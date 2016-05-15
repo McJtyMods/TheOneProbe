@@ -1,13 +1,17 @@
 package mcjty.theoneprobe;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import mcjty.theoneprobe.api.ITheOneProbe;
+import mcjty.theoneprobe.proxy.CommonProxy;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
-import mcjty.theoneprobe.proxy.CommonProxy;
 
 import java.io.File;
 
@@ -43,6 +47,17 @@ public class TheOneProbe {
 
 //        FMLInterModComms.sendMessage("Waila", "register", "mcjty.wailasupport.WailaCompatibility.load");
     }
+
+    @Mod.EventHandler
+    public void imcCallback(FMLInterModComms.IMCEvent event) {
+        for (FMLInterModComms.IMCMessage message : event.getMessages()) {
+            if (message.key.equalsIgnoreCase("getTheOneProbe")) {
+                Optional<Function<ITheOneProbe, Void>> value = message.getFunctionValue(ITheOneProbe.class, Void.class);
+                value.get().apply(new mcjty.theoneprobe.apiimpl.TheOneProbe());
+            }
+        }
+    }
+
 
     /**
      * Do your mod setup. Build whatever data structures you care about. Register recipes.
