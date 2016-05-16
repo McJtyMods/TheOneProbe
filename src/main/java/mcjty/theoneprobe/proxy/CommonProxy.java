@@ -21,6 +21,7 @@ public abstract class CommonProxy {
         readMainConfig();
         PacketHandler.registerMessages("combathelp");
         ModItems.init();
+        ModItems.initCrafting();
     }
 
     private void readMainConfig() {
