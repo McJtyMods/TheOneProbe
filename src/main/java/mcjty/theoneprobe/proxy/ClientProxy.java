@@ -2,6 +2,9 @@ package mcjty.theoneprobe.proxy;
 
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -28,7 +31,12 @@ public class ClientProxy extends CommonProxy {
         if (event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
             return;
         }
-        OverlayRenderer.renderHUD();
+        ItemStack mainHeldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
+        ItemStack offHeldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.OFF_HAND);
+        if ((mainHeldItem != null && mainHeldItem.getItem() == ModItems.probe) ||
+                (offHeldItem != null && offHeldItem.getItem() == ModItems.probe)) {
+            OverlayRenderer.renderHUD();
+        }
     }
 
 
