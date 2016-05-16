@@ -41,6 +41,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                     .text(TextFormatting.BLUE + modid)
                     .newline();
         }
+        probeInfo.progress(30, 100)
+                .newline();
     }
 
     private String getModName(Block block) {

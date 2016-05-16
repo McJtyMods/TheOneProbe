@@ -114,26 +114,35 @@ public class OverlayRenderer {
                     break;
                 case ITEM:
                     x += renderItemStack(Minecraft.getMinecraft(), itemRender, (ItemStack) element.getElement(), x, y, "");
-                    maxh = 20;
+                    maxh = updateMaxH(20, maxh);
                     break;
                 case PROGRESS:
+                    Pair<Integer,Integer> progressPair = (Pair<Integer,Integer>) element.getElement();
+                    int cur = progressPair.getLeft();
+                    int max = progressPair.getRight();
+                    RenderHelper.drawThickBeveledBox(x, y, x + 100, y + 10, 1, 0xffffffff, 0xffffffff, 0xff000000);
+                    RenderHelper.drawThickBeveledBox(x+31, y+1, x + 100 - 1, y + 10 - 1, 1, 0xffff0000, 0xffff0000, 0xffff0000);
+                    maxh = updateMaxH(10, maxh);
                     break;
                 case NEWLINE:
                     y += maxh;
                     x = 20;
+                    maxh = 10;
                     break;
                 case OFFSET:
-                    Pair<Integer,Integer> pair = (Pair<Integer,Integer>) element.getElement();
-                    x += pair.getLeft();
-                    y += pair.getRight();
+                    Pair<Integer,Integer> offsetPair = (Pair<Integer,Integer>) element.getElement();
+                    x += offsetPair.getLeft();
+                    y += offsetPair.getRight();
                     break;
             }
         }
+    }
 
-
-//        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-
-
-//        renderItemStack(Minecraft.getMinecraft(), itemRender, new ItemStack(Items.APPLE), 20, 20, "Test");
+    private static int updateMaxH(int h, int maxh) {
+        if (h > maxh) {
+            return h;
+        } else {
+            return maxh;
+        }
     }
 }
