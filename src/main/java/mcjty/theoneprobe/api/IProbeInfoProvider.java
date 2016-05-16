@@ -1,6 +1,9 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * You can implement IProbeInfoAccessor in your blocks or else you can use
@@ -12,11 +15,10 @@ public interface IProbeInfoProvider {
      * Return true if this block needs information server side. Return false if
      * everything this block wants to display can be calculated on the client.
      */
-    boolean needsServerInfo(Block block);
+    boolean needsServerInfo(World world, IBlockState blockState, BlockPos pos);
 
     /**
-     * Create a probe info for the given block. Return null if you don't
-     * support this block.
+     * Add information for the probe info for the given block
      */
-    IProbeInfo createProbeInfo(ITheOneProbe theOneProbe, Block block);
+    void addProbeInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos, EntityPlayer player);
 }

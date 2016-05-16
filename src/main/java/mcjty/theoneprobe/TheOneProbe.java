@@ -3,7 +3,11 @@ package mcjty.theoneprobe;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import mcjty.theoneprobe.api.ITheOneProbe;
+import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
+import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.proxy.CommonProxy;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -11,6 +15,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
@@ -33,6 +39,17 @@ public class TheOneProbe {
     public static File modConfigDir;
     public static Configuration config;
 
+    public static TheOneProbeImp theOneProbeImp = new TheOneProbeImp();
+
+    public static CreativeTabs tabProbe = new CreativeTabs("Probe") {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public Item getTabIconItem() {
+            return ModItems.probe;
+        }
+    };
+
+
     /**
      * Run before anything else. Read your config, create blocks, items, etc, and
      * register them with the GameRegistry.
@@ -53,7 +70,7 @@ public class TheOneProbe {
         for (FMLInterModComms.IMCMessage message : event.getMessages()) {
             if (message.key.equalsIgnoreCase("getTheOneProbe")) {
                 Optional<Function<ITheOneProbe, Void>> value = message.getFunctionValue(ITheOneProbe.class, Void.class);
-                value.get().apply(new mcjty.theoneprobe.apiimpl.TheOneProbe());
+                value.get().apply(theOneProbeImp);
             }
         }
     }

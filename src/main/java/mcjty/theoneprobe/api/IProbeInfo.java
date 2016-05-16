@@ -14,4 +14,6 @@ public interface IProbeInfo {
     IProbeInfo progress(int current, int max);
 
     IProbeInfo newline();
+
+    IProbeInfo offset(int dx, int dy);
 }

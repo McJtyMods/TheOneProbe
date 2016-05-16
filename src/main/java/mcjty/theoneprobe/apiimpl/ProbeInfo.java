@@ -11,6 +11,10 @@ public class ProbeInfo implements IProbeInfo {
 
     private List<Element> elements = new ArrayList<>();
 
+    public List<Element> getElements() {
+        return elements;
+    }
+
     @Override
     public IProbeInfo text(String text) {
         elements.add(new Element(ElementType.TEXT, text));
@@ -32,6 +36,12 @@ public class ProbeInfo implements IProbeInfo {
     @Override
     public IProbeInfo newline() {
         elements.add(new Element(ElementType.NEWLINE, null));
+        return this;
+    }
+
+    @Override
+    public IProbeInfo offset(int dx, int dy) {
+        elements.add(new Element(ElementType.OFFSET, Pair.of(dx, dy)));
         return this;
     }
 
@@ -57,6 +67,7 @@ public class ProbeInfo implements IProbeInfo {
         TEXT,
         ITEM,
         PROGRESS,
-        NEWLINE
+        NEWLINE,
+        OFFSET
     }
 }

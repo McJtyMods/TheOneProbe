@@ -13,9 +13,4 @@ public interface ITheOneProbe {
      * @param provider
      */
     void registerProvider(IProbeInfoProvider provider);
-
-    /**
-     * Create a new probe info object.
-     */
-    IProbeInfo create();
 }

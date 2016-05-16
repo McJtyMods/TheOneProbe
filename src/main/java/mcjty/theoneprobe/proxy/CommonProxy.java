@@ -3,6 +3,7 @@ package mcjty.theoneprobe.proxy;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.ForgeEventHandlers;
+import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -19,6 +20,7 @@ public abstract class CommonProxy {
         mainConfig = TheOneProbe.config;
         readMainConfig();
         PacketHandler.registerMessages("combathelp");
+        ModItems.init();
     }
 
     private void readMainConfig() {

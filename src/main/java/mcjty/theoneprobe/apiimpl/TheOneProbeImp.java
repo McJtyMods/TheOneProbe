@@ -7,17 +7,24 @@ import mcjty.theoneprobe.api.ITheOneProbe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TheOneProbe implements ITheOneProbe {
+public class TheOneProbeImp implements ITheOneProbe {
 
     private List<IProbeInfoProvider> providers = new ArrayList<>();
+
+    public TheOneProbeImp() {
+        providers.add(new DefaultProbeInfoProvider());
+    }
 
     @Override
     public void registerProvider(IProbeInfoProvider provider) {
         providers.add(provider);
     }
 
-    @Override
-    public IProbeInfo create() {
+    public ProbeInfo create() {
         return new ProbeInfo();
+    }
+
+    public List<IProbeInfoProvider> getProviders() {
+        return providers;
     }
 }
