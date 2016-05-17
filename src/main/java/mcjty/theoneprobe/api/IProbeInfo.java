@@ -38,4 +38,9 @@ public interface IProbeInfo {
     IProbeInfo vertical(Integer borderColor, int spacing);
 
     IProbeInfo vertical();
+
+    /**
+     * Add a custom element. Make sure the factory for this element is prroperly registered.
+     */
+    IProbeInfo element(IElement element);
 }

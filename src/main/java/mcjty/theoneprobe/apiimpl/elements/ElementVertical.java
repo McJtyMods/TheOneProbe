@@ -139,4 +139,10 @@ public class ElementVertical implements IElement, IProbeInfo {
         children.add(e);
         return e;
     }
+
+    @Override
+    public IProbeInfo element(IElement element) {
+        children.add(element);
+        return this;
+    }
 }
