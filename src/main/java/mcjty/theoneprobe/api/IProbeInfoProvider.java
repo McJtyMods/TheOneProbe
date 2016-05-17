@@ -14,5 +14,5 @@ public interface IProbeInfoProvider {
      * Add information for the probe info for the given block. This is always called
      * server side.
      */
-    void addProbeInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos);
+    void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos);
 }

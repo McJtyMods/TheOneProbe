@@ -16,6 +16,10 @@ public class ProbeInfo extends ElementVertical {
         children = createElements(buf);
     }
 
+    public ProbeInfo() {
+        super((Integer) null);
+    }
+
     public static List<Element> createElements(ByteBuf buf) {
         int size = buf.readShort();
         List<Element> elements = new ArrayList<>(size);

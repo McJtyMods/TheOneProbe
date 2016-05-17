@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.rendering;
 
 import mcjty.theoneprobe.Config;
+import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.apiimpl.elements.Cursor;
 import mcjty.theoneprobe.network.PacketGetInfo;
@@ -25,7 +26,7 @@ public class OverlayRenderer {
         cachedInfo.put(Pair.of(dim, pos), Pair.of(time, probeInfo));
     }
 
-    public static void renderHUD() {
+    public static void renderHUD(ProbeMode mode) {
         RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
         if (mouseOver == null) {
             return;
@@ -43,11 +44,11 @@ public class OverlayRenderer {
 
         Pair<Long, ProbeInfo> pair = cachedInfo.get(Pair.of(player.worldObj.provider.getDimension(), blockPos));
         if (pair == null) {
-            PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos));
+            PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode));
         } else {
             if (time > pair.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
-                PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos));
+                PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode));
             }
             renderElements(pair.getRight());
         }

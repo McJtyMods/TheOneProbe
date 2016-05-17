@@ -4,6 +4,10 @@ public class Cursor {
     private int x;
     private int y;
 
+    public Cursor clone() {
+        return new Cursor(x, y);
+    }
+
     public Cursor(int x, int y) {
         this.x = x;
         this.y = y;

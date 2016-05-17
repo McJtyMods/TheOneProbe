@@ -1,9 +1,11 @@
 package mcjty.theoneprobe.proxy;
 
 import mcjty.theoneprobe.Config;
+import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -32,16 +34,26 @@ public class ClientProxy extends CommonProxy {
         if (event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
             return;
         }
-        if (Config.needsProbe) {
-            ItemStack mainHeldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
-            ItemStack offHeldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.OFF_HAND);
-            if ((mainHeldItem != null && mainHeldItem.getItem() == ModItems.probe) ||
-                    (offHeldItem != null && offHeldItem.getItem() == ModItems.probe)) {
-                OverlayRenderer.renderHUD();
+        if (hasItemInEitherHand(ModItems.creativeProbe)) {
+            OverlayRenderer.renderHUD(ProbeMode.DEBUG);
+        } else if (Config.needsProbe) {
+            if (hasItemInEitherHand(ModItems.probe)) {
+                OverlayRenderer.renderHUD(getModeForPlayer());
             }
         } else {
-            OverlayRenderer.renderHUD();
+            OverlayRenderer.renderHUD(getModeForPlayer());
         }
+    }
+
+    private ProbeMode getModeForPlayer() {
+        return Minecraft.getMinecraft().thePlayer.isSneaking() ? ProbeMode.EXTENDED : ProbeMode.NORMAL;
+    }
+
+    private boolean hasItemInEitherHand(Item item) {
+        ItemStack mainHeldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
+        ItemStack offHeldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.OFF_HAND);
+        return (mainHeldItem != null && mainHeldItem.getItem() == item) ||
+                (offHeldItem != null && offHeldItem.getItem() == item);
     }
 
 

@@ -3,6 +3,7 @@ package mcjty.theoneprobe.apiimpl;
 import cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.api.ProgressStyle;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.common.ModContainer;
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
-    public void addProbeInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos) {
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos) {
         Block block = blockState.getBlock();
         String modid = getModName(block);
 
@@ -36,6 +37,21 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                     .text(TextFormatting.WHITE + block.getLocalizedName())
                     .text(TextFormatting.BLUE + modid);
         }
+
+        if (mode == ProbeMode.EXTENDED) {
+            probeInfo.text(TextFormatting.GREEN + "Harvest level: " + block.getHarvestTool(blockState));
+        }
+
+        if (mode == ProbeMode.DEBUG) {
+            IProbeInfo vertical = probeInfo.vertical(0xffff4444)
+                    .text("Unlocname: " + block.getUnlocalizedName())
+                    .text("Meta: " + blockState.getBlock().getMetaFromState(blockState));
+            TileEntity te = world.getTileEntity(pos);
+            if (te != null) {
+                vertical.text("TE: " + te.getClass().getSimpleName());
+            }
+        }
+
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof IEnergyHandler) {
             IEnergyHandler handler = (IEnergyHandler) te;

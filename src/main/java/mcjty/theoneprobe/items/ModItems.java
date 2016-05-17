@@ -8,15 +8,18 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModItems {
+    public static CreativeProbe creativeProbe;
     public static Probe probe;
 
     public static void init() {
         probe = new Probe();
+        creativeProbe = new CreativeProbe();
     }
 
     @SideOnly(Side.CLIENT)
     public static void initClient() {
         probe.initModel();
+        creativeProbe.initModel();
     }
 
     public static void initCrafting() {

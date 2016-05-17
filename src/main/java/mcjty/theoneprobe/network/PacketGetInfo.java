@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -21,11 +22,13 @@ public class PacketGetInfo implements IMessage {
 
     private int dim;
     private BlockPos pos;
+    private ProbeMode mode;
 
     @Override
     public void fromBytes(ByteBuf buf) {
         dim = buf.readInt();
         pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        mode = ProbeMode.values()[buf.readByte()];
     }
 
     @Override
@@ -34,14 +37,16 @@ public class PacketGetInfo implements IMessage {
         buf.writeInt(pos.getX());
         buf.writeInt(pos.getY());
         buf.writeInt(pos.getZ());
+        buf.writeByte(mode.ordinal());
     }
 
     public PacketGetInfo() {
     }
 
-    public PacketGetInfo(int dim, BlockPos pos) {
+    public PacketGetInfo(int dim, BlockPos pos, ProbeMode mode) {
         this.dim = dim;
         this.pos = pos;
+        this.mode = mode;
     }
 
     public static class Handler implements IMessageHandler<PacketGetInfo, IMessage> {
@@ -54,23 +59,23 @@ public class PacketGetInfo implements IMessage {
         private void handle(PacketGetInfo message, MessageContext ctx) {
             WorldServer world = DimensionManager.getWorld(message.dim);
             if (world != null) {
-                ProbeInfo probeInfo = getProbeInfo(world, message.pos);
+                ProbeInfo probeInfo = getProbeInfo(message.mode, world, message.pos);
                 PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(message.dim, message.pos, probeInfo), ctx.getServerHandler().playerEntity);
             }
         }
     }
 
-    private static ProbeInfo getProbeInfo(World world, BlockPos blockPos) {
+    private static ProbeInfo getProbeInfo(ProbeMode mode, World world, BlockPos blockPos) {
         IBlockState state = world.getBlockState(blockPos);
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
 
         List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
         for (IProbeInfoProvider provider : providers) {
-            provider.addProbeInfo(probeInfo, world, state, blockPos);
+            provider.addProbeInfo(mode, probeInfo, world, state, blockPos);
         }
         if (state.getBlock() instanceof IProbeInfoAccessor) {
             IProbeInfoAccessor accessor = (IProbeInfoAccessor) state.getBlock();
-            accessor.addProbeInfo(probeInfo, world, state, blockPos);
+            accessor.addProbeInfo(mode, probeInfo, world, state, blockPos);
         }
         return probeInfo;
     }

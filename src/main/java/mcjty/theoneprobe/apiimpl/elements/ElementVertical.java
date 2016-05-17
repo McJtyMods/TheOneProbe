@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProgressStyle;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -14,15 +15,28 @@ public class ElementVertical implements Element, IProbeInfo {
     private final int SPACING = 2;
 
     protected List<Element> children = new ArrayList<>();
+    private Integer borderColor;
 
     @Override
     public void render(Cursor cursor) {
-        int x = cursor.getX();
-        for (Element element : children) {
-            element.render(cursor);
-            cursor.addY(element.getHeight() + SPACING);
-            cursor.setX(x);
+        if (borderColor != null) {
+            int w = getWidth();
+            int h = getHeight();
+            RenderHelper.drawHorizontalLine(cursor.getX(), cursor.getY(), cursor.getX() + w - 1, borderColor);
+            RenderHelper.drawHorizontalLine(cursor.getX(), cursor.getY() + h - 1, cursor.getX() + w - 1, borderColor);
+            RenderHelper.drawVerticalLine(cursor.getX(), cursor.getY(), cursor.getY() + h - 1, borderColor);
+            RenderHelper.drawVerticalLine(cursor.getX() + w - 1, cursor.getY(), cursor.getY() + h - 1, borderColor);
+            cursor.addX(3);
+            cursor.addY(3);
         }
+        for (Element element : children) {
+            element.render(cursor.clone());
+            cursor.addY(element.getHeight() + SPACING);
+        }
+    }
+
+    private int getBorderSpacing() {
+        return borderColor == null ? 0 : 6;
     }
 
     @Override
@@ -31,7 +45,7 @@ public class ElementVertical implements Element, IProbeInfo {
         for (Element element : children) {
             h += element.getHeight();
         }
-        return h + SPACING * (children.size() - 1);
+        return h + SPACING * (children.size() - 1) + getBorderSpacing();
     }
 
     @Override
@@ -43,19 +57,29 @@ public class ElementVertical implements Element, IProbeInfo {
                 w = ww;
             }
         }
-        return w;
+        return w + getBorderSpacing();
     }
 
-    public ElementVertical() {
+    public ElementVertical(Integer borderColor) {
+        this.borderColor = borderColor;
     }
 
     public ElementVertical(ByteBuf buf) {
         children = ProbeInfo.createElements(buf);
+        if (buf.readBoolean()) {
+            borderColor = buf.readInt();
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ProbeInfo.writeElements(children, buf);
+        if (borderColor != null) {
+            buf.writeBoolean(true);
+            buf.writeInt(borderColor);
+        } else {
+            buf.writeBoolean(false);
+        }
     }
 
     @Override
@@ -82,15 +106,29 @@ public class ElementVertical implements Element, IProbeInfo {
     }
 
     @Override
+    public IProbeInfo horizontal(int borderColor) {
+        ElementHorizontal e = new ElementHorizontal(borderColor);
+        children.add(e);
+        return e;
+    }
+
+    @Override
     public IProbeInfo horizontal() {
-        ElementHorizontal e = new ElementHorizontal();
+        ElementHorizontal e = new ElementHorizontal((Integer) null);
+        children.add(e);
+        return e;
+    }
+
+    @Override
+    public IProbeInfo vertical(int borderColor) {
+        ElementVertical e = new ElementVertical(borderColor);
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo vertical() {
-        ElementVertical e = new ElementVertical();
+        ElementVertical e = new ElementVertical((Integer) null);
         children.add(e);
         return e;
     }
