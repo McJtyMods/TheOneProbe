@@ -19,9 +19,9 @@ public class Config {
     public static int rightX = -1;
     public static int bottomY = -1;
 
-    public static int boxBorderColor = 0;
-    public static int boxFillColor = 0;
-    public static int boxThickness = 0;
+    public static int boxBorderColor = 0xff999999;
+    public static int boxFillColor = 0x55006699;
+    public static int boxThickness = 2;
 
     public static void init(Configuration cfg) {
         needsProbe = cfg.getBoolean("needsProbe", CATEGORY_THEONEPROBE, needsProbe, "If true the probe is needed to show the tooltip. If false the tooltip shows all the time");
