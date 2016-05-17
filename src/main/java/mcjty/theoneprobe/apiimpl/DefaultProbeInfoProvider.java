@@ -1,7 +1,9 @@
 package mcjty.theoneprobe.apiimpl;
 
 import cofh.api.energy.IEnergyHandler;
+import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -36,9 +38,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
 
         if (mode == ProbeMode.EXTENDED) {
-            String harvestTool = block.getHarvestTool(blockState);
-            if (harvestTool != null) {
-                probeInfo.text(TextFormatting.GREEN + "Harvest level: " + harvestTool);
+            if (Config.showHarvestLevel) {
+                String harvestTool = block.getHarvestTool(blockState);
+                if (harvestTool != null) {
+                    probeInfo.text(TextFormatting.GREEN + "Harvest level: " + harvestTool);
+                }
             }
         }
 
@@ -52,11 +56,19 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             }
         }
 
-        TileEntity te = world.getTileEntity(pos);
-        if (te instanceof IEnergyHandler) {
-            IEnergyHandler handler = (IEnergyHandler) te;
-            probeInfo.progress(handler.getEnergyStored(EnumFacing.DOWN), handler.getMaxEnergyStored(EnumFacing.DOWN), "", "RF",
-                    new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000).borderColor(0xff555555).numberFormat(NumberFormat.COMPACT));
+        if (Config.showRF > 0) {
+            TileEntity te = world.getTileEntity(pos);
+            if (te instanceof IEnergyHandler) {
+                IEnergyHandler handler = (IEnergyHandler) te;
+                int energy = handler.getEnergyStored(EnumFacing.DOWN);
+                int maxEnergy = handler.getMaxEnergyStored(EnumFacing.DOWN);
+                if (Config.showRF == 1) {
+                    probeInfo.progress(energy, maxEnergy, "", "RF",
+                            new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000).borderColor(0xff555555).numberFormat(Config.rfFormat));
+                } else {
+                    probeInfo.text(TextFormatting.GREEN + "RF: " + ElementProgress.format(energy, Config.rfFormat) + "RF");
+                }
+            }
         }
     }
 

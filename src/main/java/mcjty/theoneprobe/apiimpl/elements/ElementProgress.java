@@ -65,7 +65,7 @@ public class ElementProgress implements Element {
 
     private static DecimalFormat dfCommas = new DecimalFormat("###,###");
 
-    private static String format(int in, NumberFormat style) {
+    public static String format(int in, NumberFormat style) {
         switch (style) {
             case FULL:
                 return Integer.toString(in);
