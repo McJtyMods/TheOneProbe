@@ -24,8 +24,62 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     @Override
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos) {
         Block block = blockState.getBlock();
-        String modid = getModName(block);
 
+        showStandardBlockInfo(probeInfo, block);
+
+        if (mode == ProbeMode.EXTENDED) {
+            if (Config.showHarvestLevel) {
+                showHarvestLevel(probeInfo, blockState, block);
+            }
+
+            if (Config.showChestContents) {
+                showChestContents(probeInfo, world, pos);
+            }
+        }
+
+        if (mode == ProbeMode.DEBUG && Config.showDebugInfo) {
+            showDebugInfo(probeInfo, world, blockState, pos, block);
+        }
+
+        if (Config.showRF > 0) {
+            showRF(probeInfo, world, pos);
+        }
+    }
+
+    private void showRF(IProbeInfo probeInfo, World world, BlockPos pos) {
+        TileEntity te = world.getTileEntity(pos);
+        if (te instanceof IEnergyHandler) {
+            IEnergyHandler handler = (IEnergyHandler) te;
+            int energy = handler.getEnergyStored(EnumFacing.DOWN);
+            int maxEnergy = handler.getMaxEnergyStored(EnumFacing.DOWN);
+            if (Config.showRF == 1) {
+                probeInfo.progress(energy, maxEnergy, "", "RF",
+                        new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000).borderColor(0xff555555).numberFormat(Config.rfFormat));
+            } else {
+                probeInfo.text(TextFormatting.GREEN + "RF: " + ElementProgress.format(energy, Config.rfFormat) + "RF");
+            }
+        }
+    }
+
+    private void showDebugInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos, Block block) {
+        IProbeInfo vertical = probeInfo.vertical(0xffff4444, 2)
+                .text("Unlocname: " + block.getUnlocalizedName())
+                .text("Meta: " + blockState.getBlock().getMetaFromState(blockState));
+        TileEntity te = world.getTileEntity(pos);
+        if (te != null) {
+            vertical.text("TE: " + te.getClass().getSimpleName());
+        }
+    }
+
+    private void showHarvestLevel(IProbeInfo probeInfo, IBlockState blockState, Block block) {
+        String harvestTool = block.getHarvestTool(blockState);
+        if (harvestTool != null) {
+            probeInfo.text(TextFormatting.GREEN + "Harvest level: " + harvestTool);
+        }
+    }
+
+    private void showStandardBlockInfo(IProbeInfo probeInfo, Block block) {
+        String modid = getModName(block);
         Item item = Item.getItemFromBlock(block);
         if (item != null) {
             ItemStack stack = new ItemStack(item, 1);
@@ -38,44 +92,6 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             probeInfo.horizontal()
                     .text(TextFormatting.WHITE + block.getLocalizedName())
                     .text(TextFormatting.BLUE + modid);
-        }
-
-        if (mode == ProbeMode.EXTENDED) {
-            if (Config.showHarvestLevel) {
-                String harvestTool = block.getHarvestTool(blockState);
-                if (harvestTool != null) {
-                    probeInfo.text(TextFormatting.GREEN + "Harvest level: " + harvestTool);
-                }
-            }
-
-            if (Config.showChestContents) {
-                showChestContents(probeInfo, world, pos);
-            }
-        }
-
-        if (mode == ProbeMode.DEBUG && Config.showDebugInfo) {
-            IProbeInfo vertical = probeInfo.vertical(0xffff4444, 2)
-                    .text("Unlocname: " + block.getUnlocalizedName())
-                    .text("Meta: " + blockState.getBlock().getMetaFromState(blockState));
-            TileEntity te = world.getTileEntity(pos);
-            if (te != null) {
-                vertical.text("TE: " + te.getClass().getSimpleName());
-            }
-        }
-
-        if (Config.showRF > 0) {
-            TileEntity te = world.getTileEntity(pos);
-            if (te instanceof IEnergyHandler) {
-                IEnergyHandler handler = (IEnergyHandler) te;
-                int energy = handler.getEnergyStored(EnumFacing.DOWN);
-                int maxEnergy = handler.getMaxEnergyStored(EnumFacing.DOWN);
-                if (Config.showRF == 1) {
-                    probeInfo.progress(energy, maxEnergy, "", "RF",
-                            new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000).borderColor(0xff555555).numberFormat(Config.rfFormat));
-                } else {
-                    probeInfo.text(TextFormatting.GREEN + "RF: " + ElementProgress.format(energy, Config.rfFormat) + "RF");
-                }
-            }
         }
     }
 
