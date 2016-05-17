@@ -40,7 +40,7 @@ public interface IProbeInfo {
     IProbeInfo vertical();
 
     /**
-     * Add a custom element. Make sure the factory for this element is prroperly registered.
+     * Add a custom element. Make sure the factory for this element is properly registered.
      */
     IProbeInfo element(IElement element);
 }
