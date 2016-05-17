@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.api;
 
 /**
- * Style for the progress bar
+ * Style for the progress bar.
  */
 public class ProgressStyle {
     private int borderColor = 0xffffffff;
@@ -12,31 +12,37 @@ public class ProgressStyle {
 
     private NumberFormat numberFormat = NumberFormat.FULL;
 
+    /// The color that is used for the border of the progress bar
     public ProgressStyle borderColor(int c) {
         borderColor = c;
         return this;
     }
 
+    /// The color that is used for the background of the progress bar
     public ProgressStyle backgroundColor(int c) {
         backgroundColor = c;
         return this;
     }
 
+    /// The color that is used for the filled part of the progress bar
     public ProgressStyle filledColor(int c) {
         filledColor = c;
         return this;
     }
 
+    /// If this is different from the filledColor then the fill color will alternate
     public ProgressStyle alternateFilledColor(int c) {
         alternatefilledColor = c;
         return this;
     }
 
+    /// If true then text is shown inside the progress bar
     public ProgressStyle showText(boolean b) {
         showText = b;
         return this;
     }
 
+    /// The number format to use for the text inside the progress bar
     public ProgressStyle numberFormat(NumberFormat f) {
         numberFormat = f;
         return this;
