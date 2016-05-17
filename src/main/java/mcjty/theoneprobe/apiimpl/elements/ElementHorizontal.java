@@ -12,10 +12,11 @@ import java.util.List;
 
 public class ElementHorizontal implements Element, IProbeInfo {
 
-    private final int SPACING = 5;
+    public static final int SPACING = 5;
 
     private List<Element> children = new ArrayList<>();
     private Integer borderColor;
+    private int spacing;
 
     @Override
     public void render(Cursor cursor) {
@@ -31,7 +32,7 @@ public class ElementHorizontal implements Element, IProbeInfo {
         }
         for (Element element : children) {
             element.render(cursor.clone());
-            cursor.addX(element.getWidth() + SPACING);
+            cursor.addX(element.getWidth() + spacing);
         }
     }
 
@@ -45,7 +46,7 @@ public class ElementHorizontal implements Element, IProbeInfo {
         for (Element element : children) {
             w += element.getWidth();
         }
-        return w + SPACING * (children.size() - 1) + getBorderSpacing();
+        return w + spacing * (children.size() - 1) + getBorderSpacing();
     }
 
     @Override
@@ -60,8 +61,9 @@ public class ElementHorizontal implements Element, IProbeInfo {
         return h + getBorderSpacing();
     }
 
-    public ElementHorizontal(Integer borderColor) {
+    public ElementHorizontal(Integer borderColor, int spacing) {
         this.borderColor = borderColor;
+        this.spacing = spacing;
     }
 
     public ElementHorizontal(ByteBuf buf) {
@@ -69,6 +71,7 @@ public class ElementHorizontal implements Element, IProbeInfo {
         if (buf.readBoolean()) {
             borderColor = buf.readInt();
         }
+        spacing = buf.readShort();
     }
 
     @Override
@@ -80,6 +83,7 @@ public class ElementHorizontal implements Element, IProbeInfo {
         } else {
             buf.writeBoolean(false);
         }
+        buf.writeShort(spacing);
     }
 
     @Override
@@ -106,29 +110,29 @@ public class ElementHorizontal implements Element, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo horizontal(int borderColor) {
-        ElementHorizontal e = new ElementHorizontal(borderColor);
+    public IProbeInfo horizontal(Integer borderColor, int spacing) {
+        ElementHorizontal e = new ElementHorizontal(borderColor, spacing);
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo horizontal() {
-        ElementHorizontal e = new ElementHorizontal((Integer) null);
+        ElementHorizontal e = new ElementHorizontal((Integer) null, SPACING);
         children.add(e);
         return e;
     }
 
     @Override
-    public IProbeInfo vertical(int borderColor) {
-        ElementVertical e = new ElementVertical(borderColor);
+    public IProbeInfo vertical(Integer borderColor, int spacing) {
+        ElementVertical e = new ElementVertical(borderColor, spacing);
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo vertical() {
-        ElementVertical e = new ElementVertical((Integer) null);
+        ElementVertical e = new ElementVertical((Integer) null, ElementVertical.SPACING);
         children.add(e);
         return e;
     }

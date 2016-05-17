@@ -16,13 +16,20 @@ public class ElementItemStack implements Element {
     }
 
     public ElementItemStack(ByteBuf buf) {
-        itemStack = NetworkTools.readItemStack(buf);
+        if (buf.readBoolean()) {
+            itemStack = NetworkTools.readItemStack(buf);
+        } else {
+            itemStack = null;
+        }
     }
 
     @Override
     public void render(Cursor cursor) {
         RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
-        RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, cursor.getX(), cursor.getY(), "");
+        if (itemStack != null) {
+            String amount = itemStack.stackSize > 1 ? Integer.toString(itemStack.stackSize) : "";
+            RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, cursor.getX(), cursor.getY(), amount);
+        }
     }
 
     @Override
@@ -37,7 +44,12 @@ public class ElementItemStack implements Element {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        NetworkTools.writeItemStack(buf, itemStack);
+        if (itemStack != null) {
+            buf.writeBoolean(true);
+            NetworkTools.writeItemStack(buf, itemStack);
+        } else {
+            buf.writeBoolean(false);
+        }
     }
 
     @Override

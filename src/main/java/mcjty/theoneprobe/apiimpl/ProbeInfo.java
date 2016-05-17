@@ -17,7 +17,7 @@ public class ProbeInfo extends ElementVertical {
     }
 
     public ProbeInfo() {
-        super((Integer) null);
+        super((Integer) null, 2);
     }
 
     public static List<Element> createElements(ByteBuf buf) {
