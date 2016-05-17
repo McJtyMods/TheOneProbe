@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.rendering;
 
+import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.apiimpl.elements.Cursor;
 import mcjty.theoneprobe.apiimpl.elements.Element;
@@ -45,7 +46,7 @@ public class OverlayRenderer {
         if (pair == null) {
             PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos));
         } else {
-            if (time > pair.getLeft() + 200) {
+            if (time > pair.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
                 PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos));
             }
@@ -57,7 +58,7 @@ public class OverlayRenderer {
             Map<Pair<Integer,BlockPos>, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
             for (Map.Entry<Pair<Integer, BlockPos>, Pair<Long, ProbeInfo>> entry : cachedInfo.entrySet()) {
                 long t = entry.getValue().getLeft();
-                if (time < t + 200 * 2) {
+                if (time < t + Config.timeout + 1000) {
                     newCachedInfo.put(entry.getKey(), entry.getValue());
                 }
             }
