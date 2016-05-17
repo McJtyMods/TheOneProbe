@@ -79,6 +79,14 @@ public class OverlayRenderer {
         int w = probeInfo.getWidth();
         int h = probeInfo.getHeight();
 
+        int thick = Config.boxThickness;
+        int margin = 0;
+        if (thick > 0) {
+            w += (thick+3) * 2;
+            h += (thick+3) * 2;
+            margin = thick + 3;
+        }
+
         int x;
         int y;
         if (Config.leftX != -1) {
@@ -96,7 +104,11 @@ public class OverlayRenderer {
             y = (scaledHeight - h) / 2;
         }
 
-        Cursor cursor = new Cursor(x, y);
+        if (thick > 0) {
+            RenderHelper.drawThickBeveledBox(x, y, x + w-1, y + h-1, thick, Config.boxBorderColor, Config.boxBorderColor, Config.boxFillColor);
+        }
+
+        Cursor cursor = new Cursor(x + margin, y + margin);
         probeInfo.render(cursor);
     }
 }

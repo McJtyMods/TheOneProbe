@@ -18,6 +18,10 @@ public class Config {
     public static int rightX = -1;
     public static int bottomY = -1;
 
+    public static int boxBorderColor = 0;
+    public static int boxFillColor = 0;
+    public static int boxThickness = 0;
+
     public static void init(Configuration cfg) {
         needsProbe = cfg.getBoolean("needsProbe", CATEGORY_THEONEPROBE, needsProbe, "If true the probe is needed to show the tooltip. If false the tooltip shows all the time");
         showRF = cfg.getInt("showRF", CATEGORY_THEONEPROBE, showRF, 0, 2, "How to display RF: 0 = do not show, 1 = show in a bar, 2 = show as text");
@@ -31,5 +35,16 @@ public class Config {
         rightX = cfg.getInt("boxRightX", CATEGORY_THEONEPROBE, rightX, -1, 10000, "The distance to the right side of the screen. Use -1 if you don't want to set this");
         topY = cfg.getInt("boxTopY", CATEGORY_THEONEPROBE, topY, -1, 10000, "The distance to the top side of the screen. Use -1 if you don't want to set this");
         bottomY = cfg.getInt("boxBottomY", CATEGORY_THEONEPROBE, bottomY, -1, 10000, "The distance to the bottom side of the screen. Use -1 if you don't want to set this");
+        boxBorderColor = parseColor(cfg.getString("boxBorderColor", CATEGORY_THEONEPROBE, Integer.toHexString(boxBorderColor), "Color of the border of the box (0 to disable)"));
+        boxFillColor = parseColor(cfg.getString("boxFillColor", CATEGORY_THEONEPROBE, Integer.toHexString(boxFillColor), "Color of the box (0 to disable)"));
+        boxThickness = parseColor(cfg.getString("boxThickness", CATEGORY_THEONEPROBE, Integer.toHexString(boxThickness), "Thickness of the border of the box (0 to disable)"));
+    }
+
+    private static int parseColor(String col) {
+        try {
+            return Integer.parseInt(col, 16);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }
