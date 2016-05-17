@@ -1,4 +1,4 @@
-package cofh.api.item;
+package java.cofh.api.item;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;

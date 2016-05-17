@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl;
 
-import cofh.api.energy.IEnergyHandler;
+import java.cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeInfo;
