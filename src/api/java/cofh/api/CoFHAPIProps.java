@@ -1,4 +1,4 @@
-package java.cofh.api;
+package cofh.api;
 
 public class CoFHAPIProps {
 

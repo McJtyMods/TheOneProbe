@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.apiimpl;
 
-import java.cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -22,6 +21,8 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+
+import cofh.api.energy.IEnergyHandler;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
