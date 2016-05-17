@@ -11,13 +11,8 @@ import net.minecraft.world.World;
 public interface IProbeInfoProvider {
 
     /**
-     * Return true if this block needs information server side. Return false if
-     * everything this block wants to display can be calculated on the client.
-     */
-    boolean needsServerInfo(World world, IBlockState blockState, BlockPos pos);
-
-    /**
-     * Add information for the probe info for the given block
+     * Add information for the probe info for the given block. This is always called
+     * server side.
      */
     void addProbeInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos);
 }

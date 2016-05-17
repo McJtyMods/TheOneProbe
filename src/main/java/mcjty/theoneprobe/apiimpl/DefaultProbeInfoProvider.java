@@ -18,11 +18,6 @@ import net.minecraftforge.fml.common.ModContainer;
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
-    public boolean needsServerInfo(World world, IBlockState blockState, BlockPos pos) {
-        return false;
-    }
-
-    @Override
     public void addProbeInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos) {
         Block block = blockState.getBlock();
         String modid = getModName(block);
