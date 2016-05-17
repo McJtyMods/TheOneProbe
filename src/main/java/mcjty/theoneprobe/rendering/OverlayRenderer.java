@@ -1,22 +1,29 @@
 package mcjty.theoneprobe.rendering;
 
-import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.IProbeInfoAccessor;
-import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.apiimpl.elements.Cursor;
 import mcjty.theoneprobe.apiimpl.elements.Element;
-import net.minecraft.block.state.IBlockState;
+import mcjty.theoneprobe.network.PacketGetInfo;
+import mcjty.theoneprobe.network.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OverlayRenderer {
+
+    private static Map<Pair<Integer,BlockPos>, Pair<Long, ProbeInfo>> cachedInfo = new HashMap<>();
+    private static long lastCleanupTime = 0;
+
+    public static void registerProbeInfo(int dim, BlockPos pos, ProbeInfo probeInfo) {
+        long time = System.currentTimeMillis();
+        cachedInfo.put(Pair.of(dim, pos), Pair.of(time, probeInfo));
+    }
 
     public static void renderHUD() {
         RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
@@ -32,8 +39,31 @@ public class OverlayRenderer {
             return;
         }
 
-        ProbeInfo probeInfo = getProbeInfo(player.worldObj, blockPos);
-        renderElements(probeInfo);
+        long time = System.currentTimeMillis();
+
+        Pair<Long, ProbeInfo> pair = cachedInfo.get(Pair.of(player.worldObj.provider.getDimension(), blockPos));
+        if (pair == null) {
+            PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos));
+        } else {
+            if (time > pair.getLeft() + 200) {
+                // This info is slightly old. Update it
+                PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos));
+            }
+            renderElements(pair.getRight());
+        }
+
+        if (time > lastCleanupTime + 5000) {
+            // It has been a while. Time to clean up unused cached pairs.
+            Map<Pair<Integer,BlockPos>, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
+            for (Map.Entry<Pair<Integer, BlockPos>, Pair<Long, ProbeInfo>> entry : cachedInfo.entrySet()) {
+                long t = entry.getValue().getLeft();
+                if (time < t + 200 * 2) {
+                    newCachedInfo.put(entry.getKey(), entry.getValue());
+                }
+            }
+            cachedInfo = newCachedInfo;
+            lastCleanupTime = time;
+        }
     }
 
     private static void renderElements(ProbeInfo probeInfo) {
@@ -45,20 +75,5 @@ public class OverlayRenderer {
         for (Element element : probeInfo.getElements()) {
             element.render(cursor);
         }
-    }
-
-    private static ProbeInfo getProbeInfo(World world, BlockPos blockPos) {
-        IBlockState state = world.getBlockState(blockPos);
-        ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
-
-        List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
-        for (IProbeInfoProvider provider : providers) {
-            provider.addProbeInfo(probeInfo, world, state, blockPos);
-        }
-        if (state.getBlock() instanceof IProbeInfoAccessor) {
-            IProbeInfoAccessor accessor = (IProbeInfoAccessor) state.getBlock();
-            accessor.addProbeInfo(probeInfo, world, state, blockPos);
-        }
-        return probeInfo;
     }
 }

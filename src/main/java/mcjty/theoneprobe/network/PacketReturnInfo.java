@@ -2,6 +2,7 @@ package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -18,6 +19,7 @@ public class PacketReturnInfo implements IMessage {
     public void fromBytes(ByteBuf buf) {
         dim = buf.readInt();
         pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        probeInfo = new ProbeInfo();
         probeInfo.fromBytes(buf);
     }
 
@@ -47,6 +49,7 @@ public class PacketReturnInfo implements IMessage {
         }
 
         private void handle(PacketReturnInfo message, MessageContext ctx) {
+            OverlayRenderer.registerProbeInfo(message.dim, message.pos, message.probeInfo);
         }
     }
 }

@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.apiimpl.elements.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +21,37 @@ public class ProbeInfo implements IProbeInfo {
         int size = buf.readInt();
         elements.clear();
         for (int i = 0 ; i < size ; i++) {
-
+            short t = buf.readShort();
+            ElementType type = ElementType.values()[t];
+            Element element;
+            switch (type) {
+                case TEXT:
+                    element = new ElementText(buf);
+                    break;
+                case ITEMSTACK:
+                    element = new ElementItemStack(buf);
+                    break;
+                case OFFSET:
+                    element = new ElementOffset(buf);
+                    break;
+                case PROGRESS:
+                    element = new ElementProgress(buf);
+                    break;
+                case NEWLINE:
+                    element = new ElementNewline();
+                    break;
+                default:
+                    throw new RuntimeException("Missing type!");
+            }
+            elements.add(element);
         }
     }
 
     public void toBytes(ByteBuf buf) {
         buf.writeInt(elements.size());
         for (Element element : elements) {
-
+            buf.writeShort(element.getType().ordinal());
+            element.toBytes(buf);
         }
     }
 

@@ -1,5 +1,7 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
+import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.network.NetworkTools;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 
@@ -13,6 +15,12 @@ public class ElementProgress implements Element {
         this.current = current;
         this.max = max;
         this.suffix = suffix;
+    }
+
+    public ElementProgress(ByteBuf buf) {
+        current = buf.readInt();
+        max = buf.readInt();
+        suffix = NetworkTools.readString(buf);
     }
 
     @Override
@@ -30,5 +38,17 @@ public class ElementProgress implements Element {
 
         cursor.addX(w);
         cursor.updateMaxY(12);
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        buf.writeInt(current);
+        buf.writeInt(max);
+        NetworkTools.writeString(buf, suffix);
+    }
+
+    @Override
+    public ElementType getType() {
+        return ElementType.PROGRESS;
     }
 }

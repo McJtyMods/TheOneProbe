@@ -9,10 +9,14 @@ import net.minecraft.item.ItemStack;
 
 public class ElementItemStack implements Element {
 
-    private ItemStack itemStack;
+    private final ItemStack itemStack;
 
     public ElementItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
+    }
+
+    public ElementItemStack(ByteBuf buf) {
+        itemStack = NetworkTools.readItemStack(buf);
     }
 
     @Override
@@ -24,12 +28,12 @@ public class ElementItemStack implements Element {
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        itemStack = NetworkTools.readItemStack(buf);
+    public void toBytes(ByteBuf buf) {
+        NetworkTools.writeItemStack(buf, itemStack);
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        NetworkTools.writeItemStack(buf, itemStack);
+    public ElementType getType() {
+        return ElementType.ITEMSTACK;
     }
 }

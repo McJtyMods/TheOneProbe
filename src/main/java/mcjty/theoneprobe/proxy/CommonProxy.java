@@ -28,7 +28,7 @@ public abstract class CommonProxy {
         Configuration cfg = mainConfig;
         try {
             cfg.load();
-            cfg.addCustomCategoryComment(Config.CATEGORY_THEONEPROBE, "Combat Help configuration");
+            cfg.addCustomCategoryComment(Config.CATEGORY_THEONEPROBE, "The One Probe configuration");
             Config.init(cfg);
         } catch (Exception e1) {
             TheOneProbe.logger.log(Level.ERROR, "Problem loading config file!", e1);

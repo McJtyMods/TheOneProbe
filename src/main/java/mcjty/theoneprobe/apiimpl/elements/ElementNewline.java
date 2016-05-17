@@ -11,12 +11,12 @@ public class ElementNewline implements Element {
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void toBytes(ByteBuf buf) {
 
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-
+    public ElementType getType() {
+        return ElementType.NEWLINE;
     }
 }
