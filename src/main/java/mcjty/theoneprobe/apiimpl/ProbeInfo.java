@@ -1,8 +1,8 @@
 package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.apiimpl.elements.*;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,57 +17,31 @@ public class ProbeInfo implements IProbeInfo {
 
     @Override
     public IProbeInfo text(String text) {
-        elements.add(new Element(ElementType.TEXT, text));
+        elements.add(new ElementText(text));
         return this;
     }
 
     @Override
     public IProbeInfo item(ItemStack stack) {
-        elements.add(new Element(ElementType.ITEM, stack));
+        elements.add(new ElementItemStack(stack));
         return this;
     }
 
     @Override
     public IProbeInfo progress(int current, int max) {
-        elements.add(new Element(ElementType.PROGRESS, Pair.of(current, max)));
+        elements.add(new ElementProgress(current, max));
         return this;
     }
 
     @Override
     public IProbeInfo newline() {
-        elements.add(new Element(ElementType.NEWLINE, null));
+        elements.add(new ElementNewline());
         return this;
     }
 
     @Override
     public IProbeInfo offset(int dx, int dy) {
-        elements.add(new Element(ElementType.OFFSET, Pair.of(dx, dy)));
+        elements.add(new ElementOffset(dx, dy));
         return this;
-    }
-
-    public static class Element {
-        private final ElementType type;
-        private final Object element;
-
-        public Element(ElementType type, Object element) {
-            this.type = type;
-            this.element = element;
-        }
-
-        public ElementType getType() {
-            return type;
-        }
-
-        public Object getElement() {
-            return element;
-        }
-    }
-
-    public enum ElementType {
-        TEXT,
-        ITEM,
-        PROGRESS,
-        NEWLINE,
-        OFFSET
     }
 }

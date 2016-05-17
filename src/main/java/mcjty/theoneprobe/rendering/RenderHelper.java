@@ -383,6 +383,60 @@ public class RenderHelper {
         buffer.pos(p4.getX(), p4.getY(), p4.getZ()).tex(0.0D, 1.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
     }
 
+    public static int renderItemStack(Minecraft mc, RenderItem itemRender, ItemStack itm, int x, int y, String txt) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F);
+
+        int rc = 0;
+        if (itm != null && itm.getItem() != null) {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0.0F, 0.0F, 32.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.enableLighting();
+            short short1 = 240;
+            short short2 = 240;
+            net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) short1 / 1.0F, (float) short2 / 1.0F);
+            itemRender.renderItemAndEffectIntoGUI(itm, x, y);
+            itemRender.renderItemOverlayIntoGUI(mc.fontRendererObj, itm, x, y, txt);
+            GlStateManager.popMatrix();
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.disableLighting();
+            rc = 20;
+        }
+
+        return rc;
+    }
+
+    public static int renderText(Minecraft mc, int x, int y, String txt) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F);
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0.0F, 0.0F, 32.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.enableLighting();
+        net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
+        GlStateManager.disableBlend();
+        int width = mc.fontRendererObj.getStringWidth(txt);
+        mc.fontRendererObj.drawStringWithShadow(txt, (float)x, (float)y, 16777215);
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
+        // Fixes opaque cooldown overlay a bit lower
+        // TODO: check if enabled blending still screws things up down the line.
+        GlStateManager.enableBlend();
+
+
+        GlStateManager.popMatrix();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableLighting();
+
+        return width;
+    }
+
     public static class Vector {
         public final float x;
         public final float y;
