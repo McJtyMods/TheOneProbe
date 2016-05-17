@@ -28,8 +28,8 @@ public class ProbeInfo implements IProbeInfo {
     }
 
     @Override
-    public IProbeInfo progress(int current, int max) {
-        elements.add(new ElementProgress(current, max));
+    public IProbeInfo progress(int current, int max, String suffix) {
+        elements.add(new ElementProgress(current, max, suffix));
         return this;
     }
 
