@@ -19,9 +19,17 @@ public class ElementText implements Element {
 
     @Override
     public void render(Cursor cursor) {
-        int w = RenderHelper.renderText(Minecraft.getMinecraft(), cursor.getX(), cursor.getY(), text);
-        cursor.addX(w);
-        cursor.updateMaxY(10);
+        RenderHelper.renderText(Minecraft.getMinecraft(), cursor.getX(), cursor.getY(), text);
+    }
+
+    @Override
+    public int getWidth() {
+        return Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+    }
+
+    @Override
+    public int getHeight() {
+        return 10;
     }
 
     @Override

@@ -57,9 +57,16 @@ public class ElementProgress implements Element {
         if (style.isShowText()) {
             RenderHelper.renderText(Minecraft.getMinecraft(), cursor.getX() + 3, cursor.getY() + 2, prefix + current + suffix);
         }
+    }
 
-        cursor.addX(w);
-        cursor.updateMaxY(12);
+    @Override
+    public int getWidth() {
+        return 100;
+    }
+
+    @Override
+    public int getHeight() {
+        return 12;
     }
 
     @Override

@@ -3,7 +3,6 @@ package mcjty.theoneprobe.rendering;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.apiimpl.elements.Cursor;
-import mcjty.theoneprobe.apiimpl.elements.Element;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
 import net.minecraft.client.Minecraft;
@@ -71,10 +70,7 @@ public class OverlayRenderer {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
 
-        Cursor cursor = new Cursor(20, 20, 20, 20);
-
-        for (Element element : probeInfo.getElements()) {
-            element.render(cursor);
-        }
+        Cursor cursor = new Cursor(20, 20);
+        probeInfo.render(cursor);
     }
 }

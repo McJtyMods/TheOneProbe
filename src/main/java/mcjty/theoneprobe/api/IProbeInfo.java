@@ -13,7 +13,15 @@ public interface IProbeInfo {
 
     IProbeInfo progress(int current, int max, String prefix, String suffix, ProgressStyle style);
 
-    IProbeInfo newline();
+    /**
+     * Create a new horizontal probe info as a child of this one. Note that the returned
+     * probe info is the new horizontal layout and not this one!
+     */
+    IProbeInfo horizontal();
 
-    IProbeInfo offset(int dx, int dy);
+    /**
+     * Create a new vertical probe info as a child of this one. Note that the returned
+     * probe info is the new horizontal layout and not this one!
+     */
+    IProbeInfo vertical();
 }

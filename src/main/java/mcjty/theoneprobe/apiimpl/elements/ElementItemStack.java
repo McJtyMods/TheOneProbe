@@ -22,9 +22,17 @@ public class ElementItemStack implements Element {
     @Override
     public void render(Cursor cursor) {
         RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
-        int w = RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, cursor.getX(), cursor.getY(), "");
-        cursor.addX(w);
-        cursor.updateMaxY(20);
+        RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, cursor.getX(), cursor.getY(), "");
+    }
+
+    @Override
+    public int getWidth() {
+        return 20;
+    }
+
+    @Override
+    public int getHeight() {
+        return 20;
     }
 
     @Override

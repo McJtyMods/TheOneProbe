@@ -26,25 +26,21 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         Item item = Item.getItemFromBlock(block);
         if (item != null) {
             ItemStack stack = new ItemStack(item, 1);
-            probeInfo.item(stack)
-                    .text(TextFormatting.WHITE + stack.getDisplayName())
-                    .newline()
-                    .offset(20, -10)
-                    .text(TextFormatting.BLUE + modid)
-                    .newline();
+            probeInfo.horizontal()
+                    .item(stack)
+                    .vertical()
+                        .text(TextFormatting.WHITE + stack.getDisplayName())
+                        .text(TextFormatting.BLUE + modid);
         } else {
-            probeInfo.text(TextFormatting.WHITE + block.getLocalizedName())
-                    .newline()
-                    .offset(20, -10)
-                    .text(TextFormatting.BLUE + modid)
-                    .newline();
+            probeInfo.horizontal()
+                    .text(TextFormatting.WHITE + block.getLocalizedName())
+                    .text(TextFormatting.BLUE + modid);
         }
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof IEnergyHandler) {
             IEnergyHandler handler = (IEnergyHandler) te;
             probeInfo.progress(handler.getEnergyStored(EnumFacing.DOWN), handler.getMaxEnergyStored(EnumFacing.DOWN), "", "RF",
-                    new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000).borderColor(0xff555555))
-                    .newline();
+                    new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000).borderColor(0xff555555));
         }
     }
 

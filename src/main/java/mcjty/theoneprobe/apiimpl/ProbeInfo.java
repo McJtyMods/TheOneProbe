@@ -1,26 +1,24 @@
 package mcjty.theoneprobe.apiimpl;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProgressStyle;
 import mcjty.theoneprobe.apiimpl.elements.*;
-import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProbeInfo implements IProbeInfo {
-
-    private List<Element> elements = new ArrayList<>();
+public class ProbeInfo extends ElementVertical {
 
     public List<Element> getElements() {
-        return elements;
+        return children;
     }
 
-
     public void fromBytes(ByteBuf buf) {
-        int size = buf.readInt();
-        elements.clear();
+        children = createElements(buf);
+    }
+
+    public static List<Element> createElements(ByteBuf buf) {
+        int size = buf.readShort();
+        List<Element> elements = new ArrayList<>(size);
         for (int i = 0 ; i < size ; i++) {
             short t = buf.readShort();
             ElementType type = ElementType.values()[t];
@@ -32,57 +30,28 @@ public class ProbeInfo implements IProbeInfo {
                 case ITEMSTACK:
                     element = new ElementItemStack(buf);
                     break;
-                case OFFSET:
-                    element = new ElementOffset(buf);
-                    break;
                 case PROGRESS:
                     element = new ElementProgress(buf);
                     break;
-                case NEWLINE:
-                    element = new ElementNewline();
+                case HORIZONTAL:
+                    element = new ElementHorizontal(buf);
+                    break;
+                case VERTICAL:
+                    element = new ElementVertical(buf);
                     break;
                 default:
                     throw new RuntimeException("Missing type!");
             }
             elements.add(element);
         }
+        return elements;
     }
 
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(elements.size());
+    public static void writeElements(List<Element> elements, ByteBuf buf) {
+        buf.writeShort(elements.size());
         for (Element element : elements) {
             buf.writeShort(element.getType().ordinal());
             element.toBytes(buf);
         }
-    }
-
-    @Override
-    public IProbeInfo text(String text) {
-        elements.add(new ElementText(text));
-        return this;
-    }
-
-    @Override
-    public IProbeInfo item(ItemStack stack) {
-        elements.add(new ElementItemStack(stack));
-        return this;
-    }
-
-    @Override
-    public IProbeInfo progress(int current, int max, String prefix, String suffix, ProgressStyle style) {
-        elements.add(new ElementProgress(current, max, prefix, suffix, style));
-        return this;
-    }
-
-    @Override
-    public IProbeInfo newline() {
-        elements.add(new ElementNewline());
-        return this;
-    }
-
-    @Override
-    public IProbeInfo offset(int dx, int dy) {
-        elements.add(new ElementOffset(dx, dy));
-        return this;
     }
 }
