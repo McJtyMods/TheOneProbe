@@ -46,7 +46,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             }
         }
 
-        if (mode == ProbeMode.DEBUG) {
+        if (mode == ProbeMode.DEBUG && Config.showDebugInfo) {
             IProbeInfo vertical = probeInfo.vertical(0xffff4444)
                     .text("Unlocname: " + block.getUnlocalizedName())
                     .text("Meta: " + blockState.getBlock().getMetaFromState(blockState));

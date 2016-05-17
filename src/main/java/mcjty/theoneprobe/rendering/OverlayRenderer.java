@@ -8,6 +8,7 @@ import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -71,7 +72,31 @@ public class OverlayRenderer {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
 
-        Cursor cursor = new Cursor(20, 20);
+        final ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+        final int scaledWidth = scaledresolution.getScaledWidth();
+        final int scaledHeight = scaledresolution.getScaledHeight();
+
+        int w = probeInfo.getWidth();
+        int h = probeInfo.getHeight();
+
+        int x;
+        int y;
+        if (Config.leftX != -1) {
+            x = Config.leftX;
+        } else if (Config.rightX != -1) {
+            x = scaledWidth - w - Config.rightX;
+        } else {
+            x = (scaledWidth - w) / 2;
+        }
+        if (Config.topY != -1) {
+            y = Config.topY;
+        } else if (Config.bottomY != -1) {
+            y = scaledHeight - h - Config.bottomY;
+        } else {
+            y = (scaledHeight - h) / 2;
+        }
+
+        Cursor cursor = new Cursor(x, y);
         probeInfo.render(cursor);
     }
 }
