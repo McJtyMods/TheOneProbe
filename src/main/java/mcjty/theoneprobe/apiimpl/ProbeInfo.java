@@ -2,6 +2,7 @@ package mcjty.theoneprobe.apiimpl;
 
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProgressStyle;
 import mcjty.theoneprobe.apiimpl.elements.*;
 import net.minecraft.item.ItemStack;
 
@@ -68,8 +69,8 @@ public class ProbeInfo implements IProbeInfo {
     }
 
     @Override
-    public IProbeInfo progress(int current, int max, String suffix) {
-        elements.add(new ElementProgress(current, max, suffix));
+    public IProbeInfo progress(int current, int max, String prefix, String suffix, ProgressStyle style) {
+        elements.add(new ElementProgress(current, max, suffix, prefix, style));
         return this;
     }
 

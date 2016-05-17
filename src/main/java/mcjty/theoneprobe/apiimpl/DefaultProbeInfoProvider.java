@@ -3,6 +3,7 @@ package mcjty.theoneprobe.apiimpl;
 import cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.ProgressStyle;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -41,7 +42,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof IEnergyHandler) {
             IEnergyHandler handler = (IEnergyHandler) te;
-            probeInfo.progress(handler.getEnergyStored(EnumFacing.DOWN), handler.getMaxEnergyStored(EnumFacing.DOWN), "RF")
+            probeInfo.progress(handler.getEnergyStored(EnumFacing.DOWN), handler.getMaxEnergyStored(EnumFacing.DOWN), TextFormatting.BLACK + "", "RF",
+                    new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000))
                     .newline();
         }
     }

@@ -11,7 +11,7 @@ public interface IProbeInfo {
 
     IProbeInfo item(ItemStack stack);
 
-    IProbeInfo progress(int current, int max, String suffix);
+    IProbeInfo progress(int current, int max, String prefix, String suffix, ProgressStyle style);
 
     IProbeInfo newline();
 
