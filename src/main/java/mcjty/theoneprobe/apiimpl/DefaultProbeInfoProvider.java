@@ -42,8 +42,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof IEnergyHandler) {
             IEnergyHandler handler = (IEnergyHandler) te;
-            probeInfo.progress(handler.getEnergyStored(EnumFacing.DOWN), handler.getMaxEnergyStored(EnumFacing.DOWN), TextFormatting.BLACK + "", "RF",
-                    new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000))
+            probeInfo.progress(handler.getEnergyStored(EnumFacing.DOWN), handler.getMaxEnergyStored(EnumFacing.DOWN), "", "RF",
+                    new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000).borderColor(0xff555555))
                     .newline();
         }
     }

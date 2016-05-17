@@ -70,7 +70,7 @@ public class ProbeInfo implements IProbeInfo {
 
     @Override
     public IProbeInfo progress(int current, int max, String prefix, String suffix, ProgressStyle style) {
-        elements.add(new ElementProgress(current, max, suffix, prefix, style));
+        elements.add(new ElementProgress(current, max, prefix, suffix, style));
         return this;
     }
 
