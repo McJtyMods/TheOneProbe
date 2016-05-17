@@ -42,8 +42,9 @@ public class Config {
 
     private static int parseColor(String col) {
         try {
-            return Integer.parseInt(col, 16);
+            return (int) Long.parseLong(col, 16);
         } catch (NumberFormatException e) {
+            System.out.println("Config.parseColor");
             return 0;
         }
     }
