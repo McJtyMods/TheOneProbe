@@ -1,8 +1,10 @@
 package mcjty.theoneprobe.apiimpl;
 
+import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.apiimpl.elements.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,22 @@ public class ProbeInfo implements IProbeInfo {
 
     public List<Element> getElements() {
         return elements;
+    }
+
+
+    public void fromBytes(ByteBuf buf) {
+        int size = buf.readInt();
+        elements.clear();
+        for (int i = 0 ; i < size ; i++) {
+
+        }
+    }
+
+    public void toBytes(ByteBuf buf) {
+        buf.writeInt(elements.size());
+        for (Element element : elements) {
+
+        }
     }
 
     @Override

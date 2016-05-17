@@ -10,45 +10,55 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.World;
 
 import java.util.List;
 
 public class OverlayRenderer {
 
     public static void renderHUD() {
-        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-
         RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
         if (mouseOver == null) {
             return;
         }
-        if (mouseOver.getBlockPos() == null) {
+        BlockPos blockPos = mouseOver.getBlockPos();
+        if (blockPos == null) {
             return;
         }
-        if (player.worldObj.isAirBlock(mouseOver.getBlockPos())) {
+        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+        if (player.worldObj.isAirBlock(blockPos)) {
             return;
         }
 
-        IBlockState state = player.worldObj.getBlockState(mouseOver.getBlockPos());
+        ProbeInfo probeInfo = getProbeInfo(player.worldObj, blockPos);
+        renderElements(probeInfo);
+    }
 
+    private static void renderElements(ProbeInfo probeInfo) {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
-
-        ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
-
-        List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
-        for (IProbeInfoProvider provider : providers) {
-            provider.addProbeInfo(probeInfo, player.worldObj, state, mouseOver.getBlockPos(), player);
-        }
-        if (state.getBlock() instanceof IProbeInfoAccessor) {
-            ((IProbeInfoAccessor) state.getBlock()).addProbeInfo(probeInfo, player.worldObj, state, mouseOver.getBlockPos(), player);
-        }
 
         Cursor cursor = new Cursor(20, 20, 20, 20);
 
         for (Element element : probeInfo.getElements()) {
             element.render(cursor);
         }
+    }
+
+    private static ProbeInfo getProbeInfo(World world, BlockPos blockPos) {
+        IBlockState state = world.getBlockState(blockPos);
+        ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
+
+        List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
+        for (IProbeInfoProvider provider : providers) {
+            provider.addProbeInfo(probeInfo, world, state, blockPos);
+        }
+        if (state.getBlock() instanceof IProbeInfoAccessor) {
+            IProbeInfoAccessor accessor = (IProbeInfoAccessor) state.getBlock();
+            accessor.addProbeInfo(probeInfo, world, state, blockPos);
+        }
+        return probeInfo;
     }
 }

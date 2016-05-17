@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.api;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -20,5 +19,5 @@ public interface IProbeInfoAccessor {
     /**
      * Add information for the probe info for the given block
      */
-    void addProbeInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos, EntityPlayer player);
+    void addProbeInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos);
 }

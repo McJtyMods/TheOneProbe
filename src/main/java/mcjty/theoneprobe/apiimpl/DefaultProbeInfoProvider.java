@@ -1,12 +1,10 @@
 package mcjty.theoneprobe.apiimpl;
 
 import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyStorage;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -25,7 +23,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     @Override
-    public void addProbeInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos, EntityPlayer player) {
+    public void addProbeInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos) {
         Block block = blockState.getBlock();
         String modid = getModName(block);
 

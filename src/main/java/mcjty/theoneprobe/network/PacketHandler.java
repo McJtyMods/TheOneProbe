@@ -17,6 +17,9 @@ public class PacketHandler {
         INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(channelName);
 
         // Server side
-        INSTANCE.registerMessage(PacketHotbarHandler.Handler.class, PacketHotbarHandler.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(PacketGetInfo.Handler.class, PacketGetInfo.class, nextID(), Side.SERVER);
+
+        // Client side
+        INSTANCE.registerMessage(PacketReturnInfo.Handler.class, PacketReturnInfo.class, nextID(), Side.CLIENT);
     }
 }
