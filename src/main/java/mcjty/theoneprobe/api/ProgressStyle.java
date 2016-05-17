@@ -10,6 +10,8 @@ public class ProgressStyle {
     private int alternatefilledColor = 0xffaaaaaa;
     private boolean showText = true;
 
+    private NumberFormat numberFormat = NumberFormat.FULL;
+
     public ProgressStyle borderColor(int c) {
         borderColor = c;
         return this;
@@ -35,6 +37,11 @@ public class ProgressStyle {
         return this;
     }
 
+    public ProgressStyle numberFormat(NumberFormat f) {
+        numberFormat = f;
+        return this;
+    }
+
     public int getBorderColor() {
         return borderColor;
     }
@@ -53,5 +60,9 @@ public class ProgressStyle {
 
     public boolean isShowText() {
         return showText;
+    }
+
+    public NumberFormat getNumberFormat() {
+        return numberFormat;
     }
 }

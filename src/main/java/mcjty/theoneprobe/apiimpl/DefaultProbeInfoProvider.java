@@ -1,10 +1,7 @@
 package mcjty.theoneprobe.apiimpl;
 
 import cofh.api.energy.IEnergyHandler;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoProvider;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcjty.theoneprobe.api.ProgressStyle;
+import mcjty.theoneprobe.api.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -39,7 +36,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
 
         if (mode == ProbeMode.EXTENDED) {
-            probeInfo.text(TextFormatting.GREEN + "Harvest level: " + block.getHarvestTool(blockState));
+            String harvestTool = block.getHarvestTool(blockState);
+            if (harvestTool != null) {
+                probeInfo.text(TextFormatting.GREEN + "Harvest level: " + harvestTool);
+            }
         }
 
         if (mode == ProbeMode.DEBUG) {
@@ -56,7 +56,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (te instanceof IEnergyHandler) {
             IEnergyHandler handler = (IEnergyHandler) te;
             probeInfo.progress(handler.getEnergyStored(EnumFacing.DOWN), handler.getMaxEnergyStored(EnumFacing.DOWN), "", "RF",
-                    new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000).borderColor(0xff555555));
+                    new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000).borderColor(0xff555555).numberFormat(NumberFormat.COMPACT));
         }
     }
 

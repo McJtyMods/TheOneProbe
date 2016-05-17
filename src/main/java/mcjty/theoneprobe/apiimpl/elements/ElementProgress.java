@@ -1,10 +1,13 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.api.ProgressStyle;
 import mcjty.theoneprobe.network.NetworkTools;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
+
+import java.text.DecimalFormat;
 
 public class ElementProgress implements Element {
 
@@ -32,7 +35,8 @@ public class ElementProgress implements Element {
             .filledColor(buf.readInt())
             .alternateFilledColor(buf.readInt())
             .backgroundColor(buf.readInt())
-            .showText(buf.readBoolean());
+            .showText(buf.readBoolean())
+            .numberFormat(NumberFormat.values()[buf.readByte()]);
     }
 
     @Override
@@ -55,9 +59,31 @@ public class ElementProgress implements Element {
         }
 
         if (style.isShowText()) {
-            RenderHelper.renderText(Minecraft.getMinecraft(), cursor.getX() + 3, cursor.getY() + 2, prefix + current + suffix);
+            RenderHelper.renderText(Minecraft.getMinecraft(), cursor.getX() + 3, cursor.getY() + 2, prefix + format(current, style.getNumberFormat()) + suffix);
         }
     }
+
+    private static DecimalFormat dfCommas = new DecimalFormat("###,###");
+
+    private static String format(int in, NumberFormat style) {
+        switch (style) {
+            case FULL:
+                return Integer.toString(in);
+            case COMPACT: {
+                int unit = 1000;
+                if (in < unit) {
+                    return Integer.toString(in);
+                }
+                int exp = (int) (Math.log(in) / Math.log(unit));
+                char pre = "KMGTP".charAt(exp-1);
+                return String.format("%.1f %s", in / Math.pow(unit, exp), pre);
+            }
+            case COMMAS:
+                return dfCommas.format(in);
+        }
+        return Integer.toString(in);
+    }
+
 
     @Override
     public int getWidth() {
@@ -80,6 +106,7 @@ public class ElementProgress implements Element {
         buf.writeInt(style.getAlternatefilledColor());
         buf.writeInt(style.getBackgroundColor());
         buf.writeBoolean(style.isShowText());
+        buf.writeByte(style.getNumberFormat().ordinal());
     }
 
     @Override
