@@ -1,13 +1,16 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.api.Cursor;
+import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.network.NetworkTools;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
 
-public class ElementItemStack implements Element {
+public class ElementItemStack implements IElement {
 
     private final ItemStack itemStack;
 
@@ -53,7 +56,7 @@ public class ElementItemStack implements Element {
     }
 
     @Override
-    public ElementType getType() {
-        return ElementType.ITEMSTACK;
+    public int getID() {
+        return DefaultProbeInfoProvider.ELEMENT_ITEM;
     }
 }

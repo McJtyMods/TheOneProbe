@@ -1,11 +1,14 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.api.Cursor;
+import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.network.NetworkTools;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 
-public class ElementText implements Element {
+public class ElementText implements IElement {
 
     private final String text;
 
@@ -38,7 +41,7 @@ public class ElementText implements Element {
     }
 
     @Override
-    public ElementType getType() {
-        return ElementType.TEXT;
+    public int getID() {
+        return DefaultProbeInfoProvider.ELEMENT_TEXT;
     }
 }

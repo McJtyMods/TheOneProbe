@@ -2,8 +2,12 @@ package mcjty.theoneprobe.apiimpl;
 
 import cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.Config;
-import mcjty.theoneprobe.api.*;
-import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
+import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.api.ProgressStyle;
+import mcjty.theoneprobe.apiimpl.elements.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.IInventory;
@@ -20,6 +24,20 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
+
+    public static int ELEMENT_TEXT;
+    public static int ELEMENT_ITEM;
+    public static int ELEMENT_PROGRESS;
+    public static int ELEMENT_HORIZONTAL;
+    public static int ELEMENT_VERTICAL;
+
+    public DefaultProbeInfoProvider() {
+        ELEMENT_TEXT = TheOneProbe.theOneProbeImp.registerElementFactory(ElementText::new);
+        ELEMENT_ITEM = TheOneProbe.theOneProbeImp.registerElementFactory(ElementItemStack::new);
+        ELEMENT_PROGRESS = TheOneProbe.theOneProbeImp.registerElementFactory(ElementProgress::new);
+        ELEMENT_HORIZONTAL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementHorizontal::new);
+        ELEMENT_VERTICAL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementVertical::new);
+    }
 
     @Override
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos) {

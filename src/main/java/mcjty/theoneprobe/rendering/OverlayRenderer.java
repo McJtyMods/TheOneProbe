@@ -3,7 +3,7 @@ package mcjty.theoneprobe.rendering;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
-import mcjty.theoneprobe.apiimpl.elements.Cursor;
+import mcjty.theoneprobe.api.Cursor;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
 import net.minecraft.client.Minecraft;

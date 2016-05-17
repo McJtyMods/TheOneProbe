@@ -13,4 +13,15 @@ public interface ITheOneProbe {
      * @param provider
      */
     void registerProvider(IProbeInfoProvider provider);
+
+    /**
+     * Register an element factory.
+     * @return an id to use when defining elements using this factory
+     */
+    int registerElementFactory(IElementFactory factory);
+
+    /**
+     * Get the element factory for a given ID.
+     */
+    IElementFactory getElementFactory(int id);
 }

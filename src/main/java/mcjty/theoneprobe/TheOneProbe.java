@@ -3,6 +3,7 @@ package mcjty.theoneprobe;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import mcjty.theoneprobe.api.ITheOneProbe;
+import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.proxy.CommonProxy;
@@ -56,6 +57,8 @@ public class TheOneProbe {
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent e) {
+        theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
+
         logger = e.getModLog();
         mainConfigDir = e.getModConfigurationDirectory();
         modConfigDir = new File(mainConfigDir.getPath());

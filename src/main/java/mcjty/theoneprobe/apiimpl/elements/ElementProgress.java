@@ -1,15 +1,18 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.api.Cursor;
+import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.api.ProgressStyle;
+import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.network.NetworkTools;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 
 import java.text.DecimalFormat;
 
-public class ElementProgress implements Element {
+public class ElementProgress implements IElement {
 
     private final int current;
     private final int max;
@@ -110,7 +113,7 @@ public class ElementProgress implements Element {
     }
 
     @Override
-    public ElementType getType() {
-        return ElementType.PROGRESS;
+    public int getID() {
+        return DefaultProbeInfoProvider.ELEMENT_PROGRESS;
     }
 }

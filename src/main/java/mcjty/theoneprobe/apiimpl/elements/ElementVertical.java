@@ -1,8 +1,11 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.api.Cursor;
+import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProgressStyle;
+import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.item.ItemStack;
@@ -10,11 +13,11 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ElementVertical implements Element, IProbeInfo {
+public class ElementVertical implements IElement, IProbeInfo {
 
     public static final int SPACING = 2;
 
-    protected List<Element> children = new ArrayList<>();
+    protected List<IElement> children = new ArrayList<>();
     private Integer borderColor;
     private int spacing = SPACING;
 
@@ -30,7 +33,7 @@ public class ElementVertical implements Element, IProbeInfo {
             cursor.addX(3);
             cursor.addY(3);
         }
-        for (Element element : children) {
+        for (IElement element : children) {
             element.render(cursor.clone());
             cursor.addY(element.getHeight() + spacing);
         }
@@ -43,7 +46,7 @@ public class ElementVertical implements Element, IProbeInfo {
     @Override
     public int getHeight() {
         int h = 0;
-        for (Element element : children) {
+        for (IElement element : children) {
             h += element.getHeight();
         }
         return h + spacing * (children.size() - 1) + getBorderSpacing();
@@ -52,7 +55,7 @@ public class ElementVertical implements Element, IProbeInfo {
     @Override
     public int getWidth() {
         int w = 0;
-        for (Element element : children) {
+        for (IElement element : children) {
             int ww = element.getWidth();
             if (ww > w) {
                 w = ww;
@@ -87,8 +90,8 @@ public class ElementVertical implements Element, IProbeInfo {
     }
 
     @Override
-    public ElementType getType() {
-        return ElementType.VERTICAL;
+    public int getID() {
+        return DefaultProbeInfoProvider.ELEMENT_VERTICAL;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package mcjty.theoneprobe.apiimpl.elements;
+package mcjty.theoneprobe.api;
 
 public class Cursor {
     private int x;
