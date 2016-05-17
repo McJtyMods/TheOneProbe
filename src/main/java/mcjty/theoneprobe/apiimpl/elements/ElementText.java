@@ -15,6 +15,6 @@ public class ElementText implements Element {
     public void render(Cursor cursor) {
         int w = RenderHelper.renderText(Minecraft.getMinecraft(), cursor.getX(), cursor.getY(), text);
         cursor.addX(w);
-        cursor.updateMaxY(20);
+        cursor.updateMaxY(10);
     }
 }
