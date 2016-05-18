@@ -45,11 +45,11 @@ public class OverlayRenderer {
 
         Pair<Long, ProbeInfo> pair = cachedInfo.get(Pair.of(player.worldObj.provider.getDimension(), blockPos));
         if (pair == null) {
-            PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode));
+            PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode, mouseOver));
         } else {
             if (time > pair.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
-                PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode));
+                PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode, mouseOver));
             }
             renderElements(pair.getRight());
         }

@@ -14,8 +14,8 @@ public class Config {
     public static boolean showHarvestLevel = true;
     public static boolean showChestContents = true;
     public static boolean showDebugInfo = true;
-    public static int leftX = 15;
-    public static int topY = 15;
+    public static int leftX = 5;
+    public static int topY = 5;
     public static int rightX = -1;
     public static int bottomY = -1;
 

@@ -2,13 +2,11 @@ package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoProvider;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcjty.theoneprobe.api.ProgressStyle;
+import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,8 +39,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     @Override
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos) {
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
         Block block = blockState.getBlock();
+        BlockPos pos = data.getPos();
 
         showStandardBlockInfo(probeInfo, block);
 
@@ -93,7 +92,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showHarvestLevel(IProbeInfo probeInfo, IBlockState blockState, Block block) {
         String harvestTool = block.getHarvestTool(blockState);
         if (harvestTool != null) {
-            probeInfo.text(TextFormatting.GREEN + "Harvest level: " + harvestTool);
+            probeInfo.text(TextFormatting.GREEN + "Harvest tool: " + harvestTool);
         }
     }
 
