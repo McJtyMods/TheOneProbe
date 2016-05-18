@@ -30,6 +30,7 @@ public class ClientProxy extends CommonProxy {
         super.init(e);
         MinecraftForge.EVENT_BUS.register(this);
         ClientCommandHandler.instance.registerCommand(new CommandTopCfg());
+        Config.initClientConfig().save();
     }
 
     @SubscribeEvent

@@ -4,6 +4,8 @@ package mcjty.theoneprobe;
 import mcjty.theoneprobe.api.NumberFormat;
 import net.minecraftforge.common.config.Configuration;
 
+import java.io.File;
+
 public class Config {
     public static String CATEGORY_THEONEPROBE = "theoneprobe";
     public static String CATEGORY_PROVIDERS = "providers";
@@ -38,20 +40,48 @@ public class Config {
         showChestContents = cfg.getBoolean("showChestContents", CATEGORY_THEONEPROBE, showChestContents, "If true show chest contents while the player is sneaking");
         showDebugInfo = cfg.getBoolean("showDebugInfo", CATEGORY_THEONEPROBE, showDebugInfo, "If true show debug info with creative probe");
 
+        setupStyleConfig(cfg);
+    }
+
+    public static Configuration initClientConfig() {
+        Configuration cfg = new Configuration(new File(TheOneProbe.modConfigDir, "theoneprobe_client.cfg"));
+        cfg.load();
+        setupStyleConfig(cfg);
+        return cfg;
+    }
+
+    private static void setupStyleConfig(Configuration cfg) {
         leftX = cfg.getInt("boxLeftX", CATEGORY_THEONEPROBE, leftX, -1, 10000, "The distance to the left side of the screen. Use -1 if you don't want to set this");
         rightX = cfg.getInt("boxRightX", CATEGORY_THEONEPROBE, rightX, -1, 10000, "The distance to the right side of the screen. Use -1 if you don't want to set this");
         topY = cfg.getInt("boxTopY", CATEGORY_THEONEPROBE, topY, -1, 10000, "The distance to the top side of the screen. Use -1 if you don't want to set this");
         bottomY = cfg.getInt("boxBottomY", CATEGORY_THEONEPROBE, bottomY, -1, 10000, "The distance to the bottom side of the screen. Use -1 if you don't want to set this");
         boxBorderColor = parseColor(cfg.getString("boxBorderColor", CATEGORY_THEONEPROBE, Integer.toHexString(boxBorderColor), "Color of the border of the box (0 to disable)"));
         boxFillColor = parseColor(cfg.getString("boxFillColor", CATEGORY_THEONEPROBE, Integer.toHexString(boxFillColor), "Color of the box (0 to disable)"));
-        boxThickness = parseColor(cfg.getString("boxThickness", CATEGORY_THEONEPROBE, Integer.toHexString(boxThickness), "Thickness of the border of the box (0 to disable)"));
+        boxThickness = cfg.getInt("boxThickness", CATEGORY_THEONEPROBE, boxThickness, 0, 20, "Thickness of the border of the box (0 to disable)");
     }
 
     public static void setPos(int leftx, int topy, int rightx, int bottomy) {
+        Configuration cfg = initClientConfig();
         Config.leftX = leftx;
         Config.topY = topy;
         Config.rightX = rightx;
         Config.bottomY = bottomy;
+        cfg.get(CATEGORY_THEONEPROBE, "boxLeftX", leftx).set(leftx);
+        cfg.get(CATEGORY_THEONEPROBE, "boxRightX", rightx).set(rightx);
+        cfg.get(CATEGORY_THEONEPROBE, "boxTopY", topy).set(topy);
+        cfg.get(CATEGORY_THEONEPROBE, "boxBottomY", bottomy).set(bottomy);
+        cfg.save();
+    }
+
+    public static void setBoxStyle(int thickness, int borderColor, int fillcolor) {
+        Configuration cfg = initClientConfig();
+        boxThickness = thickness;
+        boxBorderColor = borderColor;
+        boxFillColor = fillcolor;
+        cfg.get(CATEGORY_THEONEPROBE, "boxThickness", thickness).set(thickness);
+        cfg.get(CATEGORY_THEONEPROBE, "boxBorderColor", Integer.toHexString(borderColor)).set(Integer.toHexString(borderColor));
+        cfg.get(CATEGORY_THEONEPROBE, "boxFillColor", Integer.toHexString(fillcolor)).set(Integer.toHexString(fillcolor));
+        cfg.save();
     }
 
     private static int parseColor(String col) {
