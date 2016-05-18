@@ -58,11 +58,6 @@ public class TheOneProbe {
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent e) {
-
-        TheOneProbeImp.registerElements();
-        theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
-        theOneProbeImp.registerProvider(new DebugProbeInfoProvider());
-
         logger = e.getModLog();
         mainConfigDir = e.getModConfigurationDirectory();
         modConfigDir = new File(mainConfigDir.getPath());

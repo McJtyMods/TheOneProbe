@@ -2,15 +2,11 @@ package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IElementFactory;
-import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.elements.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TheOneProbeImp implements ITheOneProbe {
 
@@ -52,6 +48,37 @@ public class TheOneProbeImp implements ITheOneProbe {
 
     public List<IProbeInfoProvider> getProviders() {
         return providers;
+    }
+
+    private IProbeInfoProvider getProviderByID(String id) {
+        for (IProbeInfoProvider provider : providers) {
+            if (provider.getID().equals(id)) {
+                return provider;
+            }
+        }
+        return null;
+    }
+
+    public void configureProviders(String[] sortedProviders, Set<String> excludedProviders) {
+        List<IProbeInfoProvider> newProviders = new ArrayList<>();
+        for (String id : sortedProviders) {
+            if (!excludedProviders.contains(id)) {
+                IProbeInfoProvider provider = getProviderByID(id);
+                if (provider != null) {
+                    newProviders.add(provider);
+                }
+            }
+        }
+
+        // Add all providers that are not in the list of sortedProviders and are also not
+        // excluded.
+        for (IProbeInfoProvider provider : providers) {
+            if ((!newProviders.contains(provider)) && !excludedProviders.contains(provider.getID())) {
+                newProviders.add(provider);
+            }
+        }
+
+        providers = newProviders;
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.minecraftforge.common.config.Configuration;
 
 public class Config {
     public static String CATEGORY_THEONEPROBE = "theoneprobe";
+    public static String CATEGORY_PROVIDERS = "providers";
 
     public static boolean needsProbe = true;
     public static int showRF = 1;
