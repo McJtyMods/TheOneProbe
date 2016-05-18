@@ -23,6 +23,10 @@ public class Config {
     public static int boxFillColor = 0x55006699;
     public static int boxThickness = 2;
 
+    public static int rfbarFilledColor = 0xffdd0000;
+    public static int rfbarAlternateFilledColor = 0xff430000;
+    public static int rfbarBorderColor = 0xff555555;
+
     public static void init(Configuration cfg) {
         needsProbe = cfg.getBoolean("needsProbe", CATEGORY_THEONEPROBE, needsProbe, "If true the probe is needed to show the tooltip. If false the tooltip shows all the time");
         showRF = cfg.getInt("showRF", CATEGORY_THEONEPROBE, showRF, 0, 2, "How to display RF: 0 = do not show, 1 = show in a bar, 2 = show as text");

@@ -73,7 +73,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             int maxEnergy = handler.getMaxEnergyStored(EnumFacing.DOWN);
             if (Config.showRF == 1) {
                 probeInfo.progress(energy, maxEnergy, "", "RF",
-                        new ProgressStyle().filledColor(0xffdd0000).alternateFilledColor(0xff430000).borderColor(0xff555555).numberFormat(Config.rfFormat));
+                        new ProgressStyle().filledColor(Config.rfbarFilledColor).alternateFilledColor(Config.rfbarAlternateFilledColor).borderColor(0xff555555).numberFormat(Config.rfFormat));
             } else {
                 probeInfo.text(TextFormatting.GREEN + "RF: " + ElementProgress.format(energy, Config.rfFormat) + "RF");
             }
