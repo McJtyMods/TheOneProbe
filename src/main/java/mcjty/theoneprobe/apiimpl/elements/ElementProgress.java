@@ -49,12 +49,14 @@ public class ElementProgress implements IElement {
         int y = cursor.getY();
         RenderHelper.drawThickBeveledBox(x, y, x + w, y + 12, 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
         if (current > 0) {
-            int dx = current * (w-1) / max;
+            int dx = current * (w-2) / max;
 
             if (style.getFilledColor() == style.getAlternatefilledColor()) {
-                RenderHelper.drawThickBeveledBox(x + 1, y + 1, x + dx - 1, y + 12 - 1, 1, style.getFilledColor(), style.getFilledColor(), style.getFilledColor());
+                if (dx > 0) {
+                    RenderHelper.drawThickBeveledBox(x + 1, y + 1, x + dx + 1, y + 12 - 1, 1, style.getFilledColor(), style.getFilledColor(), style.getFilledColor());
+                }
             } else {
-                for (int xx = x + 1; xx <= x + dx - 1; xx++) {
+                for (int xx = x + 1; xx <= x + dx + 1; xx++) {
                     int color = (xx & 1) == 0 ? style.getFilledColor() : style.getAlternatefilledColor();
                     RenderHelper.drawVerticalLine(xx, y + 1, y + 12 - 1, color);
                 }
