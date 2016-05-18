@@ -36,8 +36,15 @@ public class PacketGetInfo implements IMessage {
         dim = buf.readInt();
         pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
         mode = ProbeMode.values()[buf.readByte()];
-        sideHit = EnumFacing.values()[buf.readByte()];
-        hitVec = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        byte sideByte = buf.readByte();
+        if (sideByte == 127) {
+            sideHit = null;
+        } else {
+            sideHit = EnumFacing.values()[sideByte];
+        }
+        if (buf.readBoolean()) {
+            hitVec = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        }
     }
 
     @Override
@@ -47,10 +54,15 @@ public class PacketGetInfo implements IMessage {
         buf.writeInt(pos.getY());
         buf.writeInt(pos.getZ());
         buf.writeByte(mode.ordinal());
-        buf.writeByte(sideHit.ordinal());
-        buf.writeDouble(hitVec.xCoord);
-        buf.writeDouble(hitVec.yCoord);
-        buf.writeDouble(hitVec.zCoord);
+        buf.writeByte(sideHit == null ? 127 : sideHit.ordinal());
+        if (hitVec == null) {
+            buf.writeBoolean(false);
+        } else {
+            buf.writeBoolean(true);
+            buf.writeDouble(hitVec.xCoord);
+            buf.writeDouble(hitVec.yCoord);
+            buf.writeDouble(hitVec.zCoord);
+        }
     }
 
     public PacketGetInfo() {
