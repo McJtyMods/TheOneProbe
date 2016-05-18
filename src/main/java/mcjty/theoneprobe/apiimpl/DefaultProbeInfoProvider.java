@@ -80,7 +80,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         String modid = getModName(block);
         Item item = Item.getItemFromBlock(block);
         if (item != null) {
-            ItemStack stack = new ItemStack(item, 1, block.getMetaFromState(blockState));
+            int meta = block.getMetaFromState(blockState);
+            if (!item.getHasSubtypes()) {
+                meta = 0;
+            }
+            ItemStack stack = new ItemStack(block, 1, meta);
             probeInfo.horizontal()
                     .item(stack)
                     .vertical()
