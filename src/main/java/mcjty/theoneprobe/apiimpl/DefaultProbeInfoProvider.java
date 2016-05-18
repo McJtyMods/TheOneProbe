@@ -33,7 +33,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         Block block = blockState.getBlock();
         BlockPos pos = data.getPos();
 
-        showStandardBlockInfo(probeInfo, block);
+        showStandardBlockInfo(probeInfo, blockState, block);
 
         if (mode == ProbeMode.EXTENDED) {
             if (Config.showHarvestLevel) {
@@ -76,11 +76,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private void showStandardBlockInfo(IProbeInfo probeInfo, Block block) {
+    private void showStandardBlockInfo(IProbeInfo probeInfo, IBlockState blockState, Block block) {
         String modid = getModName(block);
         Item item = Item.getItemFromBlock(block);
         if (item != null) {
-            ItemStack stack = new ItemStack(item, 1);
+            ItemStack stack = new ItemStack(item, 1, block.getMetaFromState(blockState));
             probeInfo.horizontal()
                     .item(stack)
                     .vertical()
