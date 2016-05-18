@@ -3,7 +3,6 @@ package mcjty.theoneprobe.network;
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfoAccessor;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -89,10 +88,6 @@ public class PacketGetInfo implements IMessage {
         List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
         for (IProbeInfoProvider provider : providers) {
             provider.addProbeInfo(mode, probeInfo, player, world, state, data);
-        }
-        if (state.getBlock() instanceof IProbeInfoAccessor) {
-            IProbeInfoAccessor accessor = (IProbeInfoAccessor) state.getBlock();
-            accessor.addProbeInfo(mode, probeInfo, player, world, state, data);
         }
         return probeInfo;
     }
