@@ -2,12 +2,14 @@ package mcjty.theoneprobe.proxy;
 
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.commands.CommandTopCfg;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -27,6 +29,7 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent e) {
         super.init(e);
         MinecraftForge.EVENT_BUS.register(this);
+        ClientCommandHandler.instance.registerCommand(new CommandTopCfg());
     }
 
     @SubscribeEvent

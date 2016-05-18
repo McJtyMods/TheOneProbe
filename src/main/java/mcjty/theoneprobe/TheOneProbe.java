@@ -3,8 +3,6 @@ package mcjty.theoneprobe;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import mcjty.theoneprobe.api.ITheOneProbe;
-import mcjty.theoneprobe.apiimpl.DebugProbeInfoProvider;
-import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.proxy.CommonProxy;
@@ -74,7 +72,6 @@ public class TheOneProbe {
             }
         }
     }
-
 
     /**
      * Do your mod setup. Build whatever data structures you care about. Register recipes.

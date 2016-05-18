@@ -47,6 +47,13 @@ public class Config {
         boxThickness = parseColor(cfg.getString("boxThickness", CATEGORY_THEONEPROBE, Integer.toHexString(boxThickness), "Thickness of the border of the box (0 to disable)"));
     }
 
+    public static void setPos(int leftx, int topy, int rightx, int bottomy) {
+        Config.leftX = leftx;
+        Config.topY = topy;
+        Config.rightX = rightx;
+        Config.bottomY = bottomy;
+    }
+
     private static int parseColor(String col) {
         try {
             return (int) Long.parseLong(col, 16);
