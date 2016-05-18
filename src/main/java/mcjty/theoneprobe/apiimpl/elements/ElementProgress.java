@@ -5,7 +5,7 @@ import mcjty.theoneprobe.api.Cursor;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.api.ProgressStyle;
-import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
+import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.network.NetworkTools;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -114,6 +114,6 @@ public class ElementProgress implements IElement {
 
     @Override
     public int getID() {
-        return DefaultProbeInfoProvider.ELEMENT_PROGRESS;
+        return TheOneProbeImp.ELEMENT_PROGRESS;
     }
 }

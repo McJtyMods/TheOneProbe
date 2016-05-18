@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl;
 
+import cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
@@ -20,22 +21,11 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import cofh.api.energy.IEnergyHandler;
-
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
-    public static int ELEMENT_TEXT;
-    public static int ELEMENT_ITEM;
-    public static int ELEMENT_PROGRESS;
-    public static int ELEMENT_HORIZONTAL;
-    public static int ELEMENT_VERTICAL;
-
-    public DefaultProbeInfoProvider() {
-        ELEMENT_TEXT = TheOneProbe.theOneProbeImp.registerElementFactory(ElementText::new);
-        ELEMENT_ITEM = TheOneProbe.theOneProbeImp.registerElementFactory(ElementItemStack::new);
-        ELEMENT_PROGRESS = TheOneProbe.theOneProbeImp.registerElementFactory(ElementProgress::new);
-        ELEMENT_HORIZONTAL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementHorizontal::new);
-        ELEMENT_VERTICAL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementVertical::new);
+    @Override
+    public String getID() {
+        return TheOneProbe.MODID + ":default";
     }
 
     @Override
@@ -55,10 +45,6 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             }
         }
 
-        if (mode == ProbeMode.DEBUG && Config.showDebugInfo) {
-            showDebugInfo(probeInfo, world, blockState, pos, block);
-        }
-
         if (Config.showRF > 0) {
             showRF(probeInfo, world, pos);
         }
@@ -76,16 +62,6 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             } else {
                 probeInfo.text(TextFormatting.GREEN + "RF: " + ElementProgress.format(energy, Config.rfFormat) + "RF");
             }
-        }
-    }
-
-    private void showDebugInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos, Block block) {
-        IProbeInfo vertical = probeInfo.vertical(0xffff4444, 2)
-                .text("Unlocname: " + block.getUnlocalizedName())
-                .text("Meta: " + blockState.getBlock().getMetaFromState(blockState));
-        TileEntity te = world.getTileEntity(pos);
-        if (te != null) {
-            vertical.text("TE: " + te.getClass().getSimpleName());
         }
     }
 

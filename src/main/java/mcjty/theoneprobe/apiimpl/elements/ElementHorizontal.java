@@ -5,8 +5,8 @@ import mcjty.theoneprobe.api.Cursor;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProgressStyle;
-import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.item.ItemStack;
 
@@ -91,7 +91,7 @@ public class ElementHorizontal implements IElement, IProbeInfo {
 
     @Override
     public int getID() {
-        return DefaultProbeInfoProvider.ELEMENT_HORIZONTAL;
+        return TheOneProbeImp.ELEMENT_HORIZONTAL;
     }
 
     @Override

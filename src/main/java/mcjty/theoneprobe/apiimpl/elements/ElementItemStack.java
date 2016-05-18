@@ -3,7 +3,7 @@ package mcjty.theoneprobe.apiimpl.elements;
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.Cursor;
 import mcjty.theoneprobe.api.IElement;
-import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
+import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.network.NetworkTools;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -57,6 +57,6 @@ public class ElementItemStack implements IElement {
 
     @Override
     public int getID() {
-        return DefaultProbeInfoProvider.ELEMENT_ITEM;
+        return TheOneProbeImp.ELEMENT_ITEM;
     }
 }

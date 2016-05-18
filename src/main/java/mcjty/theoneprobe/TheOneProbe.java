@@ -3,6 +3,7 @@ package mcjty.theoneprobe;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import mcjty.theoneprobe.api.ITheOneProbe;
+import mcjty.theoneprobe.apiimpl.DebugProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.items.ModItems;
@@ -57,15 +58,16 @@ public class TheOneProbe {
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent e) {
+
+        TheOneProbeImp.registerElements();
         theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
+        theOneProbeImp.registerProvider(new DebugProbeInfoProvider());
 
         logger = e.getModLog();
         mainConfigDir = e.getModConfigurationDirectory();
         modConfigDir = new File(mainConfigDir.getPath());
         config = new Configuration(new File(modConfigDir, "theoneprobe.cfg"));
         proxy.preInit(e);
-
-//        FMLInterModComms.sendMessage("Waila", "register", "mcjty.wailasupport.WailaCompatibility.load");
     }
 
     @Mod.EventHandler
