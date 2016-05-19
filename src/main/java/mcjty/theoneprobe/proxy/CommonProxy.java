@@ -34,7 +34,7 @@ public abstract class CommonProxy {
 
         mainConfig = TheOneProbe.config;
         readMainConfig();
-        PacketHandler.registerMessages("combathelp");
+        PacketHandler.registerMessages("theoneprobe");
         ModItems.init();
         ModItems.initCrafting();
     }
