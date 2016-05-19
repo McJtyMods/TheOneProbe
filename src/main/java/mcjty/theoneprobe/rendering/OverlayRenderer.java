@@ -3,7 +3,6 @@ package mcjty.theoneprobe.rendering;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
-import mcjty.theoneprobe.api.Cursor;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
 import net.minecraft.client.Minecraft;
@@ -108,7 +107,6 @@ public class OverlayRenderer {
             RenderHelper.drawThickBeveledBox(x, y, x + w-1, y + h-1, thick, Config.boxBorderColor, Config.boxBorderColor, Config.boxFillColor);
         }
 
-        Cursor cursor = new Cursor(x + margin, y + margin);
-        probeInfo.render(cursor);
+        probeInfo.render(x + margin, y + margin);
     }
 }

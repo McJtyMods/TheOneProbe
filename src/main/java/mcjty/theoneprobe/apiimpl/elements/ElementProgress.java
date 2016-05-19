@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.api.Cursor;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.api.ProgressStyle;
@@ -16,55 +15,51 @@ public class ElementProgress implements IElement {
 
     private final int current;
     private final int max;
-    private final String prefix;
-    private final String suffix;
     private final ProgressStyle style;
 
-    public ElementProgress(int current, int max, String prefix, String suffix, ProgressStyle style) {
+    public ElementProgress(int current, int max, ProgressStyle style) {
         this.current = current;
         this.max = max;
-        this.prefix = prefix;
-        this.suffix = suffix;
         this.style = style;
     }
 
     public ElementProgress(ByteBuf buf) {
         current = buf.readInt();
         max = buf.readInt();
-        prefix = NetworkTools.readString(buf);
-        suffix = NetworkTools.readString(buf);
         style = new ProgressStyle()
-            .borderColor(buf.readInt())
-            .filledColor(buf.readInt())
-            .alternateFilledColor(buf.readInt())
-            .backgroundColor(buf.readInt())
-            .showText(buf.readBoolean())
-            .numberFormat(NumberFormat.values()[buf.readByte()]);
+                .width(buf.readInt())
+                .height(buf.readInt())
+                .prefix(NetworkTools.readString(buf))
+                .suffix(NetworkTools.readString(buf))
+                .borderColor(buf.readInt())
+                .filledColor(buf.readInt())
+                .alternateFilledColor(buf.readInt())
+                .backgroundColor(buf.readInt())
+                .showText(buf.readBoolean())
+                .numberFormat(NumberFormat.values()[buf.readByte()]);
     }
 
     @Override
-    public void render(Cursor cursor) {
-        int w = 100;
-        int x = cursor.getX();
-        int y = cursor.getY();
-        RenderHelper.drawThickBeveledBox(x, y, x + w, y + 12, 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
+    public void render(int x, int y) {
+        int w = getWidth();
+        RenderHelper.drawThickBeveledBox(x, y, x + w, y + getHeight(), 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
         if (current > 0) {
-            int dx = current * (w-2) / max;
+            int dx = current * (w - 2) / max;
 
             if (style.getFilledColor() == style.getAlternatefilledColor()) {
                 if (dx > 0) {
-                    RenderHelper.drawThickBeveledBox(x + 1, y + 1, x + dx + 1, y + 12 - 1, 1, style.getFilledColor(), style.getFilledColor(), style.getFilledColor());
+                    RenderHelper.drawThickBeveledBox(x + 1, y + 1, x + dx + 1, y + getHeight() - 1, 1, style.getFilledColor(), style.getFilledColor(), style.getFilledColor());
                 }
             } else {
                 for (int xx = x + 1; xx <= x + dx + 1; xx++) {
                     int color = (xx & 1) == 0 ? style.getFilledColor() : style.getAlternatefilledColor();
-                    RenderHelper.drawVerticalLine(xx, y + 1, y + 12 - 1, color);
+                    RenderHelper.drawVerticalLine(xx, y + 1, y + getHeight() - 1, color);
                 }
             }
         }
 
         if (style.isShowText()) {
-            RenderHelper.renderText(Minecraft.getMinecraft(), cursor.getX() + 3, cursor.getY() + 2, prefix + format(current, style.getNumberFormat()) + suffix);
+            RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 2, style.getPrefix() + format(current, style.getNumberFormat()) + style.getSuffix());
         }
     }
 
@@ -80,7 +75,7 @@ public class ElementProgress implements IElement {
                     return Integer.toString(in);
                 }
                 int exp = (int) (Math.log(in) / Math.log(unit));
-                char pre = "KMGTP".charAt(exp-1);
+                char pre = "KMGTP".charAt(exp - 1);
                 return String.format("%.1f %s", in / Math.pow(unit, exp), pre);
             }
             case COMMAS:
@@ -92,20 +87,22 @@ public class ElementProgress implements IElement {
 
     @Override
     public int getWidth() {
-        return 100;
+        return style.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return 12;
+        return style.getHeight();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(current);
         buf.writeInt(max);
-        NetworkTools.writeString(buf, prefix);
-        NetworkTools.writeString(buf, suffix);
+        buf.writeInt(style.getWidth());
+        buf.writeInt(style.getHeight());
+        NetworkTools.writeString(buf, style.getPrefix());
+        NetworkTools.writeString(buf, style.getSuffix());
         buf.writeInt(style.getBorderColor());
         buf.writeInt(style.getFilledColor());
         buf.writeInt(style.getAlternatefilledColor());

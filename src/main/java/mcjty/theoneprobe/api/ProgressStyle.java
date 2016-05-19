@@ -9,6 +9,10 @@ public class ProgressStyle {
     private int filledColor = 0xffaaaaaa;
     private int alternatefilledColor = 0xffaaaaaa;
     private boolean showText = true;
+    private String prefix = "";
+    private String suffix = "";
+    private int width = 100;
+    private int height = 12;
 
     private NumberFormat numberFormat = NumberFormat.FULL;
 
@@ -48,6 +52,26 @@ public class ProgressStyle {
         return this;
     }
 
+    public ProgressStyle prefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    public ProgressStyle suffix(String suffix) {
+        this.suffix = suffix;
+        return this;
+    }
+
+    public ProgressStyle width(int w) {
+        this.width = w;
+        return this;
+    }
+
+    public ProgressStyle height(int h) {
+        this.height = h;
+        return this;
+    }
+
     public int getBorderColor() {
         return borderColor;
     }
@@ -70,5 +94,21 @@ public class ProgressStyle {
 
     public NumberFormat getNumberFormat() {
         return numberFormat;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

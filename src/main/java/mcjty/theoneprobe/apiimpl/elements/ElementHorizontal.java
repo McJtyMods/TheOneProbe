@@ -1,9 +1,9 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.api.Cursor;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.LayoutStyle;
 import mcjty.theoneprobe.api.ProgressStyle;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
@@ -22,20 +22,20 @@ public class ElementHorizontal implements IElement, IProbeInfo {
     private int spacing;
 
     @Override
-    public void render(Cursor cursor) {
+    public void render(int x, int y) {
         if (borderColor != null) {
             int w = getWidth();
             int h = getHeight();
-            RenderHelper.drawHorizontalLine(cursor.getX(), cursor.getY(), cursor.getX() + w - 1, borderColor);
-            RenderHelper.drawHorizontalLine(cursor.getX(), cursor.getY() + h - 1, cursor.getX() + w - 1, borderColor);
-            RenderHelper.drawVerticalLine(cursor.getX(), cursor.getY(), cursor.getY() + h - 1, borderColor);
-            RenderHelper.drawVerticalLine(cursor.getX() + w - 1, cursor.getY(), cursor.getY() + h - 1, borderColor);
-            cursor.addX(3);
-            cursor.addY(3);
+            RenderHelper.drawHorizontalLine(x, y, x + w - 1, borderColor);
+            RenderHelper.drawHorizontalLine(x, y + h - 1, x + w - 1, borderColor);
+            RenderHelper.drawVerticalLine(x, y, y + h - 1, borderColor);
+            RenderHelper.drawVerticalLine(x + w - 1, y, y + h - 1, borderColor);
+            x += 3;
+            y += 3;
         }
         for (IElement element : children) {
-            element.render(cursor.clone());
-            cursor.addX(element.getWidth() + spacing);
+            element.render(x, y);
+            x += element.getWidth() + spacing;
         }
     }
 
@@ -107,14 +107,14 @@ public class ElementHorizontal implements IElement, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo progress(int current, int max, String prefix, String suffix, ProgressStyle style) {
-        children.add(new ElementProgress(current, max, prefix, suffix, style));
+    public IProbeInfo progress(int current, int max, ProgressStyle style) {
+        children.add(new ElementProgress(current, max, style));
         return this;
     }
 
     @Override
-    public IProbeInfo horizontal(Integer borderColor, int spacing) {
-        ElementHorizontal e = new ElementHorizontal(borderColor, spacing);
+    public IProbeInfo horizontal(LayoutStyle style) {
+        ElementHorizontal e = new ElementHorizontal(style.getBorderColor(), style.getSpacing());
         children.add(e);
         return e;
     }
@@ -127,8 +127,8 @@ public class ElementHorizontal implements IElement, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo vertical(Integer borderColor, int spacing) {
-        ElementVertical e = new ElementVertical(borderColor, spacing);
+    public IProbeInfo vertical(LayoutStyle style) {
+        ElementVertical e = new ElementVertical(style.getBorderColor(), style.getSpacing());
         children.add(e);
         return e;
     }

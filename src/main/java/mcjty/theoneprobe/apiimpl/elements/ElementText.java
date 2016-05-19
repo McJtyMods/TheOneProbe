@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.api.Cursor;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.network.NetworkTools;
@@ -21,8 +20,8 @@ public class ElementText implements IElement {
     }
 
     @Override
-    public void render(Cursor cursor) {
-        RenderHelper.renderText(Minecraft.getMinecraft(), cursor.getX(), cursor.getY(), text);
+    public void render(int x, int y) {
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, text);
     }
 
     @Override

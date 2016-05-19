@@ -4,7 +4,7 @@ import cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
-import mcjty.theoneprobe.apiimpl.elements.*;
+import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,8 +57,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             int energy = handler.getEnergyStored(EnumFacing.DOWN);
             int maxEnergy = handler.getMaxEnergyStored(EnumFacing.DOWN);
             if (Config.showRF == 1) {
-                probeInfo.progress(energy, maxEnergy, "", "RF",
+                probeInfo.progress(energy, maxEnergy,
                         new ProgressStyle()
+                                .suffix("RF")
                                 .filledColor(Config.rfbarFilledColor)
                                 .alternateFilledColor(Config.rfbarAlternateFilledColor)
                                 .borderColor(Config.rfbarBorderColor)
@@ -110,9 +111,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 if (stackInSlot != null) {
                     if (idx % 10 == 0) {
                         if (vertical == null) {
-                            vertical = probeInfo.vertical(0xffffffff, 0);
+                            vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffffffff).spacing(0));
                         }
-                        horizontal = vertical.horizontal(null, 0);
+                        horizontal = vertical.horizontal(new LayoutStyle().spacing(0));
                         rows++;
                         if (rows > 4) {
                             break;
@@ -129,9 +130,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 if (stackInSlot != null) {
                     if (idx % 10 == 0) {
                         if (vertical == null) {
-                            vertical = probeInfo.vertical(0xffffffff, 0);
+                            vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffffffff).spacing(0));
                         }
-                        horizontal = vertical.horizontal();
+                        horizontal = vertical.horizontal(new LayoutStyle().spacing(0));
                         rows++;
                         if (rows > 4) {
                             break;

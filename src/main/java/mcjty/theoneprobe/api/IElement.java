@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.api;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.apiimpl.elements.ElementType;
 
 /**
  * An element in the probe gui.
@@ -9,9 +8,9 @@ import mcjty.theoneprobe.apiimpl.elements.ElementType;
 public interface IElement {
 
     /**
-     * Render this element at the location given by the cursor
+     * Render this element at the location given by the location
      */
-    void render(Cursor cursor);
+    void render(int x, int y);
 
     /**
      * Get the width of this element

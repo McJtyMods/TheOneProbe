@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.api.Cursor;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.network.NetworkTools;
@@ -27,11 +26,11 @@ public class ElementItemStack implements IElement {
     }
 
     @Override
-    public void render(Cursor cursor) {
+    public void render(int x, int y) {
         RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
         if (itemStack != null) {
             String amount = itemStack.stackSize > 1 ? Integer.toString(itemStack.stackSize) : "";
-            RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, cursor.getX(), cursor.getY(), amount);
+            RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, x, y, amount);
         }
     }
 

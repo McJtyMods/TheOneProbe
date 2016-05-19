@@ -19,24 +19,22 @@ public interface IProbeInfo {
     IProbeInfo item(ItemStack stack);
 
     /**
-     * This creates a progress bar of 100 width. For the default style just use a new ProgressStyle object.
+     * This creates a progress bar of 100 width
      */
-    IProbeInfo progress(int current, int max, String prefix, String suffix, ProgressStyle style);
+    IProbeInfo progress(int current, int max, ProgressStyle style);
 
     /**
      * Create a new horizontal probe info as a child of this one. Note that the returned
      * probe info is the new horizontal layout and not this one!
      */
-    IProbeInfo horizontal(Integer borderColor, int spacing);
-
+    IProbeInfo horizontal(LayoutStyle style);
     IProbeInfo horizontal();
 
     /**
      * Create a new vertical probe info as a child of this one. Note that the returned
      * probe info is the new horizontal layout and not this one!
      */
-    IProbeInfo vertical(Integer borderColor, int spacing);
-
+    IProbeInfo vertical(LayoutStyle style);
     IProbeInfo vertical();
 
     /**
