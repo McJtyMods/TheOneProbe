@@ -14,27 +14,49 @@ import net.minecraft.item.ItemStack;
  */
 public interface IProbeInfo {
 
+    /**
+     * Create a default layout style for the horizontal or vertical elements
+     */
+    ILayoutStyle defaultLayoutStyle();
+
+    /**
+     * Create a default style for the progress bar
+     */
+    IProgressStyle defaultProgressStyle();
+
+    /**
+     * Create a default style for the text element
+     */
+    ITextStyle defaultTextStyle();
+
+    /**
+     * Create a default style for the item element
+     */
+    IItemStyle defaultItemStyle();
+
+    IProbeInfo text(String text, ITextStyle style);
     IProbeInfo text(String text);
 
+    IProbeInfo item(ItemStack stack, IItemStyle style);
     IProbeInfo item(ItemStack stack);
 
     /**
      * This creates a progress bar of 100 width
      */
-    IProbeInfo progress(int current, int max, ProgressStyle style);
+    IProbeInfo progress(int current, int max, IProgressStyle style);
 
     /**
      * Create a new horizontal probe info as a child of this one. Note that the returned
      * probe info is the new horizontal layout and not this one!
      */
-    IProbeInfo horizontal(LayoutStyle style);
+    IProbeInfo horizontal(ILayoutStyle style);
     IProbeInfo horizontal();
 
     /**
      * Create a new vertical probe info as a child of this one. Note that the returned
      * probe info is the new horizontal layout and not this one!
      */
-    IProbeInfo vertical(LayoutStyle style);
+    IProbeInfo vertical(ILayoutStyle style);
     IProbeInfo vertical();
 
     /**

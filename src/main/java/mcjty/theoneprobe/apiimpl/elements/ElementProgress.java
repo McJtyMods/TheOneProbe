@@ -2,8 +2,9 @@ package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.NumberFormat;
-import mcjty.theoneprobe.api.ProgressStyle;
+import mcjty.theoneprobe.apiimpl.ProgressStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.network.NetworkTools;
 import mcjty.theoneprobe.rendering.RenderHelper;
@@ -15,9 +16,9 @@ public class ElementProgress implements IElement {
 
     private final int current;
     private final int max;
-    private final ProgressStyle style;
+    private final IProgressStyle style;
 
-    public ElementProgress(int current, int max, ProgressStyle style) {
+    public ElementProgress(int current, int max, IProgressStyle style) {
         this.current = current;
         this.max = max;
         this.style = style;

@@ -1,11 +1,10 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.api.IElement;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.LayoutStyle;
-import mcjty.theoneprobe.api.ProgressStyle;
+import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.apiimpl.LayoutStyle;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.apiimpl.ProgressStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.item.ItemStack;
@@ -95,9 +94,19 @@ public class ElementHorizontal implements IElement, IProbeInfo {
     }
 
     @Override
+    public IProbeInfo text(String text, ITextStyle style) {
+        return text(text);
+    }
+
+    @Override
     public IProbeInfo text(String text) {
         children.add(new ElementText(text));
         return this;
+    }
+
+    @Override
+    public IProbeInfo item(ItemStack stack, IItemStyle style) {
+        return item(stack);
     }
 
     @Override
@@ -107,13 +116,13 @@ public class ElementHorizontal implements IElement, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo progress(int current, int max, ProgressStyle style) {
+    public IProbeInfo progress(int current, int max, IProgressStyle style) {
         children.add(new ElementProgress(current, max, style));
         return this;
     }
 
     @Override
-    public IProbeInfo horizontal(LayoutStyle style) {
+    public IProbeInfo horizontal(ILayoutStyle style) {
         ElementHorizontal e = new ElementHorizontal(style.getBorderColor(), style.getSpacing());
         children.add(e);
         return e;
@@ -127,7 +136,7 @@ public class ElementHorizontal implements IElement, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo vertical(LayoutStyle style) {
+    public IProbeInfo vertical(ILayoutStyle style) {
         ElementVertical e = new ElementVertical(style.getBorderColor(), style.getSpacing());
         children.add(e);
         return e;
@@ -144,5 +153,25 @@ public class ElementHorizontal implements IElement, IProbeInfo {
     public IProbeInfo element(IElement element) {
         children.add(element);
         return this;
+    }
+
+    @Override
+    public ILayoutStyle defaultLayoutStyle() {
+        return new LayoutStyle();
+    }
+
+    @Override
+    public IProgressStyle defaultProgressStyle() {
+        return new ProgressStyle();
+    }
+
+    @Override
+    public ITextStyle defaultTextStyle() {
+        return new ITextStyle() { };
+    }
+
+    @Override
+    public IItemStyle defaultItemStyle() {
+        return new IItemStyle() { };
     }
 }
