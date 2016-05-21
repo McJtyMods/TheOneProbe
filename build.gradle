@@ -44,6 +44,14 @@ if (ENV.DRONE_BUILD_NUMBER) {
 group= "mcjty.theoneprobe" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "theoneprobe"
 
+if (System.getenv('BUILD_NUMBER') != null) {
+    version += "-${System.getenv('BUILD_NUMBER')}"
+} else if (new File(projectDir, '.git').exists()) {
+    def repo = Grgit.open(project.file('.'))
+    version += "-${repo.log().find().abbreviatedId}"
+}
+
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
