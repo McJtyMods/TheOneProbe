@@ -14,7 +14,6 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven'
-apply plugin: 'maven-publish'
 
 repositories {
     maven { // The repo from which to get waila
