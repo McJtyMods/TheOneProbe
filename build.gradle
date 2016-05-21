@@ -87,11 +87,6 @@ processResources
     }
 }
 
-artifacts {
-    archives jar
-    archives sourceJar
-}
-
 publishing {
     tasks.publish.dependsOn 'build'
     publications {
