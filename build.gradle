@@ -45,9 +45,6 @@ archivesBaseName = "theoneprobe"
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "-${System.getenv('BUILD_NUMBER')}"
-} else if (new File(projectDir, '.git').exists()) {
-    def repo = Grgit.open(project.file('.'))
-    version += "-${repo.log().find().abbreviatedId}"
 }
 
 
