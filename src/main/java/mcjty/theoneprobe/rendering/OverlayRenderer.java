@@ -21,6 +21,11 @@ public class OverlayRenderer {
     private static Map<Pair<Integer,BlockPos>, Pair<Long, ProbeInfo>> cachedInfo = new HashMap<>();
     private static long lastCleanupTime = 0;
 
+    // For a short while we keep displaying the last pair if we have no new information
+    // to prevent flickering
+    private static Pair<Long, ProbeInfo> lastPair;
+    private static long lastPairTime = 0;
+
     public static void registerProbeInfo(int dim, BlockPos pos, ProbeInfo probeInfo) {
         long time = System.currentTimeMillis();
         cachedInfo.put(Pair.of(dim, pos), Pair.of(time, probeInfo));
@@ -45,12 +50,17 @@ public class OverlayRenderer {
         Pair<Long, ProbeInfo> pair = cachedInfo.get(Pair.of(player.worldObj.provider.getDimension(), blockPos));
         if (pair == null) {
             PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode, mouseOver));
+            if (lastPair != null && time < lastPairTime + Config.timeout) {
+                renderElements(lastPair.getRight());
+            }
         } else {
             if (time > pair.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
                 PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode, mouseOver));
             }
             renderElements(pair.getRight());
+            lastPair = pair;
+            lastPairTime = time;
         }
 
         if (time > lastCleanupTime + 5000) {
