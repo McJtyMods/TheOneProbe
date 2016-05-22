@@ -13,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -99,7 +100,11 @@ public class PacketGetInfo implements IMessage {
 
         List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
         for (IProbeInfoProvider provider : providers) {
-            provider.addProbeInfo(mode, probeInfo, player, world, state, data);
+            try {
+                provider.addProbeInfo(mode, probeInfo, player, world, state, data);
+            } catch (Exception e) {
+                probeInfo.text(TextFormatting.RED + "Error: " + provider.getID());
+            }
         }
         return probeInfo;
     }
