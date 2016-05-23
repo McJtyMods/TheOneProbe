@@ -3,6 +3,7 @@ package mcjty.theoneprobe.apiimpl;
 import cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
@@ -16,19 +17,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import org.apache.commons.lang3.text.WordUtils;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -87,7 +80,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void showStandardBlockInfo(IProbeInfo probeInfo, IBlockState blockState, Block block) {
-        String modid = getModName(block);
+        String modid = Tools.getModName(block);
         Item item = Item.getItemFromBlock(block);
         if (item != null) {
             int meta = block.getMetaFromState(blockState);
@@ -101,7 +94,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                         .text(TextFormatting.WHITE + stack.getDisplayName())
                         .text(TextFormatting.BLUE + modid);
         } else {
-            probeInfo.horizontal()
+            probeInfo.vertical()
                     .text(TextFormatting.WHITE + block.getLocalizedName())
                     .text(TextFormatting.BLUE + modid);
         }
@@ -154,29 +147,4 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private final static Map<String, String> modNamesForIds = new HashMap<>();
-
-    private static void init() {
-        Map<String, ModContainer> modMap = Loader.instance().getIndexedModList();
-        for (Map.Entry<String, ModContainer> modEntry : modMap.entrySet()) {
-            String lowercaseId = modEntry.getKey().toLowerCase(Locale.ENGLISH);
-            String modName = modEntry.getValue().getName();
-            modNamesForIds.put(lowercaseId, modName);
-        }
-    }
-
-    private static String getModName(Block block) {
-        if (modNamesForIds.isEmpty()) {
-            init();
-        }
-        ResourceLocation itemResourceLocation = block.getRegistryName();
-        String modId = itemResourceLocation.getResourceDomain();
-        String lowercaseModId = modId.toLowerCase(Locale.ENGLISH);
-        String modName = modNamesForIds.get(lowercaseModId);
-        if (modName == null) {
-            modName = WordUtils.capitalize(modId);
-            modNamesForIds.put(lowercaseModId, modName);
-        }
-        return modName;
-    }
 }

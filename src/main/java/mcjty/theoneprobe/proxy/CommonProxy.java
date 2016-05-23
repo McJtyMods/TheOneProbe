@@ -4,10 +4,7 @@ import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.ForgeEventHandlers;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
-import mcjty.theoneprobe.apiimpl.BlockProbeInfoProvider;
-import mcjty.theoneprobe.apiimpl.DebugProbeInfoProvider;
-import mcjty.theoneprobe.apiimpl.DefaultProbeInfoProvider;
-import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
+import mcjty.theoneprobe.apiimpl.*;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,6 +28,9 @@ public abstract class CommonProxy {
         TheOneProbe.theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
         TheOneProbe.theOneProbeImp.registerProvider(new DebugProbeInfoProvider());
         TheOneProbe.theOneProbeImp.registerProvider(new BlockProbeInfoProvider());
+        TheOneProbe.theOneProbeImp.registerEntityProvider(new DefaultProbeInfoEntityProvider());
+        TheOneProbe.theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
+        TheOneProbe.theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
 
         mainConfig = TheOneProbe.config;
         readMainConfig();

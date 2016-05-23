@@ -3,6 +3,7 @@ package mcjty.theoneprobe.rendering;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
 import net.minecraft.client.Minecraft;
@@ -15,10 +16,12 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class OverlayRenderer {
 
     private static Map<Pair<Integer,BlockPos>, Pair<Long, ProbeInfo>> cachedInfo = new HashMap<>();
+    private static Map<UUID, Pair<Long, ProbeInfo>> cachedEntityInfo = new HashMap<>();
     private static long lastCleanupTime = 0;
 
     // For a short while we keep displaying the last pair if we have no new information
@@ -31,11 +34,58 @@ public class OverlayRenderer {
         cachedInfo.put(Pair.of(dim, pos), Pair.of(time, probeInfo));
     }
 
+    public static void registerProbeInfo(UUID uuid, ProbeInfo probeInfo) {
+        long time = System.currentTimeMillis();
+        cachedEntityInfo.put(uuid, Pair.of(time, probeInfo));
+    }
+
     public static void renderHUD(ProbeMode mode) {
         RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
         if (mouseOver == null) {
             return;
         }
+
+        if (mouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {
+            renderHUDEntity(mode, mouseOver);
+        } else if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
+            renderHUDBlock(mode, mouseOver);
+        }
+
+        long time = System.currentTimeMillis();
+        if (time > lastCleanupTime + 5000) {
+            cleanupCachedBlocks(time);
+            cleanupCachedEntities(time);
+            lastCleanupTime = time;
+        }
+    }
+
+    private static void renderHUDEntity(ProbeMode mode, RayTraceResult mouseOver) {
+        if (mouseOver.entityHit == null) {
+            return;
+        }
+        UUID uuid = mouseOver.entityHit.getPersistentID();
+
+        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+        long time = System.currentTimeMillis();
+
+        Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
+        if (cacheEntry == null) {
+            PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.worldObj.provider.getDimension(), mode, mouseOver));
+            if (lastPair != null && time < lastPairTime + Config.timeout) {
+                renderElements(lastPair.getRight());
+            }
+        } else {
+            if (time > cacheEntry.getLeft() + Config.timeout) {
+                // This info is slightly old. Update it
+                PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.worldObj.provider.getDimension(), mode, mouseOver));
+            }
+            renderElements(cacheEntry.getRight());
+            lastPair = cacheEntry;
+            lastPairTime = time;
+        }
+    }
+
+    private static void renderHUDBlock(ProbeMode mode, RayTraceResult mouseOver) {
         BlockPos blockPos = mouseOver.getBlockPos();
         if (blockPos == null) {
             return;
@@ -47,34 +97,45 @@ public class OverlayRenderer {
 
         long time = System.currentTimeMillis();
 
-        Pair<Long, ProbeInfo> pair = cachedInfo.get(Pair.of(player.worldObj.provider.getDimension(), blockPos));
-        if (pair == null) {
+        Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(Pair.of(player.worldObj.provider.getDimension(), blockPos));
+        if (cacheEntry == null) {
             PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode, mouseOver));
             if (lastPair != null && time < lastPairTime + Config.timeout) {
                 renderElements(lastPair.getRight());
             }
         } else {
-            if (time > pair.getLeft() + Config.timeout) {
+            if (time > cacheEntry.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
                 PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode, mouseOver));
             }
-            renderElements(pair.getRight());
-            lastPair = pair;
+            renderElements(cacheEntry.getRight());
+            lastPair = cacheEntry;
             lastPairTime = time;
         }
+    }
 
-        if (time > lastCleanupTime + 5000) {
-            // It has been a while. Time to clean up unused cached pairs.
-            Map<Pair<Integer,BlockPos>, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
-            for (Map.Entry<Pair<Integer, BlockPos>, Pair<Long, ProbeInfo>> entry : cachedInfo.entrySet()) {
-                long t = entry.getValue().getLeft();
-                if (time < t + Config.timeout + 1000) {
-                    newCachedInfo.put(entry.getKey(), entry.getValue());
-                }
+    private static void cleanupCachedBlocks(long time) {
+        // It has been a while. Time to clean up unused cached pairs.
+        Map<Pair<Integer,BlockPos>, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
+        for (Map.Entry<Pair<Integer, BlockPos>, Pair<Long, ProbeInfo>> entry : cachedInfo.entrySet()) {
+            long t = entry.getValue().getLeft();
+            if (time < t + Config.timeout + 1000) {
+                newCachedInfo.put(entry.getKey(), entry.getValue());
             }
-            cachedInfo = newCachedInfo;
-            lastCleanupTime = time;
         }
+        cachedInfo = newCachedInfo;
+    }
+
+    private static void cleanupCachedEntities(long time) {
+        // It has been a while. Time to clean up unused cached pairs.
+        Map<UUID, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
+        for (Map.Entry<UUID, Pair<Long, ProbeInfo>> entry : cachedEntityInfo.entrySet()) {
+            long t = entry.getValue().getLeft();
+            if (time < t + Config.timeout + 1000) {
+                newCachedInfo.put(entry.getKey(), entry.getValue());
+            }
+        }
+        cachedEntityInfo = newCachedInfo;
     }
 
     private static void renderElements(ProbeInfo probeInfo) {

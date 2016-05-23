@@ -28,6 +28,25 @@ public interface ITheOneProbe {
     void registerProvider(IProbeInfoProvider provider);
 
     /**
+     * Optionally register a provider for your probe information. You don't have to do this. You
+     * can also implement IProbeInfoAccessor in your block instead. If you register a provider
+     * with the same string ID as one that already exists it will replace that provider. This
+     * is one way to replace the standard providers. TheOneProbe has the following standard
+     * providers (registered in the given order):
+     *
+     *   - "theoneprobe:default": this is the default provider that takes care of showing
+     *     the entity name and modid as well as the current health of the entity.
+     *   - "theoneprobe:debug": this provider shows debug information if the creative probe
+     *     is being used.
+     *   - "theoneprobe:entity": this provider will check if the entity has an IProbeInfoEntityAccessor
+     *     and then use that. i.e. this is the provider that takes care of making sure
+     *     that IProbeInfoEntityAccessor works.
+     *
+     * @param provider
+     */
+    void registerEntityProvider(IProbeInfoEntityProvider provider);
+
+    /**
      * Register an element factory.
      * @return an id to use when defining elements using this factory
      */

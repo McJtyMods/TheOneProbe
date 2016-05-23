@@ -2,6 +2,7 @@ package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IElementFactory;
+import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.elements.*;
@@ -18,6 +19,7 @@ public class TheOneProbeImp implements ITheOneProbe {
 
 
     private List<IProbeInfoProvider> providers = new ArrayList<>();
+    private List<IProbeInfoEntityProvider> entityProviders = new ArrayList<>();
     private Map<Integer,IElementFactory> factories = new HashMap<>();
     private int lastId = 0;
 
@@ -51,6 +53,25 @@ public class TheOneProbeImp implements ITheOneProbe {
         }
     }
 
+    private int findEntityProvider(String id) {
+        for (int i = 0 ; i < entityProviders.size() ; i++) {
+            if (id.equals(entityProviders.get(i).getID())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public void registerEntityProvider(IProbeInfoEntityProvider provider) {
+        int idx = findEntityProvider(provider.getID());
+        if (idx != -1) {
+            entityProviders.set(idx, provider);
+        } else {
+            entityProviders.add(provider);
+        }
+    }
+
     @Override
     public IElementFactory getElementFactory(int id) {
         return factories.get(id);
@@ -62,6 +83,10 @@ public class TheOneProbeImp implements ITheOneProbe {
 
     public List<IProbeInfoProvider> getProviders() {
         return providers;
+    }
+
+    public List<IProbeInfoEntityProvider> getEntityProviders() {
+        return entityProviders;
     }
 
     private IProbeInfoProvider getProviderByID(String id) {
