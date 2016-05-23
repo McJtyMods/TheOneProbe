@@ -104,6 +104,7 @@ public class PacketGetInfo implements IMessage {
                 provider.addProbeInfo(mode, probeInfo, player, world, state, data);
             } catch (Exception e) {
                 probeInfo.text(TextFormatting.RED + "Error: " + provider.getID());
+                TheOneProbe.logger.error("The One Probe catched error: ", e);
             }
         }
         return probeInfo;
