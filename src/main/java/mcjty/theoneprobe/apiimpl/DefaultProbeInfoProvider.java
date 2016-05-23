@@ -37,21 +37,24 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         BlockPos pos = data.getPos();
 
         showStandardBlockInfo(probeInfo, blockState, block);
-        showGrowthLevel(probeInfo, blockState, block);
 
-        if (mode == ProbeMode.EXTENDED) {
-            if (Config.showHarvestLevel) {
-                showHarvestLevel(probeInfo, blockState, block);
-            }
-
-            if (Config.showChestContents) {
-                showChestContents(probeInfo, world, pos);
-            }
+        if (show(mode, Config.showCropPercentage)) {
+            showGrowthLevel(probeInfo, blockState, block);
+        }
+        if (show(mode, Config.showHarvestLevel)) {
+            showHarvestLevel(probeInfo, blockState, block);
+        }
+        if (show(mode, Config.showChestContents)) {
+            showChestContents(probeInfo, world, pos);
         }
 
         if (Config.showRF > 0) {
             showRF(probeInfo, world, pos);
         }
+    }
+
+    private static boolean show(ProbeMode mode, int cfg) {
+        return cfg == Config.MODE_NORMAL || (cfg == Config.MODE_EXTENDED && mode == ProbeMode.EXTENDED);
     }
 
     private void showRF(IProbeInfo probeInfo, World world, BlockPos pos) {

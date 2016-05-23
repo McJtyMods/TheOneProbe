@@ -10,13 +10,19 @@ public class Config {
     public static String CATEGORY_THEONEPROBE = "theoneprobe";
     public static String CATEGORY_PROVIDERS = "providers";
 
+    public static int MODE_NOT = 0;
+    public static int MODE_NORMAL = 1;
+    public static int MODE_EXTENDED = 2;
+
     public static boolean needsProbe = true;
     public static int showRF = 1;
     public static NumberFormat rfFormat = NumberFormat.COMPACT;
     public static int timeout = 200;
-    public static boolean showHarvestLevel = true;
-    public static boolean showCropPercentage = true;
-    public static boolean showChestContents = true;
+
+    public static int showHarvestLevel = MODE_NORMAL;
+    public static int showCropPercentage = MODE_NORMAL;
+    public static int showChestContents = MODE_EXTENDED;
+
     public static boolean showDebugInfo = true;
     public static int leftX = 5;
     public static int topY = 5;
@@ -37,9 +43,9 @@ public class Config {
         int fmt = cfg.getInt("rfFormat", CATEGORY_THEONEPROBE, rfFormat.ordinal(), 0, 2, "Format for displaying RF: 0 = full, 1 = compact, 2 = comma separated");
         rfFormat = NumberFormat.values()[fmt];
         timeout = cfg.getInt("timeout", CATEGORY_THEONEPROBE, timeout, 10, 100000, "The amount of milliseconds to wait before updating probe information from the server");
-        showHarvestLevel = cfg.getBoolean("showHarvestLevel", CATEGORY_THEONEPROBE, showHarvestLevel, "If true show harvest level while the player is sneaking");
-        showCropPercentage = cfg.getBoolean("showCropPercentage", CATEGORY_THEONEPROBE, showCropPercentage, "If true show the growth level of crops");
-        showChestContents = cfg.getBoolean("showChestContents", CATEGORY_THEONEPROBE, showChestContents, "If true show chest contents while the player is sneaking");
+        showHarvestLevel = cfg.getInt("showHarvestLevel", CATEGORY_THEONEPROBE, showHarvestLevel, 0, 2, "If true show harvest level (0 = not, 1 = always, 2 = sneak)");
+        showCropPercentage = cfg.getInt("showCropPercentage", CATEGORY_THEONEPROBE, showCropPercentage, 0, 2, "If true show the growth level of crops (0 = not, 1 = always, 2 = sneak)");
+        showChestContents = cfg.getInt("showChestContents", CATEGORY_THEONEPROBE, showChestContents, 0, 2, "If true show chest contents (0 = not, 1 = always, 2 = sneak)");
         showDebugInfo = cfg.getBoolean("showDebugInfo", CATEGORY_THEONEPROBE, showDebugInfo, "If true show debug info with creative probe");
 
         setupStyleConfig(cfg);
