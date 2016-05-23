@@ -36,7 +36,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         Block block = blockState.getBlock();
         BlockPos pos = data.getPos();
 
-        showStandardBlockInfo(probeInfo, blockState, block);
+        showStandardBlockInfo(probeInfo, blockState, block, world, pos);
 
         if (Tools.show(mode, Config.showCropPercentage)) {
             showGrowthLevel(probeInfo, blockState, block);
@@ -89,25 +89,26 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private void showStandardBlockInfo(IProbeInfo probeInfo, IBlockState blockState, Block block) {
+    private void showStandardBlockInfo(IProbeInfo probeInfo, IBlockState blockState, Block block, World world, BlockPos pos) {
         String modid = Tools.getModName(block);
-        Item item = Item.getItemFromBlock(block);
-        if (item != null) {
-            int meta = block.getMetaFromState(blockState);
-            if (!item.getHasSubtypes()) {
-                meta = 0;
-            }
-            ItemStack stack = new ItemStack(block, 1, meta);
-            probeInfo.horizontal()
-                    .item(stack)
-                    .vertical()
-                        .text(TextFormatting.WHITE + stack.getDisplayName())
-                        .text(TextFormatting.BLUE + modid);
+        Item item;
+
+        ItemStack pickBlock = block.getPickBlock(blockState, null, world, pos, null);
+        if (pickBlock != null) {
+            showStack(probeInfo, modid, pickBlock);
         } else {
             probeInfo.vertical()
                     .text(TextFormatting.WHITE + block.getLocalizedName())
                     .text(TextFormatting.BLUE + modid);
         }
+    }
+
+    private void showStack(IProbeInfo probeInfo, String modid, ItemStack stack) {
+        probeInfo.horizontal()
+                .item(stack)
+                .vertical()
+                    .text(TextFormatting.WHITE + stack.getDisplayName())
+                    .text(TextFormatting.BLUE + modid);
     }
 
     private void showChestContents(IProbeInfo probeInfo, World world, BlockPos pos) {
