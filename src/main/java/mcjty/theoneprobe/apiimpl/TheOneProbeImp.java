@@ -32,9 +32,23 @@ public class TheOneProbeImp implements ITheOneProbe {
         ELEMENT_VERTICAL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementVertical::new);
     }
 
+    private int findProvider(String id) {
+        for (int i = 0 ; i < providers.size() ; i++) {
+            if (id.equals(providers.get(i).getID())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public void registerProvider(IProbeInfoProvider provider) {
-        providers.add(provider);
+        int idx = findProvider(provider.getID());
+        if (idx != -1) {
+            providers.set(idx, provider);
+        } else {
+            providers.add(provider);
+        }
     }
 
     @Override

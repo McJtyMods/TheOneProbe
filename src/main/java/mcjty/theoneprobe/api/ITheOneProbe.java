@@ -9,7 +9,20 @@ public interface ITheOneProbe {
 
     /**
      * Optionally register a provider for your probe information. You don't have to do this. You
-     * can also implement IProbeInfoAccessor in your block instead.
+     * can also implement IProbeInfoAccessor in your block instead. If you register a provider
+     * with the same string ID as one that already exists it will replace that provider. This
+     * is one way to replace the standard providers. TheOneProbe has the following standard
+     * providers (registered in the given order):
+     *
+     *   - "theoneprobe:default": this is the default provider that takes care of showing
+     *     the block icon, name and modid as well as the harvest level of the block if the player
+     *     sneaks.
+     *   - "theoneprobe:debug": this provider shows debug information if the creative probe
+     *     is being used.
+     *   - "theoneprobe:block": this provider will check if the block has an IProbeInfoAccessor
+     *     and then use that. i.e. this is the provider that takes care of making sure
+     *     that IProbeInfoAccessor works.
+     *
      * @param provider
      */
     void registerProvider(IProbeInfoProvider provider);
