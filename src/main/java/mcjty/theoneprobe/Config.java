@@ -15,6 +15,7 @@ public class Config {
     public static NumberFormat rfFormat = NumberFormat.COMPACT;
     public static int timeout = 200;
     public static boolean showHarvestLevel = true;
+    public static boolean showCropPercentage = true;
     public static boolean showChestContents = true;
     public static boolean showDebugInfo = true;
     public static int leftX = 5;
@@ -37,6 +38,7 @@ public class Config {
         rfFormat = NumberFormat.values()[fmt];
         timeout = cfg.getInt("timeout", CATEGORY_THEONEPROBE, timeout, 10, 100000, "The amount of milliseconds to wait before updating probe information from the server");
         showHarvestLevel = cfg.getBoolean("showHarvestLevel", CATEGORY_THEONEPROBE, showHarvestLevel, "If true show harvest level while the player is sneaking");
+        showCropPercentage = cfg.getBoolean("showCropPercentage", CATEGORY_THEONEPROBE, showCropPercentage, "If true show the growth level of crops");
         showChestContents = cfg.getBoolean("showChestContents", CATEGORY_THEONEPROBE, showChestContents, "If true show chest contents while the player is sneaking");
         showDebugInfo = cfg.getBoolean("showDebugInfo", CATEGORY_THEONEPROBE, showDebugInfo, "If true show debug info with creative probe");
 

@@ -10,6 +10,7 @@ import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCrops;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -36,6 +37,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         BlockPos pos = data.getPos();
 
         showStandardBlockInfo(probeInfo, blockState, block);
+        showGrowthLevel(probeInfo, blockState, block);
 
         if (mode == ProbeMode.EXTENDED) {
             if (Config.showHarvestLevel) {
@@ -76,6 +78,15 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         String harvestTool = block.getHarvestTool(blockState);
         if (harvestTool != null) {
             probeInfo.text(TextFormatting.GREEN + "Harvest tool: " + harvestTool);
+        }
+    }
+
+    private void showGrowthLevel(IProbeInfo probeInfo, IBlockState blockState, Block block) {
+        if (block instanceof BlockCrops) {
+            BlockCrops crops = (BlockCrops) block;
+            int maxAge = crops.getMaxAge();
+            Integer age = blockState.getValue(BlockCrops.AGE);
+            probeInfo.text(TextFormatting.GREEN + "Growth: " + (age * 100) / maxAge + "%");
         }
     }
 
