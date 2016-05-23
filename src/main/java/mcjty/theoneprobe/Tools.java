@@ -1,5 +1,6 @@
 package mcjty.theoneprobe;
 
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -60,5 +61,9 @@ public class Tools {
             modNamesForIds.put(lowercaseModId, modName);
         }
         return modName;
+    }
+
+    public static boolean show(ProbeMode mode, int cfg) {
+        return cfg == Config.MODE_NORMAL || (cfg == Config.MODE_EXTENDED && mode == ProbeMode.EXTENDED);
     }
 }

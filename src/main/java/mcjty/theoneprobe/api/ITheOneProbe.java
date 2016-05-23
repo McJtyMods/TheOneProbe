@@ -15,8 +15,8 @@ public interface ITheOneProbe {
      * providers (registered in the given order):
      *
      *   - "theoneprobe:default": this is the default provider that takes care of showing
-     *     the block icon, name and modid as well as the harvest level of the block if the player
-     *     sneaks.
+     *     the block icon, name and modid as well as the harvest level of the block and other
+     *     basic information
      *   - "theoneprobe:debug": this provider shows debug information if the creative probe
      *     is being used.
      *   - "theoneprobe:block": this provider will check if the block has an IProbeInfoAccessor

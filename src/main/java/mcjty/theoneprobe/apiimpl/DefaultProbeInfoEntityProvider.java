@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl;
 
+import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.IProbeHitEntityData;
@@ -27,7 +28,9 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 .text(TextFormatting.BLUE + modid);
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase livingBase = (EntityLivingBase) entity;
-            probeInfo.text(TextFormatting.YELLOW + "HP: " + (int) livingBase.getHealth() + " / " + (int) livingBase.getMaxHealth());
+            if (Tools.show(mode, Config.showMobHealth)) {
+                probeInfo.text(TextFormatting.YELLOW + "HP: " + (int) livingBase.getHealth() + " / " + (int) livingBase.getMaxHealth());
+            }
         }
     }
 }
