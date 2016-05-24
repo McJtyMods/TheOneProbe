@@ -19,6 +19,10 @@ public class ElementHorizontal extends AbstractElementPanel {
     @Override
     public void render(int x, int y) {
         super.render(x, y);
+        if (borderColor != null) {
+            x += 3;
+            y += 3;
+        }
         for (IElement element : children) {
             element.render(x, y);
             x += element.getWidth() + spacing;
