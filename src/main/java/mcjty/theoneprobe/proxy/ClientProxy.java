@@ -39,13 +39,13 @@ public class ClientProxy extends CommonProxy {
             return;
         }
         if (hasItemInEitherHand(ModItems.creativeProbe)) {
-            OverlayRenderer.renderHUD(ProbeMode.DEBUG);
+            OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getPartialTicks());
         } else if (Config.needsProbe) {
             if (hasItemInEitherHand(ModItems.probe)) {
-                OverlayRenderer.renderHUD(getModeForPlayer());
+                OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
             }
         } else {
-            OverlayRenderer.renderHUD(getModeForPlayer());
+            OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
         }
     }
 

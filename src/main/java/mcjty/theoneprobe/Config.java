@@ -19,6 +19,9 @@ public class Config {
     public static NumberFormat rfFormat = NumberFormat.COMPACT;
     public static int timeout = 200;
 
+    public static float probeDistance = 7;
+    public static boolean showLiquids = false;
+
     public static int showHarvestLevel = MODE_NORMAL;
     public static int showCropPercentage = MODE_NORMAL;
     public static int showChestContents = MODE_EXTENDED;
@@ -46,6 +49,7 @@ public class Config {
         int fmt = cfg.getInt("rfFormat", CATEGORY_THEONEPROBE, rfFormat.ordinal(), 0, 2, "Format for displaying RF: 0 = full, 1 = compact, 2 = comma separated");
         rfFormat = NumberFormat.values()[fmt];
         timeout = cfg.getInt("timeout", CATEGORY_THEONEPROBE, timeout, 10, 100000, "The amount of milliseconds to wait before updating probe information from the server");
+        probeDistance = cfg.getFloat("probeDistance", CATEGORY_THEONEPROBE, probeDistance, 0.1f, 200f, "Distance at which the probe works");
         showHarvestLevel = cfg.getInt("showHarvestLevel", CATEGORY_THEONEPROBE, showHarvestLevel, 0, 2, "Show harvest level (0 = not, 1 = always, 2 = sneak)");
         showCropPercentage = cfg.getInt("showCropPercentage", CATEGORY_THEONEPROBE, showCropPercentage, 0, 2, "Show the growth level of crops (0 = not, 1 = always, 2 = sneak)");
         showChestContents = cfg.getInt("showChestContents", CATEGORY_THEONEPROBE, showChestContents, 0, 2, "Show chest contents (0 = not, 1 = always, 2 = sneak)");
@@ -53,6 +57,7 @@ public class Config {
         showMobHealth = cfg.getInt("showMobHealth", CATEGORY_THEONEPROBE, showMobHealth, 0, 2, "Show mob health (0 = not, 1 = always, 2 = sneak)");
         showMobPotionEffects = cfg.getInt("showMobPotionEffects", CATEGORY_THEONEPROBE, showMobPotionEffects, 0, 2, "Show mob potion effects (0 = not, 1 = always, 2 = sneak)");
         showDebugInfo = cfg.getBoolean("showDebugInfo", CATEGORY_THEONEPROBE, showDebugInfo, "If true show debug info with creative probe");
+        showLiquids = cfg.getBoolean("showLiquids", CATEGORY_THEONEPROBE, showLiquids, "If true show liquid information when the probe hits liquid first");
 
         setupStyleConfig(cfg);
     }
@@ -72,6 +77,14 @@ public class Config {
         boxBorderColor = parseColor(cfg.getString("boxBorderColor", CATEGORY_THEONEPROBE, Integer.toHexString(boxBorderColor), "Color of the border of the box (0 to disable)"));
         boxFillColor = parseColor(cfg.getString("boxFillColor", CATEGORY_THEONEPROBE, Integer.toHexString(boxFillColor), "Color of the box (0 to disable)"));
         boxThickness = cfg.getInt("boxThickness", CATEGORY_THEONEPROBE, boxThickness, 0, 20, "Thickness of the border of the box (0 to disable)");
+        showLiquids = cfg.getBoolean("showLiquids", CATEGORY_THEONEPROBE, showLiquids, "If true show liquid information when the probe hits liquid first");
+    }
+
+    public static void setLiquids(boolean liquids) {
+        Configuration cfg = initClientConfig();
+        Config.showLiquids = liquids;
+        cfg.get(CATEGORY_THEONEPROBE, "showLiquids", showLiquids).set(liquids);
+        cfg.save();
     }
 
     public static void setPos(int leftx, int topy, int rightx, int bottomy) {

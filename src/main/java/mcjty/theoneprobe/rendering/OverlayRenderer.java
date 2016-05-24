@@ -12,6 +12,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
@@ -39,8 +40,15 @@ public class OverlayRenderer {
         cachedEntityInfo.put(uuid, Pair.of(time, probeInfo));
     }
 
-    public static void renderHUD(ProbeMode mode) {
-        RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
+    public static void renderHUD(ProbeMode mode, float partialTicks) {
+        float dist = Config.probeDistance;
+
+        EntityPlayerSP entity = Minecraft.getMinecraft().thePlayer;
+        Vec3d start  = entity.getPositionEyes(partialTicks);
+        Vec3d vec31 = entity.getLook(partialTicks);
+        Vec3d end = start.addVector(vec31.xCoord * dist, vec31.yCoord * dist, vec31.zCoord * dist);
+
+        RayTraceResult mouseOver = entity.worldObj.rayTraceBlocks(start, end, Config.showLiquids);
         if (mouseOver == null) {
             return;
         }

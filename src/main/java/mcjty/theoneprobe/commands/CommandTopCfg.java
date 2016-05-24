@@ -42,6 +42,8 @@ public class CommandTopCfg implements ICommand {
         SUBCOMMANDS.put("setpos", CommandTopCfg::setPos);
         SUBCOMMANDS.put("opaque", s -> Config.setBoxStyle(2, 0xff999999, 0xff003366));
         SUBCOMMANDS.put("default", s -> Config.setBoxStyle(2, 0xff999999, 0x55006699));
+        SUBCOMMANDS.put("liquids", s -> Config.setLiquids(true));
+        SUBCOMMANDS.put("noliquids", s -> Config.setLiquids(false));
     }
 
 
