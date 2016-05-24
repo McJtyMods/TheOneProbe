@@ -2,11 +2,13 @@ package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.apiimpl.IconStyle;
 import mcjty.theoneprobe.apiimpl.LayoutStyle;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.apiimpl.ProgressStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,17 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
             buf.writeBoolean(false);
         }
         buf.writeShort(spacing);
+    }
+
+    @Override
+    public IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h) {
+        return icon(icon, u, v, w, h, new IconStyle());
+    }
+
+    @Override
+    public IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h, IIconStyle style) {
+        children.add(new ElementIcon(icon, u, v, w, h, style));
+        return this;
     }
 
     @Override
@@ -150,5 +163,16 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     @Override
     public IItemStyle defaultItemStyle() {
         return new IItemStyle() { };
+    }
+
+    @Override
+    public IEntityStyle defaultEntityStyle() {
+        return new IEntityStyle() {
+        };
+    }
+
+    @Override
+    public IIconStyle defaultIconStyle() {
+        return new IconStyle();
     }
 }

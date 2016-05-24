@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.api;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Information to return to the probe. Most methods here return the same probe info
@@ -33,6 +34,19 @@ public interface IProbeInfo {
      * Create a default style for the item element
      */
     IItemStyle defaultItemStyle();
+
+    /**
+     * Create a default style for the entity element
+     */
+    IEntityStyle defaultEntityStyle();
+
+    /**
+     * Create a default style for the icon element
+     */
+    IIconStyle defaultIconStyle();
+
+    IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h, IIconStyle style);
+    IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h);
 
     IProbeInfo entity(String entityName, IEntityStyle style);
     IProbeInfo entity(String entityName);
