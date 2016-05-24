@@ -34,6 +34,9 @@ public interface IProbeInfo {
      */
     IItemStyle defaultItemStyle();
 
+    IProbeInfo entity(String entityName, IEntityStyle style);
+    IProbeInfo entity(String entityName);
+
     IProbeInfo text(String text, ITextStyle style);
     IProbeInfo text(String text);
 

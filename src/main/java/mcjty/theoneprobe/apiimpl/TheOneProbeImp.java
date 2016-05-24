@@ -16,6 +16,7 @@ public class TheOneProbeImp implements ITheOneProbe {
     public static int ELEMENT_PROGRESS;
     public static int ELEMENT_HORIZONTAL;
     public static int ELEMENT_VERTICAL;
+    public static int ELEMENT_ENTITY;
 
 
     private List<IProbeInfoProvider> providers = new ArrayList<>();
@@ -32,6 +33,7 @@ public class TheOneProbeImp implements ITheOneProbe {
         ELEMENT_PROGRESS = TheOneProbe.theOneProbeImp.registerElementFactory(ElementProgress::new);
         ELEMENT_HORIZONTAL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementHorizontal::new);
         ELEMENT_VERTICAL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementVertical::new);
+        ELEMENT_ENTITY = TheOneProbe.theOneProbeImp.registerElementFactory(ElementEntity::new);
     }
 
     private int findProvider(String id) {

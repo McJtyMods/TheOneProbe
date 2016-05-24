@@ -14,15 +14,14 @@ import org.lwjgl.opengl.GL11;
 public class RenderHelper {
     public static float rot = 0.0f;
 
-    public static void renderEntity(Entity entity, int xPos, int yPos) {
+    public static void renderEntity(Entity entity, int xPos, int yPos, float scale) {
         GlStateManager.pushMatrix();
         GlStateManager.color(1f, 1f, 1f);
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
-        GlStateManager.translate(xPos + 8, yPos + 16, 50F);
-        float f1 = 10F;
-        GlStateManager.scale(-f1, f1, f1);
+        GlStateManager.translate(xPos + 8, yPos + 24, 50F);
+        GlStateManager.scale(-scale, scale, scale);
         GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(135F, 0.0F, 1.0F, 0.0F);
         net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
@@ -54,7 +53,7 @@ public class RenderHelper {
 
     public static boolean renderObject(Minecraft mc, int x, int y, Object itm, boolean highlight) {
         if (itm instanceof Entity) {
-            renderEntity((Entity) itm, x, y);
+            renderEntity((Entity) itm, x, y, 10);
             return true;
         }
         RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
