@@ -2,6 +2,8 @@ package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IItemStyle;
+import mcjty.theoneprobe.apiimpl.ItemStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.network.NetworkTools;
 import mcjty.theoneprobe.rendering.RenderHelper;
@@ -12,9 +14,11 @@ import net.minecraft.item.ItemStack;
 public class ElementItemStack implements IElement {
 
     private final ItemStack itemStack;
+    private final IItemStyle style;
 
-    public ElementItemStack(ItemStack itemStack) {
+    public ElementItemStack(ItemStack itemStack, IItemStyle style) {
         this.itemStack = itemStack;
+        this.style = style;
     }
 
     public ElementItemStack(ByteBuf buf) {
@@ -23,6 +27,9 @@ public class ElementItemStack implements IElement {
         } else {
             itemStack = null;
         }
+        style = new ItemStyle()
+                .width(buf.readInt())
+                .height(buf.readInt());
     }
 
     @Override
@@ -36,12 +43,12 @@ public class ElementItemStack implements IElement {
 
     @Override
     public int getWidth() {
-        return 20;
+        return style.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return 20;
+        return style.getHeight();
     }
 
     @Override
@@ -52,6 +59,8 @@ public class ElementItemStack implements IElement {
         } else {
             buf.writeBoolean(false);
         }
+        buf.writeInt(style.getWidth());
+        buf.writeInt(style.getHeight());
     }
 
     @Override

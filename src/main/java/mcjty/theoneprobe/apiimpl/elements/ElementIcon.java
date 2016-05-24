@@ -37,7 +37,7 @@ public class ElementIcon implements IElement {
         h = buf.readInt();
         style = new IconStyle()
                 .width(buf.readInt())
-                .width(buf.readInt());
+                .height(buf.readInt());
     }
 
     @Override
