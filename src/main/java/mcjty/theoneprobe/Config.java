@@ -22,6 +22,7 @@ public class Config {
     public static int showHarvestLevel = MODE_NORMAL;
     public static int showCropPercentage = MODE_NORMAL;
     public static int showChestContents = MODE_EXTENDED;
+    public static int showRedstone = MODE_NORMAL;
     public static int showMobHealth = MODE_NORMAL;
     public static int showMobPotionEffects = MODE_EXTENDED;
 
@@ -48,6 +49,7 @@ public class Config {
         showHarvestLevel = cfg.getInt("showHarvestLevel", CATEGORY_THEONEPROBE, showHarvestLevel, 0, 2, "Show harvest level (0 = not, 1 = always, 2 = sneak)");
         showCropPercentage = cfg.getInt("showCropPercentage", CATEGORY_THEONEPROBE, showCropPercentage, 0, 2, "Show the growth level of crops (0 = not, 1 = always, 2 = sneak)");
         showChestContents = cfg.getInt("showChestContents", CATEGORY_THEONEPROBE, showChestContents, 0, 2, "Show chest contents (0 = not, 1 = always, 2 = sneak)");
+        showRedstone = cfg.getInt("showRedstone", CATEGORY_THEONEPROBE, showRedstone, 0, 2, "Show redstone (0 = not, 1 = always, 2 = sneak)");
         showMobHealth = cfg.getInt("showMobHealth", CATEGORY_THEONEPROBE, showMobHealth, 0, 2, "Show mob health (0 = not, 1 = always, 2 = sneak)");
         showMobPotionEffects = cfg.getInt("showMobPotionEffects", CATEGORY_THEONEPROBE, showMobPotionEffects, 0, 2, "Show mob potion effects (0 = not, 1 = always, 2 = sneak)");
         showDebugInfo = cfg.getBoolean("showDebugInfo", CATEGORY_THEONEPROBE, showDebugInfo, "If true show debug info with creative probe");

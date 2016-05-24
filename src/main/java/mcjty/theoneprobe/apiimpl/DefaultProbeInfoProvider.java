@@ -11,6 +11,7 @@ import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
+import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -38,6 +39,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         showStandardBlockInfo(probeInfo, blockState, block, world, pos);
 
+        if (Tools.show(mode, Config.showRedstone)) {
+            showRedstonePower(probeInfo, world, blockState, data, block);
+        }
         if (Tools.show(mode, Config.showCropPercentage)) {
             showGrowthLevel(probeInfo, blockState, block);
         }
@@ -50,6 +54,18 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         if (Config.showRF > 0) {
             showRF(probeInfo, world, pos);
+        }
+    }
+
+    private void showRedstonePower(IProbeInfo probeInfo, World world, IBlockState blockState, IProbeHitData data, Block block) {
+        int redstonePower;
+        if (block instanceof BlockRedstoneWire) {
+            redstonePower = blockState.getValue(BlockRedstoneWire.POWER);
+        } else {
+            redstonePower = world.getRedstonePower(data.getPos(), data.getSideHit().getOpposite());
+        }
+        if (redstonePower > 0) {
+            probeInfo.text("Power: " + redstonePower);
         }
     }
 
