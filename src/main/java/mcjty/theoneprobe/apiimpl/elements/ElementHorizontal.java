@@ -116,6 +116,11 @@ public class ElementHorizontal implements IElement, IProbeInfo {
     }
 
     @Override
+    public IProbeInfo progress(int current, int max) {
+        return progress(current, max, new ProgressStyle());
+    }
+
+    @Override
     public IProbeInfo progress(int current, int max, IProgressStyle style) {
         children.add(new ElementProgress(current, max, style));
         return this;

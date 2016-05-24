@@ -44,6 +44,7 @@ public interface IProbeInfo {
      * This creates a progress bar of 100 width
      */
     IProbeInfo progress(int current, int max, IProgressStyle style);
+    IProbeInfo progress(int current, int max);
 
     /**
      * Create a new horizontal probe info as a child of this one. Note that the returned
