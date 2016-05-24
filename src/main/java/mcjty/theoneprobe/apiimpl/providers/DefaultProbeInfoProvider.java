@@ -12,19 +12,21 @@ import mcjty.theoneprobe.apiimpl.LayoutStyle;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -110,24 +112,32 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showStandardBlockInfo(IProbeInfo probeInfo, IBlockState blockState, Block block, World world, BlockPos pos) {
         String modid = Tools.getModName(block);
-        Item item;
+
+        if (block instanceof BlockLiquid) {
+            Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
+            if (fluid != null) {
+                FluidStack stack = new FluidStack(fluid, 1);
+                probeInfo.horizontal()
+                        .icon(fluid.getStill(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20))
+                        .vertical()
+                        .text(TextFormatting.WHITE + stack.getLocalizedName())
+                        .text(TextFormatting.BLUE + modid);
+                return;
+            }
+        }
 
         ItemStack pickBlock = block.getPickBlock(blockState, null, world, pos, null);
         if (pickBlock != null) {
-            showStack(probeInfo, modid, pickBlock);
+            probeInfo.horizontal()
+                    .item(pickBlock)
+                    .vertical()
+                        .text(TextFormatting.WHITE + pickBlock.getDisplayName())
+                        .text(TextFormatting.BLUE + modid);
         } else {
             probeInfo.vertical()
                     .text(TextFormatting.WHITE + block.getLocalizedName())
                     .text(TextFormatting.BLUE + modid);
         }
-    }
-
-    private void showStack(IProbeInfo probeInfo, String modid, ItemStack stack) {
-        probeInfo.horizontal()
-                .item(stack)
-                .vertical()
-                    .text(TextFormatting.WHITE + stack.getDisplayName())
-                    .text(TextFormatting.BLUE + modid);
     }
 
     private void showChestContents(IProbeInfo probeInfo, World world, BlockPos pos) {

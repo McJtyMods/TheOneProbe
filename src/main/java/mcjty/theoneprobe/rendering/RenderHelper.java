@@ -284,10 +284,31 @@ public class RenderHelper {
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
         buffer.pos((double) (x + 0), (double) (y + height), (double) zLevel).tex((double)((float)(u + 0) * f), (double)((float)(v + height) * f1)).endVertex();
         buffer.pos((double) (x + width), (double) (y + height), (double) zLevel).tex((double) ((float) (u + width) * f), (double) ((float) (v + height) * f1)).endVertex();
         buffer.pos((double) (x + width), (double) (y + 0), (double) zLevel).tex((double) ((float) (u + width) * f), (double) ((float) (v + 0) * f1)).endVertex();
         buffer.pos((double) (x + 0), (double) (y + 0), (double) zLevel).tex((double) ((float) (u + 0) * f), (double) ((float) (v + 0) * f1)).endVertex();
+        tessellator.draw();
+    }
+
+    public static void drawTexturedModalRect(int x, int y, TextureAtlasSprite sprite, int width, int height) {
+        float zLevel = 0.01f;
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+
+        float u1 = sprite.getMinU();
+        float v1 = sprite.getMinV();
+        float u2 = sprite.getMaxU();
+        float v2 = sprite.getMaxV();
+
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        buffer.pos((double) (x + 0), (double) (y + height), (double) zLevel).tex(u1, v1).endVertex();
+        buffer.pos((double) (x + width), (double) (y + height), (double) zLevel).tex(u1, v2).endVertex();
+        buffer.pos((double) (x + width), (double) (y + 0), (double) zLevel).tex(u2, v2).endVertex();
+        buffer.pos((double) (x + 0), (double) (y + 0), (double) zLevel).tex(u2, v1).endVertex();
         tessellator.draw();
     }
 
