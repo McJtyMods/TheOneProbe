@@ -14,11 +14,13 @@ import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -39,14 +41,14 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         showStandardBlockInfo(probeInfo, blockState, block, world, pos);
 
-        if (Tools.show(mode, Config.showRedstone)) {
-            showRedstonePower(probeInfo, world, blockState, data, block);
-        }
         if (Tools.show(mode, Config.showCropPercentage)) {
             showGrowthLevel(probeInfo, blockState, block);
         }
         if (Tools.show(mode, Config.showHarvestLevel)) {
             showHarvestLevel(probeInfo, blockState, block);
+        }
+        if (Tools.show(mode, Config.showRedstone)) {
+            showRedstonePower(probeInfo, world, blockState, data, block);
         }
         if (Tools.show(mode, Config.showChestContents)) {
             showChestContents(probeInfo, world, pos);
@@ -65,7 +67,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             redstonePower = world.getRedstonePower(data.getPos(), data.getSideHit().getOpposite());
         }
         if (redstonePower > 0) {
-            probeInfo.text("Power: " + redstonePower);
+            probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14)).text("Power: " + redstonePower);
         }
     }
 

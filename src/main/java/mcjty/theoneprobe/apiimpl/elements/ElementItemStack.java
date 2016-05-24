@@ -37,7 +37,7 @@ public class ElementItemStack implements IElement {
         RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
         if (itemStack != null) {
             String amount = itemStack.stackSize > 1 ? Integer.toString(itemStack.stackSize) : "";
-            RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, x, y, amount);
+            RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount);
         }
     }
 
