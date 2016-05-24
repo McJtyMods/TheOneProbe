@@ -35,7 +35,12 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase livingBase = (EntityLivingBase) entity;
             if (Tools.show(mode, Config.showMobHealth)) {
-                probeInfo.text(TextFormatting.YELLOW + "HP: " + (int) livingBase.getHealth() + " / " + (int) livingBase.getMaxHealth());
+                int health = (int) livingBase.getHealth();
+                int maxHealth = (int) livingBase.getMaxHealth();
+                probeInfo.progress(health, maxHealth, probeInfo.defaultProgressStyle().lifeBar(true).showText(false).width(150).height(10));
+                if (mode == ProbeMode.EXTENDED) {
+                    probeInfo.text(TextFormatting.YELLOW + "Health: " + health + " / " + maxHealth);
+                }
             }
         }
     }

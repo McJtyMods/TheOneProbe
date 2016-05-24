@@ -26,9 +26,12 @@ public interface IProgressStyle {
 
     IProgressStyle suffix(String suffix);
 
+    /// If the progressbar is a lifebar then this is the maximum width
     IProgressStyle width(int w);
 
     IProgressStyle height(int h);
+
+    IProgressStyle lifeBar(boolean b);
 
     int getBorderColor();
 
@@ -49,4 +52,6 @@ public interface IProgressStyle {
     int getWidth();
 
     int getHeight();
+
+    boolean isLifeBar();
 }
