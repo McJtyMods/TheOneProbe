@@ -1,4 +1,4 @@
-package mcjty.theoneprobe.apiimpl;
+package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
@@ -6,6 +6,7 @@ import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.apiimpl.LayoutStyle;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

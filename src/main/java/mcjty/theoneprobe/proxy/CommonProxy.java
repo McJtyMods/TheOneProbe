@@ -5,6 +5,7 @@ import mcjty.theoneprobe.ForgeEventHandlers;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.*;
+import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
 import net.minecraftforge.common.MinecraftForge;

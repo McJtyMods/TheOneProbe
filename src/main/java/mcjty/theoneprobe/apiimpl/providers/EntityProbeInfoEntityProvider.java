@@ -1,4 +1,4 @@
-package mcjty.theoneprobe.apiimpl;
+package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
@@ -10,7 +10,7 @@ public class EntityProbeInfoEntityProvider implements IProbeInfoEntityProvider {
 
     @Override
     public String getID() {
-        return TheOneProbe.MODID + ":entity";
+        return TheOneProbe.MODID + ":entity.entity";
     }
 
     @Override

@@ -34,11 +34,11 @@ public interface ITheOneProbe {
      * is one way to replace the standard providers. TheOneProbe has the following standard
      * providers (registered in the given order):
      *
-     *   - "theoneprobe:default": this is the default provider that takes care of showing
+     *   - "theoneprobe:entity.default": this is the default provider that takes care of showing
      *     the entity name and modid as well as the current health of the entity.
-     *   - "theoneprobe:debug": this provider shows debug information if the creative probe
+     *   - "theoneprobe:entity.debug": this provider shows debug information if the creative probe
      *     is being used.
-     *   - "theoneprobe:entity": this provider will check if the entity has an IProbeInfoEntityAccessor
+     *   - "theoneprobe:entity.entity": this provider will check if the entity has an IProbeInfoEntityAccessor
      *     and then use that. i.e. this is the provider that takes care of making sure
      *     that IProbeInfoEntityAccessor works.
      *

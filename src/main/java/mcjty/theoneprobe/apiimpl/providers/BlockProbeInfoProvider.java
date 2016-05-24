@@ -1,4 +1,4 @@
-package mcjty.theoneprobe.apiimpl;
+package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;

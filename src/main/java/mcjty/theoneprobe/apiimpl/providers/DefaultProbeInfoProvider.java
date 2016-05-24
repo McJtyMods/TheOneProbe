@@ -1,4 +1,4 @@
-package mcjty.theoneprobe.apiimpl;
+package mcjty.theoneprobe.apiimpl.providers;
 
 import cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.Config;
@@ -8,6 +8,7 @@ import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.apiimpl.LayoutStyle;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
