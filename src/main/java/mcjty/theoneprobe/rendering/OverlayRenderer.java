@@ -43,22 +43,33 @@ public class OverlayRenderer {
     public static void renderHUD(ProbeMode mode, float partialTicks) {
         float dist = Config.probeDistance;
 
+        RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
+        if (mouseOver != null) {
+            if (mouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {
+                renderHUDEntity(mode, mouseOver);
+                checkCleanup();
+                return;
+            }
+        }
+
         EntityPlayerSP entity = Minecraft.getMinecraft().thePlayer;
         Vec3d start  = entity.getPositionEyes(partialTicks);
         Vec3d vec31 = entity.getLook(partialTicks);
         Vec3d end = start.addVector(vec31.xCoord * dist, vec31.yCoord * dist, vec31.zCoord * dist);
 
-        RayTraceResult mouseOver = entity.worldObj.rayTraceBlocks(start, end, Config.showLiquids);
+        mouseOver = entity.worldObj.rayTraceBlocks(start, end, Config.showLiquids);
         if (mouseOver == null) {
             return;
         }
 
-        if (mouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {
-            renderHUDEntity(mode, mouseOver);
-        } else if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
+        if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
             renderHUDBlock(mode, mouseOver);
         }
 
+        checkCleanup();
+    }
+
+    private static void checkCleanup() {
         long time = System.currentTimeMillis();
         if (time > lastCleanupTime + 5000) {
             cleanupCachedBlocks(time);
