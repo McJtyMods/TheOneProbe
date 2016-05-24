@@ -4,6 +4,8 @@ import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.commands.CommandTopCfg;
 import mcjty.theoneprobe.items.ModItems;
+import mcjty.theoneprobe.keys.KeyBindings;
+import mcjty.theoneprobe.keys.KeyInputHandler;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -31,6 +33,8 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(this);
         ClientCommandHandler.instance.registerCommand(new CommandTopCfg());
         Config.initClientConfig().save();
+        MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
+        KeyBindings.init();
     }
 
     @SubscribeEvent

@@ -19,7 +19,7 @@ public class Config {
     public static NumberFormat rfFormat = NumberFormat.COMPACT;
     public static int timeout = 200;
 
-    public static float probeDistance = 7;
+    public static float probeDistance = 6;
     public static boolean showLiquids = false;
 
     public static int showHarvestLevel = MODE_NORMAL;
