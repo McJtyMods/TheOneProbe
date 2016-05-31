@@ -1,6 +1,8 @@
 package mcjty.theoneprobe.rendering;
 
 import mcjty.theoneprobe.Config;
+import mcjty.theoneprobe.api.IOverlayStyle;
+import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.network.PacketGetEntityInfo;
@@ -91,14 +93,14 @@ public class OverlayRenderer {
         if (cacheEntry == null) {
             PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.worldObj.provider.getDimension(), mode, mouseOver));
             if (lastPair != null && time < lastPairTime + Config.timeout) {
-                renderElements(lastPair.getRight());
+                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
             }
         } else {
             if (time > cacheEntry.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
                 PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.worldObj.provider.getDimension(), mode, mouseOver));
             }
-            renderElements(cacheEntry.getRight());
+            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle());
             lastPair = cacheEntry;
             lastPairTime = time;
         }
@@ -120,17 +122,21 @@ public class OverlayRenderer {
         if (cacheEntry == null) {
             PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode, mouseOver));
             if (lastPair != null && time < lastPairTime + Config.timeout) {
-                renderElements(lastPair.getRight());
+                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
             }
         } else {
             if (time > cacheEntry.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
                 PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode, mouseOver));
             }
-            renderElements(cacheEntry.getRight());
+            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle());
             lastPair = cacheEntry;
             lastPairTime = time;
         }
+    }
+
+    public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo) {
+        renderElements((ProbeInfo) probeInfo, style);
     }
 
     private static void cleanupCachedBlocks(long time) {
@@ -157,7 +163,7 @@ public class OverlayRenderer {
         cachedEntityInfo = newCachedInfo;
     }
 
-    private static void renderElements(ProbeInfo probeInfo) {
+    private static void renderElements(ProbeInfo probeInfo, IOverlayStyle style) {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
 
@@ -168,7 +174,7 @@ public class OverlayRenderer {
         int w = probeInfo.getWidth();
         int h = probeInfo.getHeight();
 
-        int thick = Config.boxThickness;
+        int thick = style.getBorderThickness();
         int margin = 0;
         if (thick > 0) {
             w += (thick+3) * 2;
@@ -178,23 +184,23 @@ public class OverlayRenderer {
 
         int x;
         int y;
-        if (Config.leftX != -1) {
-            x = Config.leftX;
-        } else if (Config.rightX != -1) {
-            x = scaledWidth - w - Config.rightX;
+        if (style.getLeftX() != -1) {
+            x = style.getLeftX();
+        } else if (style.getRightX() != -1) {
+            x = scaledWidth - w - style.getRightX();
         } else {
             x = (scaledWidth - w) / 2;
         }
-        if (Config.topY != -1) {
-            y = Config.topY;
-        } else if (Config.bottomY != -1) {
-            y = scaledHeight - h - Config.bottomY;
+        if (style.getTopY() != -1) {
+            y = style.getTopY();
+        } else if (style.getBottomY() != -1) {
+            y = scaledHeight - h - style.getBottomY();
         } else {
             y = (scaledHeight - h) / 2;
         }
 
         if (thick > 0) {
-            RenderHelper.drawThickBeveledBox(x, y, x + w-1, y + h-1, thick, Config.boxBorderColor, Config.boxBorderColor, Config.boxFillColor);
+            RenderHelper.drawThickBeveledBox(x, y, x + w-1, y + h-1, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
         probeInfo.render(x + margin, y + margin);

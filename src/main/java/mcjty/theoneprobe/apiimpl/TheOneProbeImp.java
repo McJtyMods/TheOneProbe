@@ -1,10 +1,7 @@
 package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.IElementFactory;
-import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
-import mcjty.theoneprobe.api.IProbeInfoProvider;
-import mcjty.theoneprobe.api.ITheOneProbe;
+import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.*;
 
 import java.util.*;
@@ -130,5 +127,10 @@ public class TheOneProbeImp implements ITheOneProbe {
         int id = lastId;
         lastId++;
         return id;
+    }
+
+    @Override
+    public IOverlayRenderer getOverlayRenderer() {
+        return new DefaultOverlayRenderer();
     }
 }

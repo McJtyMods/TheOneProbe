@@ -1,7 +1,9 @@
 package mcjty.theoneprobe;
 
 
+import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.NumberFormat;
+import mcjty.theoneprobe.apiimpl.DefaultOverlayStyle;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
@@ -30,18 +32,21 @@ public class Config {
     public static int showMobPotionEffects = MODE_EXTENDED;
 
     public static boolean showDebugInfo = true;
-    public static int leftX = 5;
-    public static int topY = 5;
-    public static int rightX = -1;
-    public static int bottomY = -1;
+    private static int leftX = 5;
+    private static int topY = 5;
+    private static int rightX = -1;
+    private static int bottomY = -1;
 
-    public static int boxBorderColor = 0xff999999;
-    public static int boxFillColor = 0x55006699;
-    public static int boxThickness = 2;
+    private static int boxBorderColor = 0xff999999;
+    private static int boxFillColor = 0x55006699;
+    private static int boxThickness = 2;
 
     public static int rfbarFilledColor = 0xffdd0000;
     public static int rfbarAlternateFilledColor = 0xff430000;
     public static int rfbarBorderColor = 0xff555555;
+
+
+    private static IOverlayStyle defaultOverlayStyle;
 
     public static void init(Configuration cfg) {
         needsProbe = cfg.getBoolean("needsProbe", CATEGORY_THEONEPROBE, needsProbe, "If true the probe is needed to show the tooltip. If false the tooltip shows all the time");
@@ -98,6 +103,7 @@ public class Config {
         cfg.get(CATEGORY_THEONEPROBE, "boxTopY", topy).set(topy);
         cfg.get(CATEGORY_THEONEPROBE, "boxBottomY", bottomy).set(bottomy);
         cfg.save();
+        updateDefaultOverlayStyle();
     }
 
     public static void setBoxStyle(int thickness, int borderColor, int fillcolor) {
@@ -109,6 +115,7 @@ public class Config {
         cfg.get(CATEGORY_THEONEPROBE, "boxBorderColor", Integer.toHexString(borderColor)).set(Integer.toHexString(borderColor));
         cfg.get(CATEGORY_THEONEPROBE, "boxFillColor", Integer.toHexString(fillcolor)).set(Integer.toHexString(fillcolor));
         cfg.save();
+        updateDefaultOverlayStyle();
     }
 
     private static int parseColor(String col) {
@@ -119,4 +126,20 @@ public class Config {
             return 0;
         }
     }
+
+    private static void updateDefaultOverlayStyle() {
+        defaultOverlayStyle = new DefaultOverlayStyle()
+                .borderThickness(boxThickness)
+                .borderColor(boxBorderColor)
+                .boxColor(boxFillColor)
+                .location(leftX, rightX, topY, bottomY);
+    }
+
+    public static IOverlayStyle getDefaultOverlayStyle() {
+        if (defaultOverlayStyle == null) {
+            updateDefaultOverlayStyle();
+        }
+        return defaultOverlayStyle;
+    }
+
 }
