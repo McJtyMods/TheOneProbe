@@ -19,7 +19,7 @@ public interface IOverlayRenderer {
     /**
      * Create an empty default IProbeInfo (which actually represents the
      * default vertical element that is always used to start with). You can then
-     * modify this as you wish.
+     * modify this as you wish and give it to render().
      */
     IProbeInfo createProbeInfo();
 

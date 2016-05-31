@@ -55,7 +55,7 @@ public class ClientProxy extends CommonProxy {
 //                .item(new ItemStack(Items.EMERALD));
 //        renderer.render(style, probeInfo);
 //    }
-//
+
     @SubscribeEvent
     public void renderGameOverlayEvent(RenderGameOverlayEvent event) {
         if (event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
