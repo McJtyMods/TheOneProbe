@@ -37,6 +37,25 @@ public class ClientProxy extends CommonProxy {
         KeyBindings.init();
     }
 
+//    @SubscribeEvent
+//    public void testCustomRenderer(RenderGameOverlayEvent event) {
+//        if (event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
+//            return;
+//        }
+//        IOverlayRenderer renderer = TheOneProbe.instance.theOneProbeImp.getOverlayRenderer();
+//        IOverlayStyle style = renderer.createDefaultStyle()
+//                .location(-1, -1, -1, 20)
+//                .borderThickness(0)
+//                .boxColor(0x00000000);
+//        IProbeInfo probeInfo = renderer.createProbeInfo();
+//        probeInfo
+//                .horizontal()
+//                .item(new ItemStack(Items.DIAMOND))
+//                .text("Extra!")
+//                .item(new ItemStack(Items.EMERALD));
+//        renderer.render(style, probeInfo);
+//    }
+//
     @SubscribeEvent
     public void renderGameOverlayEvent(RenderGameOverlayEvent event) {
         if (event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
