@@ -1,5 +1,7 @@
 package mcjty.theoneprobe.rendering;
 
+import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -32,7 +34,11 @@ public class RenderHelper {
         entity.rotationPitch = 0.0F;
         GlStateManager.translate(0.0F, (float) entity.getYOffset(), 0.0F);
         Minecraft.getMinecraft().getRenderManager().playerViewY = 180F;
-        Minecraft.getMinecraft().getRenderManager().doRenderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        try {
+            Minecraft.getMinecraft().getRenderManager().doRenderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        } catch (Exception e) {
+            TheOneProbe.logger.error("Error rendering entity!", e);
+        }
         GlStateManager.popMatrix();
         net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
