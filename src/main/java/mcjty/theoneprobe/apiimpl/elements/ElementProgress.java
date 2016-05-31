@@ -17,22 +17,22 @@ import java.text.DecimalFormat;
 
 public class ElementProgress implements IElement {
 
-    private final int current;
-    private final int max;
+    private final long current;
+    private final long max;
     private final IProgressStyle style;
 
-    private static final ResourceLocation iconLocation = new ResourceLocation("textures/gui/icons.png");
+    private static final ResourceLocation ICONS = new ResourceLocation("textures/gui/icons.png");
 
 
-    public ElementProgress(int current, int max, IProgressStyle style) {
+    public ElementProgress(long current, long max, IProgressStyle style) {
         this.current = current;
         this.max = max;
         this.style = style;
     }
 
     public ElementProgress(ByteBuf buf) {
-        current = buf.readInt();
-        max = buf.readInt();
+        current = buf.readLong();
+        max = buf.readLong();
         style = new ProgressStyle()
                 .width(buf.readInt())
                 .height(buf.readInt())
@@ -55,7 +55,7 @@ public class ElementProgress implements IElement {
             int w = getWidth();
             RenderHelper.drawThickBeveledBox(x, y, x + w, y + getHeight(), 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
             if (current > 0) {
-                int dx = current * (w - 2) / max;
+                int dx = (int) (current * (w - 2) / max);
 
                 if (style.getFilledColor() == style.getAlternatefilledColor()) {
                     if (dx > 0) {
@@ -78,17 +78,17 @@ public class ElementProgress implements IElement {
     private void renderLifeBar(int x, int y) {
         int w = getWidth();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(iconLocation);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(x, y, 52, 0, 9, 9);
-            RenderHelper.renderText(Minecraft.getMinecraft(), x + 12, y, TextFormatting.WHITE + "" + (current / 2));
+            RenderHelper.renderText(Minecraft.getMinecraft(), x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
                 RenderHelper.drawTexturedModalRect(x, y, 52, 0, 9, 9);
                 x += 8;
             }
-            if (current % 2 == 1) {
+            if (current % 2 != 0) {
                 RenderHelper.drawTexturedModalRect(x, y, 61, 0, 9, 9);
             }
         }
@@ -96,14 +96,14 @@ public class ElementProgress implements IElement {
 
     private static DecimalFormat dfCommas = new DecimalFormat("###,###");
 
-    public static String format(int in, NumberFormat style) {
+    public static String format(long in, NumberFormat style) {
         switch (style) {
             case FULL:
-                return Integer.toString(in);
+                return Long.toString(in);
             case COMPACT: {
                 int unit = 1000;
                 if (in < unit) {
-                    return Integer.toString(in);
+                    return Long.toString(in);
                 }
                 int exp = (int) (Math.log(in) / Math.log(unit));
                 char pre = "KMGTP".charAt(exp - 1);
@@ -112,7 +112,7 @@ public class ElementProgress implements IElement {
             case COMMAS:
                 return dfCommas.format(in);
         }
-        return Integer.toString(in);
+        return Long.toString(in);
     }
 
 
@@ -122,7 +122,7 @@ public class ElementProgress implements IElement {
             if (current * 4 >= style.getWidth()) {
                 return 100;
             } else {
-                return current * 4 + 2;
+                return (int) (current * 4 + 2);
             }
         }
         return style.getWidth();
@@ -135,8 +135,8 @@ public class ElementProgress implements IElement {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(current);
-        buf.writeInt(max);
+        buf.writeLong(current);
+        buf.writeLong(max);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
         NetworkTools.writeString(buf, style.getPrefix());

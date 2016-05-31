@@ -109,6 +109,17 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
+    public IProbeInfo progress(long current, long max) {
+        return progress(current, max, new ProgressStyle());
+    }
+
+    @Override
+    public IProbeInfo progress(long current, long max, IProgressStyle style) {
+        children.add(new ElementProgress(current, max, style));
+        return this;
+    }
+
+    @Override
     public IProbeInfo horizontal(ILayoutStyle style) {
         ElementHorizontal e = new ElementHorizontal(style.getBorderColor(), style.getSpacing());
         children.add(e);

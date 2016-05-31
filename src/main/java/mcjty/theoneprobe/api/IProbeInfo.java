@@ -66,6 +66,8 @@ public interface IProbeInfo {
      */
     IProbeInfo progress(int current, int max, IProgressStyle style);
     IProbeInfo progress(int current, int max);
+    IProbeInfo progress(long current, long max, IProgressStyle style);
+    IProbeInfo progress(long current, long max);
 
     /**
      * Create a new horizontal probe info as a child of this one. Note that the returned
