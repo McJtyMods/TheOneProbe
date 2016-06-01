@@ -65,6 +65,8 @@ public class ClientProxy extends CommonProxy {
 //                .entity(EntityList.getEntityStringFromClass(EntityWolf.class))
 //                .entity(EntityList.getEntityStringFromClass(EntityDragon.class))
 //                ;
+//        vertical
+//                .progress(8, 10, probeInfo.defaultProgressStyle().lifeBar(true));
 //        renderer.render(style, probeInfo);
 //    }
 
