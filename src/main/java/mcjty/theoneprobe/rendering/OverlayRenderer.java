@@ -203,6 +203,7 @@ public class OverlayRenderer {
             RenderHelper.drawThickBeveledBox(x, y, x + w-1, y + h-1, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
+        RenderHelper.rot += .5f;
         probeInfo.render(x + margin, y + margin);
     }
 }

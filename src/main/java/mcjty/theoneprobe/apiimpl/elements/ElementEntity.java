@@ -35,7 +35,6 @@ public class ElementEntity implements IElement {
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             }
             if (entity != null) {
-                RenderHelper.rot += .5f;
                 float height = entity.height;
                 if (height > 3) {
                     height *= .7f;
