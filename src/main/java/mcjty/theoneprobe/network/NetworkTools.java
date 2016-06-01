@@ -7,7 +7,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Collection;
 
 public class NetworkTools {
@@ -73,7 +72,7 @@ public class NetworkTools {
         }
         byte[] dst = new byte[s];
         dataIn.readBytes(dst);
-        return new String(dst, Charset.forName("UTF-8"));
+        return new String(dst, java.nio.charset.StandardCharsets.UTF_8);
     }
 
     public static void writeStringUTF8(ByteBuf dataOut, String str) {
@@ -81,7 +80,7 @@ public class NetworkTools {
             dataOut.writeInt(-1);
             return;
         }
-        byte[] bytes = str.getBytes(Charset.forName("UTF-8"));
+        byte[] bytes = str.getBytes(java.nio.charset.StandardCharsets.UTF_8);
         dataOut.writeInt(bytes.length);
         if (bytes.length > 0) {
             dataOut.writeBytes(bytes);
