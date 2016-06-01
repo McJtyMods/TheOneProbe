@@ -4,12 +4,10 @@ import cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoProvider;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
+import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
+import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockLiquid;
@@ -42,6 +40,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         Block block = blockState.getBlock();
         BlockPos pos = data.getPos();
 
+        IProbeConfig config = Config.getRealConfig();
+
         showStandardBlockInfo(probeInfo, blockState, block, world, pos);
 
         if (Tools.show(mode, Config.showCropPercentage)) {
@@ -57,7 +57,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             showChestContents(probeInfo, world, pos);
         }
 
-        if (Config.showRF > 0) {
+        if (config.getRFMode() > 0) {
             showRF(probeInfo, world, pos);
         }
     }
@@ -77,10 +77,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showRF(IProbeInfo probeInfo, World world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof IEnergyHandler) {
+            ProbeConfig config = Config.getDefaultConfig();
             IEnergyHandler handler = (IEnergyHandler) te;
             int energy = handler.getEnergyStored(EnumFacing.DOWN);
             int maxEnergy = handler.getMaxEnergyStored(EnumFacing.DOWN);
-            if (Config.showRF == 1) {
+            if (config.getRFMode() == 1) {
                 probeInfo.progress(energy, maxEnergy,
                         probeInfo.defaultProgressStyle()
                                 .suffix("RF")

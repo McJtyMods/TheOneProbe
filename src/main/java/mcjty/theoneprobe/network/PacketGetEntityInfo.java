@@ -1,10 +1,9 @@
 package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.IProbeHitEntityData;
-import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
-import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import net.minecraft.entity.Entity;
@@ -88,6 +87,13 @@ public class PacketGetEntityInfo implements IMessage {
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         IProbeHitEntityData data = new ProbeHitEntityData(hitVec);
+
+        IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
+        List<IProbeConfigProvider> configProviders = TheOneProbe.theOneProbeImp.getConfigProviders();
+        for (IProbeConfigProvider configProvider : configProviders) {
+            configProvider.getProbeConfig(probeConfig, player, world, entity, data);
+        }
+        Config.setRealConfig(probeConfig);
 
         List<IProbeInfoEntityProvider> entityProviders = TheOneProbe.theOneProbeImp.getEntityProviders();
         for (IProbeInfoEntityProvider provider : entityProviders) {

@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl;
 
+import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.*;
@@ -16,6 +17,7 @@ public class TheOneProbeImp implements ITheOneProbe {
     public static int ELEMENT_ENTITY;
     public static int ELEMENT_ICON;
 
+    private List<IProbeConfigProvider> configProviders = new ArrayList<>();
 
     private List<IProbeInfoProvider> providers = new ArrayList<>();
     private List<IProbeInfoEntityProvider> entityProviders = new ArrayList<>();
@@ -132,5 +134,18 @@ public class TheOneProbeImp implements ITheOneProbe {
     @Override
     public IOverlayRenderer getOverlayRenderer() {
         return new DefaultOverlayRenderer();
+    }
+
+    public IProbeConfig createProbeConfig() {
+        return Config.getDefaultConfig().lazyCopy();
+    }
+
+    @Override
+    public void registerProbeConfigProvider(IProbeConfigProvider provider) {
+        configProviders.add(provider);
+    }
+
+    public List<IProbeConfigProvider> getConfigProviders() {
+        return configProviders;
     }
 }

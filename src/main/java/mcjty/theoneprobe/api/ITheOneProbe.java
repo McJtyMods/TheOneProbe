@@ -62,4 +62,11 @@ public interface ITheOneProbe {
      * (besides what The One Probe already does).
      */
     IOverlayRenderer getOverlayRenderer();
+
+    /**
+     * Register a probe config provider so that you can override the default
+     * config for your own blocks or entities. Note that you have to register
+     * this server side.
+     */
+    void registerProbeConfigProvider(IProbeConfigProvider provider);
 }

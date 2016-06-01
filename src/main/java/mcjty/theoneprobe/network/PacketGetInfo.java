@@ -1,10 +1,9 @@
 package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfoProvider;
-import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import net.minecraft.block.state.IBlockState;
@@ -97,6 +96,13 @@ public class PacketGetInfo implements IMessage {
         IBlockState state = world.getBlockState(blockPos);
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         IProbeHitData data = new ProbeHitData(blockPos, hitVec, sideHit);
+
+        IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
+        List<IProbeConfigProvider> configProviders = TheOneProbe.theOneProbeImp.getConfigProviders();
+        for (IProbeConfigProvider configProvider : configProviders) {
+            configProvider.getProbeConfig(probeConfig, player, world, state, data);
+        }
+        Config.setRealConfig(probeConfig);
 
         List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
         for (IProbeInfoProvider provider : providers) {
