@@ -104,8 +104,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showGrowthLevel(IProbeInfo probeInfo, IBlockState blockState, Block block) {
         if (block instanceof BlockCrops) {
             BlockCrops crops = (BlockCrops) block;
+            int age = crops.getAge(blockState);
             int maxAge = crops.getMaxAge();
-            Integer age = blockState.getValue(BlockCrops.AGE);
             probeInfo.text(TextFormatting.GREEN + "Growth: " + (age * 100) / maxAge + "%");
         }
     }
