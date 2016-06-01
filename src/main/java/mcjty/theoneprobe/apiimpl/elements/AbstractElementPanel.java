@@ -16,6 +16,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     protected List<IElement> children = new ArrayList<>();
     protected Integer borderColor;
     protected int spacing;
+    protected ElementAlignment alignment;
 
     @Override
     public void render(int x, int y) {
@@ -29,9 +30,10 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         }
     }
 
-    public AbstractElementPanel(Integer borderColor, int spacing) {
+    public AbstractElementPanel(Integer borderColor, int spacing, ElementAlignment alignment) {
         this.borderColor = borderColor;
         this.spacing = spacing;
+        this.alignment = alignment;
     }
 
     public AbstractElementPanel(ByteBuf buf) {
@@ -40,6 +42,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
             borderColor = buf.readInt();
         }
         spacing = buf.readShort();
+        alignment = ElementAlignment.values()[buf.readShort()];
     }
 
     @Override
@@ -52,6 +55,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
             buf.writeBoolean(false);
         }
         buf.writeShort(spacing);
+        buf.writeShort(alignment.ordinal());
     }
 
     @Override
@@ -122,28 +126,28 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
     @Override
     public IProbeInfo horizontal(ILayoutStyle style) {
-        ElementHorizontal e = new ElementHorizontal(style.getBorderColor(), style.getSpacing());
+        ElementHorizontal e = new ElementHorizontal(style.getBorderColor(), style.getSpacing(), style.getAlignment());
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo horizontal() {
-        ElementHorizontal e = new ElementHorizontal((Integer) null, spacing);
+        ElementHorizontal e = new ElementHorizontal((Integer) null, spacing, ElementAlignment.ALIGN_TOPLEFT);
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo vertical(ILayoutStyle style) {
-        ElementVertical e = new ElementVertical(style.getBorderColor(), style.getSpacing());
+        ElementVertical e = new ElementVertical(style.getBorderColor(), style.getSpacing(), style.getAlignment());
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo vertical() {
-        ElementVertical e = new ElementVertical((Integer) null, ElementVertical.SPACING);
+        ElementVertical e = new ElementVertical((Integer) null, ElementVertical.SPACING, ElementAlignment.ALIGN_TOPLEFT);
         children.add(e);
         return e;
     }

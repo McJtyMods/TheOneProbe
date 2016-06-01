@@ -13,7 +13,14 @@ public interface ILayoutStyle {
      */
     ILayoutStyle spacing(int f);
 
+    /**
+     * Set the alignment of the elements inside this element. Default is ALIGN_TOPLEFT
+     */
+    ILayoutStyle alignment(ElementAlignment alignment);
+
     Integer getBorderColor();
 
     int getSpacing();
+
+    ElementAlignment getAlignment();
 }

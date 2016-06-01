@@ -2,6 +2,7 @@ package mcjty.theoneprobe.apiimpl;
 
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IElementFactory;
 import mcjty.theoneprobe.apiimpl.elements.ElementVertical;
@@ -20,7 +21,7 @@ public class ProbeInfo extends ElementVertical {
     }
 
     public ProbeInfo() {
-        super((Integer) null, 2);
+        super((Integer) null, 2, ElementAlignment.ALIGN_TOPLEFT);
     }
 
     public static List<IElement> createElements(ByteBuf buf) {

@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 
@@ -8,8 +9,8 @@ public class ElementHorizontal extends AbstractElementPanel {
 
     public static final int SPACING = 5;
 
-    public ElementHorizontal(Integer borderColor, int spacing) {
-        super(borderColor, spacing);
+    public ElementHorizontal(Integer borderColor, int spacing, ElementAlignment alignment) {
+        super(borderColor, spacing, alignment);
     }
 
     public ElementHorizontal(ByteBuf buf) {
@@ -23,8 +24,21 @@ public class ElementHorizontal extends AbstractElementPanel {
             x += 3;
             y += 3;
         }
+        int totHeight = getHeight();
         for (IElement element : children) {
-            element.render(x, y);
+            int h = element.getHeight();
+            int cy = y;
+            switch (alignment) {
+                case ALIGN_TOPLEFT:
+                    break;
+                case ALIGN_CENTER:
+                    cy = y + (totHeight - h) / 2;
+                    break;
+                case ALIGN_BOTTOMRIGHT:
+                    cy = y + totHeight - h;
+                    break;
+            }
+            element.render(x, cy);
             x += element.getWidth() + spacing;
         }
     }

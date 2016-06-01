@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.styles;
 
+import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.ILayoutStyle;
 
 /**
@@ -7,7 +8,19 @@ import mcjty.theoneprobe.api.ILayoutStyle;
  */
 public class LayoutStyle implements ILayoutStyle {
     private Integer borderColor = null;
+    private ElementAlignment alignment = ElementAlignment.ALIGN_TOPLEFT;
     private int spacing = -1;
+
+    @Override
+    public ILayoutStyle alignment(ElementAlignment alignment) {
+        this.alignment = alignment;
+        return this;
+    }
+
+    @Override
+    public ElementAlignment getAlignment() {
+        return alignment;
+    }
 
     /// The color that is used for the border of the progress bar
     @Override
