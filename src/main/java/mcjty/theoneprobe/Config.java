@@ -25,13 +25,6 @@ public class Config {
     public static float probeDistance = 6;
     public static boolean showLiquids = false;
 
-    public static int showHarvestLevel = MODE_NORMAL;
-    public static int showCropPercentage = MODE_NORMAL;
-    public static int showChestContents = MODE_EXTENDED;
-    public static int showRedstone = MODE_NORMAL;
-    public static int showMobHealth = MODE_NORMAL;
-    public static int showMobPotionEffects = MODE_EXTENDED;
-
     public static boolean showDebugInfo = true;
     private static int leftX = 5;
     private static int topY = 5;
@@ -70,12 +63,12 @@ public class Config {
         rfFormat = NumberFormat.values()[fmt];
         timeout = cfg.getInt("timeout", CATEGORY_THEONEPROBE, timeout, 10, 100000, "The amount of milliseconds to wait before updating probe information from the server");
         probeDistance = cfg.getFloat("probeDistance", CATEGORY_THEONEPROBE, probeDistance, 0.1f, 200f, "Distance at which the probe works");
-        showHarvestLevel = cfg.getInt("showHarvestLevel", CATEGORY_THEONEPROBE, showHarvestLevel, 0, 2, "Show harvest level (0 = not, 1 = always, 2 = sneak)");
-        showCropPercentage = cfg.getInt("showCropPercentage", CATEGORY_THEONEPROBE, showCropPercentage, 0, 2, "Show the growth level of crops (0 = not, 1 = always, 2 = sneak)");
-        showChestContents = cfg.getInt("showChestContents", CATEGORY_THEONEPROBE, showChestContents, 0, 2, "Show chest contents (0 = not, 1 = always, 2 = sneak)");
-        showRedstone = cfg.getInt("showRedstone", CATEGORY_THEONEPROBE, showRedstone, 0, 2, "Show redstone (0 = not, 1 = always, 2 = sneak)");
-        showMobHealth = cfg.getInt("showMobHealth", CATEGORY_THEONEPROBE, showMobHealth, 0, 2, "Show mob health (0 = not, 1 = always, 2 = sneak)");
-        showMobPotionEffects = cfg.getInt("showMobPotionEffects", CATEGORY_THEONEPROBE, showMobPotionEffects, 0, 2, "Show mob potion effects (0 = not, 1 = always, 2 = sneak)");
+        defaultConfig.showHarvestLevel(IProbeConfig.ConfigMode.values()[cfg.getInt("showHarvestLevel", CATEGORY_THEONEPROBE, defaultConfig.getShowHarvestLevel().ordinal(), 0, 2, "Show harvest level (0 = not, 1 = always, 2 = sneak)")]);
+        defaultConfig.showCropPercentage(IProbeConfig.ConfigMode.values()[cfg.getInt("showCropPercentage", CATEGORY_THEONEPROBE, defaultConfig.getShowCropPercentage().ordinal(), 0, 2, "Show the growth level of crops (0 = not, 1 = always, 2 = sneak)")]);
+        defaultConfig.showChestContents(IProbeConfig.ConfigMode.values()[cfg.getInt("showChestContents", CATEGORY_THEONEPROBE, defaultConfig.getShowChestContents().ordinal(), 0, 2, "Show chest contents (0 = not, 1 = always, 2 = sneak)")]);
+        defaultConfig.showRedstone(IProbeConfig.ConfigMode.values()[cfg.getInt("showRedstone", CATEGORY_THEONEPROBE, defaultConfig.getShowRedstone().ordinal(), 0, 2, "Show redstone (0 = not, 1 = always, 2 = sneak)")]);
+        defaultConfig.showMobHealth(IProbeConfig.ConfigMode.values()[cfg.getInt("showMobHealth", CATEGORY_THEONEPROBE, defaultConfig.getShowMobHealth().ordinal(), 0, 2, "Show mob health (0 = not, 1 = always, 2 = sneak)")]);
+        defaultConfig.showMobPotionEffects(IProbeConfig.ConfigMode.values()[cfg.getInt("showMobPotionEffects", CATEGORY_THEONEPROBE, defaultConfig.getShowMobPotionEffects().ordinal(), 0, 2, "Show mob potion effects (0 = not, 1 = always, 2 = sneak)")]);
         showDebugInfo = cfg.getBoolean("showDebugInfo", CATEGORY_THEONEPROBE, showDebugInfo, "If true show debug info with creative probe");
         showLiquids = cfg.getBoolean("showLiquids", CATEGORY_THEONEPROBE, showLiquids, "If true show liquid information when the probe hits liquid first");
 

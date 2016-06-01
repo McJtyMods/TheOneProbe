@@ -1,5 +1,6 @@
 package mcjty.theoneprobe;
 
+import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -12,6 +13,9 @@ import org.apache.commons.lang3.text.WordUtils;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.EXTENDED;
+import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.NORMAL;
 
 public class Tools {
 
@@ -63,7 +67,7 @@ public class Tools {
         return modName;
     }
 
-    public static boolean show(ProbeMode mode, int cfg) {
-        return cfg == Config.MODE_NORMAL || (cfg == Config.MODE_EXTENDED && mode == ProbeMode.EXTENDED);
+    public static boolean show(ProbeMode mode, IProbeConfig.ConfigMode cfg) {
+        return cfg == NORMAL || (cfg == EXTENDED && mode == ProbeMode.EXTENDED);
     }
 }

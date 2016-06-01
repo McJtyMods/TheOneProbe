@@ -5,11 +5,34 @@ package mcjty.theoneprobe.api;
  */
 public interface IProbeConfig {
 
+    public static enum ConfigMode {
+        NOT,            // Don't show
+        NORMAL,         // Show
+        EXTENDED        // Shgw only when sneaking
+    }
+
     /**
      * Control how RF should be shown
-     * @param showRF 0 = not, 1 = show as bar, 2 = show as text
+     * @param mode 0 = not, 1 = show as bar, 2 = show as text
      */
-    IProbeConfig setRFMode(int showRF);
-
+    IProbeConfig setRFMode(int mode);
     int getRFMode();
+
+    IProbeConfig showHarvestLevel(ConfigMode mode);
+    ConfigMode getShowHarvestLevel();
+
+    IProbeConfig showCropPercentage(ConfigMode mode);
+    ConfigMode getShowCropPercentage();
+
+    IProbeConfig showChestContents(ConfigMode mode);
+    ConfigMode getShowChestContents();
+
+    IProbeConfig showRedstone(ConfigMode mode);
+    ConfigMode getShowRedstone();
+
+    IProbeConfig showMobHealth(ConfigMode mode);
+    ConfigMode getShowMobHealth();
+
+    IProbeConfig showMobPotionEffects(ConfigMode mode);
+    ConfigMode getShowMobPotionEffects();
 }

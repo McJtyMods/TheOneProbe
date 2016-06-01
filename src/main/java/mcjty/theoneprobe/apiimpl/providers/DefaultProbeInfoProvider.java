@@ -44,16 +44,16 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         showStandardBlockInfo(probeInfo, blockState, block, world, pos);
 
-        if (Tools.show(mode, Config.showCropPercentage)) {
+        if (Tools.show(mode, config.getShowCropPercentage())) {
             showGrowthLevel(probeInfo, blockState, block);
         }
-        if (Tools.show(mode, Config.showHarvestLevel)) {
+        if (Tools.show(mode, config.getShowHarvestLevel())) {
             showHarvestLevel(probeInfo, blockState, block);
         }
-        if (Tools.show(mode, Config.showRedstone)) {
+        if (Tools.show(mode, config.getShowRedstone())) {
             showRedstonePower(probeInfo, world, blockState, data, block);
         }
-        if (Tools.show(mode, Config.showChestContents)) {
+        if (Tools.show(mode, config.getShowChestContents())) {
             showChestContents(probeInfo, world, pos);
         }
 
