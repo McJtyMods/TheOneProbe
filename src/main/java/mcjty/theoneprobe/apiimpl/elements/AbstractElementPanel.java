@@ -2,7 +2,8 @@ package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.*;
-import mcjty.theoneprobe.apiimpl.*;
+import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.apiimpl.styles.*;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -77,13 +78,13 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
     @Override
     public IProbeInfo entity(String entityName, IEntityStyle style) {
-        return entity(entityName);
+        children.add(new ElementEntity(entityName, style));
+        return this;
     }
 
     @Override
     public IProbeInfo entity(String entityName) {
-        children.add(new ElementEntity(entityName));
-        return this;
+        return entity(entityName, new EntityStyle());
     }
 
     @Override
@@ -175,8 +176,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
     @Override
     public IEntityStyle defaultEntityStyle() {
-        return new IEntityStyle() {
-        };
+        return new EntityStyle();
     }
 
     @Override

@@ -5,6 +5,7 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IOverlayRenderer;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 
 public class DefaultOverlayRenderer implements IOverlayRenderer {

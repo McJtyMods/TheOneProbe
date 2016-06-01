@@ -3,7 +3,7 @@ package mcjty.theoneprobe;
 
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.NumberFormat;
-import mcjty.theoneprobe.apiimpl.DefaultOverlayStyle;
+import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;

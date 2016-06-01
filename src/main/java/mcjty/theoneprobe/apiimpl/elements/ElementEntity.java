@@ -2,7 +2,9 @@ package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
+import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
 import mcjty.theoneprobe.network.NetworkTools;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -15,13 +17,19 @@ import java.lang.reflect.InvocationTargetException;
 public class ElementEntity implements IElement {
 
     private final String entityName;
+    private final IEntityStyle style;
 
-    public ElementEntity(String entityName) {
+    public ElementEntity(String entityName, IEntityStyle style) {
         this.entityName = entityName;
+        this.style = style;
     }
 
     public ElementEntity(ByteBuf buf) {
         entityName = NetworkTools.readString(buf);
+        style = new EntityStyle()
+                .width(buf.readInt())
+                .height(buf.readInt())
+                .scale(buf.readFloat());
     }
 
     @Override
@@ -36,27 +44,30 @@ public class ElementEntity implements IElement {
             }
             if (entity != null) {
                 float height = entity.height;
-                if (height > 3) {
-                    height *= .7f;
-                }
-                RenderHelper.renderEntity(entity, x, y, 13 / height);
+                height = (float) ((height - 1) * .7 + 1);
+                float s = style.getScale() * ((style.getHeight() * 14.0f / 25) / height);
+
+                RenderHelper.renderEntity(entity, x, y, s);
             }
         }
     }
 
     @Override
     public int getWidth() {
-        return 25;
+        return style.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return 25;
+        return style.getHeight();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         NetworkTools.writeString(buf, entityName);
+        buf.writeInt(style.getWidth());
+        buf.writeInt(style.getHeight());
+        buf.writeFloat(style.getScale());
     }
 
     @Override

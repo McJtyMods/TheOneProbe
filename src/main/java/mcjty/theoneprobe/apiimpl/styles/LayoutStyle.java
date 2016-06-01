@@ -1,4 +1,4 @@
-package mcjty.theoneprobe.apiimpl;
+package mcjty.theoneprobe.apiimpl.styles;
 
 import mcjty.theoneprobe.api.ILayoutStyle;
 
