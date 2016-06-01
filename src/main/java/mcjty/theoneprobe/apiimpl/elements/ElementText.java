@@ -16,7 +16,7 @@ public class ElementText implements IElement {
     }
 
     public ElementText(ByteBuf buf) {
-        text = NetworkTools.readString(buf);
+        text = NetworkTools.readStringUTF8(buf);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ElementText implements IElement {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        NetworkTools.writeString(buf, text);
+        NetworkTools.writeStringUTF8(buf, text);
     }
 
     @Override

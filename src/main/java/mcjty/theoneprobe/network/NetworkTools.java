@@ -7,6 +7,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Collection;
 
 public class NetworkTools {
@@ -56,6 +57,31 @@ public class NetworkTools {
             return;
         }
         byte[] bytes = str.getBytes();
+        dataOut.writeInt(bytes.length);
+        if (bytes.length > 0) {
+            dataOut.writeBytes(bytes);
+        }
+    }
+
+    public static String readStringUTF8(ByteBuf dataIn) {
+        int s = dataIn.readInt();
+        if (s == -1) {
+            return null;
+        }
+        if (s == 0) {
+            return "";
+        }
+        byte[] dst = new byte[s];
+        dataIn.readBytes(dst);
+        return new String(dst, Charset.forName("UTF-8"));
+    }
+
+    public static void writeStringUTF8(ByteBuf dataOut, String str) {
+        if (str == null) {
+            dataOut.writeInt(-1);
+            return;
+        }
+        byte[] bytes = str.getBytes(Charset.forName("UTF-8"));
         dataOut.writeInt(bytes.length);
         if (bytes.length > 0) {
             dataOut.writeBytes(bytes);
