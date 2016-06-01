@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.api;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -54,6 +55,8 @@ public interface IProbeInfo {
 
     IProbeInfo entity(String entityName, IEntityStyle style);
     IProbeInfo entity(String entityName);
+    IProbeInfo entity(Entity entity, IEntityStyle style);
+    IProbeInfo entity(Entity entity);
 
     IProbeInfo text(String text, ITextStyle style);
     IProbeInfo text(String text);

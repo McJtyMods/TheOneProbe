@@ -10,6 +10,27 @@ import java.io.IOException;
 import java.util.Collection;
 
 public class NetworkTools {
+
+    public static NBTTagCompound readNBT(ByteBuf dataIn) {
+        PacketBuffer buf = new PacketBuffer(dataIn);
+        try {
+            return buf.readNBTTagCompoundFromBuffer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void writeNBT(ByteBuf dataOut, NBTTagCompound nbt) {
+        PacketBuffer buf = new PacketBuffer(dataOut);
+        try {
+            buf.writeNBTTagCompoundToBuffer(nbt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /// This function supports itemstacks with more then 64 items.
     public static ItemStack readItemStack(ByteBuf dataIn) {
         PacketBuffer buf = new PacketBuffer(dataIn);

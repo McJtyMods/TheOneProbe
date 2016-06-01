@@ -8,7 +8,6 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -29,10 +28,9 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
     @Override
     public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) {
         String modid = Tools.getModName(entity);
-        String entityString = EntityList.getEntityString(entity);
 
         probeInfo.horizontal()
-                .entity(entityString)
+                .entity(entity)
                 .vertical()
                 .text(TextFormatting.WHITE + entity.getDisplayName().getFormattedText())
                 .text(TextFormatting.BLUE + modid);
