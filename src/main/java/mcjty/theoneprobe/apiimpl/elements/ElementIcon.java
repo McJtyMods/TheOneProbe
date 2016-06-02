@@ -3,14 +3,10 @@ package mcjty.theoneprobe.apiimpl.elements;
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IIconStyle;
-import mcjty.theoneprobe.apiimpl.styles.IconStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
+import mcjty.theoneprobe.apiimpl.client.ElementIconRender;
+import mcjty.theoneprobe.apiimpl.styles.IconStyle;
 import mcjty.theoneprobe.network.NetworkTools;
-import mcjty.theoneprobe.rendering.RenderHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 
 public class ElementIcon implements IElement {
@@ -44,23 +40,7 @@ public class ElementIcon implements IElement {
 
     @Override
     public void render(int x, int y) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-        if (icon == null) {
-            return;
-        }
-
-        if (u == -1) {
-            TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(icon.toString());
-            if (sprite == null) {
-                return;
-            }
-            Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            RenderHelper.drawTexturedModalRect(x, y, sprite, w, h);
-        } else {
-            Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
-            RenderHelper.drawTexturedModalRect(x, y, u, v, w, h);
-        }
+        ElementIconRender.render(icon, x, y, w, h, u, v);
     }
 
     @Override

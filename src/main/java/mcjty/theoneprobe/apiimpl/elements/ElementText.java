@@ -3,9 +3,8 @@ package mcjty.theoneprobe.apiimpl.elements;
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
+import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.network.NetworkTools;
-import mcjty.theoneprobe.rendering.RenderHelper;
-import net.minecraft.client.Minecraft;
 
 public class ElementText implements IElement {
 
@@ -21,12 +20,12 @@ public class ElementText implements IElement {
 
     @Override
     public void render(int x, int y) {
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, text);
+        ElementTextRender.render(text, x, y);
     }
 
     @Override
     public int getWidth() {
-        return Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+        return ElementTextRender.getWidth(text);
     }
 
     @Override
