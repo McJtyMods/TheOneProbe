@@ -63,6 +63,12 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.9.4:3.4.0.202"
 }
 
+jar {
+    manifest {
+        attributes 'FMLAT': 'top_at.cfg'
+    }
+}
+
 processResources
 {
     // this will ensure that this task is redone when the versions change.
