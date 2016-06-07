@@ -11,9 +11,12 @@ import org.lwjgl.input.Keyboard;
 public class KeyBindings {
 
     public static KeyBinding toggleLiquids;
+    public static KeyBinding toggleVisible;
 
     public static void init() {
         toggleLiquids = new KeyBinding("key.toggleLiquids", KeyConflictContext.IN_GAME, Keyboard.KEY_L, "key.categories.theoneprobe");
+        toggleVisible = new KeyBinding("key.toggleVisible", KeyConflictContext.IN_GAME, Keyboard.KEY_V, "key.categories.theoneprobe");
         ClientRegistry.registerKeyBinding(toggleLiquids);
+        ClientRegistry.registerKeyBinding(toggleVisible);
     }
 }

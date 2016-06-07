@@ -24,6 +24,7 @@ public class Config {
 
     public static float probeDistance = 6;
     public static boolean showLiquids = false;
+    public static boolean isVisible = true;
 
     public static boolean showDebugInfo = true;
     private static int leftX = 5;
@@ -72,6 +73,7 @@ public class Config {
         defaultConfig.showMobPotionEffects(IProbeConfig.ConfigMode.values()[cfg.getInt("showMobPotionEffects", CATEGORY_THEONEPROBE, defaultConfig.getShowMobPotionEffects().ordinal(), 0, 2, "Show mob potion effects (0 = not, 1 = always, 2 = sneak)")]);
         showDebugInfo = cfg.getBoolean("showDebugInfo", CATEGORY_THEONEPROBE, showDebugInfo, "If true show debug info with creative probe");
         showLiquids = cfg.getBoolean("showLiquids", CATEGORY_THEONEPROBE, showLiquids, "If true show liquid information when the probe hits liquid first");
+        isVisible = cfg.getBoolean("isVisible", CATEGORY_THEONEPROBE, isVisible, "Toggle default probe visibility (client can override)");
 
         setupStyleConfig(cfg);
     }
@@ -92,12 +94,20 @@ public class Config {
         boxFillColor = parseColor(cfg.getString("boxFillColor", CATEGORY_THEONEPROBE, Integer.toHexString(boxFillColor), "Color of the box (0 to disable)"));
         boxThickness = cfg.getInt("boxThickness", CATEGORY_THEONEPROBE, boxThickness, 0, 20, "Thickness of the border of the box (0 to disable)");
         showLiquids = cfg.getBoolean("showLiquids", CATEGORY_THEONEPROBE, showLiquids, "If true show liquid information when the probe hits liquid first");
+        isVisible = cfg.getBoolean("isVisible", CATEGORY_THEONEPROBE, isVisible, "Toggle default probe visibility (client can override)");
     }
 
     public static void setLiquids(boolean liquids) {
         Configuration cfg = initClientConfig();
         Config.showLiquids = liquids;
         cfg.get(CATEGORY_THEONEPROBE, "showLiquids", showLiquids).set(liquids);
+        cfg.save();
+    }
+
+    public static void setVisible(boolean visible) {
+        Configuration cfg = initClientConfig();
+        Config.isVisible = visible;
+        cfg.get(CATEGORY_THEONEPROBE, "isVisible", isVisible).set(visible);
         cfg.save();
     }
 

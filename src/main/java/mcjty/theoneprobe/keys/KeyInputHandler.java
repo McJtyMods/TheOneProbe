@@ -10,6 +10,8 @@ public class KeyInputHandler {
     public void onKeyInput(InputEvent.KeyInputEvent event) {
         if (KeyBindings.toggleLiquids.isPressed()) {
             Config.setLiquids(!Config.showLiquids);
+        } else if (KeyBindings.toggleVisible.isPressed()) {
+            Config.setVisible(!Config.isVisible);
         }
     }
 }

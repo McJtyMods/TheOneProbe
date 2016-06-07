@@ -75,6 +75,11 @@ public class ClientProxy extends CommonProxy {
         if (event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
             return;
         }
+
+        if (!Config.isVisible) {
+            return;
+        }
+
         if (hasItemInEitherHand(ModItems.creativeProbe)) {
             OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getPartialTicks());
         } else if (Config.needsProbe) {
