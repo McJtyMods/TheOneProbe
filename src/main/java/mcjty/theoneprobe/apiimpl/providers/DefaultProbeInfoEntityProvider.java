@@ -35,7 +35,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                         .text(TextFormatting.WHITE + entity.getDisplayName().getFormattedText())
                         .text(TextFormatting.BLUE + modid);
         } else {
-            probeInfo.horizontal()
+            probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                     .entity(entity)
                     .text(TextFormatting.WHITE + entity.getDisplayName().getFormattedText());
         }
