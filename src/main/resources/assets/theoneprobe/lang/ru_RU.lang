@@ -1,0 +1,7 @@
+key.toggleLiquids=Переключить просмотр жидкостей
+key.toggleVisible=Переключить видимость
+key.categories.theoneprobe=The One Probe
+item.theoneprobe.probe.name=Датчик
+item.theoneprobe.creativeprobe.name=Творческий датчик
+
+itemGroup.Probe=The One Probe
