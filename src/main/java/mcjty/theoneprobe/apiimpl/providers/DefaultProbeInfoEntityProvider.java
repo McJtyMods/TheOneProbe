@@ -28,11 +28,17 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
 
         String modid = Tools.getModName(entity);
 
-        probeInfo.horizontal()
-                .entity(entity)
-                .vertical()
-                .text(TextFormatting.WHITE + entity.getDisplayName().getFormattedText())
-                .text(TextFormatting.BLUE + modid);
+        if (Tools.show(mode, config.getShowModName())) {
+            probeInfo.horizontal()
+                    .entity(entity)
+                    .vertical()
+                        .text(TextFormatting.WHITE + entity.getDisplayName().getFormattedText())
+                        .text(TextFormatting.BLUE + modid);
+        } else {
+            probeInfo.horizontal()
+                    .entity(entity)
+                    .text(TextFormatting.WHITE + entity.getDisplayName().getFormattedText());
+        }
 
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase livingBase = (EntityLivingBase) entity;

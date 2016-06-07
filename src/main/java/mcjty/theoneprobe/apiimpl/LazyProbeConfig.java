@@ -16,6 +16,7 @@ public class LazyProbeConfig implements IProbeConfig {
             dirty = true;
             original = new ProbeConfig()
                     .setRFMode(original.getRFMode())
+                    .showModName(original.getShowModName())
                     .showChestContents(original.getShowChestContents())
                     .showCropPercentage(original.getShowCropPercentage())
                     .showHarvestLevel(original.getShowHarvestLevel())
@@ -35,6 +36,17 @@ public class LazyProbeConfig implements IProbeConfig {
     @Override
     public int getRFMode() {
         return original.getRFMode();
+    }
+
+    @Override
+    public IProbeConfig showModName(ConfigMode mode) {
+        realCopy().showModName(mode);
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowModName() {
+        return original.getShowModName();
     }
 
     @Override

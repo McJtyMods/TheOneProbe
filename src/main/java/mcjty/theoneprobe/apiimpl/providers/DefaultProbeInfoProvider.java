@@ -42,7 +42,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         IProbeConfig config = Config.getRealConfig();
 
-        showStandardBlockInfo(probeInfo, blockState, block, world, pos);
+        showStandardBlockInfo(config, mode, probeInfo, blockState, block, world, pos);
 
         if (Tools.show(mode, config.getShowCropPercentage())) {
             showGrowthLevel(probeInfo, blockState, block);
@@ -111,7 +111,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private void showStandardBlockInfo(IProbeInfo probeInfo, IBlockState blockState, Block block, World world, BlockPos pos) {
+    private void showStandardBlockInfo(IProbeConfig config, ProbeMode mode, IProbeInfo probeInfo, IBlockState blockState, Block block, World world, BlockPos pos) {
         String modid = Tools.getModName(block);
 
         if (block instanceof BlockLiquid) {
@@ -121,23 +121,35 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.horizontal()
                         .icon(fluid.getStill(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20))
                         .vertical()
-                        .text(TextFormatting.WHITE + stack.getLocalizedName())
-                        .text(TextFormatting.BLUE + modid);
+                            .text(TextFormatting.WHITE + stack.getLocalizedName())
+                            .text(TextFormatting.BLUE + modid);
                 return;
             }
         }
 
         ItemStack pickBlock = block.getPickBlock(blockState, null, world, pos, null);
         if (pickBlock != null) {
-            probeInfo.horizontal()
-                    .item(pickBlock)
-                    .vertical()
-                        .text(TextFormatting.WHITE + pickBlock.getDisplayName())
-                        .text(TextFormatting.BLUE + modid);
+            if (Tools.show(mode, config.getShowModName())) {
+                probeInfo.horizontal()
+                        .item(pickBlock)
+                        .vertical()
+                            .text(TextFormatting.WHITE + pickBlock.getDisplayName())
+                            .text(TextFormatting.BLUE + modid);
+            } else {
+                probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
+                        .item(pickBlock)
+                        .text(TextFormatting.WHITE + pickBlock.getDisplayName());
+
+            }
         } else {
-            probeInfo.vertical()
-                    .text(TextFormatting.WHITE + block.getLocalizedName())
-                    .text(TextFormatting.BLUE + modid);
+            if (Tools.show(mode, config.getShowModName())) {
+                probeInfo.vertical()
+                        .text(TextFormatting.WHITE + block.getLocalizedName())
+                        .text(TextFormatting.BLUE + modid);
+            } else {
+                probeInfo.vertical()
+                        .text(TextFormatting.WHITE + block.getLocalizedName());
+            }
         }
     }
 
