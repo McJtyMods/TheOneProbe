@@ -43,18 +43,14 @@ public class RenderHelper {
         net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
         GlStateManager.disableRescaleNormal();
-        GlStateManager.translate(0F, 0F, 0.0F);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.enableRescaleNormal();
-        int i1 = 240;
-        int k1 = 240;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, i1 / 1.0F, k1 / 1.0F);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableRescaleNormal();
-        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
         GlStateManager.disableLighting();
-        GlStateManager.disableDepth();
         GlStateManager.popMatrix();
+        GlStateManager.enableDepth();
+        GlStateManager.disableColorMaterial();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
     public static boolean renderObject(Minecraft mc, int x, int y, Object itm, boolean highlight) {
