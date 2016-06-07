@@ -3,8 +3,9 @@ package mcjty.theoneprobe.proxy;
 import mcjty.theoneprobe.Config;
 import mcjty.theoneprobe.ForgeEventHandlers;
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
-import mcjty.theoneprobe.apiimpl.*;
+import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
@@ -62,6 +63,7 @@ public abstract class CommonProxy {
 
     public void postInit(FMLPostInitializationEvent e) {
         configureProviders();
+        configureEntityProviders();
 
         if (mainConfig.hasChanged()) {
             mainConfig.save();
@@ -85,4 +87,19 @@ public abstract class CommonProxy {
         TheOneProbe.theOneProbeImp.configureProviders(sortedProviders, excluded);
     }
 
+    private void configureEntityProviders() {
+        List<IProbeInfoEntityProvider> providers = TheOneProbe.theOneProbeImp.getEntityProviders();
+        String[] defaultValues = new String[providers.size()];
+        int i = 0;
+        for (IProbeInfoEntityProvider provider : providers) {
+            defaultValues[i++] = provider.getID();
+        }
+
+        String[] sortedProviders = mainConfig.getStringList("sortedEntityProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which entity providers should be used");
+        String[] excludedProviders = mainConfig.getStringList("excludedEntityProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Entity providers that should be excluded");
+        Set<String> excluded = new HashSet<>();
+        Collections.addAll(excluded, excludedProviders);
+
+        TheOneProbe.theOneProbeImp.configureEntityProviders(sortedProviders, excluded);
+    }
 }

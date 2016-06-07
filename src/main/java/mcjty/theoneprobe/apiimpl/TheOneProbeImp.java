@@ -101,6 +101,15 @@ public class TheOneProbeImp implements ITheOneProbe {
         return null;
     }
 
+    private IProbeInfoEntityProvider getEntityProviderByID(String id) {
+        for (IProbeInfoEntityProvider provider : entityProviders) {
+            if (provider.getID().equals(id)) {
+                return provider;
+            }
+        }
+        return null;
+    }
+
     public void configureProviders(String[] sortedProviders, Set<String> excludedProviders) {
         List<IProbeInfoProvider> newProviders = new ArrayList<>();
         for (String id : sortedProviders) {
@@ -121,6 +130,28 @@ public class TheOneProbeImp implements ITheOneProbe {
         }
 
         providers = newProviders;
+    }
+
+    public void configureEntityProviders(String[] sortedProviders, Set<String> excludedProviders) {
+        List<IProbeInfoEntityProvider> newProviders = new ArrayList<>();
+        for (String id : sortedProviders) {
+            if (!excludedProviders.contains(id)) {
+                IProbeInfoEntityProvider provider = getEntityProviderByID(id);
+                if (provider != null) {
+                    newProviders.add(provider);
+                }
+            }
+        }
+
+        // Add all providers that are not in the list of sortedProviders and are also not
+        // excluded.
+        for (IProbeInfoEntityProvider provider : entityProviders) {
+            if ((!newProviders.contains(provider)) && !excludedProviders.contains(provider.getID())) {
+                newProviders.add(provider);
+            }
+        }
+
+        entityProviders = newProviders;
     }
 
     @Override
