@@ -8,6 +8,7 @@ import mcjty.theoneprobe.keys.KeyBindings;
 import mcjty.theoneprobe.keys.KeyInputHandler;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -92,7 +93,13 @@ public class ClientProxy extends CommonProxy {
     }
 
     private ProbeMode getModeForPlayer() {
-        return Minecraft.getMinecraft().thePlayer.isSneaking() ? ProbeMode.EXTENDED : ProbeMode.NORMAL;
+        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+        if (Config.extendedInMain) {
+            if (hasItemInMainHand(ModItems.probe)) {
+                return ProbeMode.EXTENDED;
+            }
+        }
+        return player.isSneaking() ? ProbeMode.EXTENDED : ProbeMode.NORMAL;
     }
 
     private boolean hasItemInEitherHand(Item item) {
@@ -100,6 +107,12 @@ public class ClientProxy extends CommonProxy {
         ItemStack offHeldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.OFF_HAND);
         return (mainHeldItem != null && mainHeldItem.getItem() == item) ||
                 (offHeldItem != null && offHeldItem.getItem() == item);
+    }
+
+
+    private boolean hasItemInMainHand(Item item) {
+        ItemStack mainHeldItem = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
+        return mainHeldItem != null && mainHeldItem.getItem() == item;
     }
 
 
