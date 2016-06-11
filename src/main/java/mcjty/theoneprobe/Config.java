@@ -97,6 +97,14 @@ public class Config {
         boxThickness = cfg.getInt("boxThickness", CATEGORY_THEONEPROBE, boxThickness, 0, 20, "Thickness of the border of the box (0 to disable)");
         showLiquids = cfg.getBoolean("showLiquids", CATEGORY_THEONEPROBE, showLiquids, "If true show liquid information when the probe hits liquid first");
         isVisible = cfg.getBoolean("isVisible", CATEGORY_THEONEPROBE, isVisible, "Toggle default probe visibility (client can override)");
+        extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_THEONEPROBE, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
+    }
+
+    public static void setExtendedInMain(boolean extendedInMain) {
+        Configuration cfg = initClientConfig();
+        Config.extendedInMain = extendedInMain;
+        cfg.get(CATEGORY_THEONEPROBE, "extendedInMain", extendedInMain).set(extendedInMain);
+        cfg.save();
     }
 
     public static void setLiquids(boolean liquids) {
