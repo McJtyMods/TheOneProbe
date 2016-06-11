@@ -20,6 +20,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
@@ -42,7 +44,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         IProbeConfig config = Config.getRealConfig();
 
-        showStandardBlockInfo(config, mode, probeInfo, blockState, block, world, pos);
+        showStandardBlockInfo(config, mode, probeInfo, blockState, block, world, pos, data.getSideHit(), data.getHitVec());
 
         if (Tools.show(mode, config.getShowCropPercentage())) {
             showGrowthLevel(probeInfo, blockState, block);
@@ -111,7 +113,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private void showStandardBlockInfo(IProbeConfig config, ProbeMode mode, IProbeInfo probeInfo, IBlockState blockState, Block block, World world, BlockPos pos) {
+    private void showStandardBlockInfo(IProbeConfig config, ProbeMode mode, IProbeInfo probeInfo, IBlockState blockState, Block block, World world,
+                                       BlockPos pos, EnumFacing sideHit, Vec3d hitVec) {
         String modid = Tools.getModName(block);
 
         if (block instanceof BlockLiquid) {
@@ -127,7 +130,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             }
         }
 
-        ItemStack pickBlock = block.getPickBlock(blockState, null, world, pos, null);
+        ItemStack pickBlock = block.getPickBlock(blockState, new RayTraceResult(hitVec, sideHit, pos), world, pos, null);
         if (pickBlock != null) {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.horizontal()
