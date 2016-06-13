@@ -8,10 +8,7 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCrops;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockRedstoneWire;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -109,6 +106,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             BlockCrops crops = (BlockCrops) block;
             int age = crops.getAge(blockState);
             int maxAge = crops.getMaxAge();
+            probeInfo.text(TextFormatting.GREEN + "Growth: " + (age * 100) / maxAge + "%");
+        } else if (block instanceof BlockNetherWart) {
+            BlockNetherWart wart = (BlockNetherWart) block;
+            int age = blockState.getValue(BlockNetherWart.AGE);
+            int maxAge = 3;
             probeInfo.text(TextFormatting.GREEN + "Growth: " + (age * 100) / maxAge + "%");
         }
     }
