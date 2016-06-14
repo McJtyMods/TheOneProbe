@@ -133,7 +133,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
 
         ItemStack pickBlock = block.getPickBlock(blockState, new RayTraceResult(hitVec, sideHit, pos), world, pos, null);
-        if (pickBlock != null) {
+        if (pickBlock != null && pickBlock.getItem() != null) {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.horizontal()
                         .item(pickBlock)
