@@ -84,6 +84,9 @@ public class PacketGetEntityInfo implements IMessage {
         }
     }
 
+    private static int countSameExecption = 0;
+    private static ExceptionIdentity lastExceptionIdentity = null;
+
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         IProbeHitEntityData data = new ProbeHitEntityData(hitVec);
@@ -100,8 +103,18 @@ public class PacketGetEntityInfo implements IMessage {
             try {
                 provider.addProbeEntityInfo(mode, probeInfo, player, world, entity, data);
             } catch (Exception e) {
-                probeInfo.text(TextFormatting.RED + "Error: " + provider.getID());
-                TheOneProbe.logger.error("The One Probe catched error: ", e);
+                ExceptionIdentity identity = new ExceptionIdentity(e);
+                if (identity.equals(lastExceptionIdentity)) {
+                    countSameExecption++;
+                } else {
+                    if (lastExceptionIdentity != null) {
+                        TheOneProbe.logger.debug("Suppressed " + countSameExecption + " more exceptions");
+                    }
+                    lastExceptionIdentity = identity;
+                    countSameExecption = 0;
+                    probeInfo.text(TextFormatting.RED + "Error: " + provider.getID());
+                    TheOneProbe.logger.debug("The One Probe catched error: ", e);
+                }
             }
         }
         return probeInfo;
