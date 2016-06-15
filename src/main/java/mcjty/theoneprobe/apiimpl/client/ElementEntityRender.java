@@ -12,6 +12,13 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ElementEntityRender {
 
+    public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, int x, int y) {
+        Entity entity = Minecraft.getMinecraft().theWorld.getEntityByID(playerID);
+        if (entity != null) {
+            renderEntity(style, x, y, entity);
+        }
+    }
+
     public static void render(String entityName, NBTTagCompound entityNBT, IEntityStyle style, int x, int y) {
         if (entityName != null && !entityName.isEmpty()) {
             Entity entity = null;
@@ -26,13 +33,17 @@ public class ElementEntityRender {
                 }
             }
             if (entity != null) {
-                float height = entity.height;
-                height = (float) ((height - 1) * .7 + 1);
-                float s = style.getScale() * ((style.getHeight() * 14.0f / 25) / height);
-
-                RenderHelper.renderEntity(entity, x, y, s);
+                renderEntity(style, x, y, entity);
             }
         }
+    }
+
+    private static void renderEntity(IEntityStyle style, int x, int y, Entity entity) {
+        float height = entity.height;
+        height = (float) ((height - 1) * .7 + 1);
+        float s = style.getScale() * ((style.getHeight() * 14.0f / 25) / height);
+
+        RenderHelper.renderEntity(entity, x, y, s);
     }
 
 }

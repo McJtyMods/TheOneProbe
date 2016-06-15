@@ -9,11 +9,13 @@ import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
 import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ElementEntity implements IElement {
 
     private final String entityName;
+    private final Integer playerID;
     private final NBTTagCompound entityNBT;
     private final IEntityStyle style;
 
@@ -21,11 +23,18 @@ public class ElementEntity implements IElement {
         this.entityName = entityName;
         this.entityNBT = null;
         this.style = style;
+        this.playerID = null;
     }
 
     public ElementEntity(Entity entity, IEntityStyle style) {
-        entityNBT = entity.serializeNBT();
-
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
+            entityNBT = null;
+            playerID = player.getEntityId();
+        } else {
+            entityNBT = entity.serializeNBT();
+            playerID = null;
+        }
         this.entityName = EntityList.getEntityString(entity);
         this.style = style;
     }
@@ -41,11 +50,20 @@ public class ElementEntity implements IElement {
         } else {
             entityNBT = null;
         }
+        if (buf.readBoolean()) {
+            playerID = buf.readInt();
+        } else {
+            playerID = null;
+        }
     }
 
     @Override
     public void render(int x, int y) {
-        ElementEntityRender.render(entityName, entityNBT, style, x, y);
+        if (playerID != null) {
+            ElementEntityRender.renderPlayer(entityName, playerID, style, x, y);
+        } else {
+            ElementEntityRender.render(entityName, entityNBT, style, x, y);
+        }
     }
 
     @Override
@@ -67,6 +85,12 @@ public class ElementEntity implements IElement {
         if (entityNBT != null) {
             buf.writeBoolean(true);
             NetworkTools.writeNBT(buf, entityNBT);
+        } else {
+            buf.writeBoolean(false);
+        }
+        if (playerID != null) {
+            buf.writeBoolean(true);
+            buf.writeInt(playerID);
         } else {
             buf.writeBoolean(false);
         }
