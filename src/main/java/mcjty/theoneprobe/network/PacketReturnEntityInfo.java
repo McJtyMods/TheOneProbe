@@ -18,15 +18,24 @@ public class PacketReturnEntityInfo implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         uuid = new UUID(buf.readLong(), buf.readLong());
-        probeInfo = new ProbeInfo();
-        probeInfo.fromBytes(buf);
+        if (buf.readBoolean()) {
+            probeInfo = new ProbeInfo();
+            probeInfo.fromBytes(buf);
+        } else {
+            probeInfo = null;
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeLong(uuid.getMostSignificantBits());
         buf.writeLong(uuid.getLeastSignificantBits());
-        probeInfo.toBytes(buf);
+        if (probeInfo != null) {
+            buf.writeBoolean(true);
+            probeInfo.toBytes(buf);
+        } else {
+            buf.writeBoolean(false);
+        }
     }
 
     public PacketReturnEntityInfo() {

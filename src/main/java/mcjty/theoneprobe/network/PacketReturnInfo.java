@@ -19,8 +19,12 @@ public class PacketReturnInfo implements IMessage {
     public void fromBytes(ByteBuf buf) {
         dim = buf.readInt();
         pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
-        probeInfo = new ProbeInfo();
-        probeInfo.fromBytes(buf);
+        if (buf.readBoolean()) {
+            probeInfo = new ProbeInfo();
+            probeInfo.fromBytes(buf);
+        } else {
+            probeInfo = null;
+        }
     }
 
     @Override
@@ -29,7 +33,12 @@ public class PacketReturnInfo implements IMessage {
         buf.writeInt(pos.getX());
         buf.writeInt(pos.getY());
         buf.writeInt(pos.getZ());
-        probeInfo.toBytes(buf);
+        if (probeInfo != null) {
+            buf.writeBoolean(true);
+            probeInfo.toBytes(buf);
+        } else {
+            buf.writeBoolean(false);
+        }
     }
 
     public PacketReturnInfo() {

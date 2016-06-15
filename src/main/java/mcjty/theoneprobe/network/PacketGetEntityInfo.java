@@ -6,8 +6,10 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
@@ -84,10 +86,19 @@ public class PacketGetEntityInfo implements IMessage {
         }
     }
 
-    private static int countSameExecption = 0;
+    private static boolean hasProbeInEitherHand(EntityPlayer player) {
+        return ModItems.isProbe(player.getHeldItem(EnumHand.MAIN_HAND)) || ModItems.isProbe(player.getHeldItem(EnumHand.OFF_HAND));
+    }
+
+    private static int countSameException = 0;
     private static ExceptionIdentity lastExceptionIdentity = null;
 
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {
+        if (Config.needsProbe == 2 && !hasProbeInEitherHand(player)) {
+            // The server says we need a probe but we don't have one in our hands
+            return null;
+        }
+
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         IProbeHitEntityData data = new ProbeHitEntityData(hitVec);
 
@@ -105,13 +116,13 @@ public class PacketGetEntityInfo implements IMessage {
             } catch (Exception e) {
                 ExceptionIdentity identity = new ExceptionIdentity(e);
                 if (identity.equals(lastExceptionIdentity)) {
-                    countSameExecption++;
+                    countSameException++;
                 } else {
                     if (lastExceptionIdentity != null) {
-                        TheOneProbe.logger.debug("Suppressed " + countSameExecption + " more exceptions");
+                        TheOneProbe.logger.debug("Suppressed " + countSameException + " more exceptions");
                     }
                     lastExceptionIdentity = identity;
-                    countSameExecption = 0;
+                    countSameException = 0;
                     probeInfo.text(TextFormatting.RED + "Error: " + provider.getID());
                     TheOneProbe.logger.debug("The One Probe catched error: ", e);
                 }

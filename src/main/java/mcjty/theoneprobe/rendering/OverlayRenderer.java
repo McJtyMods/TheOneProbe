@@ -33,11 +33,17 @@ public class OverlayRenderer {
     private static long lastPairTime = 0;
 
     public static void registerProbeInfo(int dim, BlockPos pos, ProbeInfo probeInfo) {
+        if (probeInfo == null) {
+            return;
+        }
         long time = System.currentTimeMillis();
         cachedInfo.put(Pair.of(dim, pos), Pair.of(time, probeInfo));
     }
 
     public static void registerProbeInfo(UUID uuid, ProbeInfo probeInfo) {
+        if (probeInfo == null) {
+            return;
+        }
         long time = System.currentTimeMillis();
         cachedEntityInfo.put(uuid, Pair.of(time, probeInfo));
     }

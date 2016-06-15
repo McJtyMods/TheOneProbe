@@ -9,6 +9,7 @@ import mcjty.theoneprobe.keys.KeyInputHandler;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -83,7 +84,7 @@ public class ClientProxy extends CommonProxy {
 
         if (hasItemInEitherHand(ModItems.creativeProbe)) {
             OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getPartialTicks());
-        } else if (Config.needsProbe) {
+        } else if (Config.needsProbe > 0) {
             if (hasItemInEitherHand(ModItems.probe)) {
                 OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
             }
