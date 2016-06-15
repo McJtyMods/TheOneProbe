@@ -94,10 +94,25 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
+    private String[] harvestLevels = new String[] {
+            "stone",
+            "iron",
+            "diamond",
+            "obsidian",
+            "cobalt"
+    };
+
     private void showHarvestLevel(IProbeInfo probeInfo, IBlockState blockState, Block block) {
         String harvestTool = block.getHarvestTool(blockState);
         if (harvestTool != null) {
-            probeInfo.text(TextFormatting.GREEN + "Harvest tool: " + harvestTool);
+            int harvestLevel = block.getHarvestLevel(blockState);
+            String harvestName;
+            if (harvestLevel >= harvestLevels.length) {
+                harvestName = Integer.toString(harvestLevel);
+            } else {
+                harvestName = harvestLevels[harvestLevel];
+            }
+            probeInfo.text(TextFormatting.GREEN + "Tool: " + harvestTool + " (level " + harvestName + ")");
         }
     }
 
