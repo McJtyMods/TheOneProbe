@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.commands;
 
 import mcjty.theoneprobe.Config;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -10,7 +11,10 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class CommandTopCfg implements ICommand {
@@ -90,7 +94,7 @@ public class CommandTopCfg implements ICommand {
 
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-        return new ArrayList<>(SUBCOMMANDS.keySet());
+        return CommandBase.getListOfStringsMatchingLastWord(args, SUBCOMMANDS.keySet());
     }
 
     @Override
