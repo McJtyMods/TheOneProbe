@@ -170,6 +170,12 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                                        BlockPos pos, EnumFacing sideHit, Vec3d hitVec) {
         String modid = Tools.getModName(block);
 
+        if (block instanceof BlockSilverfish && mode != ProbeMode.DEBUG) {
+            BlockSilverfish.EnumType type = blockState.getValue(BlockSilverfish.VARIANT);
+            blockState = type.getModelBlock();
+            block = blockState.getBlock();
+        }
+
         if (block instanceof BlockLiquid) {
             Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
             if (fluid != null) {
