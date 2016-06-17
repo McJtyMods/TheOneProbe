@@ -24,6 +24,9 @@ public interface IProbeConfig {
     IProbeConfig showHarvestLevel(ConfigMode mode);
     ConfigMode getShowHarvestLevel();
 
+    IProbeConfig showCanBeHarvested(ConfigMode mode);
+    ConfigMode getShowCanBeHarvested();
+
     IProbeConfig showCropPercentage(ConfigMode mode);
     ConfigMode getShowCropPercentage();
 

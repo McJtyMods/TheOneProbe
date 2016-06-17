@@ -8,6 +8,7 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
+import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,6 +49,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
         if (Tools.show(mode, config.getShowHarvestLevel())) {
             showHarvestLevel(probeInfo, blockState, block);
+        }
+        if (Tools.show(mode, config.getShowCanBeHarvested())) {
+            showCanBeHarvested(probeInfo, world, pos, block, player);
         }
         if (Tools.show(mode, config.getShowRedstone())) {
             showRedstonePower(probeInfo, world, blockState, data, block);
@@ -113,6 +117,21 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 harvestName = harvestLevels[harvestLevel];
             }
             probeInfo.text(TextFormatting.GREEN + "Tool: " + harvestTool + " (level " + harvestName + ")");
+        }
+    }
+
+    private void showCanBeHarvested(IProbeInfo probeInfo, World world, BlockPos pos, Block block, EntityPlayer player) {
+        if (ModItems.isProbe(player.getHeldItemMainhand())) {
+            // If the player holds the probe there is no need to show harvestability information as the
+            // probe cannot harvest anything. This is only supposed to work in off hand.
+            return;
+        }
+
+        boolean harvestable = block.canHarvestBlock(world, pos, player);
+        if (harvestable) {
+            probeInfo.text(TextFormatting.GREEN + "Harvestable");
+        } else {
+            probeInfo.text(TextFormatting.YELLOW + "Not harvestable");
         }
     }
 

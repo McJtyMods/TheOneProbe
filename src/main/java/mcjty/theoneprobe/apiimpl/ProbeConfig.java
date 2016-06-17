@@ -9,6 +9,7 @@ public class ProbeConfig implements IProbeConfig {
 
     private int showRF = 1;
     private static IProbeConfig.ConfigMode showHarvestLevel = NORMAL;
+    private static IProbeConfig.ConfigMode showCanBeHarvested = NORMAL;
     private static IProbeConfig.ConfigMode showModName = NORMAL;
     private static IProbeConfig.ConfigMode showCropPercentage = NORMAL;
     private static IProbeConfig.ConfigMode showChestContents = EXTENDED;
@@ -52,6 +53,17 @@ public class ProbeConfig implements IProbeConfig {
     @Override
     public ConfigMode getShowHarvestLevel() {
         return showHarvestLevel;
+    }
+
+    @Override
+    public IProbeConfig showCanBeHarvested(ConfigMode mode) {
+        showCanBeHarvested = mode;
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowCanBeHarvested() {
+        return showCanBeHarvested;
     }
 
     @Override

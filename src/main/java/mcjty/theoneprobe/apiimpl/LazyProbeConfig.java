@@ -20,6 +20,7 @@ public class LazyProbeConfig implements IProbeConfig {
                     .showChestContents(original.getShowChestContents())
                     .showCropPercentage(original.getShowCropPercentage())
                     .showHarvestLevel(original.getShowHarvestLevel())
+                    .showCanBeHarvested(original.getShowCanBeHarvested())
                     .showMobHealth(original.getShowMobHealth())
                     .showMobPotionEffects(original.getShowMobPotionEffects())
                     .showRedstone(original.getShowRedstone());
@@ -58,6 +59,17 @@ public class LazyProbeConfig implements IProbeConfig {
     @Override
     public ConfigMode getShowHarvestLevel() {
         return original.getShowHarvestLevel();
+    }
+
+    @Override
+    public IProbeConfig showCanBeHarvested(ConfigMode mode) {
+        realCopy().showCanBeHarvested(mode);
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowCanBeHarvested() {
+        return original.getShowCanBeHarvested();
     }
 
     @Override
