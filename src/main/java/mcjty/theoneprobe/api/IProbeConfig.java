@@ -18,6 +18,9 @@ public interface IProbeConfig {
     IProbeConfig setRFMode(int mode);
     int getRFMode();
 
+    IProbeConfig showLeverSetting(ConfigMode mode);
+    ConfigMode getShowLeverSetting();
+
     IProbeConfig showModName(ConfigMode mode);
     ConfigMode getShowModName();
 

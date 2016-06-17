@@ -12,6 +12,7 @@ import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -54,7 +55,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             showCanBeHarvested(probeInfo, world, pos, block, player);
         }
         if (Tools.show(mode, config.getShowRedstone())) {
-            showRedstonePower(probeInfo, world, blockState, data, block);
+            showRedstonePower(probeInfo, world, blockState, data, block, Tools.show(mode, config.getShowLeverSetting()));
+        }
+        if (Tools.show(mode, config.getShowLeverSetting())) {
+            showLeverSetting(probeInfo, world, blockState, data, block);
         }
         if (Tools.show(mode, config.getShowChestContents())) {
             showChestContents(probeInfo, world, pos);
@@ -65,7 +69,12 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private void showRedstonePower(IProbeInfo probeInfo, World world, IBlockState blockState, IProbeHitData data, Block block) {
+    private void showRedstonePower(IProbeInfo probeInfo, World world, IBlockState blockState, IProbeHitData data, Block block,
+                                   boolean showLever) {
+        if (showLever && block instanceof BlockLever) {
+            // We are showing the lever setting so we don't show redstone in that case
+            return;
+        }
         int redstonePower;
         if (block instanceof BlockRedstoneWire) {
             redstonePower = blockState.getValue(BlockRedstoneWire.POWER);
@@ -74,6 +83,14 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
         if (redstonePower > 0) {
             probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14)).text("Power: " + redstonePower);
+        }
+    }
+
+    private void showLeverSetting(IProbeInfo probeInfo, World world, IBlockState blockState, IProbeHitData data, Block block) {
+        if (block instanceof BlockLever) {
+            Boolean powered = blockState.getValue(BlockLever.POWERED);
+            probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
+                    .text("State: " + (powered ? "On" : "Off"));
         }
     }
 

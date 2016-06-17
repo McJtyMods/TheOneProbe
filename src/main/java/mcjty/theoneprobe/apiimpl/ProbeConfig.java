@@ -16,6 +16,7 @@ public class ProbeConfig implements IProbeConfig {
     private static IProbeConfig.ConfigMode showRedstone = NORMAL;
     private static IProbeConfig.ConfigMode showMobHealth = NORMAL;
     private static IProbeConfig.ConfigMode showMobPotionEffects = EXTENDED;
+    private static IProbeConfig.ConfigMode showLeverSetting = NORMAL;
 
     /// Make a lazy copy of this probe config.
     public IProbeConfig lazyCopy() {
@@ -119,5 +120,16 @@ public class ProbeConfig implements IProbeConfig {
     @Override
     public ConfigMode getShowMobPotionEffects() {
         return showMobPotionEffects;
+    }
+
+    @Override
+    public IProbeConfig showLeverSetting(ConfigMode mode) {
+        showLeverSetting = mode;
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowLeverSetting() {
+        return showLeverSetting;
     }
 }
