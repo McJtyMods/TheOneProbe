@@ -90,9 +90,6 @@ public class PacketGetEntityInfo implements IMessage {
         return ModItems.isProbe(player.getHeldItem(EnumHand.MAIN_HAND)) || ModItems.isProbe(player.getHeldItem(EnumHand.OFF_HAND));
     }
 
-    private static int countSameException = 0;
-    private static ExceptionIdentity lastExceptionIdentity = null;
-
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {
         if (Config.needsProbe == 2 && !hasProbeInEitherHand(player)) {
             // The server says we need a probe but we don't have one in our hands
@@ -113,19 +110,9 @@ public class PacketGetEntityInfo implements IMessage {
         for (IProbeInfoEntityProvider provider : entityProviders) {
             try {
                 provider.addProbeEntityInfo(mode, probeInfo, player, world, entity, data);
-            } catch (Exception e) {
-                ExceptionIdentity identity = new ExceptionIdentity(e);
-                if (identity.equals(lastExceptionIdentity)) {
-                    countSameException++;
-                } else {
-                    if (lastExceptionIdentity != null) {
-                        TheOneProbe.logger.debug("Suppressed " + countSameException + " more exceptions");
-                    }
-                    lastExceptionIdentity = identity;
-                    countSameException = 0;
-                    probeInfo.text(TextFormatting.RED + "Error: " + provider.getID());
-                    TheOneProbe.logger.debug("The One Probe catched error: ", e);
-                }
+            } catch (Throwable e) {
+                ThrowableIdentity.registerThrowable(e);
+                probeInfo.text(TextFormatting.RED + "Error: " + provider.getID());
             }
         }
         return probeInfo;

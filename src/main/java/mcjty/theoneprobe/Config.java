@@ -41,6 +41,8 @@ public class Config {
     public static int rfbarAlternateFilledColor = 0xff430000;
     public static int rfbarBorderColor = 0xff555555;
 
+    public static int loggingThrowableTimeout = 20000;
+
 
     private static IOverlayStyle defaultOverlayStyle;
     private static ProbeConfig defaultConfig = new ProbeConfig();
@@ -59,6 +61,7 @@ public class Config {
     }
 
     public static void init(Configuration cfg) {
+        loggingThrowableTimeout = cfg.getInt("loggingThrowableTimeout", CATEGORY_THEONEPROBE, loggingThrowableTimeout, 1, 10000000, "How much time (ms) to wait before reporting an exception again");
         needsProbe = cfg.getInt("needsProbe", CATEGORY_THEONEPROBE, needsProbe, 0, 2, "Is the probe needed to show the tooltip? 0 = no, 1 = yes, 2 = yes and clients cannot override");
         extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_THEONEPROBE, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
         defaultConfig.setRFMode(cfg.getInt("showRF", CATEGORY_THEONEPROBE, defaultConfig.getRFMode(), 0, 2, "How to display RF: 0 = do not show, 1 = show in a bar, 2 = show as text"));
