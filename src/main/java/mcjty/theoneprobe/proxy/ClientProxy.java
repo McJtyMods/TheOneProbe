@@ -9,7 +9,6 @@ import mcjty.theoneprobe.keys.KeyInputHandler;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -20,6 +19,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import static mcjty.theoneprobe.items.ModItems.PROBETAG;
 
 public class ClientProxy extends CommonProxy {
 
@@ -85,7 +86,7 @@ public class ClientProxy extends CommonProxy {
         if (hasItemInEitherHand(ModItems.creativeProbe)) {
             OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getPartialTicks());
         } else if (Config.needsProbe > 0) {
-            if (hasItemInEitherHand(ModItems.probe)) {
+            if (hasItemInEitherHand(ModItems.probe) || hasProbeInHelmet()) {
                 OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
             }
         } else {
@@ -101,6 +102,17 @@ public class ClientProxy extends CommonProxy {
             }
         }
         return player.isSneaking() ? ProbeMode.EXTENDED : ProbeMode.NORMAL;
+    }
+
+    private boolean hasProbeInHelmet() {
+        ItemStack helmet = Minecraft.getMinecraft().thePlayer.inventory.armorItemInSlot(3);
+        if (helmet == null) {
+            return false;
+        }
+        if (helmet.getTagCompound() == null) {
+            return false;
+        }
+        return helmet.getTagCompound().hasKey(PROBETAG);
     }
 
     private boolean hasItemInEitherHand(Item item) {
