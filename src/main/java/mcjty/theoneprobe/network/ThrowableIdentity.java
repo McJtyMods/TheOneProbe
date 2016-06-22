@@ -26,7 +26,8 @@ public class ThrowableIdentity {
     }
 
     public ThrowableIdentity(Throwable e) {
-        StringBuilder builder = new StringBuilder(e.getMessage());
+        String message = e.getMessage();
+        StringBuilder builder = new StringBuilder(message == null ? "<null>" : message);
         StackTraceElement[] st = e.getStackTrace();
         for (int i = 0; i < Math.min(3, st.length); i++) {
             builder
