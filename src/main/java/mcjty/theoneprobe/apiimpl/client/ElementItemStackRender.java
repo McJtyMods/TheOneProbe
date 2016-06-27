@@ -11,7 +11,20 @@ public class ElementItemStackRender {
     public static void render(ItemStack itemStack, IItemStyle style, int x, int y) {
         RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
         if (itemStack != null) {
-            String amount = itemStack.stackSize > 1 ? Integer.toString(itemStack.stackSize) : "";
+            int size = itemStack.stackSize;
+            String amount;
+            if (size <= 0) {
+                amount = "";
+            } else if (size < 10000) {
+                amount = String.valueOf(size);
+            } else if (size < 1000000) {
+                amount = String.valueOf(size / 1000) + "k";
+            } else if (size < 1000000000) {
+                amount = String.valueOf(size / 1000000) + "m";
+            } else {
+                amount = String.valueOf(size / 1000000000) + "g";
+            }
+
             RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount);
         }
     }
