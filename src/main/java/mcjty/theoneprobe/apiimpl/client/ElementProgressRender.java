@@ -17,7 +17,7 @@ public class ElementProgressRender {
             renderLifeBar(current, x, y, w, h);
         } else {
             RenderHelper.drawThickBeveledBox(x, y, x + w, y + h, 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
-            if (current > 0) {
+            if (current > 0 && max > 0) {
                 int dx = (int) (current * (w - 2) / max);
 
                 if (style.getFilledColor() == style.getAlternatefilledColor()) {
