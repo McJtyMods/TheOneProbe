@@ -13,9 +13,9 @@ public class ElementItemStackRender {
         if (itemStack != null) {
             int size = itemStack.stackSize;
             String amount;
-            if (size <= 0) {
+            if (size <= 1) {
                 amount = "";
-            } else if (size < 10000) {
+            } else if (size < 100000) {
                 amount = String.valueOf(size);
             } else if (size < 1000000) {
                 amount = String.valueOf(size / 1000) + "k";
