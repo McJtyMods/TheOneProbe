@@ -26,6 +26,7 @@ public class Config {
     public static float probeDistance = 6;
     public static boolean showLiquids = false;
     public static boolean isVisible = true;
+    public static boolean compactEqualStacks = true;
 
     public static boolean showDebugInfo = true;
     private static int leftX = 5;
@@ -81,6 +82,7 @@ public class Config {
         showDebugInfo = cfg.getBoolean("showDebugInfo", CATEGORY_THEONEPROBE, showDebugInfo, "If true show debug info with creative probe");
         showLiquids = cfg.getBoolean("showLiquids", CATEGORY_THEONEPROBE, showLiquids, "If true show liquid information when the probe hits liquid first");
         isVisible = cfg.getBoolean("isVisible", CATEGORY_THEONEPROBE, isVisible, "Toggle default probe visibility (client can override)");
+        compactEqualStacks = cfg.getBoolean("compactEqualStacks", CATEGORY_THEONEPROBE, compactEqualStacks, "If true equal stacks will be compacted in the chest contents overlay");
         rfbarFilledColor = parseColor(cfg.getString("rfbarFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(rfbarFilledColor), "Color for the RF bar"));
         rfbarAlternateFilledColor = parseColor(cfg.getString("rfbarAlternateFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(rfbarAlternateFilledColor), "Alternate color for the RF bar"));
         rfbarBorderColor = parseColor(cfg.getString("rfbarBorderColor", CATEGORY_THEONEPROBE, Integer.toHexString(rfbarBorderColor), "Color for the RF bar border"));
@@ -104,7 +106,7 @@ public class Config {
         boxFillColor = parseColor(cfg.getString("boxFillColor", CATEGORY_THEONEPROBE, Integer.toHexString(boxFillColor), "Color of the box (0 to disable)"));
         boxThickness = cfg.getInt("boxThickness", CATEGORY_THEONEPROBE, boxThickness, 0, 20, "Thickness of the border of the box (0 to disable)");
         showLiquids = cfg.getBoolean("showLiquids", CATEGORY_THEONEPROBE, showLiquids, "If true show liquid information when the probe hits liquid first");
-        isVisible = cfg.getBoolean("isVisible", CATEGORY_THEONEPROBE, isVisible, "Toggle default probe visibility (client can override)");
+        compactEqualStacks = cfg.getBoolean("compactEqualStacks", CATEGORY_THEONEPROBE, compactEqualStacks, "If true equal stacks will be compacted in the chest contents overlay");
 
         extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_THEONEPROBE, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
     }
@@ -127,6 +129,13 @@ public class Config {
         Configuration cfg = initClientConfig();
         Config.isVisible = visible;
         cfg.get(CATEGORY_THEONEPROBE, "isVisible", isVisible).set(visible);
+        cfg.save();
+    }
+
+    public static void setCompactEqualStacks(boolean compact) {
+        Configuration cfg = initClientConfig();
+        Config.compactEqualStacks = compact;
+        cfg.get(CATEGORY_THEONEPROBE, "compactEqualStacks", compactEqualStacks).set(compact);
         cfg.save();
     }
 

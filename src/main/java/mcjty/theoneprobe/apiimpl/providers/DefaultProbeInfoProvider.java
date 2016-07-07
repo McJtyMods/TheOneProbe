@@ -12,9 +12,9 @@ import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -28,6 +28,12 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -215,50 +221,61 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
+    private void addItemStack(List<ItemStack> stacks, Set<Item> foundItems, ItemStack stack) {
+        if (stack == null) {
+            return;
+        }
+        if (foundItems != null && foundItems.contains(stack.getItem())) {
+            for (ItemStack s : stacks) {
+                if (ItemHandlerHelper.canItemStacksStack(s, stack)) {
+                    s.stackSize += stack.stackSize;
+                    return;
+                }
+            }
+        }
+        // If we come here we need to append a new stack
+        stacks.add(stack.copy());
+        if (foundItems != null) {
+            foundItems.add(stack.getItem());
+        }
+    }
+
     private void showChestContents(IProbeInfo probeInfo, World world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
         IProbeInfo vertical = null;
         IProbeInfo horizontal = null;
-        int rows = 0;
-        int idx = 0;
+
+        Set<Item> foundItems = Config.compactEqualStacks ? new HashSet<>() : null;
+        List<ItemStack> stacks = new ArrayList<>();
+
         if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
             IItemHandler capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
             for (int i = 0 ; i < capability.getSlots() ; i++) {
-                ItemStack stackInSlot = capability.getStackInSlot(i);
-                if (stackInSlot != null) {
-                    if (idx % 10 == 0) {
-                        if (vertical == null) {
-                            vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(0xffffffff).spacing(0));
-                        }
-                        horizontal = vertical.horizontal(new LayoutStyle().spacing(0));
-                        rows++;
-                        if (rows > 4) {
-                            break;
-                        }
-                    }
-                    horizontal.item(stackInSlot);
-                    idx++;
-                }
+                addItemStack(stacks, foundItems, capability.getStackInSlot(i));
             }
         } else if (te instanceof IInventory) {
             IInventory inventory = (IInventory) te;
             for (int i = 0 ; i < inventory.getSizeInventory() ; i++) {
-                ItemStack stackInSlot = inventory.getStackInSlot(i);
-                if (stackInSlot != null) {
-                    if (idx % 10 == 0) {
-                        if (vertical == null) {
-                            vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffffffff).spacing(0));
-                        }
-                        horizontal = vertical.horizontal(new LayoutStyle().spacing(0));
-                        rows++;
-                        if (rows > 4) {
-                            break;
-                        }
-                    }
-                    horizontal.item(stackInSlot);
-                    idx++;
+                addItemStack(stacks, foundItems, inventory.getStackInSlot(i));
+            }
+        }
+
+        int rows = 0;
+        int idx = 0;
+
+        for (ItemStack stackInSlot : stacks) {
+            if (idx % 10 == 0) {
+                if (vertical == null) {
+                    vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(0xffffffff).spacing(0));
+                }
+                horizontal = vertical.horizontal(new LayoutStyle().spacing(0));
+                rows++;
+                if (rows > 4) {
+                    break;
                 }
             }
+            horizontal.item(stackInSlot);
+            idx++;
         }
     }
 

@@ -450,7 +450,6 @@ public class RenderHelper {
         if (stack != null) {
             if (stack.stackSize != 1 || text != null) {
                 String s = text == null ? String.valueOf(stack.stackSize) : text;
-
                 if (text == null && stack.stackSize < 1) {
                     s = TextFormatting.RED + String.valueOf(stack.stackSize);
                 }
@@ -461,12 +460,12 @@ public class RenderHelper {
                 if (scaled >= 2) {
                     GlStateManager.pushMatrix();
                     GlStateManager.scale(.5f, .5f, .5f);
-                    fr.drawStringWithShadow(s, ((xPosition + 19 - 2) * 2 - fr.getStringWidth(s)), yPosition * 2 + 23, 16777215);
+                    fr.drawStringWithShadow(s, ((xPosition + 19 - 2) * 2 - 1 - fr.getStringWidth(s)), yPosition * 2 + 24, 16777215);
                     GlStateManager.popMatrix();
                 } else if (scaled == 1) {
                     GlStateManager.pushMatrix();
                     GlStateManager.scale(.75f, .75f, .75f);
-                    fr.drawStringWithShadow(s, ((xPosition - 2) * 1.5f - fr.getStringWidth(s)), yPosition * 1.5f + 5, 16777215);
+                    fr.drawStringWithShadow(s, ((xPosition - 2) * 1.34f + 24 - fr.getStringWidth(s)), yPosition * 1.34f + 14, 16777215);
                     GlStateManager.popMatrix();
                 } else {
                     fr.drawStringWithShadow(s, (xPosition + 19 - 2 - fr.getStringWidth(s)), (yPosition + 6 + 3), 16777215);

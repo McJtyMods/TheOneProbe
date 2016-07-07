@@ -48,6 +48,8 @@ public class CommandTopCfg implements ICommand {
         SUBCOMMANDS.put("default", s -> Config.setBoxStyle(2, 0xff999999, 0x55006699));
         SUBCOMMANDS.put("liquids", s -> Config.setLiquids(true));
         SUBCOMMANDS.put("noliquids", s -> Config.setLiquids(false));
+        SUBCOMMANDS.put("compactequalstacks", s -> Config.setCompactEqualStacks(true));
+        SUBCOMMANDS.put("dontcompactequalstacks", s -> Config.setCompactEqualStacks(false));
         SUBCOMMANDS.put("extendedinmain", s -> Config.setExtendedInMain(true));
         SUBCOMMANDS.put("defaultinmain", s -> Config.setExtendedInMain(false));
     }
