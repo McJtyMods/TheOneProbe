@@ -49,7 +49,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         IProbeConfig config = Config.getRealConfig();
 
-        showStandardBlockInfo(config, mode, probeInfo, blockState, block, world, pos, data.getSideHit(), data.getHitVec());
+        showStandardBlockInfo(config, mode, probeInfo, blockState, block, world, pos, player, data.getSideHit(), data.getHitVec());
 
         if (Tools.show(mode, config.getShowCropPercentage())) {
             showGrowthLevel(probeInfo, blockState, block);
@@ -173,7 +173,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void showStandardBlockInfo(IProbeConfig config, ProbeMode mode, IProbeInfo probeInfo, IBlockState blockState, Block block, World world,
-                                       BlockPos pos, EnumFacing sideHit, Vec3d hitVec) {
+                                       BlockPos pos, EntityPlayer player, EnumFacing sideHit, Vec3d hitVec) {
         String modid = Tools.getModName(block);
 
         if (block instanceof BlockSilverfish && mode != ProbeMode.DEBUG) {
@@ -195,7 +195,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             }
         }
 
-        ItemStack pickBlock = block.getPickBlock(blockState, new RayTraceResult(hitVec, sideHit, pos), world, pos, null);
+        ItemStack pickBlock = block.getPickBlock(blockState, new RayTraceResult(hitVec, sideHit, pos), world, pos, player);
         if (pickBlock != null && pickBlock.getItem() != null) {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.horizontal()
