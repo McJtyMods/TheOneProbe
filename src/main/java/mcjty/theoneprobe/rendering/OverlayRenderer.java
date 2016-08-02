@@ -8,13 +8,17 @@ import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
@@ -126,19 +130,31 @@ public class OverlayRenderer {
 
         Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(Pair.of(player.worldObj.provider.getDimension(), blockPos));
         if (cacheEntry == null) {
-            PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode, mouseOver));
+            requestInfoFromServer(mode, mouseOver, blockPos, player);
             if (lastPair != null && time < lastPairTime + Config.timeout) {
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
             }
         } else {
             if (time > cacheEntry.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
-                PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(player.worldObj.provider.getDimension(), blockPos, mode, mouseOver));
+                requestInfoFromServer(mode, mouseOver, blockPos, player);
             }
             renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle());
             lastPair = cacheEntry;
             lastPairTime = time;
         }
+    }
+
+    private static void requestInfoFromServer(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, EntityPlayerSP player) {
+        World world = player.worldObj;
+        IBlockState blockState = world.getBlockState(blockPos);
+        Block block = blockState.getBlock();
+        ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
+        if (pickBlock.getItem() == null) {
+            // Protection for some invalid items.
+            pickBlock = null;
+        }
+        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.provider.getDimension(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo) {

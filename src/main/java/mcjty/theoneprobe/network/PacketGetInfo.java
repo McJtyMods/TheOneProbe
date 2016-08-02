@@ -9,6 +9,7 @@ import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -32,6 +33,7 @@ public class PacketGetInfo implements IMessage {
     private ProbeMode mode;
     private EnumFacing sideHit;
     private Vec3d hitVec;
+    private ItemStack pickBlock;
 
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -46,6 +48,11 @@ public class PacketGetInfo implements IMessage {
         }
         if (buf.readBoolean()) {
             hitVec = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        }
+        if (buf.readBoolean()) {
+            pickBlock = NetworkTools.readItemStack(buf);
+        } else {
+            pickBlock = null;
         }
     }
 
@@ -65,17 +72,24 @@ public class PacketGetInfo implements IMessage {
             buf.writeDouble(hitVec.yCoord);
             buf.writeDouble(hitVec.zCoord);
         }
+        if (pickBlock == null) {
+            buf.writeBoolean(false);
+        } else {
+            buf.writeBoolean(true);
+            NetworkTools.writeItemStack(buf, pickBlock);
+        }
     }
 
     public PacketGetInfo() {
     }
 
-    public PacketGetInfo(int dim, BlockPos pos, ProbeMode mode, RayTraceResult mouseOver) {
+    public PacketGetInfo(int dim, BlockPos pos, ProbeMode mode, RayTraceResult mouseOver, ItemStack pickBlock) {
         this.dim = dim;
         this.pos = pos;
         this.mode = mode;
         this.sideHit = mouseOver.sideHit;
         this.hitVec = mouseOver.hitVec;
+        this.pickBlock = pickBlock;
     }
 
     public static class Handler implements IMessageHandler<PacketGetInfo, IMessage> {
@@ -88,7 +102,8 @@ public class PacketGetInfo implements IMessage {
         private void handle(PacketGetInfo message, MessageContext ctx) {
             WorldServer world = DimensionManager.getWorld(message.dim);
             if (world != null) {
-                ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().playerEntity, message.mode, world, message.pos, message.sideHit, message.hitVec);
+                ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().playerEntity,
+                        message.mode, world, message.pos, message.sideHit, message.hitVec, message.pickBlock);
                 PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(message.dim, message.pos, probeInfo), ctx.getServerHandler().playerEntity);
             }
         }
@@ -98,7 +113,7 @@ public class PacketGetInfo implements IMessage {
         return ModItems.isProbe(player.getHeldItem(EnumHand.MAIN_HAND)) || ModItems.isProbe(player.getHeldItem(EnumHand.OFF_HAND));
     }
 
-    private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, BlockPos blockPos, EnumFacing sideHit, Vec3d hitVec) {
+    private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, BlockPos blockPos, EnumFacing sideHit, Vec3d hitVec, ItemStack pickBlock) {
         if (Config.needsProbe == 2 && !hasProbeInEitherHand(player)) {
             // The server says we need a probe but we don't have one in our hands
             return null;
@@ -106,7 +121,7 @@ public class PacketGetInfo implements IMessage {
 
         IBlockState state = world.getBlockState(blockPos);
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
-        IProbeHitData data = new ProbeHitData(blockPos, hitVec, sideHit);
+        IProbeHitData data = new ProbeHitData(blockPos, hitVec, sideHit, pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
         List<IProbeConfigProvider> configProviders = TheOneProbe.theOneProbeImp.getConfigProviders();
