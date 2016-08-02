@@ -196,7 +196,7 @@ public class OverlayRenderer {
         IBlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
-        if (pickBlock.getItem() == null) {
+        if (pickBlock != null && pickBlock.getItem() == null) {
             // Protection for some invalid items.
             pickBlock = null;
         }
