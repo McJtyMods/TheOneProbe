@@ -27,6 +27,7 @@ public class ModItems {
     public static Item ironHelmetProbe;
 
     public static String PROBETAG = "theoneprobe";
+    public static String PROBETAG_HAND = "theoneprobe_hand";
 
     static {
         RecipeSorter.register("theoneprobe:addproberecipe", AddProbeRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
