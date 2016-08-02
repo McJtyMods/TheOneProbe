@@ -12,6 +12,8 @@ public class KeyInputHandler {
             Config.setLiquids(!Config.showLiquids);
         } else if (KeyBindings.toggleVisible.isPressed()) {
             Config.setVisible(!Config.isVisible);
+//        } else if (KeyBindings.generateLag.isPressed()) {
+//            PacketHandler.INSTANCE.sendToServer(new PacketGenerateLag());
         }
     }
 }

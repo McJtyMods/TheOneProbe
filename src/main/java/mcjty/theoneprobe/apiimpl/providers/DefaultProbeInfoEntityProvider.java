@@ -26,19 +26,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
     public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) {
         IProbeConfig config = Config.getRealConfig();
 
-        String modid = Tools.getModName(entity);
-
-        if (Tools.show(mode, config.getShowModName())) {
-            probeInfo.horizontal()
-                    .entity(entity)
-                    .vertical()
-                        .text(TextFormatting.WHITE + entity.getDisplayName().getFormattedText())
-                        .text(TextFormatting.BLUE + modid);
-        } else {
-            probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
-                    .entity(entity)
-                    .text(TextFormatting.WHITE + entity.getDisplayName().getFormattedText());
-        }
+        showStandardInfo(mode, probeInfo, entity, config);
 
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase livingBase = (EntityLivingBase) entity;
@@ -75,6 +63,22 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                     }
                 }
             }
+        }
+    }
+
+    public static void showStandardInfo(ProbeMode mode, IProbeInfo probeInfo, Entity entity, IProbeConfig config) {
+        String modid = Tools.getModName(entity);
+
+        if (Tools.show(mode, config.getShowModName())) {
+            probeInfo.horizontal()
+                    .entity(entity)
+                    .vertical()
+                        .text(TextFormatting.WHITE + entity.getDisplayName().getFormattedText())
+                        .text(TextFormatting.BLUE + modid);
+        } else {
+            probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
+                    .entity(entity)
+                    .text(TextFormatting.WHITE + entity.getDisplayName().getFormattedText());
         }
     }
 }
