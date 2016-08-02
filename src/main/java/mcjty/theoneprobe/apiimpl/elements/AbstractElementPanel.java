@@ -28,7 +28,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
             RenderHelper.drawHorizontalLine(x, y, x + w - 1, borderColor);
             RenderHelper.drawHorizontalLine(x, y + h - 1, x + w - 1, borderColor);
             RenderHelper.drawVerticalLine(x, y, y + h - 1, borderColor);
-            RenderHelper.drawVerticalLine(x + w - 1, y, y + h - 1, borderColor);
+            RenderHelper.drawVerticalLine(x + w - 1, y, y + h, borderColor);
         }
     }
 
