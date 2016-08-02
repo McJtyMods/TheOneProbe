@@ -56,7 +56,7 @@ public class CommandTopCfg implements ICommand {
 
 
     private static void setPos(String[] args) {
-        if (args.length != 4) {
+        if (args.length != 5) {
             return;
         }
         try {
