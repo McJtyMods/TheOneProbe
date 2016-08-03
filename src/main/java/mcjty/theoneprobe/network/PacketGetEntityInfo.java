@@ -60,9 +60,9 @@ public class PacketGetEntityInfo implements IMessage {
     public PacketGetEntityInfo() {
     }
 
-    public PacketGetEntityInfo(int dim, ProbeMode mode, RayTraceResult mouseOver) {
+    public PacketGetEntityInfo(int dim, ProbeMode mode, RayTraceResult mouseOver, Entity entity) {
         this.dim = dim;
-        this.uuid = mouseOver.entityHit.getPersistentID();
+        this.uuid = entity.getPersistentID();
         this.mode = mode;
         this.hitVec = mouseOver.hitVec;
     }

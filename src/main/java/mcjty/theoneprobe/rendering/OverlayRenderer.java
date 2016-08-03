@@ -17,6 +17,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.boss.EntityDragonPart;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -98,36 +102,54 @@ public class OverlayRenderer {
     }
 
     private static void renderHUDEntity(ProbeMode mode, RayTraceResult mouseOver) {
-        if (mouseOver.entityHit == null) {
+        Entity entity = mouseOver.entityHit;
+        if (entity == null) {
             return;
         }
-        UUID uuid = mouseOver.entityHit.getPersistentID();
+        if (entity instanceof EntityDragonPart) {
+            EntityDragonPart part = (EntityDragonPart) entity;
+            if (part.entityDragonObj instanceof Entity) {
+                entity = (Entity) part.entityDragonObj;
+            }
+        }
+
+        String entityString = EntityList.getEntityString(entity);
+        if (entityString == null && !(entity instanceof EntityPlayer)) {
+            // We can't show info for this entity
+            return;
+        }
+
+        UUID uuid = entity.getPersistentID();
 
         EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
         if (cacheEntry == null) {
-            PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.worldObj.provider.getDimension(), mode, mouseOver));
+            requestEntityInfo(mode, mouseOver, entity, player);
             if (lastPair != null && time < lastPairTime + Config.timeout) {
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
                 lastRenderedTime = time;
             } else if (Config.renderTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.renderTimeout) {
                 // It has been a while. Show some info on client that we are
                 // waiting for server information
-                lastPair = Pair.of(time, getWaitingEntityInfo(mode, mouseOver, player));
+                lastPair = Pair.of(time, getWaitingEntityInfo(mode, mouseOver, entity, player));
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
             }
         } else {
             if (time > cacheEntry.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
-                PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.worldObj.provider.getDimension(), mode, mouseOver));
+                requestEntityInfo(mode, mouseOver, entity, player);
             }
             renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle());
             lastRenderedTime = time;
             lastPair = cacheEntry;
             lastPairTime = time;
         }
+    }
+
+    private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, EntityPlayerSP player) {
+        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.worldObj.provider.getDimension(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(ProbeMode mode, RayTraceResult mouseOver) {
@@ -144,7 +166,7 @@ public class OverlayRenderer {
 
         Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(Pair.of(player.worldObj.provider.getDimension(), blockPos));
         if (cacheEntry == null) {
-            requestInfoFromServer(mode, mouseOver, blockPos, player);
+            requestBlockInfo(mode, mouseOver, blockPos, player);
             if (lastPair != null && time < lastPairTime + Config.timeout) {
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
                 lastRenderedTime = time;
@@ -157,7 +179,7 @@ public class OverlayRenderer {
         } else {
             if (time > cacheEntry.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
-                requestInfoFromServer(mode, mouseOver, blockPos, player);
+                requestBlockInfo(mode, mouseOver, blockPos, player);
             }
             renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle());
             lastRenderedTime = time;
@@ -181,17 +203,17 @@ public class OverlayRenderer {
         return probeInfo;
     }
 
-    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, RayTraceResult mouseOver, EntityPlayerSP player) {
+    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, EntityPlayerSP player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.hitVec);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
-        DefaultProbeInfoEntityProvider.showStandardInfo(mode, probeInfo, mouseOver.entityHit, probeConfig);
+        DefaultProbeInfoEntityProvider.showStandardInfo(mode, probeInfo, entity, probeConfig);
         probeInfo.text(TextFormatting.RED + "Waiting for server...");
         return probeInfo;
     }
 
-    private static void requestInfoFromServer(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, EntityPlayerSP player) {
+    private static void requestBlockInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, EntityPlayerSP player) {
         World world = player.worldObj;
         IBlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
