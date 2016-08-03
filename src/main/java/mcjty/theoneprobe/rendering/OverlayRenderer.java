@@ -133,8 +133,12 @@ public class OverlayRenderer {
             } else if (Config.renderTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.renderTimeout) {
                 // It has been a while. Show some info on client that we are
                 // waiting for server information
-                lastPair = Pair.of(time, getWaitingEntityInfo(mode, mouseOver, entity, player));
+                ProbeInfo info = getWaitingEntityInfo(mode, mouseOver, entity, player);
+                registerProbeInfo(uuid, info);
+                lastPair = Pair.of(time, info);
+                lastPairTime = time;
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
+                lastRenderedTime = time;
             }
         } else {
             if (time > cacheEntry.getLeft() + Config.timeout) {
@@ -164,7 +168,8 @@ public class OverlayRenderer {
 
         long time = System.currentTimeMillis();
 
-        Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(Pair.of(player.worldObj.provider.getDimension(), blockPos));
+        int dimension = player.worldObj.provider.getDimension();
+        Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(Pair.of(dimension, blockPos));
         if (cacheEntry == null) {
             requestBlockInfo(mode, mouseOver, blockPos, player);
             if (lastPair != null && time < lastPairTime + Config.timeout) {
@@ -173,8 +178,12 @@ public class OverlayRenderer {
             } else if (Config.renderTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.renderTimeout) {
                 // It has been a while. Show some info on client that we are
                 // waiting for server information
-                lastPair = Pair.of(time, getWaitingInfo(mode, mouseOver, blockPos, player));
+                ProbeInfo info = getWaitingInfo(mode, mouseOver, blockPos, player);
+                registerProbeInfo(dimension, blockPos, info);
+                lastPair = Pair.of(time, info);
+                lastPairTime = time;
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
+                lastRenderedTime = time;
             }
         } else {
             if (time > cacheEntry.getLeft() + Config.timeout) {
