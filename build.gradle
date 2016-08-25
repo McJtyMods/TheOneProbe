@@ -52,15 +52,15 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.10-12.18.0.1983-1.10.0"
+    version = "1.10.2-12.18.1.2043"
     runDir = "run"
-    mappings = "snapshot_20160518"
+    mappings = "snapshot_20160730"
     useDepAts = true
 }
 
 dependencies {
-    //deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
-    deobfCompile "mezz.jei:jei_1.9.4:3.4.0.202"
+    deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
+    deobfCompile "mezz.jei:jei_1.10.2:3.7.3.223"
 }
 
 jar {
