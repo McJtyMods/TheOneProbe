@@ -134,6 +134,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             String harvestName;
             if (harvestLevel >= harvestLevels.length) {
                 harvestName = Integer.toString(harvestLevel);
+            } else if (harvestLevel < 0) {
+                harvestName = Integer.toString(harvestLevel);
             } else {
                 harvestName = harvestLevels[harvestLevel];
             }
