@@ -1,13 +1,13 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import cofh.api.energy.IEnergyHandler;
-import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
@@ -150,7 +150,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             return;
         }
 
-        boolean harvestable = block.canHarvestBlock(world, pos, player);
+        boolean harvestable = block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
         if (harvestable) {
             probeInfo.text(TextFormatting.GREEN + "Harvestable");
         } else {
