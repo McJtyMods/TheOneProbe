@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.keys;
 
-import mcjty.theoneprobe.Config;
+import mcjty.theoneprobe.config.Config;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 

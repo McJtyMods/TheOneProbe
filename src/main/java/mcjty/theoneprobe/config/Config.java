@@ -1,6 +1,7 @@
-package mcjty.theoneprobe;
+package mcjty.theoneprobe.config;
 
 
+import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.NumberFormat;
@@ -8,11 +9,10 @@ import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import net.minecraftforge.common.config.Configuration;
 
-import java.io.File;
-
 public class Config {
     public static String CATEGORY_THEONEPROBE = "theoneprobe";
     public static String CATEGORY_PROVIDERS = "providers";
+    public static String CATEGORY_CLIENT = "client";
 
     public static int MODE_NOT = 0;
     public static int MODE_NORMAL = 1;
@@ -92,77 +92,70 @@ public class Config {
         setupStyleConfig(cfg);
     }
 
-    public static Configuration initClientConfig() {
-        Configuration cfg = new Configuration(new File(TheOneProbe.modConfigDir, "theoneprobe_client.cfg"));
-        cfg.load();
-        setupStyleConfig(cfg);
-        return cfg;
-    }
+    public static void setupStyleConfig(Configuration cfg) {
+        leftX = cfg.getInt("boxLeftX", CATEGORY_CLIENT, leftX, -1, 10000, "The distance to the left side of the screen. Use -1 if you don't want to set this");
+        rightX = cfg.getInt("boxRightX", CATEGORY_CLIENT, rightX, -1, 10000, "The distance to the right side of the screen. Use -1 if you don't want to set this");
+        topY = cfg.getInt("boxTopY", CATEGORY_CLIENT, topY, -1, 10000, "The distance to the top side of the screen. Use -1 if you don't want to set this");
+        bottomY = cfg.getInt("boxBottomY", CATEGORY_CLIENT, bottomY, -1, 10000, "The distance to the bottom side of the screen. Use -1 if you don't want to set this");
+        boxBorderColor = parseColor(cfg.getString("boxBorderColor", CATEGORY_CLIENT, Integer.toHexString(boxBorderColor), "Color of the border of the box (0 to disable)"));
+        boxFillColor = parseColor(cfg.getString("boxFillColor", CATEGORY_CLIENT, Integer.toHexString(boxFillColor), "Color of the box (0 to disable)"));
+        boxThickness = cfg.getInt("boxThickness", CATEGORY_CLIENT, boxThickness, 0, 20, "Thickness of the border of the box (0 to disable)");
+        showLiquids = cfg.getBoolean("showLiquids", CATEGORY_CLIENT, showLiquids, "If true show liquid information when the probe hits liquid first");
+        compactEqualStacks = cfg.getBoolean("compactEqualStacks", CATEGORY_CLIENT, compactEqualStacks, "If true equal stacks will be compacted in the chest contents overlay");
 
-    private static void setupStyleConfig(Configuration cfg) {
-        leftX = cfg.getInt("boxLeftX", CATEGORY_THEONEPROBE, leftX, -1, 10000, "The distance to the left side of the screen. Use -1 if you don't want to set this");
-        rightX = cfg.getInt("boxRightX", CATEGORY_THEONEPROBE, rightX, -1, 10000, "The distance to the right side of the screen. Use -1 if you don't want to set this");
-        topY = cfg.getInt("boxTopY", CATEGORY_THEONEPROBE, topY, -1, 10000, "The distance to the top side of the screen. Use -1 if you don't want to set this");
-        bottomY = cfg.getInt("boxBottomY", CATEGORY_THEONEPROBE, bottomY, -1, 10000, "The distance to the bottom side of the screen. Use -1 if you don't want to set this");
-        boxBorderColor = parseColor(cfg.getString("boxBorderColor", CATEGORY_THEONEPROBE, Integer.toHexString(boxBorderColor), "Color of the border of the box (0 to disable)"));
-        boxFillColor = parseColor(cfg.getString("boxFillColor", CATEGORY_THEONEPROBE, Integer.toHexString(boxFillColor), "Color of the box (0 to disable)"));
-        boxThickness = cfg.getInt("boxThickness", CATEGORY_THEONEPROBE, boxThickness, 0, 20, "Thickness of the border of the box (0 to disable)");
-        showLiquids = cfg.getBoolean("showLiquids", CATEGORY_THEONEPROBE, showLiquids, "If true show liquid information when the probe hits liquid first");
-        compactEqualStacks = cfg.getBoolean("compactEqualStacks", CATEGORY_THEONEPROBE, compactEqualStacks, "If true equal stacks will be compacted in the chest contents overlay");
-
-        extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_THEONEPROBE, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
+        extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
     }
 
     public static void setExtendedInMain(boolean extendedInMain) {
-        Configuration cfg = initClientConfig();
+        Configuration cfg = TheOneProbe.config;
         Config.extendedInMain = extendedInMain;
-        cfg.get(CATEGORY_THEONEPROBE, "extendedInMain", extendedInMain).set(extendedInMain);
+        cfg.get(CATEGORY_CLIENT, "extendedInMain", extendedInMain).set(extendedInMain);
         cfg.save();
     }
 
     public static void setLiquids(boolean liquids) {
-        Configuration cfg = initClientConfig();
+        Configuration cfg = TheOneProbe.config;
         Config.showLiquids = liquids;
-        cfg.get(CATEGORY_THEONEPROBE, "showLiquids", showLiquids).set(liquids);
+        cfg.get(CATEGORY_CLIENT, "showLiquids", showLiquids).set(liquids);
         cfg.save();
     }
 
     public static void setVisible(boolean visible) {
-        Configuration cfg = initClientConfig();
+        Configuration cfg = TheOneProbe.config;
         Config.isVisible = visible;
-        cfg.get(CATEGORY_THEONEPROBE, "isVisible", isVisible).set(visible);
+        cfg.get(CATEGORY_CLIENT, "isVisible", isVisible).set(visible);
         cfg.save();
     }
 
     public static void setCompactEqualStacks(boolean compact) {
-        Configuration cfg = initClientConfig();
+        Configuration cfg = TheOneProbe.config;
         Config.compactEqualStacks = compact;
-        cfg.get(CATEGORY_THEONEPROBE, "compactEqualStacks", compactEqualStacks).set(compact);
+        cfg.get(CATEGORY_CLIENT, "compactEqualStacks", compactEqualStacks).set(compact);
         cfg.save();
     }
 
     public static void setPos(int leftx, int topy, int rightx, int bottomy) {
-        Configuration cfg = initClientConfig();
+        Configuration cfg = TheOneProbe.config;
         Config.leftX = leftx;
         Config.topY = topy;
         Config.rightX = rightx;
         Config.bottomY = bottomy;
-        cfg.get(CATEGORY_THEONEPROBE, "boxLeftX", leftx).set(leftx);
-        cfg.get(CATEGORY_THEONEPROBE, "boxRightX", rightx).set(rightx);
-        cfg.get(CATEGORY_THEONEPROBE, "boxTopY", topy).set(topy);
-        cfg.get(CATEGORY_THEONEPROBE, "boxBottomY", bottomy).set(bottomy);
+        cfg.get(CATEGORY_CLIENT, "boxLeftX", leftx).set(leftx);
+        cfg.get(CATEGORY_CLIENT, "boxRightX", rightx).set(rightx);
+        cfg.get(CATEGORY_CLIENT, "boxTopY", topy).set(topy);
+        cfg.get(CATEGORY_CLIENT, "boxBottomY", bottomy).set(bottomy);
         cfg.save();
         updateDefaultOverlayStyle();
     }
 
     public static void setBoxStyle(int thickness, int borderColor, int fillcolor) {
-        Configuration cfg = initClientConfig();
+        Configuration cfg = TheOneProbe.config;
         boxThickness = thickness;
         boxBorderColor = borderColor;
         boxFillColor = fillcolor;
-        cfg.get(CATEGORY_THEONEPROBE, "boxThickness", thickness).set(thickness);
-        cfg.get(CATEGORY_THEONEPROBE, "boxBorderColor", Integer.toHexString(borderColor)).set(Integer.toHexString(borderColor));
-        cfg.get(CATEGORY_THEONEPROBE, "boxFillColor", Integer.toHexString(fillcolor)).set(Integer.toHexString(fillcolor));
+        cfg.get(CATEGORY_CLIENT, "boxThickness", thickness).set(thickness);
+        cfg.get(CATEGORY_CLIENT, "boxBorderColor", Integer.toHexString(borderColor)).set(Integer.toHexString(borderColor));
+        cfg.get(CATEGORY_CLIENT, "boxFillColor", Integer.toHexString(fillcolor)).set(Integer.toHexString(fillcolor));
         cfg.save();
         updateDefaultOverlayStyle();
     }
@@ -176,7 +169,7 @@ public class Config {
         }
     }
 
-    private static void updateDefaultOverlayStyle() {
+    public static void updateDefaultOverlayStyle() {
         defaultOverlayStyle = new DefaultOverlayStyle()
                 .borderThickness(boxThickness)
                 .borderColor(boxBorderColor)

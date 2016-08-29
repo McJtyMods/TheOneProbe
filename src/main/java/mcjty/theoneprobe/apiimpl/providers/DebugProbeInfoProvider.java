@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
-import mcjty.theoneprobe.Config;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;

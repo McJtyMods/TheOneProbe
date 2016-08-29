@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl;
 
-import mcjty.theoneprobe.Config;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IOverlayRenderer;
 import mcjty.theoneprobe.api.IOverlayStyle;

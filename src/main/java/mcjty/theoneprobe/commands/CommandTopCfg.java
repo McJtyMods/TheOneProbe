@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.commands;
 
-import mcjty.theoneprobe.Config;
+import mcjty.theoneprobe.config.Config;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -56,7 +56,7 @@ public class CommandTopCfg implements ICommand {
 
 
     private static void setPos(String[] args) {
-        if (args.length != 4) {
+        if (args.length != 5) {
             return;
         }
         try {

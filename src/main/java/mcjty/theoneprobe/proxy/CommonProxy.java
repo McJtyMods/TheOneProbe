@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.proxy;
 
-import mcjty.theoneprobe.Config;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.ForgeEventHandlers;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
@@ -23,8 +23,6 @@ import java.util.Set;
 
 public abstract class CommonProxy {
 
-    private Configuration mainConfig;
-
     public void preInit(FMLPreInitializationEvent e) {
         TheOneProbeImp.registerElements();
         TheOneProbe.theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
@@ -34,7 +32,6 @@ public abstract class CommonProxy {
         TheOneProbe.theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
         TheOneProbe.theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
 
-        mainConfig = TheOneProbe.config;
         readMainConfig();
         PacketHandler.registerMessages("theoneprobe");
         ModItems.init();
@@ -42,17 +39,18 @@ public abstract class CommonProxy {
     }
 
     private void readMainConfig() {
-        Configuration cfg = mainConfig;
+        Configuration cfg = TheOneProbe.config;
         try {
             cfg.load();
             cfg.addCustomCategoryComment(Config.CATEGORY_THEONEPROBE, "The One Probe configuration");
             cfg.addCustomCategoryComment(Config.CATEGORY_PROVIDERS, "Provider configuration");
+            cfg.addCustomCategoryComment(Config.CATEGORY_CLIENT, "Client-side settings");
             Config.init(cfg);
         } catch (Exception e1) {
             TheOneProbe.logger.log(Level.ERROR, "Problem loading config file!", e1);
         } finally {
-            if (mainConfig.hasChanged()) {
-                mainConfig.save();
+            if (TheOneProbe.config.hasChanged()) {
+                TheOneProbe.config.save();
             }
         }
     }
@@ -65,10 +63,9 @@ public abstract class CommonProxy {
         configureProviders();
         configureEntityProviders();
 
-        if (mainConfig.hasChanged()) {
-            mainConfig.save();
+        if (TheOneProbe.config.hasChanged()) {
+            TheOneProbe.config.save();
         }
-        mainConfig = null;
     }
 
     private void configureProviders() {
@@ -79,8 +76,8 @@ public abstract class CommonProxy {
             defaultValues[i++] = provider.getID();
         }
 
-        String[] sortedProviders = mainConfig.getStringList("sortedProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which providers should be used");
-        String[] excludedProviders = mainConfig.getStringList("excludedProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Providers that should be excluded");
+        String[] sortedProviders = TheOneProbe.config.getStringList("sortedProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which providers should be used");
+        String[] excludedProviders = TheOneProbe.config.getStringList("excludedProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Providers that should be excluded");
         Set<String> excluded = new HashSet<>();
         Collections.addAll(excluded, excludedProviders);
 
@@ -95,8 +92,8 @@ public abstract class CommonProxy {
             defaultValues[i++] = provider.getID();
         }
 
-        String[] sortedProviders = mainConfig.getStringList("sortedEntityProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which entity providers should be used");
-        String[] excludedProviders = mainConfig.getStringList("excludedEntityProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Entity providers that should be excluded");
+        String[] sortedProviders = TheOneProbe.config.getStringList("sortedEntityProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which entity providers should be used");
+        String[] excludedProviders = TheOneProbe.config.getStringList("excludedEntityProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Entity providers that should be excluded");
         Set<String> excluded = new HashSet<>();
         Collections.addAll(excluded, excludedProviders);
 
