@@ -79,8 +79,14 @@ public class ClientProxy extends CommonProxy {
             return;
         }
 
-        if (!Config.isVisible) {
-            return;
+        if (Config.holdKeyToMakeVisible) {
+            if (!KeyBindings.toggleVisible.isKeyDown()) {
+                return;
+            }
+        } else {
+            if (!Config.isVisible) {
+                return;
+            }
         }
 
         if (hasItemInEitherHand(ModItems.creativeProbe)) {
