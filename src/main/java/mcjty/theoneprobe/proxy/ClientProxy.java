@@ -74,7 +74,7 @@ public class ClientProxy extends CommonProxy {
 //    }
 
     @SubscribeEvent
-    public void renderGameOverlayEvent(RenderGameOverlayEvent.Post event) {
+    public void renderGameOverlayEvent(RenderGameOverlayEvent.Pre event) {
         if (event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
             return;
         }

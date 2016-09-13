@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.rendering;
 
-import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -8,6 +7,7 @@ import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoEntityProvider;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoProvider;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
@@ -28,6 +28,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +70,19 @@ public class OverlayRenderer {
         RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
         if (mouseOver != null) {
             if (mouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {
-                renderHUDEntity(mode, mouseOver);
+                GlStateManager.pushMatrix();
+
+                double scale = Config.tooltipScale;
+
+                ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+                double sw = scaledresolution.getScaledWidth_double();
+                double sh = scaledresolution.getScaledHeight_double();
+
+                setupOverlayRendering(sw * scale, sh * scale);
+                renderHUDEntity(mode, mouseOver, sw * scale, sh * scale);
+                setupOverlayRendering(sw, sh);
+                GlStateManager.popMatrix();
+
                 checkCleanup();
                 return;
             }
@@ -86,10 +99,32 @@ public class OverlayRenderer {
         }
 
         if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
-            renderHUDBlock(mode, mouseOver);
+            GlStateManager.pushMatrix();
+
+            double scale = Config.tooltipScale;
+
+            ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+            double sw = scaledresolution.getScaledWidth_double();
+            double sh = scaledresolution.getScaledHeight_double();
+
+            setupOverlayRendering(sw * scale, sh * scale);
+            renderHUDBlock(mode, mouseOver, sw * scale, sh * scale);
+            setupOverlayRendering(sw, sh);
+
+            GlStateManager.popMatrix();
         }
 
         checkCleanup();
+    }
+
+    private static void setupOverlayRendering(double sw, double sh) {
+        GlStateManager.clear(256);
+        GlStateManager.matrixMode(GL11.GL_PROJECTION);
+        GlStateManager.loadIdentity();
+        GlStateManager.ortho(0.0D, sw, sh, 0.0D, 1000.0D, 3000.0D);
+        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+        GlStateManager.loadIdentity();
+        GlStateManager.translate(0.0F, 0.0F, -2000.0F);
     }
 
     private static void checkCleanup() {
@@ -101,7 +136,7 @@ public class OverlayRenderer {
         }
     }
 
-    private static void renderHUDEntity(ProbeMode mode, RayTraceResult mouseOver) {
+    private static void renderHUDEntity(ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
         Entity entity = mouseOver.entityHit;
         if (entity == null) {
             return;
@@ -128,7 +163,7 @@ public class OverlayRenderer {
         if (cacheEntry == null) {
             requestEntityInfo(mode, mouseOver, entity, player);
             if (lastPair != null && time < lastPairTime + Config.timeout) {
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
+                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
                 lastRenderedTime = time;
             } else if (Config.renderTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.renderTimeout) {
                 // It has been a while. Show some info on client that we are
@@ -137,7 +172,7 @@ public class OverlayRenderer {
                 registerProbeInfo(uuid, info);
                 lastPair = Pair.of(time, info);
                 lastPairTime = time;
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
+                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
                 lastRenderedTime = time;
             }
         } else {
@@ -145,7 +180,7 @@ public class OverlayRenderer {
                 // This info is slightly old. Update it
                 requestEntityInfo(mode, mouseOver, entity, player);
             }
-            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle());
+            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
             lastRenderedTime = time;
             lastPair = cacheEntry;
             lastPairTime = time;
@@ -156,7 +191,7 @@ public class OverlayRenderer {
         PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.worldObj.provider.getDimension(), mode, mouseOver, entity));
     }
 
-    private static void renderHUDBlock(ProbeMode mode, RayTraceResult mouseOver) {
+    private static void renderHUDBlock(ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
         BlockPos blockPos = mouseOver.getBlockPos();
         if (blockPos == null) {
             return;
@@ -173,7 +208,7 @@ public class OverlayRenderer {
         if (cacheEntry == null) {
             requestBlockInfo(mode, mouseOver, blockPos, player);
             if (lastPair != null && time < lastPairTime + Config.timeout) {
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
+                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
                 lastRenderedTime = time;
             } else if (Config.renderTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.renderTimeout) {
                 // It has been a while. Show some info on client that we are
@@ -182,7 +217,7 @@ public class OverlayRenderer {
                 registerProbeInfo(dimension, blockPos, info);
                 lastPair = Pair.of(time, info);
                 lastPairTime = time;
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle());
+                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
                 lastRenderedTime = time;
             }
         } else {
@@ -190,7 +225,7 @@ public class OverlayRenderer {
                 // This info is slightly old. Update it
                 requestBlockInfo(mode, mouseOver, blockPos, player);
             }
-            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle());
+            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
             lastRenderedTime = time;
             lastPair = cacheEntry;
             lastPairTime = time;
@@ -235,7 +270,18 @@ public class OverlayRenderer {
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo) {
-        renderElements((ProbeInfo) probeInfo, style);
+        GlStateManager.pushMatrix();
+
+        double scale = Config.tooltipScale;
+
+        ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+        double sw = scaledresolution.getScaledWidth_double();
+        double sh = scaledresolution.getScaledHeight_double();
+
+        setupOverlayRendering(sw * scale, sh * scale);
+        renderElements((ProbeInfo) probeInfo, style, sw * scale, sh * scale);
+        setupOverlayRendering(sw, sh);
+        GlStateManager.popMatrix();
     }
 
     private static void cleanupCachedBlocks(long time) {
@@ -262,13 +308,15 @@ public class OverlayRenderer {
         cachedEntityInfo = newCachedInfo;
     }
 
-    private static void renderElements(ProbeInfo probeInfo, IOverlayStyle style) {
+    private static void renderElements(ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh) {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
 
-        final ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
-        final int scaledWidth = scaledresolution.getScaledWidth();
-        final int scaledHeight = scaledresolution.getScaledHeight();
+//        final ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+//        final int scaledWidth = scaledresolution.getScaledWidth();
+//        final int scaledHeight = scaledresolution.getScaledHeight();
+        int scaledWidth = (int) sw;
+        int scaledHeight = (int) sh;
 
         int w = probeInfo.getWidth();
         int h = probeInfo.getHeight();
