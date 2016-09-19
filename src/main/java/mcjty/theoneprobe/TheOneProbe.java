@@ -70,7 +70,11 @@ public class TheOneProbe {
         for (FMLInterModComms.IMCMessage message : event.getMessages()) {
             if (message.key.equalsIgnoreCase("getTheOneProbe")) {
                 Optional<Function<ITheOneProbe, Void>> value = message.getFunctionValue(ITheOneProbe.class, Void.class);
-                value.get().apply(theOneProbeImp);
+                if (value.isPresent()) {
+                    value.get().apply(theOneProbeImp);
+                } else {
+                    logger.warn("Some mod didn't return a valid result with getTheOneProbe!");
+                }
             }
         }
     }
