@@ -11,6 +11,7 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
+import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -241,8 +242,15 @@ public class OverlayRenderer {
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
         IProbeHitData data = new ProbeHitData(blockPos, mouseOver.hitVec, mouseOver.sideHit, pickBlock);
+
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
-        DefaultProbeInfoProvider.showStandardBlockInfo(probeConfig, mode, probeInfo, blockState, block, world, blockPos, player, data);
+        try {
+            DefaultProbeInfoProvider.showStandardBlockInfo(probeConfig, mode, probeInfo, blockState, block, world, blockPos, player, data);
+        } catch (Exception e) {
+            ThrowableIdentity.registerThrowable(e);
+            probeInfo.text(TextFormatting.RED + "Error (see log for details)!");
+        }
+
         probeInfo.text(TextFormatting.RED + "Waiting for server...");
         return probeInfo;
     }
@@ -252,7 +260,13 @@ public class OverlayRenderer {
         IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.hitVec);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
-        DefaultProbeInfoEntityProvider.showStandardInfo(mode, probeInfo, entity, probeConfig);
+        try {
+            DefaultProbeInfoEntityProvider.showStandardInfo(mode, probeInfo, entity, probeConfig);
+        } catch (Exception e) {
+            ThrowableIdentity.registerThrowable(e);
+            probeInfo.text(TextFormatting.RED + "Error (see log for details)!");
+        }
+
         probeInfo.text(TextFormatting.RED + "Waiting for server...");
         return probeInfo;
     }
