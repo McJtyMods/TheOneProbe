@@ -57,6 +57,8 @@ public class ElementProgress implements IElement {
             }
             case COMMAS:
                 return dfCommas.format(in);
+            case NONE:
+                return "";
         }
         return Long.toString(in);
     }
