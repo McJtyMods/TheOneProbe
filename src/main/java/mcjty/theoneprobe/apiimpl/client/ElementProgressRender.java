@@ -34,7 +34,7 @@ public class ElementProgressRender {
         }
 
         if (style.isShowText()) {
-            RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 2, style.getPrefix() + ElementProgress.format(current, style.getNumberFormat()) + style.getSuffix());
+            RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 2, style.getPrefix() + ElementProgress.format(current, style.getNumberFormat(), style.getSuffix()));
         }
     }
 

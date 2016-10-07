@@ -21,9 +21,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.*;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -71,6 +71,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (config.getRFMode() > 0) {
             showRF(probeInfo, world, pos);
         }
+        if (config.getTankMode() > 0) {
+            showTankInfo(probeInfo, world, pos);
+        }
     }
 
     private void showRedstonePower(IProbeInfo probeInfo, World world, IBlockState blockState, IProbeHitData data, Block block,
@@ -98,6 +101,48 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
+    private void showTankInfo(IProbeInfo probeInfo, World world, BlockPos pos) {
+        ProbeConfig config = Config.getDefaultConfig();
+        TileEntity te = world.getTileEntity(pos);
+        if (te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+            net.minecraftforge.fluids.capability.IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+            if (handler != null) {
+                IFluidTankProperties[] properties = handler.getTankProperties();
+                if (properties != null && properties.length > 0) {
+                    FluidStack fluidStack = properties[0].getContents();
+                    int maxContents = properties[0].getCapacity();
+                    addFluidInfo(probeInfo, config, fluidStack, maxContents);
+                }
+            }
+        } else if (te instanceof IFluidHandler) {
+            IFluidHandler handler = (IFluidHandler) te;
+            FluidTankInfo[] info = handler.getTankInfo(null);
+            if (info != null && info.length > 0) {
+                FluidStack fluidStack = info[0].fluid;
+                int maxContents = info[0].capacity;
+                addFluidInfo(probeInfo, config, fluidStack, maxContents);
+            }
+        }
+    }
+
+    private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
+        int contents = fluidStack == null ? 0 : fluidStack.amount;
+        if (fluidStack != null) {
+            probeInfo.text("Liquid: " + fluidStack.getLocalizedName());
+        }
+        if (config.getTankMode() == 1) {
+            probeInfo.progress(contents, maxContents,
+                    probeInfo.defaultProgressStyle()
+                            .suffix("mB")
+                            .filledColor(Config.tankbarFilledColor)
+                            .alternateFilledColor(Config.tankbarAlternateFilledColor)
+                            .borderColor(Config.tankbarBorderColor)
+                            .numberFormat(Config.tankFormat));
+        } else {
+            probeInfo.text(TextFormatting.GREEN + ElementProgress.format(contents, Config.tankFormat, "mB"));
+        }
+    }
+
     private void showRF(IProbeInfo probeInfo, World world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof IEnergyHandler) {
@@ -114,7 +159,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                                 .borderColor(Config.rfbarBorderColor)
                                 .numberFormat(Config.rfFormat));
             } else {
-                probeInfo.text(TextFormatting.GREEN + "RF: " + ElementProgress.format(energy, Config.rfFormat) + "RF");
+                probeInfo.text(TextFormatting.GREEN + "RF: " + ElementProgress.format(energy, Config.rfFormat, "RF"));
             }
         }
     }

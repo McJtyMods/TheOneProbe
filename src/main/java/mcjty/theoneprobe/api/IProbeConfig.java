@@ -18,6 +18,13 @@ public interface IProbeConfig {
     IProbeConfig setRFMode(int mode);
     int getRFMode();
 
+    /**
+     * Control how Liquid should be shown
+     * @param mode 0 = not, 1 = show as bar, 2 = show as text
+     */
+    IProbeConfig setTankMode(int mode);
+    int getTankMode();
+
     IProbeConfig showLeverSetting(ConfigMode mode);
     ConfigMode getShowLeverSetting();
 

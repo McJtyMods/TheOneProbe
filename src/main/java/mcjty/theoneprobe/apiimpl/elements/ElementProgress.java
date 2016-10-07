@@ -42,23 +42,37 @@ public class ElementProgress implements IElement {
 
     private static DecimalFormat dfCommas = new DecimalFormat("###,###");
 
-    public static String format(long in, NumberFormat style) {
+    /**
+     * If the suffix starts with 'm' we can possibly drop that
+     */
+    public static String format(long in, NumberFormat style, String suffix) {
         switch (style) {
             case FULL:
-                return Long.toString(in);
+                return Long.toString(in) + suffix;
             case COMPACT: {
                 int unit = 1000;
                 if (in < unit) {
-                    return Long.toString(in);
+                    return Long.toString(in) + " " + suffix;
                 }
                 int exp = (int) (Math.log(in) / Math.log(unit));
-                char pre = "KMGTP".charAt(exp - 1);
-                return String.format("%.1f %s", in / Math.pow(unit, exp), pre);
+                char pre;
+                if (suffix.startsWith("m")) {
+                    suffix = suffix.substring(1);
+                    if (exp - 2 >= 0) {
+                        pre = "KMGTP".charAt(exp - 2);
+                        return String.format("%.1f %s", in / Math.pow(unit, exp), pre) + suffix;
+                    } else {
+                        return String.format("%.1f %s", in / Math.pow(unit, exp), suffix);
+                    }
+                } else {
+                    pre = "KMGTP".charAt(exp - 1);
+                    return String.format("%.1f %s", in / Math.pow(unit, exp), pre) + suffix;
+                }
             }
             case COMMAS:
-                return dfCommas.format(in);
+                return dfCommas.format(in) + suffix;
             case NONE:
-                return "";
+                return suffix;
         }
         return Long.toString(in);
     }

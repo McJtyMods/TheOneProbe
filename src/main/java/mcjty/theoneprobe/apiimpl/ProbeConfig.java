@@ -8,6 +8,8 @@ import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.NORMAL;
 public class ProbeConfig implements IProbeConfig {
 
     private int showRF = 1;
+    private int showTank = 1;
+
     private static IProbeConfig.ConfigMode showHarvestLevel = NORMAL;
     private static IProbeConfig.ConfigMode showCanBeHarvested = NORMAL;
     private static IProbeConfig.ConfigMode showModName = NORMAL;
@@ -21,6 +23,17 @@ public class ProbeConfig implements IProbeConfig {
     /// Make a lazy copy of this probe config.
     public IProbeConfig lazyCopy() {
         return new LazyProbeConfig(this);
+    }
+
+    @Override
+    public IProbeConfig setTankMode(int mode) {
+        this.showTank = mode;
+        return this;
+    }
+
+    @Override
+    public int getTankMode() {
+        return showTank;
     }
 
     @Override

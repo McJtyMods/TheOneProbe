@@ -16,6 +16,7 @@ public class LazyProbeConfig implements IProbeConfig {
             dirty = true;
             original = new ProbeConfig()
                     .setRFMode(original.getRFMode())
+                    .setTankMode(original.getTankMode())
                     .showModName(original.getShowModName())
                     .showChestContents(original.getShowChestContents())
                     .showCropPercentage(original.getShowCropPercentage())
@@ -27,6 +28,17 @@ public class LazyProbeConfig implements IProbeConfig {
                     .showLeverSetting(original.getShowLeverSetting());
         }
         return original;
+    }
+
+    @Override
+    public IProbeConfig setTankMode(int mode) {
+        realCopy().setTankMode(mode);
+        return this;
+    }
+
+    @Override
+    public int getTankMode() {
+        return original.getTankMode();
     }
 
     @Override
