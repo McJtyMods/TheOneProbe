@@ -18,6 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static mcjty.theoneprobe.items.ModItems.PROBETAG;
@@ -73,9 +74,9 @@ public class ClientProxy extends CommonProxy {
 //        renderer.render(style, probeInfo);
 //    }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void renderGameOverlayEvent(RenderGameOverlayEvent.Pre event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.TEXT) {
             return;
         }
 
