@@ -28,6 +28,9 @@ public interface IProbeConfig {
     IProbeConfig showLeverSetting(ConfigMode mode);
     ConfigMode getShowLeverSetting();
 
+    IProbeConfig showTankSetting(ConfigMode mode);
+    ConfigMode getShowTankSetting();
+
     IProbeConfig showModName(ConfigMode mode);
     ConfigMode getShowModName();
 

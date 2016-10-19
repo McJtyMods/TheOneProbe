@@ -25,7 +25,8 @@ public class LazyProbeConfig implements IProbeConfig {
                     .showMobHealth(original.getShowMobHealth())
                     .showMobPotionEffects(original.getShowMobPotionEffects())
                     .showRedstone(original.getShowRedstone())
-                    .showLeverSetting(original.getShowLeverSetting());
+                    .showLeverSetting(original.getShowLeverSetting())
+                    .showTankSetting(original.getShowTankSetting());
         }
         return original;
     }
@@ -39,6 +40,17 @@ public class LazyProbeConfig implements IProbeConfig {
     @Override
     public int getTankMode() {
         return original.getTankMode();
+    }
+
+    @Override
+    public IProbeConfig showTankSetting(ConfigMode mode) {
+        realCopy().showTankSetting(mode);
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowTankSetting() {
+        return original.getShowTankSetting();
     }
 
     @Override

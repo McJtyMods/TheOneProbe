@@ -71,8 +71,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (config.getRFMode() > 0) {
             showRF(probeInfo, world, pos);
         }
-        if (config.getTankMode() > 0) {
-            showTankInfo(probeInfo, world, pos);
+        if (Tools.show(mode, config.getShowTankSetting())) {
+            if (config.getTankMode() > 0) {
+                showTankInfo(probeInfo, world, pos);
+            }
         }
     }
 
