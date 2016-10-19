@@ -108,19 +108,27 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             net.minecraftforge.fluids.capability.IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
             if (handler != null) {
                 IFluidTankProperties[] properties = handler.getTankProperties();
-                if (properties != null && properties.length > 0) {
-                    FluidStack fluidStack = properties[0].getContents();
-                    int maxContents = properties[0].getCapacity();
-                    addFluidInfo(probeInfo, config, fluidStack, maxContents);
+                if (properties != null) {
+                    for (IFluidTankProperties property : properties) {
+                        if (property != null) {
+                            FluidStack fluidStack = property.getContents();
+                            int maxContents = property.getCapacity();
+                            addFluidInfo(probeInfo, config, fluidStack, maxContents);
+                        }
+                    }
                 }
             }
         } else if (te instanceof IFluidHandler) {
             IFluidHandler handler = (IFluidHandler) te;
             FluidTankInfo[] info = handler.getTankInfo(null);
-            if (info != null && info.length > 0) {
-                FluidStack fluidStack = info[0].fluid;
-                int maxContents = info[0].capacity;
-                addFluidInfo(probeInfo, config, fluidStack, maxContents);
+            if (info != null) {
+                for (FluidTankInfo tankInfo : info) {
+                    if (tankInfo != null) {
+                        FluidStack fluidStack = tankInfo.fluid;
+                        int maxContents = tankInfo.capacity;
+                        addFluidInfo(probeInfo, config, fluidStack, maxContents);
+                    }
+                }
             }
         }
     }
