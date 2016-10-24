@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -34,6 +35,8 @@ import java.util.List;
 import java.util.Set;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
+
+    private static final ResourceLocation ICONS = new ResourceLocation(TheOneProbe.MODID, "textures/gui/icons.png");
 
     @Override
     public String getID() {
@@ -52,12 +55,17 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (Tools.show(mode, config.getShowCropPercentage())) {
             showGrowthLevel(probeInfo, blockState, block);
         }
-        if (Tools.show(mode, config.getShowHarvestLevel())) {
+
+        boolean showHarvestLevel = Tools.show(mode, config.getShowHarvestLevel());
+        boolean showHarvested = Tools.show(mode, config.getShowCanBeHarvested());
+        if (showHarvested && showHarvestLevel) {
+            showHarvestInfo(probeInfo, world, pos, block, blockState, player);
+        } else if (showHarvestLevel) {
             showHarvestLevel(probeInfo, blockState, block);
-        }
-        if (Tools.show(mode, config.getShowCanBeHarvested())) {
+        } else if (showHarvested) {
             showCanBeHarvested(probeInfo, world, pos, block, player);
         }
+
         if (Tools.show(mode, config.getShowRedstone())) {
             showRedstonePower(probeInfo, world, blockState, data, block, Tools.show(mode, config.getShowLeverSetting()));
         }
@@ -210,6 +218,33 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             probeInfo.text(TextFormatting.GREEN + "Harvestable");
         } else {
             probeInfo.text(TextFormatting.YELLOW + "Not harvestable");
+        }
+    }
+
+    private void showHarvestInfo(IProbeInfo probeInfo, World world, BlockPos pos, Block block, IBlockState blockState, EntityPlayer player) {
+        boolean harvestable = block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
+
+        String harvestTool = block.getHarvestTool(blockState);
+        String harvestName = null;
+        if (harvestTool != null) {
+            int harvestLevel = block.getHarvestLevel(blockState);
+            if (harvestLevel >= harvestLevels.length) {
+                harvestName = Integer.toString(harvestLevel);
+            } else if (harvestLevel < 0) {
+                harvestName = Integer.toString(harvestLevel);
+            } else {
+                harvestName = harvestLevels[harvestLevel];
+            }
+        }
+
+        ILayoutStyle alignment = probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER);
+        IIconStyle iconStyle = probeInfo.defaultIconStyle().width(20);
+        IProbeInfo horizontal = probeInfo.horizontal(alignment);
+        horizontal.icon(ICONS, harvestable ? 0 : 16, 0, 16, 16, iconStyle);
+        if (harvestTool != null) {
+            horizontal.text(TextFormatting.GREEN + harvestTool + " (" + harvestName + ")");
+        } else {
+            horizontal.text(TextFormatting.GREEN + "No tool");
         }
     }
 

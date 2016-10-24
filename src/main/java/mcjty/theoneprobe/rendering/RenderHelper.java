@@ -284,10 +284,28 @@ public class RenderHelper {
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
      */
+    public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height, int twidth, int theight) {
+        float zLevel = 0.01f;
+        float f = (1.0f/twidth);
+        float f1 = (1.0f/theight);
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+        buffer.pos((x + 0), (y + height), zLevel).tex(((u + 0) * f), ((v + height) * f1)).endVertex();
+        buffer.pos((x + width), (y + height), zLevel).tex(((u + width) * f), ((v + height) * f1)).endVertex();
+        buffer.pos((x + width), (y + 0), zLevel).tex(((u + width) * f), ((v + 0) * f1)).endVertex();
+        buffer.pos((x + 0), (y + 0), zLevel).tex(((u + 0) * f), ((v + 0) * f1)).endVertex();
+        tessellator.draw();
+    }
+
+    /**
+     * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
+     */
     public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height) {
         float zLevel = 0.01f;
-        float f = 0.00390625F;
-        float f1 = 0.00390625F;
+        float f = (1/256.0f);
+        float f1 = (1/256.0f);
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -301,8 +319,8 @@ public class RenderHelper {
 
     public static void drawTexturedModalRect(int x, int y, TextureAtlasSprite sprite, int width, int height) {
         float zLevel = 0.01f;
-        float f = 0.00390625F;
-        float f1 = 0.00390625F;
+        float f = (1/256.0f);
+        float f1 = (1/256.0f);
 
         float u1 = sprite.getMinU();
         float v1 = sprite.getMinV();
