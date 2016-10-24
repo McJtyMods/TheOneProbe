@@ -217,6 +217,7 @@ public class OverlayRenderer {
                     damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
                             .prefix("Progress ")
                             .suffix("%")
+                            .width(85)
                             .borderColor(0)
                             .filledColor(0)
                             .filledColor(0xff990000)
