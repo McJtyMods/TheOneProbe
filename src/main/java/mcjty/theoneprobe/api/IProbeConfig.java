@@ -46,6 +46,10 @@ public interface IProbeConfig {
     IProbeConfig showChestContents(ConfigMode mode);
     ConfigMode getShowChestContents();
 
+    // This controls when detailed chest info is shown in case the amount of items is below showItemDetailThresshold
+    IProbeConfig showChestContentsDetailed(ConfigMode mode);
+    ConfigMode getShowChestContentsDetailed();
+
     IProbeConfig showRedstone(ConfigMode mode);
     ConfigMode getShowRedstone();
 

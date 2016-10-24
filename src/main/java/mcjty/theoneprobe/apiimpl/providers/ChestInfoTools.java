@@ -1,9 +1,11 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.Tools;
+import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.inventory.IInventory;
@@ -48,7 +50,10 @@ public class ChestInfoTools {
                 getChestContents(world, pos, stacks);
             }
 
-            showChestContents(probeInfo, world, pos, stacks);
+            if (!stacks.isEmpty()) {
+                boolean showDetailed = Tools.show(mode, config.getShowChestContentsDetailed()) && stacks.size() <= Config.showItemDetailThresshold;
+                showChestContents(probeInfo, world, pos, stacks, showDetailed);
+            }
         }
     }
 
@@ -71,26 +76,33 @@ public class ChestInfoTools {
         }
     }
 
-    private static void showChestContents(IProbeInfo probeInfo, World world, BlockPos pos, List<ItemStack> stacks) {
+    private static void showChestContents(IProbeInfo probeInfo, World world, BlockPos pos, List<ItemStack> stacks, boolean detailed) {
         IProbeInfo vertical = null;
         IProbeInfo horizontal = null;
 
         int rows = 0;
         int idx = 0;
 
-        for (ItemStack stackInSlot : stacks) {
-            if (idx % 10 == 0) {
-                if (vertical == null) {
-                    vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(Config.chestContentsBorderColor).spacing(0));
-                }
-                horizontal = vertical.horizontal(new LayoutStyle().spacing(0));
-                rows++;
-                if (rows > 4) {
-                    break;
-                }
+        vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(Config.chestContentsBorderColor).spacing(0));
+
+        if (detailed) {
+            for (ItemStack stackInSlot : stacks) {
+                horizontal = vertical.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER));
+                horizontal.item(stackInSlot, new ItemStyle().width(16).height(16))
+                    .text(stackInSlot.getDisplayName());
             }
-            horizontal.item(stackInSlot);
-            idx++;
+        } else {
+            for (ItemStack stackInSlot : stacks) {
+                if (idx % 10 == 0) {
+                    horizontal = vertical.horizontal(new LayoutStyle().spacing(0));
+                    rows++;
+                    if (rows > 4) {
+                        break;
+                    }
+                }
+                horizontal.item(stackInSlot);
+                idx++;
+            }
         }
     }
 

@@ -19,6 +19,7 @@ public class LazyProbeConfig implements IProbeConfig {
                     .setTankMode(original.getTankMode())
                     .showModName(original.getShowModName())
                     .showChestContents(original.getShowChestContents())
+                    .showChestContentsDetailed(original.getShowChestContentsDetailed())
                     .showCropPercentage(original.getShowCropPercentage())
                     .showHarvestLevel(original.getShowHarvestLevel())
                     .showCanBeHarvested(original.getShowCanBeHarvested())
@@ -117,6 +118,17 @@ public class LazyProbeConfig implements IProbeConfig {
     @Override
     public ConfigMode getShowChestContents() {
         return original.getShowChestContents();
+    }
+
+    @Override
+    public IProbeConfig showChestContentsDetailed(ConfigMode mode) {
+        realCopy().showChestContentsDetailed(mode);
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowChestContentsDetailed() {
+        return original.getShowChestContentsDetailed();
     }
 
     @Override
