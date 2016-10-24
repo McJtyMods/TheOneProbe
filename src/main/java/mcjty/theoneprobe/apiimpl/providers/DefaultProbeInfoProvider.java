@@ -238,7 +238,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
 
         ILayoutStyle alignment = probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER);
-        IIconStyle iconStyle = probeInfo.defaultIconStyle().width(20);
+        IIconStyle iconStyle = probeInfo.defaultIconStyle().width(20).textureWidth(32).textureHeight(32);
         IProbeInfo horizontal = probeInfo.horizontal(alignment);
         horizontal.icon(ICONS, harvestable ? 0 : 16, 0, 16, 16, iconStyle);
         if (harvestTool != null) {

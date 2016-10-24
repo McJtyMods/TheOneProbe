@@ -35,12 +35,14 @@ public class ElementIcon implements IElement {
         h = buf.readInt();
         style = new IconStyle()
                 .width(buf.readInt())
-                .height(buf.readInt());
+                .height(buf.readInt())
+                .textureWidth(buf.readInt())
+                .textureHeight(buf.readInt());
     }
 
     @Override
     public void render(int x, int y) {
-        ElementIconRender.render(icon, x, y, w, h, u, v);
+        ElementIconRender.render(icon, x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight());
     }
 
     @Override
@@ -63,6 +65,8 @@ public class ElementIcon implements IElement {
         buf.writeInt(h);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
+        buf.writeInt(style.getTextureWidth());
+        buf.writeInt(style.getTextureHeight());
     }
 
     @Override

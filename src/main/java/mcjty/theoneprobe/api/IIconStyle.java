@@ -17,4 +17,18 @@ public interface IIconStyle {
     int getWidth();
 
     int getHeight();
+
+    /**
+     * Change the total width of the texture on which the icon sits. Default is 256
+     */
+    IIconStyle textureWidth(int w);
+
+    /**
+     * Change the total height of the texture on which the icon sits. Default is 256
+     */
+    IIconStyle textureHeight(int h);
+
+    int getTextureWidth();
+
+    int getTextureHeight();
 }
