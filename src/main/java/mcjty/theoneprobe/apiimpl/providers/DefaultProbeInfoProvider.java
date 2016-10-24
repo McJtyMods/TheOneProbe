@@ -28,6 +28,7 @@ import net.minecraftforge.fluids.capability.*;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -182,7 +183,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private String[] harvestLevels = new String[] {
+    private String[] harvestLevels = new String[]{
             "stone",
             "iron",
             "diamond",
@@ -235,16 +236,18 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             } else {
                 harvestName = harvestLevels[harvestLevel];
             }
+            harvestTool = StringUtils.capitalize(harvestTool);
         }
 
         ILayoutStyle alignment = probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER);
         IIconStyle iconStyle = probeInfo.defaultIconStyle().width(20).textureWidth(32).textureHeight(32);
         IProbeInfo horizontal = probeInfo.horizontal(alignment);
-        horizontal.icon(ICONS, harvestable ? 0 : 16, 0, 16, 16, iconStyle);
-        if (harvestTool != null) {
-            horizontal.text(TextFormatting.GREEN + harvestTool + " (" + harvestName + ")");
+        if (harvestable) {
+            horizontal.icon(ICONS, 0, 0, 16, 16, iconStyle)
+                    .text(TextFormatting.GREEN + ((harvestTool != null) ? harvestTool : "No tool"));
         } else {
-            horizontal.text(TextFormatting.GREEN + "No tool");
+            horizontal.icon(ICONS, 16, 0, 16, 16, iconStyle)
+                    .text(TextFormatting.GREEN + ((harvestTool != null) ? harvestTool : "No tool") + " (" + harvestName + ")");
         }
     }
 
@@ -263,7 +266,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     public static void showStandardBlockInfo(IProbeConfig config, ProbeMode mode, IProbeInfo probeInfo, IBlockState blockState, Block block, World world,
-                                       BlockPos pos, EntityPlayer player, IProbeHitData data) {
+                                             BlockPos pos, EntityPlayer player, IProbeHitData data) {
         String modid = Tools.getModName(block);
 
         if (block instanceof BlockSilverfish && mode != ProbeMode.DEBUG) {
@@ -279,8 +282,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.horizontal()
                         .icon(fluid.getStill(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20))
                         .vertical()
-                            .text(TextFormatting.WHITE + stack.getLocalizedName())
-                            .text(TextFormatting.BLUE + modid);
+                        .text(TextFormatting.WHITE + stack.getLocalizedName())
+                        .text(TextFormatting.BLUE + modid);
                 return;
             }
         }
@@ -291,8 +294,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.horizontal()
                         .item(pickBlock)
                         .vertical()
-                            .text(TextFormatting.WHITE + pickBlock.getDisplayName())
-                            .text(TextFormatting.BLUE + modid);
+                        .text(TextFormatting.WHITE + pickBlock.getDisplayName())
+                        .text(TextFormatting.BLUE + modid);
             } else {
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(pickBlock)
@@ -340,12 +343,12 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
             IItemHandler capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-            for (int i = 0 ; i < capability.getSlots() ; i++) {
+            for (int i = 0; i < capability.getSlots(); i++) {
                 addItemStack(stacks, foundItems, capability.getStackInSlot(i));
             }
         } else if (te instanceof IInventory) {
             IInventory inventory = (IInventory) te;
-            for (int i = 0 ; i < inventory.getSizeInventory() ; i++) {
+            for (int i = 0; i < inventory.getSizeInventory(); i++) {
                 addItemStack(stacks, foundItems, inventory.getStackInSlot(i));
             }
         }
