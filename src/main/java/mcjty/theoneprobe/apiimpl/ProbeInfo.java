@@ -43,4 +43,8 @@ public class ProbeInfo extends ElementVertical {
             element.toBytes(buf);
         }
     }
+
+    public void removeElement(IElement element) {
+        this.getElements().remove(element);
+    }
 }

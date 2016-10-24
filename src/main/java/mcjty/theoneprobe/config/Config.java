@@ -47,6 +47,8 @@ public class Config {
     private static int rightX = -1;
     private static int bottomY = -1;
 
+    public static int showBreakProgress = 1;    // 0 == off, 1 == bar, 2 == text
+
     public static int chestContentsBorderColor = 0xff006699;
     private static int boxBorderColor = 0xff999999;
     private static int boxFillColor = 0x55006699;
@@ -134,6 +136,7 @@ public class Config {
         compactEqualStacks = cfg.getBoolean("compactEqualStacks", CATEGORY_CLIENT, compactEqualStacks, "If true equal stacks will be compacted in the chest contents overlay");
         tooltipScale = cfg.getFloat("tooltipScale", CATEGORY_CLIENT, tooltipScale, 0.4f, 5.0f, "The scale of the tooltips, 1 is default, 2 is smaller");
         chestContentsBorderColor = parseColor(cfg.getString("chestContentsBorderColor", CATEGORY_CLIENT, Integer.toHexString(chestContentsBorderColor), "Color of the border of the chest contents box (0 to disable)"));
+        showBreakProgress = cfg.getInt("showBreakProgress", CATEGORY_CLIENT, showBreakProgress, 0, 2, "0 means don't show break progress, 1 is show as bar, 2 is show as text");
 
         extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
     }

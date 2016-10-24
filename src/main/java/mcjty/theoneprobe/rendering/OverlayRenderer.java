@@ -5,8 +5,11 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
+import mcjty.theoneprobe.apiimpl.elements.ElementText;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoEntityProvider;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoProvider;
+import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
@@ -164,7 +167,7 @@ public class OverlayRenderer {
         if (cacheEntry == null) {
             requestEntityInfo(mode, mouseOver, entity, player);
             if (lastPair != null && time < lastPairTime + Config.timeout) {
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
+                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
                 lastRenderedTime = time;
             } else if (Config.waitingForServerTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout) {
                 // It has been a while. Show some info on client that we are
@@ -173,7 +176,7 @@ public class OverlayRenderer {
                 registerProbeInfo(uuid, info);
                 lastPair = Pair.of(time, info);
                 lastPairTime = time;
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
+                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
                 lastRenderedTime = time;
             }
         } else {
@@ -181,7 +184,7 @@ public class OverlayRenderer {
                 // This info is slightly old. Update it
                 requestEntityInfo(mode, mouseOver, entity, player);
             }
-            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
+            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
             lastRenderedTime = time;
             lastPair = cacheEntry;
             lastPairTime = time;
@@ -204,12 +207,30 @@ public class OverlayRenderer {
 
         long time = System.currentTimeMillis();
 
+        IElement damageElement = null;
+        if (Config.showBreakProgress > 0) {
+            float damage = Minecraft.getMinecraft().playerController.curBlockDamageMP;
+            if (damage > 0) {
+                if (Config.showBreakProgress == 2) {
+                    damageElement = new ElementText(TextFormatting.RED + "Progress " + (int) (damage * 100) + "%");
+                } else {
+                    damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
+                            .prefix("Progress ")
+                            .suffix("%")
+                            .borderColor(0)
+                            .filledColor(0)
+                            .filledColor(0xff990000)
+                            .alternateFilledColor(0xff550000));
+                }
+            }
+        }
+
         int dimension = player.worldObj.provider.getDimension();
         Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(Pair.of(dimension, blockPos));
         if (cacheEntry == null) {
             requestBlockInfo(mode, mouseOver, blockPos, player);
             if (lastPair != null && time < lastPairTime + Config.timeout) {
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
+                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
                 lastRenderedTime = time;
             } else if (Config.waitingForServerTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout) {
                 // It has been a while. Show some info on client that we are
@@ -218,7 +239,7 @@ public class OverlayRenderer {
                 registerProbeInfo(dimension, blockPos, info);
                 lastPair = Pair.of(time, info);
                 lastPairTime = time;
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
+                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
                 lastRenderedTime = time;
             }
         } else {
@@ -226,7 +247,7 @@ public class OverlayRenderer {
                 // This info is slightly old. Update it
                 requestBlockInfo(mode, mouseOver, blockPos, player);
             }
-            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
+            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
             lastRenderedTime = time;
             lastPair = cacheEntry;
             lastPairTime = time;
@@ -293,7 +314,7 @@ public class OverlayRenderer {
         double sh = scaledresolution.getScaledHeight_double();
 
         setupOverlayRendering(sw * scale, sh * scale);
-        renderElements((ProbeInfo) probeInfo, style, sw * scale, sh * scale);
+        renderElements((ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
         setupOverlayRendering(sw, sh);
         GlStateManager.popMatrix();
     }
@@ -322,7 +343,11 @@ public class OverlayRenderer {
         cachedEntityInfo = newCachedInfo;
     }
 
-    private static void renderElements(ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh) {
+    private static void renderElements(ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh, IElement extra) {
+        if (extra != null) {
+            probeInfo.element(extra);
+        }
+
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
 
@@ -367,6 +392,10 @@ public class OverlayRenderer {
         if (!Minecraft.getMinecraft().isGamePaused()) {
             RenderHelper.rot += .5f;
         }
+
         probeInfo.render(x + margin, y + margin);
+        if (extra != null) {
+            probeInfo.removeElement(extra);
+        }
     }
 }
