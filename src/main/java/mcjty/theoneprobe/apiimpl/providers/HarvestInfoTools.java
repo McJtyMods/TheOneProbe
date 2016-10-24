@@ -82,7 +82,7 @@ public class HarvestInfoTools {
                     .text(TextFormatting.GREEN + ((harvestTool != null) ? harvestTool : "No tool"));
         } else {
             horizontal.icon(ICONS, 16, 0, 16, 16, iconStyle)
-                    .text(TextFormatting.RED + ((harvestTool != null) ? harvestTool : "No tool") + " (" + harvestName + ")");
+                    .text(TextFormatting.YELLOW + ((harvestTool != null) ? harvestTool : "No tool") + " (" + harvestName + ")");
         }
     }
 }
