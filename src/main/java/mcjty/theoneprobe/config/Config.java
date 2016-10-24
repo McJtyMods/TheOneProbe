@@ -7,7 +7,11 @@ import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Config {
     public static String CATEGORY_THEONEPROBE = "theoneprobe";
@@ -25,6 +29,12 @@ public class Config {
     public static int timeout = 200;
     public static int renderTimeout = 500;
 
+    public static int showSmallChestContentsWithoutSneaking = 0;
+    public static String[] showContentsWithoutSneaking = { "storagedrawers:basicDrawers" };
+    public static String[] dontShowContentsUnlessSneaking = {};
+    private static Set<ResourceLocation> inventoriesToShow = null;
+    private static Set<ResourceLocation> inventoriesToNotShow = null;
+
     public static float probeDistance = 6;
     public static boolean showLiquids = false;
     public static boolean isVisible = true;
@@ -37,6 +47,7 @@ public class Config {
     private static int rightX = -1;
     private static int bottomY = -1;
 
+    public static int chestContentsBorderColor = 0xff006699;
     private static int boxBorderColor = 0xff999999;
     private static int boxFillColor = 0x55006699;
     private static int boxThickness = 2;
@@ -102,6 +113,10 @@ public class Config {
         tankbarAlternateFilledColor = parseColor(cfg.getString("tankbarAlternateFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(tankbarAlternateFilledColor), "Alternate color for the tank bar"));
         tankbarBorderColor = parseColor(cfg.getString("tankbarBorderColor", CATEGORY_THEONEPROBE, Integer.toHexString(tankbarBorderColor), "Color for the tank bar border"));
 
+        showSmallChestContentsWithoutSneaking = cfg.getInt("showSmallChestContentsWithoutSneaking", CATEGORY_THEONEPROBE, showSmallChestContentsWithoutSneaking, 0, 1000, "The maximum amount of slots (empty or not) to show without sneaking");
+        showContentsWithoutSneaking = cfg.getStringList("showContentsWithoutSneaking", CATEGORY_THEONEPROBE, showContentsWithoutSneaking, "A list of blocks for which we automatically show chest contents even if not sneaking");
+        dontShowContentsUnlessSneaking = cfg.getStringList("dontShowContentsUnlessSneaking", CATEGORY_THEONEPROBE, dontShowContentsUnlessSneaking, "A list of blocks for which we don't show chest contents automatically except if sneaking");
+
         setupStyleConfig(cfg);
     }
 
@@ -118,6 +133,7 @@ public class Config {
         holdKeyToMakeVisible = cfg.getBoolean("holdKeyToMakeVisible", CATEGORY_CLIENT, holdKeyToMakeVisible, "If true then the probe hotkey must be held down to show the tooltip");
         compactEqualStacks = cfg.getBoolean("compactEqualStacks", CATEGORY_CLIENT, compactEqualStacks, "If true equal stacks will be compacted in the chest contents overlay");
         tooltipScale = cfg.getFloat("tooltipScale", CATEGORY_CLIENT, tooltipScale, 0.4f, 5.0f, "The scale of the tooltips, 1 is default, 2 is smaller");
+        chestContentsBorderColor = parseColor(cfg.getString("chestContentsBorderColor", CATEGORY_CLIENT, Integer.toHexString(chestContentsBorderColor), "Color of the border of the chest contents box (0 to disable)"));
 
         extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
     }
@@ -200,4 +216,23 @@ public class Config {
         return defaultOverlayStyle;
     }
 
+    public static Set<ResourceLocation> getInventoriesToShow() {
+        if (inventoriesToShow == null) {
+            inventoriesToShow = new HashSet<>();
+            for (String s : showContentsWithoutSneaking) {
+                inventoriesToShow.add(new ResourceLocation(s));
+            }
+        }
+        return inventoriesToShow;
+    }
+
+    public static Set<ResourceLocation> getInventoriesToNotShow() {
+        if (inventoriesToNotShow == null) {
+            inventoriesToNotShow = new HashSet<>();
+            for (String s : dontShowContentsUnlessSneaking) {
+                inventoriesToNotShow.add(new ResourceLocation(s));
+            }
+        }
+        return inventoriesToNotShow;
+    }
 }

@@ -8,7 +8,7 @@ public interface IProbeConfig {
     public static enum ConfigMode {
         NOT,            // Don't show
         NORMAL,         // Show
-        EXTENDED        // Shgw only when sneaking
+        EXTENDED        // Show only when sneaking
     }
 
     /**
