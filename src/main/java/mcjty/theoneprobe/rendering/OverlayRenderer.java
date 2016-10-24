@@ -166,7 +166,7 @@ public class OverlayRenderer {
             if (lastPair != null && time < lastPairTime + Config.timeout) {
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
                 lastRenderedTime = time;
-            } else if (Config.renderTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.renderTimeout) {
+            } else if (Config.waitingForServerTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout) {
                 // It has been a while. Show some info on client that we are
                 // waiting for server information
                 ProbeInfo info = getWaitingEntityInfo(mode, mouseOver, entity, player);
@@ -211,7 +211,7 @@ public class OverlayRenderer {
             if (lastPair != null && time < lastPairTime + Config.timeout) {
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh);
                 lastRenderedTime = time;
-            } else if (Config.renderTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.renderTimeout) {
+            } else if (Config.waitingForServerTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout) {
                 // It has been a while. Show some info on client that we are
                 // waiting for server information
                 ProbeInfo info = getWaitingInfo(mode, mouseOver, blockPos, player);
