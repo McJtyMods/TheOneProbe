@@ -1,0 +1,10 @@
+key.toggleLiquids=Alternar Visualização de Líquidos
+key.toggleVisible=Alternar Visibilidade
+key.categories.theoneprobe=The One Probe
+item.theoneprobe.probe.name=O Examinador
+item.theoneprobe.diamond_helmet_probe.name=Capacete de Diamante com Examinador
+item.theoneprobe.gold_helmet_probe.name=Capacete de Ouro com Examinador
+item.theoneprobe.iron_helmet_probe.name=Capacete de Ferro com Examinador
+item.theoneprobe.creativeprobe.name=O Examinador (Criativo)
+
+itemGroup.Probe=The One Probe
