@@ -1,15 +1,14 @@
 package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
@@ -86,13 +85,9 @@ public class PacketGetEntityInfo implements IMessage {
         }
     }
 
-    private static boolean hasProbeInEitherHand(EntityPlayer player) {
-        return ModItems.isProbe(player.getHeldItem(EnumHand.MAIN_HAND)) || ModItems.isProbe(player.getHeldItem(EnumHand.OFF_HAND));
-    }
-
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {
-        if (Config.needsProbe == 2 && !hasProbeInEitherHand(player)) {
-            // The server says we need a probe but we don't have one in our hands
+        if (Config.needsProbe == 2 && !ModItems.hasAProbeSomewhere(player)) {
+            // The server says we need a probe but we don't have one in our hands or on our head
             return null;
         }
 

@@ -3,6 +3,7 @@ package mcjty.theoneprobe.items;
 import mcjty.theoneprobe.TheOneProbe;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -10,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -94,6 +96,36 @@ public class ModItems {
         if (stack == null) {
             return false;
         }
-        return stack.getItem() == probe || stack.getItem() == creativeProbe;
+        if (stack.getItem() == probe || stack.getItem() == creativeProbe) {
+            return true;
+        }
+        if (stack.getTagCompound() == null) {
+            return false;
+        }
+        return stack.getTagCompound().hasKey(PROBETAG_HAND);
+    }
+
+    public static boolean isProbeHelmet(ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
+        if (stack.getTagCompound() == null) {
+            return false;
+        }
+        return stack.getTagCompound().hasKey(PROBETAG);
+    }
+
+    public static boolean hasAProbeSomewhere(EntityPlayer player) {
+        return hasProbeInHand(player, EnumHand.MAIN_HAND) || hasProbeInHand(player, EnumHand.OFF_HAND) || hasProbeInHelmet(player);
+    }
+
+    private static boolean hasProbeInHand(EntityPlayer player, EnumHand hand) {
+        ItemStack item = player.getHeldItem(hand);
+        return isProbe(item);
+    }
+
+    private static boolean hasProbeInHelmet(EntityPlayer player) {
+        ItemStack helmet = player.inventory.armorItemInSlot(3);
+        return isProbeHelmet(helmet);
     }
 }

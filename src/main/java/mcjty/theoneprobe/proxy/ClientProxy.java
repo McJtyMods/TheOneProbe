@@ -21,9 +21,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static mcjty.theoneprobe.items.ModItems.PROBETAG;
-import static mcjty.theoneprobe.items.ModItems.PROBETAG_HAND;
-
 public class ClientProxy extends CommonProxy {
 
     @Override
@@ -93,7 +90,7 @@ public class ClientProxy extends CommonProxy {
         if (hasItemInEitherHand(ModItems.creativeProbe)) {
             OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getPartialTicks());
         } else if (Config.needsProbe > 0) {
-            if (hasProbeInHand(EnumHand.MAIN_HAND) || hasProbeInHand(EnumHand.OFF_HAND) || hasProbeInHelmet()) {
+            if (ModItems.hasAProbeSomewhere(Minecraft.getMinecraft().thePlayer)) {
                 OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
             }
         } else {
@@ -109,31 +106,6 @@ public class ClientProxy extends CommonProxy {
             }
         }
         return player.isSneaking() ? ProbeMode.EXTENDED : ProbeMode.NORMAL;
-    }
-
-    private boolean hasProbeInHand(EnumHand hand) {
-        ItemStack item = Minecraft.getMinecraft().thePlayer.getHeldItem(hand);
-        if (item == null) {
-            return false;
-        }
-        if (item.getItem() == ModItems.probe || item.getItem() == ModItems.creativeProbe) {
-            return true;
-        }
-        if (item.getTagCompound() == null) {
-            return false;
-        }
-        return item.getTagCompound().hasKey(PROBETAG_HAND);
-    }
-
-    private boolean hasProbeInHelmet() {
-        ItemStack helmet = Minecraft.getMinecraft().thePlayer.inventory.armorItemInSlot(3);
-        if (helmet == null) {
-            return false;
-        }
-        if (helmet.getTagCompound() == null) {
-            return false;
-        }
-        return helmet.getTagCompound().hasKey(PROBETAG);
     }
 
     private boolean hasItemInEitherHand(Item item) {
