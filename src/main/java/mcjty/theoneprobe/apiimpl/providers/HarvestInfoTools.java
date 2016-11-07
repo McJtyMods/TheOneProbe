@@ -78,14 +78,14 @@ public class HarvestInfoTools {
         IIconStyle iconStyle = probeInfo.defaultIconStyle().width(20).textureWidth(32).textureHeight(32);
         IProbeInfo horizontal = probeInfo.horizontal(alignment);
         if (harvestable) {
-            horizontal.icon(ICONS, 0, 0, 16, 16, iconStyle)
+            horizontal.icon(ICONS, 0, 16, 13, 13, iconStyle)
                     .text(TextFormatting.GREEN + ((harvestTool != null) ? harvestTool : "No tool"));
         } else {
             if (harvestName == null || harvestName.isEmpty()) {
-                horizontal.icon(ICONS, 16, 0, 16, 16, iconStyle)
+                horizontal.icon(ICONS, 16, 16, 13, 13, iconStyle)
                         .text(TextFormatting.YELLOW + ((harvestTool != null) ? harvestTool : "No tool"));
             } else {
-                horizontal.icon(ICONS, 16, 0, 16, 16, iconStyle)
+                horizontal.icon(ICONS, 16, 16, 13, 13, iconStyle)
                         .text(TextFormatting.YELLOW + ((harvestTool != null) ? harvestTool : "No tool") + " (" + harvestName + ")");
             }
         }
