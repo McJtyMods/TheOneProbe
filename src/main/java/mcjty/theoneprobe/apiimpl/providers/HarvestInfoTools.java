@@ -5,6 +5,7 @@ import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IIconStyle;
 import mcjty.theoneprobe.api.ILayoutStyle;
 import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -74,18 +75,22 @@ public class HarvestInfoTools {
             harvestTool = StringUtils.capitalize(harvestTool);
         }
 
+        boolean v = Config.harvestStyleVanilla;
+        int offs = v ? 16 : 0;
+        int dim = v ? 13 : 16;
+
         ILayoutStyle alignment = probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER);
-        IIconStyle iconStyle = probeInfo.defaultIconStyle().width(20).textureWidth(32).textureHeight(32);
+        IIconStyle iconStyle = probeInfo.defaultIconStyle().width(v ? 18 : 20).height(v ? 14 : 16).textureWidth(32).textureHeight(32);
         IProbeInfo horizontal = probeInfo.horizontal(alignment);
         if (harvestable) {
-            horizontal.icon(ICONS, 0, 16, 13, 13, iconStyle)
+            horizontal.icon(ICONS, 0, offs, dim, dim, iconStyle)
                     .text(TextFormatting.GREEN + ((harvestTool != null) ? harvestTool : "No tool"));
         } else {
             if (harvestName == null || harvestName.isEmpty()) {
-                horizontal.icon(ICONS, 16, 16, 13, 13, iconStyle)
+                horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
                         .text(TextFormatting.YELLOW + ((harvestTool != null) ? harvestTool : "No tool"));
             } else {
-                horizontal.icon(ICONS, 16, 16, 13, 13, iconStyle)
+                horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
                         .text(TextFormatting.YELLOW + ((harvestTool != null) ? harvestTool : "No tool") + " (" + harvestName + ")");
             }
         }
