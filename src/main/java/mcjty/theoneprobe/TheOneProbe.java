@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.proxy.CommonProxy;
 import net.minecraft.creativetab.CreativeTabs;
@@ -69,7 +70,12 @@ public class TheOneProbe {
 
         baubles = Loader.isModLoaded("Baubles");
         if (baubles) {
-            logger.log(Level.INFO, "The One Probe Detected Baubles: enabling support");
+            if (Config.supportBaubles) {
+                logger.log(Level.INFO, "The One Probe Detected Baubles: enabling support");
+            } else {
+                logger.log(Level.INFO, "The One Probe Detected Baubles but support disabled in config");
+                baubles = false;
+            }
         }
 
         proxy.preInit(e);
