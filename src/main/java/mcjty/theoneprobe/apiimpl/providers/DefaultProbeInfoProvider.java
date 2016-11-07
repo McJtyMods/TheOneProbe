@@ -92,6 +92,16 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             Boolean powered = blockState.getValue(BlockLever.POWERED);
             probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
                     .text("State: " + (powered ? "On" : "Off"));
+        } else if (block instanceof BlockRedstoneComparator) {
+            BlockRedstoneComparator.Mode mode = blockState.getValue(BlockRedstoneComparator.MODE);
+            probeInfo.text("Mode: " + mode.getName());
+        } else if (block instanceof BlockRedstoneRepeater) {
+            Boolean locked = blockState.getValue(BlockRedstoneRepeater.LOCKED);
+            Integer delay = blockState.getValue(BlockRedstoneRepeater.DELAY);
+            probeInfo.text("Delay: " + delay + " ticks");
+            if (locked) {
+                probeInfo.text("Locked");
+            }
         }
     }
 

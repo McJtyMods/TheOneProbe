@@ -25,6 +25,10 @@ public interface IProbeConfig {
     IProbeConfig setTankMode(int mode);
     int getTankMode();
 
+    /**
+     * Lever setting is also used for other technical information like the
+     * comparator mode and repeater delay
+     */
     IProbeConfig showLeverSetting(ConfigMode mode);
     ConfigMode getShowLeverSetting();
 
