@@ -181,12 +181,20 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             BlockCrops crops = (BlockCrops) block;
             int age = crops.getAge(blockState);
             int maxAge = crops.getMaxAge();
-            probeInfo.text(TextFormatting.GREEN + "Growth: " + (age * 100) / maxAge + "%");
+            if (age == maxAge) {
+                probeInfo.text(TextFormatting.GREEN + "Fully grown");
+            } else {
+                probeInfo.text(TextFormatting.YELLOW + "Growth: " + (age * 100) / maxAge + "%");
+            }
         } else if (block instanceof BlockNetherWart) {
             BlockNetherWart wart = (BlockNetherWart) block;
             int age = blockState.getValue(BlockNetherWart.AGE);
             int maxAge = 3;
-            probeInfo.text(TextFormatting.GREEN + "Growth: " + (age * 100) / maxAge + "%");
+            if (age == maxAge) {
+                probeInfo.text(TextFormatting.GREEN + "Fully grown");
+            } else {
+                probeInfo.text(TextFormatting.YELLOW + "Growth: " + (age * 100) / maxAge + "%");
+            }
         }
     }
 
