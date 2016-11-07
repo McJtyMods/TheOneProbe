@@ -6,7 +6,9 @@ import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextFormatting;
@@ -63,6 +65,10 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                     }
                 }
             }
+        }
+        if (entity instanceof EntityWolf && Config.showCollarColor) {
+            EnumDyeColor collarColor = ((EntityWolf) entity).getCollarColor();
+            probeInfo.text("Collar: " + collarColor.getName());
         }
     }
 

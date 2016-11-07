@@ -72,6 +72,7 @@ public class Config {
 
     public static int loggingThrowableTimeout = 20000;
 
+    public static boolean showCollarColor = true;
 
     private static IOverlayStyle defaultOverlayStyle;
     private static ProbeConfig defaultConfig = new ProbeConfig();
@@ -94,6 +95,7 @@ public class Config {
         needsProbe = cfg.getInt("needsProbe", CATEGORY_THEONEPROBE, needsProbe, 0, 2, "Is the probe needed to show the tooltip? 0 = no, 1 = yes, 2 = yes and clients cannot override");
         extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_THEONEPROBE, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
         supportBaubles = cfg.getBoolean("supportBaubles", CATEGORY_THEONEPROBE, supportBaubles, "If true there will be a bauble version of the probe if baubles is present");
+        showCollarColor = cfg.getBoolean("showCollarColor", CATEGORY_THEONEPROBE, showCollarColor, "If true show the color of the collar of a wolf");
         defaultConfig.setRFMode(cfg.getInt("showRF", CATEGORY_THEONEPROBE, defaultConfig.getRFMode(), 0, 2, "How to display RF: 0 = do not show, 1 = show in a bar, 2 = show as text"));
         defaultConfig.setTankMode(cfg.getInt("showTank", CATEGORY_THEONEPROBE, defaultConfig.getTankMode(), 0, 2, "How to display tank contents: 0 = do not show, 1 = show in a bar, 2 = show as text"));
         int fmt = cfg.getInt("rfFormat", CATEGORY_THEONEPROBE, rfFormat.ordinal(), 0, 2, "Format for displaying RF: 0 = full, 1 = compact, 2 = comma separated");
