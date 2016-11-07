@@ -9,6 +9,7 @@ import mcjty.theoneprobe.proxy.CommonProxy;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
@@ -43,6 +45,8 @@ public class TheOneProbe {
 
     public static TheOneProbeImp theOneProbeImp = new TheOneProbeImp();
 
+    public static boolean baubles = false;
+
     public static CreativeTabs tabProbe = new CreativeTabs("Probe") {
         @Override
         @SideOnly(Side.CLIENT)
@@ -62,6 +66,12 @@ public class TheOneProbe {
         mainConfigDir = e.getModConfigurationDirectory();
         modConfigDir = new File(mainConfigDir.getPath());
         config = new Configuration(new File(modConfigDir, "theoneprobe.cfg"));
+
+        baubles = Loader.isModLoaded("Baubles");
+        if (baubles) {
+            logger.log(Level.INFO, "The One Probe Detected Baubles: enabling support");
+        }
+
         proxy.preInit(e);
     }
 

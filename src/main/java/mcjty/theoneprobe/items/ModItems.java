@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.compat.BaubleTools;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +29,7 @@ public class ModItems {
     public static Item diamondHelmetProbe;
     public static Item goldHelmetProbe;
     public static Item ironHelmetProbe;
+    public static ProbeGoggles probeGoggles;
 
     public static String PROBETAG = "theoneprobe";
     public static String PROBETAG_HAND = "theoneprobe_hand";
@@ -50,6 +52,10 @@ public class ModItems {
         diamondHelmetProbe = makeHelpmet(materialDiamondHelmet, 3, "diamond_helmet_probe");
         goldHelmetProbe = makeHelpmet(materialGoldHelmet, 4, "gold_helmet_probe");
         ironHelmetProbe = makeHelpmet(materialIronHelmet, 2, "iron_helmet_probe");
+
+        if (TheOneProbe.baubles) {
+            probeGoggles = new ProbeGoggles();
+        }
     }
 
     private static Item makeHelpmet(ItemArmor.ArmorMaterial material, int renderIndex, String name) {
@@ -83,6 +89,10 @@ public class ModItems {
         ModelLoader.setCustomModelResourceLocation(diamondHelmetProbe, 0, new ModelResourceLocation(diamondHelmetProbe.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(goldHelmetProbe, 0, new ModelResourceLocation(goldHelmetProbe.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(ironHelmetProbe, 0, new ModelResourceLocation(ironHelmetProbe.getRegistryName(), "inventory"));
+
+        if (TheOneProbe.baubles) {
+            probeGoggles.initModel();
+        }
     }
 
     public static void initCrafting() {
@@ -90,9 +100,12 @@ public class ModItems {
         GameRegistry.addRecipe(new AddProbeRecipe(Items.DIAMOND_HELMET, diamondHelmetProbe));
         GameRegistry.addRecipe(new AddProbeRecipe(Items.GOLDEN_HELMET, goldHelmetProbe));
         GameRegistry.addRecipe(new AddProbeRecipe(Items.IRON_HELMET, ironHelmetProbe));
+        if (TheOneProbe.baubles) {
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probeGoggles, 1), " g ", "gpg", " g ", 'p', probe, 'g', "nuggetGold"));
+        }
     }
 
-    public static boolean isProbe(ItemStack stack) {
+    public static boolean isProbeInHand(ItemStack stack) {
         if (stack == null) {
             return false;
         }
@@ -105,7 +118,7 @@ public class ModItems {
         return stack.getTagCompound().hasKey(PROBETAG_HAND);
     }
 
-    public static boolean isProbeHelmet(ItemStack stack) {
+    private static boolean isProbeHelmet(ItemStack stack) {
         if (stack == null) {
             return false;
         }
@@ -116,16 +129,25 @@ public class ModItems {
     }
 
     public static boolean hasAProbeSomewhere(EntityPlayer player) {
-        return hasProbeInHand(player, EnumHand.MAIN_HAND) || hasProbeInHand(player, EnumHand.OFF_HAND) || hasProbeInHelmet(player);
+        return hasProbeInHand(player, EnumHand.MAIN_HAND) || hasProbeInHand(player, EnumHand.OFF_HAND) || hasProbeInHelmet(player)
+                || hasProbeInBauble(player);
     }
 
     private static boolean hasProbeInHand(EntityPlayer player, EnumHand hand) {
         ItemStack item = player.getHeldItem(hand);
-        return isProbe(item);
+        return isProbeInHand(item);
     }
 
     private static boolean hasProbeInHelmet(EntityPlayer player) {
         ItemStack helmet = player.inventory.armorItemInSlot(3);
         return isProbeHelmet(helmet);
+    }
+
+    private static boolean hasProbeInBauble(EntityPlayer player) {
+        if (TheOneProbe.baubles) {
+            return BaubleTools.hasProbeGoggle(player);
+        } else {
+            return false;
+        }
     }
 }
