@@ -32,6 +32,9 @@ public interface IProbeConfig {
     IProbeConfig showLeverSetting(ConfigMode mode);
     ConfigMode getShowLeverSetting();
 
+    IProbeConfig showBrewStandSetting(ConfigMode mode);
+    ConfigMode getShowBrewStandSetting();
+
     IProbeConfig showTankSetting(ConfigMode mode);
     ConfigMode getShowTankSetting();
 

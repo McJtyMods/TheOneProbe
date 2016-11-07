@@ -21,6 +21,7 @@ public class ProbeConfig implements IProbeConfig {
     private static IProbeConfig.ConfigMode showMobPotionEffects = EXTENDED;
     private static IProbeConfig.ConfigMode showLeverSetting = NORMAL;
     private static IProbeConfig.ConfigMode showTankSetting = EXTENDED;
+    private static IProbeConfig.ConfigMode showBrewStand = NORMAL;
 
     /// Make a lazy copy of this probe config.
     public IProbeConfig lazyCopy() {
@@ -47,6 +48,17 @@ public class ProbeConfig implements IProbeConfig {
     @Override
     public int getRFMode() {
         return showRF;
+    }
+
+    @Override
+    public IProbeConfig showBrewStandSetting(ConfigMode mode) {
+        showBrewStand = mode;
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowBrewStandSetting() {
+        return showBrewStand;
     }
 
     @Override

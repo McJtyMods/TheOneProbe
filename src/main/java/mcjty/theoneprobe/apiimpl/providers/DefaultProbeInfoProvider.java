@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -66,6 +67,27 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (Tools.show(mode, config.getShowTankSetting())) {
             if (config.getTankMode() > 0) {
                 showTankInfo(probeInfo, world, pos);
+            }
+        }
+
+        if (Tools.show(mode, config.getShowBrewStandSetting())) {
+            showBrewingStandInfo(probeInfo, world, data, block);
+        }
+    }
+
+    private void showBrewingStandInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
+        if (block instanceof BlockBrewingStand) {
+            TileEntity te = world.getTileEntity(data.getPos());
+            if (te instanceof TileEntityBrewingStand) {
+                int brewtime = ((TileEntityBrewingStand) te).getField(0);
+                int fuel = ((TileEntityBrewingStand) te).getField(1);
+                probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
+                        .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
+                        .text("Fuel: " + fuel);
+                if (brewtime > 0) {
+                    probeInfo.text("Time: " + brewtime + " ticks");
+                }
+
             }
         }
     }

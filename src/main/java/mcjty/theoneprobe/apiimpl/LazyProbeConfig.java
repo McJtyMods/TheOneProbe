@@ -27,7 +27,8 @@ public class LazyProbeConfig implements IProbeConfig {
                     .showMobPotionEffects(original.getShowMobPotionEffects())
                     .showRedstone(original.getShowRedstone())
                     .showLeverSetting(original.getShowLeverSetting())
-                    .showTankSetting(original.getShowTankSetting());
+                    .showTankSetting(original.getShowTankSetting())
+                    .showBrewStandSetting(original.getShowBrewStandSetting());
         }
         return original;
     }
@@ -41,6 +42,17 @@ public class LazyProbeConfig implements IProbeConfig {
     @Override
     public int getTankMode() {
         return original.getTankMode();
+    }
+
+    @Override
+    public IProbeConfig showBrewStandSetting(ConfigMode mode) {
+        realCopy().showBrewStandSetting(mode);
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowBrewStandSetting() {
+        return original.getShowBrewStandSetting();
     }
 
     @Override
