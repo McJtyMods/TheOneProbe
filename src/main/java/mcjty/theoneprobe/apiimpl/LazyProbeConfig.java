@@ -29,7 +29,8 @@ public class LazyProbeConfig implements IProbeConfig {
                     .showLeverSetting(original.getShowLeverSetting())
                     .showTankSetting(original.getShowTankSetting())
                     .showBrewStandSetting(original.getShowBrewStandSetting())
-                    .showAnimalOwnerSetting(original.getAnimalOwnerSetting());
+                    .showAnimalOwnerSetting(original.getAnimalOwnerSetting())
+                    .showHorseStatSetting(original.getHorseStatSetting());
         }
         return original;
     }
@@ -43,6 +44,17 @@ public class LazyProbeConfig implements IProbeConfig {
     @Override
     public int getTankMode() {
         return original.getTankMode();
+    }
+
+    @Override
+    public IProbeConfig showHorseStatSetting(ConfigMode mode) {
+        realCopy().showHorseStatSetting(mode);
+        return this;
+    }
+
+    @Override
+    public ConfigMode getHorseStatSetting() {
+        return original.getHorseStatSetting();
     }
 
     @Override

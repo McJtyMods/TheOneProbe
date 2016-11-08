@@ -32,6 +32,9 @@ public interface IProbeConfig {
     IProbeConfig showLeverSetting(ConfigMode mode);
     ConfigMode getShowLeverSetting();
 
+    IProbeConfig showHorseStatSetting(ConfigMode mode);
+    ConfigMode getHorseStatSetting();
+
     IProbeConfig showAnimalOwnerSetting(ConfigMode mode);
     ConfigMode getAnimalOwnerSetting();
 

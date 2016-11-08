@@ -1,12 +1,14 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
-import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.config.Config;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +20,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -27,6 +30,8 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
     public String getID() {
         return TheOneProbe.MODID + ":entity.default";
     }
+
+    private static DecimalFormat dfCommas = new DecimalFormat("##.#");
 
     @Override
     public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) {
@@ -86,6 +91,16 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 } else {
                     probeInfo.text(TextFormatting.GREEN + "Owned by: " + username);
                 }
+            }
+        }
+
+        if (Tools.show(mode, config.getHorseStatSetting())) {
+            if (entity instanceof EntityHorse) {
+                double jumpStrength = ((EntityHorse) entity).getHorseJumpStrength();
+                double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
+                probeInfo.text(TextFormatting.GREEN + "Jump height: " + dfCommas.format(jumpHeight));
+                IAttributeInstance iattributeinstance = ((EntityHorse) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+                probeInfo.text(TextFormatting.GREEN + "Speed: " + dfCommas.format(iattributeinstance.getAttributeValue()));
             }
         }
 
