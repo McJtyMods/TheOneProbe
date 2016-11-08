@@ -6,6 +6,8 @@ import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
@@ -14,8 +16,10 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.common.UsernameCache;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider {
 
@@ -66,6 +70,25 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 }
             }
         }
+
+        if (Tools.show(mode, config.getAnimalOwnerSetting())) {
+            UUID ownerId = null;
+            if (entity instanceof IEntityOwnable) {
+                ownerId = ((IEntityOwnable) entity).getOwnerId();
+            } else if (entity instanceof EntityHorse) {
+                ownerId = ((EntityHorse) entity).getOwnerUniqueId();
+            }
+
+            if (ownerId != null) {
+                String username = UsernameCache.getLastKnownUsername(ownerId);
+                if (username == null) {
+                    probeInfo.text(TextFormatting.YELLOW + "Unknown owner");
+                } else {
+                    probeInfo.text(TextFormatting.GREEN + "Owned by: " + username);
+                }
+            }
+        }
+
         if (entity instanceof EntityWolf && Config.showCollarColor) {
             EnumDyeColor collarColor = ((EntityWolf) entity).getCollarColor();
             probeInfo.text("Collar: " + collarColor.getName());

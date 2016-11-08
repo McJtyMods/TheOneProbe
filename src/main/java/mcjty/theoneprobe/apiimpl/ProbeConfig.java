@@ -22,6 +22,7 @@ public class ProbeConfig implements IProbeConfig {
     private static IProbeConfig.ConfigMode showLeverSetting = NORMAL;
     private static IProbeConfig.ConfigMode showTankSetting = EXTENDED;
     private static IProbeConfig.ConfigMode showBrewStand = NORMAL;
+    private static IProbeConfig.ConfigMode showMobOwner = EXTENDED;
 
     /// Make a lazy copy of this probe config.
     public IProbeConfig lazyCopy() {
@@ -48,6 +49,17 @@ public class ProbeConfig implements IProbeConfig {
     @Override
     public int getRFMode() {
         return showRF;
+    }
+
+    @Override
+    public IProbeConfig showAnimalOwnerSetting(ConfigMode mode) {
+        showMobOwner = mode;
+        return this;
+    }
+
+    @Override
+    public ConfigMode getAnimalOwnerSetting() {
+        return showMobOwner;
     }
 
     @Override
