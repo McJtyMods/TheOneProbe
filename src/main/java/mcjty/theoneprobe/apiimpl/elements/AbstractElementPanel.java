@@ -73,13 +73,13 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
     @Override
     public IProbeInfo text(String text, ITextStyle style) {
-        return text(text);
+        children.add(new ElementText(text, style));
+        return this;
     }
 
     @Override
     public IProbeInfo text(String text) {
-        children.add(new ElementText(text));
-        return this;
+        return text(text, new TextStyle());
     }
 
     @Override
@@ -183,7 +183,12 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
     @Override
     public ITextStyle defaultTextStyle() {
-        return new ITextStyle() { };
+        return new TextStyle();
+    }
+
+    @Override
+    public ITextStyle defaultTextStyle(TextStyleClass styleClass) {
+        return new TextStyle().styleClass(styleClass);
     }
 
     @Override

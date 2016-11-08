@@ -10,6 +10,7 @@ import mcjty.theoneprobe.apiimpl.elements.ElementText;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoEntityProvider;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
+import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
@@ -212,7 +213,8 @@ public class OverlayRenderer {
             float damage = Minecraft.getMinecraft().playerController.curBlockDamageMP;
             if (damage > 0) {
                 if (Config.showBreakProgress == 2) {
-                    damageElement = new ElementText(TextFormatting.RED + "Progress " + (int) (damage * 100) + "%");
+                    damageElement = new ElementText(TextFormatting.RED + "Progress " + (int) (damage * 100) + "%",
+                            new TextStyle().styleClass(TextStyleClass.PROGRESS));
                 } else {
                     damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
                             .prefix("Progress ")

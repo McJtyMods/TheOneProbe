@@ -32,6 +32,12 @@ public interface IProbeInfo {
     ITextStyle defaultTextStyle();
 
     /**
+     * Conveniance to create a default style for the text element
+     * with the given class
+     */
+    ITextStyle defaultTextStyle(TextStyleClass styleClass);
+
+    /**
      * Create a default style for the item element
      */
     IItemStyle defaultItemStyle();

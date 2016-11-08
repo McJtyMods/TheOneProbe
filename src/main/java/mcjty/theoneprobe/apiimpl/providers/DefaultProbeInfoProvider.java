@@ -22,6 +22,9 @@ import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
+import static mcjty.theoneprobe.api.TextStyleClass.BLOCKNAME;
+import static mcjty.theoneprobe.api.TextStyleClass.MODNAME;
+
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
@@ -237,8 +240,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.horizontal()
                         .icon(fluid.getStill(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20))
                         .vertical()
-                        .text(TextFormatting.WHITE + stack.getLocalizedName())
-                        .text(TextFormatting.BLUE + modid);
+                        .text(stack.getLocalizedName(), probeInfo.defaultTextStyle(BLOCKNAME))
+                        .text(modid, probeInfo.defaultTextStyle(MODNAME));
                 return;
             }
         }
@@ -249,22 +252,22 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.horizontal()
                         .item(pickBlock)
                         .vertical()
-                        .text(TextFormatting.WHITE + pickBlock.getDisplayName())
-                        .text(TextFormatting.BLUE + modid);
+                        .text(pickBlock.getDisplayName(), probeInfo.defaultTextStyle(BLOCKNAME))
+                        .text(modid, probeInfo.defaultTextStyle(MODNAME));
             } else {
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(pickBlock)
-                        .text(TextFormatting.WHITE + pickBlock.getDisplayName());
+                        .text(pickBlock.getDisplayName(), probeInfo.defaultTextStyle(BLOCKNAME));
 
             }
         } else {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.vertical()
-                        .text(TextFormatting.WHITE + block.getLocalizedName())
-                        .text(TextFormatting.BLUE + modid);
+                        .text(block.getLocalizedName(), probeInfo.defaultTextStyle(BLOCKNAME))
+                        .text(modid, probeInfo.defaultTextStyle(MODNAME));
             } else {
                 probeInfo.vertical()
-                        .text(TextFormatting.WHITE + block.getLocalizedName());
+                        .text(block.getLocalizedName(), probeInfo.defaultTextStyle(BLOCKNAME));
             }
         }
     }

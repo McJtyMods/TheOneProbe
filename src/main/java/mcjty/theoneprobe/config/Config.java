@@ -5,12 +5,17 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.NumberFormat;
+import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Config {
@@ -69,6 +74,18 @@ public class Config {
     public static int tankbarFilledColor = 0xff0000dd;
     public static int tankbarAlternateFilledColor = 0xff000043;
     public static int tankbarBorderColor = 0xff555555;
+
+    private static Map<TextStyleClass, String> textStyleClasses = new HashMap<>();
+
+    static {
+        textStyleClasses.put(TextStyleClass.BLOCKNAME, "white");
+        textStyleClasses.put(TextStyleClass.MODNAME, "blue,italic");
+        textStyleClasses.put(TextStyleClass.ERROR, "red,bold");
+        textStyleClasses.put(TextStyleClass.WARNING, "yellow");
+        textStyleClasses.put(TextStyleClass.OK, "green");
+        textStyleClasses.put(TextStyleClass.INFO, "blue");
+        textStyleClasses.put(TextStyleClass.PROGRESS, "white");
+    }
 
     public static int loggingThrowableTimeout = 20000;
 
@@ -158,6 +175,12 @@ public class Config {
         showBreakProgress = cfg.getInt("showBreakProgress", CATEGORY_CLIENT, showBreakProgress, 0, 2, "0 means don't show break progress, 1 is show as bar, 2 is show as text");
         harvestStyleVanilla = cfg.getBoolean("harvestStyleVanilla", CATEGORY_CLIENT, harvestStyleVanilla, "true means shows harvestability with vanilla style icons");
 
+        Map<TextStyleClass, String> newformat = new HashMap<>();
+        for (TextStyleClass styleClass : textStyleClasses.keySet()) {
+            newformat.put(styleClass, cfg.getString("textStyle" + styleClass.name(), CATEGORY_CLIENT, textStyleClasses.get(styleClass), "Text style (use a comma delimited string like 'red,italic')"));
+        }
+        textStyleClasses = newformat;
+
         extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
     }
 
@@ -213,6 +236,25 @@ public class Config {
         cfg.get(CATEGORY_CLIENT, "boxFillColor", Integer.toHexString(fillcolor)).set(Integer.toHexString(fillcolor));
         cfg.save();
         updateDefaultOverlayStyle();
+    }
+
+    private static String configToTextFormat(String input) {
+        StringBuilder builder = new StringBuilder();
+        String[] splitted = StringUtils.split(input, ',');
+        for (String s : splitted) {
+            TextFormatting format = TextFormatting.getValueByName(s);
+            if (format != null) {
+                builder.append(format.toString());
+            }
+        }
+        return builder.toString();
+    }
+
+    public static String getTextStyle(TextStyleClass styleClass) {
+        if (textStyleClasses.containsKey(styleClass)) {
+            return configToTextFormat(textStyleClasses.get(styleClass));
+        }
+        return "";
     }
 
     private static int parseColor(String col) {
