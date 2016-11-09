@@ -40,7 +40,7 @@ public class HarvestInfoTools {
             } else {
                 harvestName = harvestLevels[harvestLevel];
             }
-            probeInfo.text(INFO + "Tool: " + harvestTool + " (level " + harvestName + ")");
+            probeInfo.text(LABEL + "Tool: " + INFO + harvestTool + " (level " + harvestName + ")");
         }
     }
 

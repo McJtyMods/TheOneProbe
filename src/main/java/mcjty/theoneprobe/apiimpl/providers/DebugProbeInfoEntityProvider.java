@@ -13,6 +13,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
+import static mcjty.theoneprobe.api.TextStyleClass.INFO;
+import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
+
 public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
 
     @Override
@@ -34,11 +37,11 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                 float aiMoveSpeed = entityLivingBase.getAIMoveSpeed();
                 int revengeTimer = entityLivingBase.getRevengeTimer();
                 vertical
-                        .text("Tot armor: " + totalArmorValue)
-                        .text("Age: " + age)
-                        .text("Absorption: " + absorptionAmount)
-                        .text("AI Move Speed: " + aiMoveSpeed)
-                        .text("Revenge Timer: " + revengeTimer);
+                        .text(LABEL + "Tot armor: " + INFO + totalArmorValue)
+                        .text(LABEL + "Age: " + INFO + age)
+                        .text(LABEL + "Absorption: " + INFO + absorptionAmount)
+                        .text(LABEL + "AI Move Speed: " + INFO + aiMoveSpeed)
+                        .text(LABEL + "Revenge Timer: " + INFO + revengeTimer);
             }
             if (entity instanceof EntityAgeable) {
                 if (vertical == null) {
@@ -48,7 +51,7 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                 EntityAgeable entityAgeable = (EntityAgeable) entity;
                 int growingAge = entityAgeable.getGrowingAge();
                 vertical
-                        .text("Growing Age: " + growingAge);
+                        .text(LABEL + "Growing Age: " + INFO + growingAge);
             }
         }
     }

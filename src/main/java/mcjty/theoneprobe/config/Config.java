@@ -86,8 +86,9 @@ public class Config {
         textStyleClasses.put(WARNING, "yellow");
         textStyleClasses.put(OK, "green");
         textStyleClasses.put(INFO, "white");
-        textStyleClasses.put(INFOIMP, "blue,bold");
+        textStyleClasses.put(INFOIMP, "blue");
         textStyleClasses.put(OBSOLETE, "gray,strikethrough");
+        textStyleClasses.put(LABEL, "gray");
         textStyleClasses.put(PROGRESS, "white");
     }
 
@@ -181,7 +182,9 @@ public class Config {
 
         Map<TextStyleClass, String> newformat = new HashMap<>();
         for (TextStyleClass styleClass : textStyleClasses.keySet()) {
-            newformat.put(styleClass, cfg.getString("textStyle" + styleClass.getReadableName(), CATEGORY_CLIENT, textStyleClasses.get(styleClass), "Text style (use a comma delimited string like 'red,italic')"));
+            newformat.put(styleClass, cfg.getString("textStyle" + styleClass.getReadableName(),
+                    CATEGORY_CLIENT, textStyleClasses.get(styleClass),
+                    "Text style. Use a comma delimited list with colors like: 'red', 'green', 'blue', ... or style codes like 'underline', 'bold', 'italic', 'strikethrough', ..."));
         }
         textStyleClasses = newformat;
 
@@ -243,6 +246,9 @@ public class Config {
     }
 
     private static String configToTextFormat(String input) {
+        if ("context".equals(input)) {
+            return "context";
+        }
         StringBuilder builder = new StringBuilder();
         String[] splitted = StringUtils.split(input, ',');
         for (String s : splitted) {

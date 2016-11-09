@@ -47,7 +47,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 int maxHealth = (int) livingBase.getMaxHealth();
                 probeInfo.progress(health, maxHealth, probeInfo.defaultProgressStyle().lifeBar(true).showText(false).width(150).height(10));
                 if (mode == ProbeMode.EXTENDED) {
-                    probeInfo.text(INFOIMP + "Health: " + health + " / " + maxHealth);
+                    probeInfo.text(LABEL + "Health: " + INFOIMP + health + " / " + maxHealth);
                 }
             }
 
@@ -90,7 +90,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 if (username == null) {
                     probeInfo.text(WARNING + "Unknown owner");
                 } else {
-                    probeInfo.text(INFO + "Owned by: " + username);
+                    probeInfo.text(LABEL + "Owned by: " + INFO + username);
                 }
             }
         }
@@ -99,15 +99,15 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if (entity instanceof EntityHorse) {
                 double jumpStrength = ((EntityHorse) entity).getHorseJumpStrength();
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
-                probeInfo.text(INFO + "Jump height: " + dfCommas.format(jumpHeight));
+                probeInfo.text(LABEL + "Jump height: " + INFO + dfCommas.format(jumpHeight));
                 IAttributeInstance iattributeinstance = ((EntityHorse) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-                probeInfo.text(INFO + "Speed: " + dfCommas.format(iattributeinstance.getAttributeValue()));
+                probeInfo.text(LABEL + "Speed: " + INFO + dfCommas.format(iattributeinstance.getAttributeValue()));
             }
         }
 
         if (entity instanceof EntityWolf && Config.showCollarColor) {
             EnumDyeColor collarColor = ((EntityWolf) entity).getCollarColor();
-            probeInfo.text(INFO + "Collar: " + collarColor.getName());
+            probeInfo.text(LABEL + "Collar: " + INFO + collarColor.getName());
         }
     }
 

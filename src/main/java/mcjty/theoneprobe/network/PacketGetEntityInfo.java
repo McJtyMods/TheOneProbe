@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
+import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 
 public class PacketGetEntityInfo implements IMessage {
 
@@ -109,7 +110,7 @@ public class PacketGetEntityInfo implements IMessage {
                 provider.addProbeEntityInfo(mode, probeInfo, player, world, entity, data);
             } catch (Throwable e) {
                 ThrowableIdentity.registerThrowable(e);
-                probeInfo.text(ERROR + "Error: " + provider.getID());
+                probeInfo.text(LABEL + "Error: " + ERROR + provider.getID());
             }
         }
         return probeInfo;

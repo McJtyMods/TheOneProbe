@@ -12,7 +12,8 @@ public enum TextStyleClass {
     INFOIMP("I", "InfoImportant"),   // General info, important
     WARNING("w", "Warning"),         // Warning, something is not ready (not mature), or missing stuff
     ERROR("e", "Error"),             // Error, bad situation, out of power, things like that
-    OBSOLETE("o", "Obsolete"),       // Obsolete, deprecated, old information
+    OBSOLETE("O", "Obsolete"),       // Obsolete, deprecated, old information
+    LABEL("l", "Label"),             // A label, use the 'context' code to set the same as the style that follows
     OK("o", "Ok"),                   // Status ok
     PROGRESS("p", "Progress");       // Progress rendering in case the bar is not used
 
