@@ -21,6 +21,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static mcjty.theoneprobe.config.Config.*;
+
 public class ClientProxy extends CommonProxy {
 
     @Override
@@ -89,12 +91,19 @@ public class ClientProxy extends CommonProxy {
 
         if (hasItemInEitherHand(ModItems.creativeProbe)) {
             OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getPartialTicks());
-        } else if (Config.needsProbe > 0) {
-            if (ModItems.hasAProbeSomewhere(Minecraft.getMinecraft().thePlayer)) {
-                OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
-            }
         } else {
-            OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
+            switch (Config.needsProbe) {
+                case PROBE_NOTNEEDED:
+                case PROBE_NEEDEDFOREXTENDED:
+                    OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
+                    break;
+                case PROBE_NEEDED:
+                case PROBE_NEEDEDHARD:
+                    if (ModItems.hasAProbeSomewhere(Minecraft.getMinecraft().thePlayer)) {
+                        OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
+                    }
+                    break;
+            }
         }
     }
 

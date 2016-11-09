@@ -27,6 +27,8 @@ import java.util.List;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
+import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
+import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
 public class PacketGetInfo implements IMessage {
 
@@ -112,7 +114,15 @@ public class PacketGetInfo implements IMessage {
     }
 
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, BlockPos blockPos, EnumFacing sideHit, Vec3d hitVec, ItemStack pickBlock) {
-        if (Config.needsProbe == 2 && !ModItems.hasAProbeSomewhere(player)) {
+        if (Config.needsProbe == PROBE_NEEDEDFOREXTENDED) {
+            // We need a probe only for extended information
+            if (!ModItems.hasAProbeSomewhere(player)) {
+                // No probe anywhere, switch EXTENDED to NORMAL
+                if (mode == ProbeMode.EXTENDED) {
+                    mode = ProbeMode.NORMAL;
+                }
+            }
+        } else if (Config.needsProbe == PROBE_NEEDEDHARD && !ModItems.hasAProbeSomewhere(player)) {
             // The server says we need a probe but we don't have one in our hands
             return null;
         }
