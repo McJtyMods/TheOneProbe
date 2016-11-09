@@ -89,12 +89,23 @@ processResources
     }
 }
 
+task apiJar(type: Jar) {
+    classifier = "api"
+    from(sourceSets.main.output) {
+        include "mcjty/theoneprobe/api/**"
+    }
+}
+
+artifacts {
+    archives apiJar
+}
+
 publishing {
     tasks.publish.dependsOn 'build'
     publications {
         mavenJava(MavenPublication) {
             from components.java
-
+            artifact apiJar
             artifact sourceJar
         }
     }
