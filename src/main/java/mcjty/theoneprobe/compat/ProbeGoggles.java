@@ -1,4 +1,4 @@
-package mcjty.theoneprobe.items;
+package mcjty.theoneprobe.compat;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;

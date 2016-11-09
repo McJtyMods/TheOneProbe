@@ -29,7 +29,7 @@ public class ModItems {
     public static Item diamondHelmetProbe;
     public static Item goldHelmetProbe;
     public static Item ironHelmetProbe;
-    public static ProbeGoggles probeGoggles;
+    public static Item probeGoggles;
 
     public static String PROBETAG = "theoneprobe";
     public static String PROBETAG_HAND = "theoneprobe_hand";
@@ -54,7 +54,7 @@ public class ModItems {
         ironHelmetProbe = makeHelpmet(materialIronHelmet, 2, "iron_helmet_probe");
 
         if (TheOneProbe.baubles) {
-            probeGoggles = new ProbeGoggles();
+            probeGoggles = BaubleTools.initProbeGoggle();
         }
     }
 
@@ -91,7 +91,7 @@ public class ModItems {
         ModelLoader.setCustomModelResourceLocation(ironHelmetProbe, 0, new ModelResourceLocation(ironHelmetProbe.getRegistryName(), "inventory"));
 
         if (TheOneProbe.baubles) {
-            probeGoggles.initModel();
+            BaubleTools.initProbeModel(probeGoggles);
         }
     }
 
