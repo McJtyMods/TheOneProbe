@@ -14,6 +14,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.Level;
 
 import java.util.Collections;
@@ -56,6 +57,7 @@ public abstract class CommonProxy {
     }
 
     public void init(FMLInitializationEvent e) {
+        NetworkRegistry.INSTANCE.registerGuiHandler(TheOneProbe.instance, new GuiProxy());
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
     }
 

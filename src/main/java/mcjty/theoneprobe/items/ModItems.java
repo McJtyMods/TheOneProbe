@@ -30,6 +30,7 @@ public class ModItems {
     public static Item goldHelmetProbe;
     public static Item ironHelmetProbe;
     public static Item probeGoggles;
+    public static ProbeNote probeNote;
 
     public static String PROBETAG = "theoneprobe";
     public static String PROBETAG_HAND = "theoneprobe_hand";
@@ -52,6 +53,8 @@ public class ModItems {
         diamondHelmetProbe = makeHelpmet(materialDiamondHelmet, 3, "diamond_helmet_probe");
         goldHelmetProbe = makeHelpmet(materialGoldHelmet, 4, "gold_helmet_probe");
         ironHelmetProbe = makeHelpmet(materialIronHelmet, 2, "iron_helmet_probe");
+
+        probeNote = new ProbeNote();
 
         if (TheOneProbe.baubles) {
             probeGoggles = BaubleTools.initProbeGoggle();
@@ -90,6 +93,8 @@ public class ModItems {
         ModelLoader.setCustomModelResourceLocation(goldHelmetProbe, 0, new ModelResourceLocation(goldHelmetProbe.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(ironHelmetProbe, 0, new ModelResourceLocation(ironHelmetProbe.getRegistryName(), "inventory"));
 
+        probeNote.initModel();
+
         if (TheOneProbe.baubles) {
             BaubleTools.initProbeModel(probeGoggles);
         }
@@ -100,6 +105,9 @@ public class ModItems {
         GameRegistry.addRecipe(new AddProbeRecipe(Items.DIAMOND_HELMET, diamondHelmetProbe));
         GameRegistry.addRecipe(new AddProbeRecipe(Items.GOLDEN_HELMET, goldHelmetProbe));
         GameRegistry.addRecipe(new AddProbeRecipe(Items.IRON_HELMET, ironHelmetProbe));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probeNote, 1), "r  ", " p ", "  r", 'p', Items.PAPER, 'r', "dustRedstone"));
+
         if (TheOneProbe.baubles) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probeGoggles, 1), " g ", "gpg", " g ", 'p', probe, 'g', "nuggetGold"));
         }

@@ -37,7 +37,7 @@ public class TheOneProbe {
     @SidedProxy(clientSide="mcjty.theoneprobe.proxy.ClientProxy", serverSide="mcjty.theoneprobe.proxy.ServerProxy")
     public static CommonProxy proxy;
 
-    @Mod.Instance("TheOneProbe")
+    @Mod.Instance
     public static TheOneProbe instance;
     public static Logger logger;
     public static File mainConfigDir;
