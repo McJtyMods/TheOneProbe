@@ -23,6 +23,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import java.util.List;
 import java.util.UUID;
 
+import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
+
 public class PacketGetEntityInfo implements IMessage {
 
     private int dim;
@@ -107,7 +109,7 @@ public class PacketGetEntityInfo implements IMessage {
                 provider.addProbeEntityInfo(mode, probeInfo, player, world, entity, data);
             } catch (Throwable e) {
                 ThrowableIdentity.registerThrowable(e);
-                probeInfo.text(TextFormatting.RED + "Error: " + provider.getID());
+                probeInfo.text(ERROR + "Error: " + provider.getID());
             }
         }
         return probeInfo;

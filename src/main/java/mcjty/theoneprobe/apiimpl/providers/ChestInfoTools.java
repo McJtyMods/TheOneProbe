@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static mcjty.theoneprobe.api.TextStyleClass.INFO;
+
 public class ChestInfoTools {
 
     static void showChestInfo(ProbeMode mode, IProbeInfo probeInfo, World world, BlockPos pos, IProbeConfig config) {
@@ -89,7 +91,7 @@ public class ChestInfoTools {
             for (ItemStack stackInSlot : stacks) {
                 horizontal = vertical.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER));
                 horizontal.item(stackInSlot, new ItemStyle().width(16).height(16))
-                    .text(stackInSlot.getDisplayName());
+                    .text(INFO + stackInSlot.getDisplayName());
             }
         } else {
             for (ItemStack stackInSlot : stacks) {

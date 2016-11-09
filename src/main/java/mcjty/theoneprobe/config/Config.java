@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static mcjty.theoneprobe.api.TextStyleClass.*;
+
 public class Config {
     public static String CATEGORY_THEONEPROBE = "theoneprobe";
     public static String CATEGORY_PROVIDERS = "providers";
@@ -75,16 +77,18 @@ public class Config {
     public static int tankbarAlternateFilledColor = 0xff000043;
     public static int tankbarBorderColor = 0xff555555;
 
-    private static Map<TextStyleClass, String> textStyleClasses = new HashMap<>();
+    public static Map<TextStyleClass, String> textStyleClasses = new HashMap<>();
 
     static {
-        textStyleClasses.put(TextStyleClass.BLOCKNAME, "white");
-        textStyleClasses.put(TextStyleClass.MODNAME, "blue,italic");
-        textStyleClasses.put(TextStyleClass.ERROR, "red,bold");
-        textStyleClasses.put(TextStyleClass.WARNING, "yellow");
-        textStyleClasses.put(TextStyleClass.OK, "green");
-        textStyleClasses.put(TextStyleClass.INFO, "blue");
-        textStyleClasses.put(TextStyleClass.PROGRESS, "white");
+        textStyleClasses.put(NAME, "white");
+        textStyleClasses.put(MODNAME, "blue,italic");
+        textStyleClasses.put(ERROR, "red,bold");
+        textStyleClasses.put(WARNING, "yellow");
+        textStyleClasses.put(OK, "green");
+        textStyleClasses.put(INFO, "white");
+        textStyleClasses.put(INFOIMP, "blue,bold");
+        textStyleClasses.put(OBSOLETE, "gray,strikethrough");
+        textStyleClasses.put(PROGRESS, "white");
     }
 
     public static int loggingThrowableTimeout = 20000;
@@ -177,7 +181,7 @@ public class Config {
 
         Map<TextStyleClass, String> newformat = new HashMap<>();
         for (TextStyleClass styleClass : textStyleClasses.keySet()) {
-            newformat.put(styleClass, cfg.getString("textStyle" + styleClass.name(), CATEGORY_CLIENT, textStyleClasses.get(styleClass), "Text style (use a comma delimited string like 'red,italic')"));
+            newformat.put(styleClass, cfg.getString("textStyle" + styleClass.getReadableName(), CATEGORY_CLIENT, textStyleClasses.get(styleClass), "Text style (use a comma delimited string like 'red,italic')"));
         }
         textStyleClasses = newformat;
 

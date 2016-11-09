@@ -72,14 +72,15 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo text(String text, ITextStyle style) {
-        children.add(new ElementText(text, style));
+    public IProbeInfo text(String text) {
+        children.add(new ElementText(text));
         return this;
     }
 
     @Override
-    public IProbeInfo text(String text) {
-        return text(text, new TextStyle());
+    public IProbeInfo text(String text, ITextStyle style) {
+        children.add(new ElementText(text));
+        return this;
     }
 
     @Override
@@ -146,7 +147,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
     @Override
     public IProbeInfo horizontal() {
-        ElementHorizontal e = new ElementHorizontal((Integer) null, spacing, ElementAlignment.ALIGN_TOPLEFT);
+        ElementHorizontal e = new ElementHorizontal(null, spacing, ElementAlignment.ALIGN_TOPLEFT);
         children.add(e);
         return e;
     }
@@ -160,7 +161,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
     @Override
     public IProbeInfo vertical() {
-        ElementVertical e = new ElementVertical((Integer) null, ElementVertical.SPACING, ElementAlignment.ALIGN_TOPLEFT);
+        ElementVertical e = new ElementVertical(null, ElementVertical.SPACING, ElementAlignment.ALIGN_TOPLEFT);
         children.add(e);
         return e;
     }
@@ -184,11 +185,6 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     @Override
     public ITextStyle defaultTextStyle() {
         return new TextStyle();
-    }
-
-    @Override
-    public ITextStyle defaultTextStyle(TextStyleClass styleClass) {
-        return new TextStyle().styleClass(styleClass);
     }
 
     @Override

@@ -22,8 +22,7 @@ import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-import static mcjty.theoneprobe.api.TextStyleClass.BLOCKNAME;
-import static mcjty.theoneprobe.api.TextStyleClass.MODNAME;
+import static mcjty.theoneprobe.api.TextStyleClass.*;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -86,9 +85,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 int fuel = ((TileEntityBrewingStand) te).getField(1);
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
-                        .text("Fuel: " + fuel);
+                        .text(INFO + "Fuel: " + fuel);
                 if (brewtime > 0) {
-                    probeInfo.text("Time: " + brewtime + " ticks");
+                    probeInfo.text(INFO + "Time: " + brewtime + " ticks");
                 }
 
             }
@@ -108,7 +107,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             redstonePower = world.getRedstonePower(data.getPos(), data.getSideHit().getOpposite());
         }
         if (redstonePower > 0) {
-            probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14)).text("Power: " + redstonePower);
+            probeInfo.horizontal()
+                    .item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
+                    .text(INFO + "Power: " + redstonePower);
         }
     }
 
@@ -116,16 +117,16 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (block instanceof BlockLever) {
             Boolean powered = blockState.getValue(BlockLever.POWERED);
             probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
-                    .text("State: " + (powered ? "On" : "Off"));
+                    .text(INFO + "State: " + (powered ? "On" : "Off"));
         } else if (block instanceof BlockRedstoneComparator) {
             BlockRedstoneComparator.Mode mode = blockState.getValue(BlockRedstoneComparator.MODE);
-            probeInfo.text("Mode: " + mode.getName());
+            probeInfo.text(INFO + "Mode: " + mode.getName());
         } else if (block instanceof BlockRedstoneRepeater) {
             Boolean locked = blockState.getValue(BlockRedstoneRepeater.LOCKED);
             Integer delay = blockState.getValue(BlockRedstoneRepeater.DELAY);
-            probeInfo.text("Delay: " + delay + " ticks");
+            probeInfo.text(INFO + "Delay: " + delay + " ticks");
             if (locked) {
-                probeInfo.text("Locked");
+                probeInfo.text(INFO + "Locked");
             }
         }
     }
@@ -165,7 +166,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
         int contents = fluidStack == null ? 0 : fluidStack.amount;
         if (fluidStack != null) {
-            probeInfo.text("Liquid: " + fluidStack.getLocalizedName());
+            probeInfo.text(NAME + "Liquid: " + fluidStack.getLocalizedName());
         }
         if (config.getTankMode() == 1) {
             probeInfo.progress(contents, maxContents,
@@ -176,7 +177,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                             .borderColor(Config.tankbarBorderColor)
                             .numberFormat(Config.tankFormat));
         } else {
-            probeInfo.text(TextFormatting.GREEN + ElementProgress.format(contents, Config.tankFormat, "mB"));
+            probeInfo.text(PROGRESS + ElementProgress.format(contents, Config.tankFormat, "mB"));
         }
     }
 
@@ -196,7 +197,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                                 .borderColor(Config.rfbarBorderColor)
                                 .numberFormat(Config.rfFormat));
             } else {
-                probeInfo.text(TextFormatting.GREEN + "RF: " + ElementProgress.format(energy, Config.rfFormat, "RF"));
+                probeInfo.text(PROGRESS + "RF: " + ElementProgress.format(energy, Config.rfFormat, "RF"));
             }
         }
     }
@@ -207,18 +208,18 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             int age = crops.getAge(blockState);
             int maxAge = crops.getMaxAge();
             if (age == maxAge) {
-                probeInfo.text(TextFormatting.GREEN + "Fully grown");
+                probeInfo.text(INFO + "Fully grown");
             } else {
-                probeInfo.text(TextFormatting.YELLOW + "Growth: " + (age * 100) / maxAge + "%");
+                probeInfo.text(WARNING + "Growth: " + (age * 100) / maxAge + "%");
             }
         } else if (block instanceof BlockNetherWart) {
             BlockNetherWart wart = (BlockNetherWart) block;
             int age = blockState.getValue(BlockNetherWart.AGE);
             int maxAge = 3;
             if (age == maxAge) {
-                probeInfo.text(TextFormatting.GREEN + "Fully grown");
+                probeInfo.text(INFO + "Fully grown");
             } else {
-                probeInfo.text(TextFormatting.YELLOW + "Growth: " + (age * 100) / maxAge + "%");
+                probeInfo.text(WARNING + "Growth: " + (age * 100) / maxAge + "%");
             }
         }
     }
@@ -240,8 +241,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.horizontal()
                         .icon(fluid.getStill(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20))
                         .vertical()
-                        .text(stack.getLocalizedName(), probeInfo.defaultTextStyle(BLOCKNAME))
-                        .text(modid, probeInfo.defaultTextStyle(MODNAME));
+                        .text(NAME + stack.getLocalizedName())
+                        .text(MODNAME + modid);
                 return;
             }
         }
@@ -252,22 +253,22 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.horizontal()
                         .item(pickBlock)
                         .vertical()
-                        .text(pickBlock.getDisplayName(), probeInfo.defaultTextStyle(BLOCKNAME))
-                        .text(modid, probeInfo.defaultTextStyle(MODNAME));
+                        .text(NAME + pickBlock.getDisplayName())
+                        .text(MODNAME + modid);
             } else {
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(pickBlock)
-                        .text(pickBlock.getDisplayName(), probeInfo.defaultTextStyle(BLOCKNAME));
+                        .text(NAME + pickBlock.getDisplayName());
 
             }
         } else {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.vertical()
-                        .text(block.getLocalizedName(), probeInfo.defaultTextStyle(BLOCKNAME))
-                        .text(modid, probeInfo.defaultTextStyle(MODNAME));
+                        .text(NAME + block.getLocalizedName())
+                        .text(MODNAME + modid);
             } else {
                 probeInfo.vertical()
-                        .text(block.getLocalizedName(), probeInfo.defaultTextStyle(BLOCKNAME));
+                        .text(NAME + block.getLocalizedName());
             }
         }
     }

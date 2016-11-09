@@ -32,12 +32,6 @@ public interface IProbeInfo {
     ITextStyle defaultTextStyle();
 
     /**
-     * Conveniance to create a default style for the text element
-     * with the given class
-     */
-    ITextStyle defaultTextStyle(TextStyleClass styleClass);
-
-    /**
      * Create a default style for the item element
      */
     IItemStyle defaultItemStyle();
@@ -64,6 +58,10 @@ public interface IProbeInfo {
     IProbeInfo entity(Entity entity, IEntityStyle style);
     IProbeInfo entity(Entity entity);
 
+    /**
+     * Note that you can include TextStyleClass info in the given text which
+     * will be translated to the right style client-side
+     */
     IProbeInfo text(String text, ITextStyle style);
     IProbeInfo text(String text);
 

@@ -12,9 +12,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
+
+import static mcjty.theoneprobe.api.TextStyleClass.*;
 
 public class HarvestInfoTools {
 
@@ -39,7 +40,7 @@ public class HarvestInfoTools {
             } else {
                 harvestName = harvestLevels[harvestLevel];
             }
-            probeInfo.text(TextFormatting.GREEN + "Tool: " + harvestTool + " (level " + harvestName + ")");
+            probeInfo.text(INFO + "Tool: " + harvestTool + " (level " + harvestName + ")");
         }
     }
 
@@ -52,9 +53,9 @@ public class HarvestInfoTools {
 
         boolean harvestable = block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
         if (harvestable) {
-            probeInfo.text(TextFormatting.GREEN + "Harvestable");
+            probeInfo.text(OK + "Harvestable");
         } else {
-            probeInfo.text(TextFormatting.YELLOW + "Not harvestable");
+            probeInfo.text(WARNING + "Not harvestable");
         }
     }
 
@@ -84,14 +85,14 @@ public class HarvestInfoTools {
         IProbeInfo horizontal = probeInfo.horizontal(alignment);
         if (harvestable) {
             horizontal.icon(ICONS, 0, offs, dim, dim, iconStyle)
-                    .text(TextFormatting.GREEN + ((harvestTool != null) ? harvestTool : "No tool"));
+                    .text(OK + ((harvestTool != null) ? harvestTool : "No tool"));
         } else {
             if (harvestName == null || harvestName.isEmpty()) {
                 horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
-                        .text(TextFormatting.YELLOW + ((harvestTool != null) ? harvestTool : "No tool"));
+                        .text(WARNING + ((harvestTool != null) ? harvestTool : "No tool"));
             } else {
                 horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
-                        .text(TextFormatting.YELLOW + ((harvestTool != null) ? harvestTool : "No tool") + " (" + harvestName + ")");
+                        .text(WARNING + ((harvestTool != null) ? harvestTool : "No tool") + " (" + harvestName + ")");
             }
         }
     }

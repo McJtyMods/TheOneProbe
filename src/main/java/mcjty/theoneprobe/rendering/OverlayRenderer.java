@@ -10,7 +10,6 @@ import mcjty.theoneprobe.apiimpl.elements.ElementText;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoEntityProvider;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
-import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
@@ -38,6 +37,8 @@ import org.lwjgl.opengl.GL11;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 
 public class OverlayRenderer {
 
@@ -213,8 +214,7 @@ public class OverlayRenderer {
             float damage = Minecraft.getMinecraft().playerController.curBlockDamageMP;
             if (damage > 0) {
                 if (Config.showBreakProgress == 2) {
-                    damageElement = new ElementText(TextFormatting.RED + "Progress " + (int) (damage * 100) + "%",
-                            new TextStyle().styleClass(TextStyleClass.PROGRESS));
+                    damageElement = new ElementText("" + TextFormatting.RED + "Progress " + (int) (damage * 100) + "%");
                 } else {
                     damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
                             .prefix("Progress ")
@@ -272,10 +272,10 @@ public class OverlayRenderer {
             DefaultProbeInfoProvider.showStandardBlockInfo(probeConfig, mode, probeInfo, blockState, block, world, blockPos, player, data);
         } catch (Exception e) {
             ThrowableIdentity.registerThrowable(e);
-            probeInfo.text(TextFormatting.RED + "Error (see log for details)!");
+            probeInfo.text(ERROR + "Error (see log for details)!");
         }
 
-        probeInfo.text(TextFormatting.RED + "Waiting for server...");
+        probeInfo.text(ERROR + "Waiting for server...");
         return probeInfo;
     }
 
@@ -288,10 +288,10 @@ public class OverlayRenderer {
             DefaultProbeInfoEntityProvider.showStandardInfo(mode, probeInfo, entity, probeConfig);
         } catch (Exception e) {
             ThrowableIdentity.registerThrowable(e);
-            probeInfo.text(TextFormatting.RED + "Error (see log for details)!");
+            probeInfo.text(ERROR + "Error (see log for details)!");
         }
 
-        probeInfo.text(TextFormatting.RED + "Waiting for server...");
+        probeInfo.text(ERROR + "Waiting for server...");
         return probeInfo;
     }
 
