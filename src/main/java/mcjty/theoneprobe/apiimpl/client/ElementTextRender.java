@@ -12,6 +12,10 @@ import java.util.Set;
 public class ElementTextRender {
 
     public static void render(String text, int x, int y) {
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, stylifyString(text));
+    }
+
+    private static String stylifyString(String text) {
         if (text.contains("{=")) {
             Set<TextStyleClass> stylesNeedingContext = EnumSet.noneOf(TextStyleClass.class);
             TextStyleClass context = null;
@@ -35,10 +39,10 @@ public class ElementTextRender {
                 }
             }
         }
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, text);
+        return text;
     }
 
     public static int getWidth(String text) {
-        return Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+        return Minecraft.getMinecraft().fontRendererObj.getStringWidth(stylifyString(text));
     }
 }

@@ -34,6 +34,7 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -123,7 +124,7 @@ public class OverlayRenderer {
         checkCleanup();
     }
 
-    private static void setupOverlayRendering(double sw, double sh) {
+    public static void setupOverlayRendering(double sw, double sh) {
         GlStateManager.clear(256);
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
         GlStateManager.loadIdentity();
@@ -312,7 +313,8 @@ public class OverlayRenderer {
 
         double scale = Config.tooltipScale;
 
-        ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+        Minecraft minecraft = Minecraft.getMinecraft();
+        ScaledResolution scaledresolution = new ScaledResolution(minecraft);
         double sw = scaledresolution.getScaledWidth_double();
         double sh = scaledresolution.getScaledHeight_double();
 
@@ -346,7 +348,8 @@ public class OverlayRenderer {
         cachedEntityInfo = newCachedInfo;
     }
 
-    private static void renderElements(ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh, IElement extra) {
+    public static void renderElements(ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh,
+                                       @Nullable IElement extra) {
         if (extra != null) {
             probeInfo.element(extra);
         }

@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.proxy.GuiProxy;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -32,7 +33,11 @@ public class ProbeNote extends Item {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (world.isRemote) {
-            player.openGui(TheOneProbe.instance, 1, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+            if (player.isSneaking()) {
+                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+            } else {
+                player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+            }
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);

@@ -238,6 +238,14 @@ public class Config {
         updateDefaultOverlayStyle();
     }
 
+    public static void setScale(float scale) {
+        Configuration cfg = TheOneProbe.config;
+        tooltipScale = scale;
+        cfg.get(CATEGORY_CLIENT, "tooltipScale", tooltipScale).set(tooltipScale);
+        cfg.save();
+        updateDefaultOverlayStyle();
+    }
+
     public static void setBoxStyle(int thickness, int borderColor, int fillcolor) {
         Configuration cfg = TheOneProbe.config;
         boxThickness = thickness;
