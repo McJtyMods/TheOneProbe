@@ -88,9 +88,11 @@ public class GuiConfig extends GuiScreen {
 
         RenderHelper.renderText(Minecraft.getMinecraft(), x, y, TextFormatting.GOLD + "Scale:");
         y += 12;
-        addButton(x+10, y, 40, 14, "Small", () -> { Config.setScale(1.2f);}); x += 50;
-        addButton(x+10, y, 40, 14, "Normal", () -> { Config.setScale(1f);}); x += 50;
-        addButton(x+10, y, 40, 14, "Large", () -> { Config.setScale(0.8f);}); x += 50;
+        addButton(x+10, y, 30, 14, "--", () -> { Config.setScale(1.2f);}); x += 36;
+        addButton(x+10, y, 30, 14, "-", () -> { Config.setScale(1.1f);}); x += 36;
+        addButton(x+10, y, 30, 14, "0", () -> { Config.setScale(1f);}); x += 36;
+        addButton(x+10, y, 30, 14, "+", () -> { Config.setScale(0.9f);}); x += 36;
+        addButton(x+10, y, 30, 14, "++", () -> { Config.setScale(0.8f);}); x += 36;
 
         int margin = 90;
         hitboxes.add(new HitBox(0, 0, margin, margin, () -> {
