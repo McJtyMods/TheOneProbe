@@ -37,10 +37,10 @@ public class GuiConfig extends GuiScreen {
     private List<HitBox> hitboxes = Collections.emptyList();
 
     static {
-        presets.add(new Preset("Default style", 0xff999999, 0x55006699, 2));
-        presets.add(new Preset("WAILA style", 0xff4503d0, 0xff000000, 2));
-        presets.add(new Preset("Full transparent style", 0x00000000, 0x00000000, 0));
-        presets.add(new Preset("Black & White style", 0xffffffff, 0xff000000, 2));
+        presets.add(new Preset("Default style", 0xff999999, 0x55006699, 2, 0));
+        presets.add(new Preset("WAILA style", 0xff4503d0, 0xff000000, 1, 1));
+        presets.add(new Preset("Full transparent style", 0x00000000, 0x00000000, 0, 0));
+        presets.add(new Preset("Black & White style", 0xffffffff, 0xff000000, 2, 0));
     }
 
 
@@ -137,7 +137,7 @@ public class GuiConfig extends GuiScreen {
     }
 
     private void applyPreset(Preset preset) {
-        Config.setBoxStyle(preset.getBoxThickness(), preset.getBoxBorderColor(), preset.getBoxFillColor());
+        Config.setBoxStyle(preset.getBoxThickness(), preset.getBoxBorderColor(), preset.getBoxFillColor(), preset.getBoxOffset());
     }
 
     private int addPreset(int x, int y, Preset preset) {
@@ -183,12 +183,13 @@ public class GuiConfig extends GuiScreen {
         int w = probeInfo.getWidth();
         int h = probeInfo.getHeight();
 
+        int offset = style.getBorderOffset();
         int thick = style.getBorderThickness();
         int margin = 0;
         if (thick > 0) {
-            w += (thick + 3) * 2;
-            h += (thick + 3) * 2;
-            margin = thick + 3;
+            w += (offset + thick + 3) * 2;
+            h += (offset + thick + 3) * 2;
+            margin = offset + thick + 3;
         }
 
         int x;
@@ -219,7 +220,10 @@ public class GuiConfig extends GuiScreen {
         if (thick > 0) {
             int x2 = x + w - 1;
             int y2 = y + h - 1;
-            RenderHelper.drawThickBeveledBox(x, y, x2, y2, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
+            if (offset > 0) {
+                RenderHelper.drawThickBeveledBox(x, y, x2, y2, thick, style.getBoxColor(), style.getBoxColor(), style.getBoxColor());
+            }
+            RenderHelper.drawThickBeveledBox(x+offset, y+offset, x2-offset, y2-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
         if (!Minecraft.getMinecraft().isGamePaused()) {

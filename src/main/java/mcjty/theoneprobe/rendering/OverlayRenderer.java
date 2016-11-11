@@ -366,12 +366,13 @@ public class OverlayRenderer {
         int w = probeInfo.getWidth();
         int h = probeInfo.getHeight();
 
+        int offset = style.getBorderOffset();
         int thick = style.getBorderThickness();
         int margin = 0;
         if (thick > 0) {
-            w += (thick+3) * 2;
-            h += (thick+3) * 2;
-            margin = thick + 3;
+            w += (offset + thick + 3) * 2;
+            h += (offset + thick + 3) * 2;
+            margin = offset + thick + 3;
         }
 
         int x;
@@ -392,7 +393,10 @@ public class OverlayRenderer {
         }
 
         if (thick > 0) {
-            RenderHelper.drawThickBeveledBox(x, y, x + w-1, y + h-1, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
+            if (offset > 0) {
+                RenderHelper.drawThickBeveledBox(x, y, x + w-1, y + h-1, thick, style.getBoxColor(), style.getBoxColor(), style.getBoxColor());
+            }
+            RenderHelper.drawThickBeveledBox(x+offset, y+offset, x + w-1-offset, y + h-1-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
         if (!Minecraft.getMinecraft().isGamePaused()) {

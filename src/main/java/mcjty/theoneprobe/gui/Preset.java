@@ -5,12 +5,14 @@ class Preset {
     private final int boxBorderColor;
     private final int boxFillColor;
     private final int boxThickness;
+    private final int boxOffset;
 
-    public Preset(String name, int boxBorderColor, int boxFillColor, int boxThickness) {
+    public Preset(String name, int boxBorderColor, int boxFillColor, int boxThickness, int boxOffset) {
         this.name = name;
         this.boxBorderColor = boxBorderColor;
         this.boxFillColor = boxFillColor;
         this.boxThickness = boxThickness;
+        this.boxOffset = boxOffset;
     }
 
     public String getName() {
@@ -27,5 +29,9 @@ class Preset {
 
     public int getBoxThickness() {
         return boxThickness;
+    }
+
+    public int getBoxOffset() {
+        return boxOffset;
     }
 }

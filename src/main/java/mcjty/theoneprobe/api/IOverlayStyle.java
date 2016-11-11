@@ -6,6 +6,13 @@ package mcjty.theoneprobe.api;
 public interface IOverlayStyle {
 
     /**
+     * The offset of the border around the box. Use 0 to disable.
+     */
+    IOverlayStyle borderOffset(int offset);
+
+    int getBorderOffset();
+
+    /**
      * The thickness of the border around the overlay. Use 0 to disable.
      */
     IOverlayStyle borderThickness(int thick);

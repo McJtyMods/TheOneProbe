@@ -7,6 +7,7 @@ public class DefaultOverlayStyle implements IOverlayStyle {
     private int borderThickness;
     private int borderColor;
     private int boxColor;
+    private int borderOffset;
     private int leftX;
     private int rightX;
     private int topY;
@@ -17,7 +18,19 @@ public class DefaultOverlayStyle implements IOverlayStyle {
                 .borderThickness(borderThickness)
                 .borderColor(borderColor)
                 .boxColor(boxColor)
+                .borderOffset(borderOffset)
                 .location(leftX, rightX, topY, bottomY);
+    }
+
+    @Override
+    public IOverlayStyle borderOffset(int offset) {
+        borderOffset = offset;
+        return this;
+    }
+
+    @Override
+    public int getBorderOffset() {
+        return borderOffset;
     }
 
     @Override
