@@ -9,7 +9,12 @@ import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
+import mcjty.theoneprobe.playerdata.PlayerProperties;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -25,6 +30,7 @@ import java.util.Set;
 public abstract class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent e) {
+        registerCapabilities();
         TheOneProbeImp.registerElements();
         TheOneProbe.theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
         TheOneProbe.theOneProbeImp.registerProvider(new DebugProbeInfoProvider());
@@ -38,6 +44,25 @@ public abstract class CommonProxy {
         ModItems.init();
         ModItems.initCrafting();
     }
+
+    private static void registerCapabilities(){
+        CapabilityManager.INSTANCE.register(PlayerProperties.class, new Capability.IStorage<PlayerProperties>() {
+
+            @Override
+            public NBTBase writeNBT(Capability<PlayerProperties> capability, PlayerProperties instance, EnumFacing side) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void readNBT(Capability<PlayerProperties> capability, PlayerProperties instance, EnumFacing side, NBTBase nbt) {
+                throw new UnsupportedOperationException();
+            }
+
+        }, () -> {
+            throw new UnsupportedOperationException();
+        });
+    }
+
 
     private void readMainConfig() {
         Configuration cfg = TheOneProbe.config;
