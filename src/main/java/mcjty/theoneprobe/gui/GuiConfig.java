@@ -3,6 +3,7 @@ package mcjty.theoneprobe.gui;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.IOverlayStyle;
+import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
@@ -14,11 +15,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 
@@ -40,7 +43,18 @@ public class GuiConfig extends GuiScreen {
         presets.add(new Preset("Default style", 0xff999999, 0x55006699, 2, 0));
         presets.add(new Preset("WAILA style", 0xff4503d0, 0xff000000, 1, 1));
         presets.add(new Preset("Full transparent style", 0x00000000, 0x00000000, 0, 0));
-        presets.add(new Preset("Black & White style", 0xffffffff, 0xff000000, 2, 0));
+        presets.add(new Preset("Black & White style", 0xffffffff, 0xff000000, 2, 0,
+                Pair.of(MODNAME, "white,italic"),
+                Pair.of(NAME, "white,bold"),
+                Pair.of(INFO, "white"),
+                Pair.of(INFOIMP, "white,bold"),
+                Pair.of(WARNING, "white"),
+                Pair.of(ERROR, "white,underline"),
+                Pair.of(OBSOLETE, "white,strikethrough"),
+                Pair.of(LABEL, "white,underline"),
+                Pair.of(OK, "white"),
+                Pair.of(PROGRESS, "white")
+        ));
     }
 
 
@@ -138,6 +152,14 @@ public class GuiConfig extends GuiScreen {
 
     private void applyPreset(Preset preset) {
         Config.setBoxStyle(preset.getBoxThickness(), preset.getBoxBorderColor(), preset.getBoxFillColor(), preset.getBoxOffset());
+
+        for (Map.Entry<TextStyleClass, String> entry : Config.defaultTextStyleClasses.entrySet()) {
+            Config.setTextStyle(entry.getKey(), entry.getValue());
+        }
+
+        for (Map.Entry<TextStyleClass, String> entry : preset.getTextStyleClasses().entrySet()) {
+            Config.setTextStyle(entry.getKey(), entry.getValue());
+        }
     }
 
     private int addPreset(int x, int y, Preset preset) {

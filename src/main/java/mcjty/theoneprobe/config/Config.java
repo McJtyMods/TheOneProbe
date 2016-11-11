@@ -25,10 +25,6 @@ public class Config {
     public static String CATEGORY_PROVIDERS = "providers";
     public static String CATEGORY_CLIENT = "client";
 
-    public static int MODE_NOT = 0;
-    public static int MODE_NORMAL = 1;
-    public static int MODE_EXTENDED = 2;
-
     public static final int PROBE_NOTNEEDED = 0;
     public static final int PROBE_NEEDED = 1;
     public static final int PROBE_NEEDEDHARD = 2;
@@ -83,19 +79,21 @@ public class Config {
     public static int tankbarAlternateFilledColor = 0xff000043;
     public static int tankbarBorderColor = 0xff555555;
 
+    public static Map<TextStyleClass, String> defaultTextStyleClasses = new HashMap<>();
     public static Map<TextStyleClass, String> textStyleClasses = new HashMap<>();
 
     static {
-        textStyleClasses.put(NAME, "white");
-        textStyleClasses.put(MODNAME, "blue,italic");
-        textStyleClasses.put(ERROR, "red,bold");
-        textStyleClasses.put(WARNING, "yellow");
-        textStyleClasses.put(OK, "green");
-        textStyleClasses.put(INFO, "white");
-        textStyleClasses.put(INFOIMP, "blue");
-        textStyleClasses.put(OBSOLETE, "gray,strikethrough");
-        textStyleClasses.put(LABEL, "gray");
-        textStyleClasses.put(PROGRESS, "white");
+        defaultTextStyleClasses.put(NAME, "white");
+        defaultTextStyleClasses.put(MODNAME, "blue,italic");
+        defaultTextStyleClasses.put(ERROR, "red,bold");
+        defaultTextStyleClasses.put(WARNING, "yellow");
+        defaultTextStyleClasses.put(OK, "green");
+        defaultTextStyleClasses.put(INFO, "white");
+        defaultTextStyleClasses.put(INFOIMP, "blue");
+        defaultTextStyleClasses.put(OBSOLETE, "gray,strikethrough");
+        defaultTextStyleClasses.put(LABEL, "gray");
+        defaultTextStyleClasses.put(PROGRESS, "white");
+        textStyleClasses = new HashMap<>(defaultTextStyleClasses);
     }
 
     public static int loggingThrowableTimeout = 20000;
@@ -197,13 +195,21 @@ public class Config {
 
         Map<TextStyleClass, String> newformat = new HashMap<>();
         for (TextStyleClass styleClass : textStyleClasses.keySet()) {
-            newformat.put(styleClass, cfg.getString("textStyle" + styleClass.getReadableName(),
+            String style = cfg.getString("textStyle" + styleClass.getReadableName(),
                     CATEGORY_CLIENT, textStyleClasses.get(styleClass),
-                    "Text style. Use a comma delimited list with colors like: 'red', 'green', 'blue', ... or style codes like 'underline', 'bold', 'italic', 'strikethrough', ..."));
+                    "Text style. Use a comma delimited list with colors like: 'red', 'green', 'blue', ... or style codes like 'underline', 'bold', 'italic', 'strikethrough', ...");
+            newformat.put(styleClass, style);
         }
         textStyleClasses = newformat;
 
         extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
+    }
+
+    public static void setTextStyle(TextStyleClass styleClass, String style) {
+        Configuration cfg = TheOneProbe.config;
+        Config.textStyleClasses.put(styleClass, style);
+        cfg.get(CATEGORY_CLIENT, "textStyle" + styleClass.getReadableName(), style).set(style);
+        cfg.save();
     }
 
     public static void setExtendedInMain(boolean extendedInMain) {
