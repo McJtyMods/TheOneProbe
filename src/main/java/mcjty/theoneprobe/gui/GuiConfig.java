@@ -23,8 +23,8 @@ import java.util.List;
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 
 public class GuiConfig extends GuiScreen {
-    private static final int WIDTH = 240;
-    private static final int HEIGHT = 240;
+    private static final int WIDTH = 230;
+    private static final int HEIGHT = 230;
 
     private int guiLeft;
     private int guiTop;
@@ -206,21 +206,17 @@ public class GuiConfig extends GuiScreen {
             y = (HEIGHT - h) / 2;
         }
 
+
         x += guiLeft;
         y += guiTop;
 
-        w = (int) (w / Config.tooltipScale);
-        h = (int) (h / Config.tooltipScale);
-
-        int x2 = x + w - 1;
-        int y2 = y + h - 1;
-
-        x = (int) (x * Config.tooltipScale);
-        y = (int) (y * Config.tooltipScale);
-        x2 = (int) (x2 * Config.tooltipScale);
-        y2 = (int) (y2 * Config.tooltipScale);
+        double factor = (Config.tooltipScale - 1) * 1.4 + 1;
+        x *= factor;
+        y *= factor;
 
         if (thick > 0) {
+            int x2 = x + w - 1;
+            int y2 = y + h - 1;
             RenderHelper.drawThickBeveledBox(x, y, x2, y2, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
