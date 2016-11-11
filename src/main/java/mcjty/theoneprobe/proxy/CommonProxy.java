@@ -1,15 +1,15 @@
 package mcjty.theoneprobe.proxy;
 
-import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.ForgeEventHandlers;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
-import mcjty.theoneprobe.playerdata.PlayerProperties;
+import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,15 +46,15 @@ public abstract class CommonProxy {
     }
 
     private static void registerCapabilities(){
-        CapabilityManager.INSTANCE.register(PlayerProperties.class, new Capability.IStorage<PlayerProperties>() {
+        CapabilityManager.INSTANCE.register(PlayerGotNote.class, new Capability.IStorage<PlayerGotNote>() {
 
             @Override
-            public NBTBase writeNBT(Capability<PlayerProperties> capability, PlayerProperties instance, EnumFacing side) {
+            public NBTBase writeNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, EnumFacing side) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public void readNBT(Capability<PlayerProperties> capability, PlayerProperties instance, EnumFacing side, NBTBase nbt) {
+            public void readNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, EnumFacing side, NBTBase nbt) {
                 throw new UnsupportedOperationException();
             }
 
