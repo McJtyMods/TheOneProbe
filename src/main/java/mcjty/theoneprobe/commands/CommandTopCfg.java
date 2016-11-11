@@ -1,10 +1,13 @@
 package mcjty.theoneprobe.commands;
 
+import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.proxy.GuiProxy;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -77,7 +80,10 @@ public class CommandTopCfg implements ICommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length < 1) {
-            sender.addChatMessage(new TextComponentString(TextFormatting.RED + "Too few parameters"));
+            if (sender instanceof EntityPlayer) {
+                EntityPlayer player = (EntityPlayer) sender;
+                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+            }
             return;
         }
         String cmd = args[0];
