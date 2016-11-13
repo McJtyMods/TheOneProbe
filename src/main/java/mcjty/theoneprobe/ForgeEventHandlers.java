@@ -48,11 +48,13 @@ public class ForgeEventHandlers {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
-        PlayerGotNote note = PlayerProperties.getPlayerGotNote(event.player);
-        if (!note.isPlayerGotNote()) {
-            boolean success = event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.probeNote));
-            if (success) {
-                note.setPlayerGotNote(true);
+        if (Config.spawnNote) {
+            PlayerGotNote note = PlayerProperties.getPlayerGotNote(event.player);
+            if (!note.isPlayerGotNote()) {
+                boolean success = event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.probeNote));
+                if (success) {
+                    note.setPlayerGotNote(true);
+                }
             }
         }
     }
