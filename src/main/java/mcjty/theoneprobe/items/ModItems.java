@@ -147,7 +147,7 @@ public class ModItems {
     }
 
     private static boolean hasProbeInHelmet(EntityPlayer player) {
-        ItemStack helmet = player.inventory.armorItemInSlot(3);
+        ItemStack helmet = player.inventory.armorInventory[3];
         return isProbeHelmet(helmet);
     }
 
