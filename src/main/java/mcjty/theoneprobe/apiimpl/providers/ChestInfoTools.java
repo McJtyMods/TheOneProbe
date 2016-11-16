@@ -60,13 +60,14 @@ public class ChestInfoTools {
     }
 
     private static void addItemStack(List<ItemStack> stacks, Set<Item> foundItems, ItemStack stack) {
-        if (stack == null) {
+        if (stack == null || stack.func_190926_b()) {
             return;
         }
         if (foundItems != null && foundItems.contains(stack.getItem())) {
             for (ItemStack s : stacks) {
                 if (ItemHandlerHelper.canItemStacksStack(s, stack)) {
-                    s.stackSize += stack.stackSize;
+                    s.func_190917_f(stack.func_190916_E());
+//                    s.stackSize += stack.stackSize;
                     return;
                 }
             }

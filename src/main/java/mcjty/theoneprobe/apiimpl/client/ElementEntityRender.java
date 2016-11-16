@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 public class ElementEntityRender {
 
     public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, int x, int y) {
-        Entity entity = Minecraft.getMinecraft().theWorld.getEntityByID(playerID);
+        Entity entity = Minecraft.getMinecraft().world.getEntityByID(playerID);
         if (entity != null) {
             renderEntity(style, x, y, entity);
         }
@@ -23,14 +23,14 @@ public class ElementEntityRender {
         if (entityName != null && !entityName.isEmpty()) {
             Entity entity = null;
             if (entityNBT != null) {
-                entity = EntityList.createEntityFromNBT(entityNBT, Minecraft.getMinecraft().theWorld);
+                entity = EntityList.createEntityFromNBT(entityNBT, Minecraft.getMinecraft().world);
             } else {
-                int id = EntityList.getIDFromString(entityName);
-                Class<? extends Entity> clazz = EntityList.getClassFromID(id);
-                try {
-                    entity = clazz.getConstructor(World.class).newInstance(Minecraft.getMinecraft().theWorld);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                }
+//                int id = EntityList.getIDFromString(entityName);
+//                Class<? extends Entity> clazz = EntityList.getClassFromID(id);
+//                try {
+//                    entity = clazz.getConstructor(World.class).newInstance(Minecraft.getMinecraft().theWorld);
+//                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+//                }
             }
             if (entity != null) {
                 renderEntity(style, x, y, entity);

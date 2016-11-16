@@ -31,12 +31,13 @@ public class ProbeNote extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
         if (world.isRemote) {
             if (player.isSneaking()) {
-                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
             } else {
-                player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+                player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
             }
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }

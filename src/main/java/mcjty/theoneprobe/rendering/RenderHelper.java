@@ -94,10 +94,10 @@ public class RenderHelper {
     }
 
     public static boolean renderItemStackWithCount(Minecraft mc, RenderItem itemRender, ItemStack itm, int xo, int yo, boolean highlight) {
-        if (itm.stackSize == 1 || itm.stackSize == 0) {
+        if (itm.func_190916_E() == 1 || itm.func_190916_E() == 0) {
             return renderItemStack(mc, itemRender, itm, xo, yo, "", highlight);
         } else {
-            return renderItemStack(mc, itemRender, itm, xo, yo, "" + itm.stackSize, highlight);
+            return renderItemStack(mc, itemRender, itm, xo, yo, "" + itm.func_190916_E(), highlight);
         }
     }
 
@@ -466,10 +466,10 @@ public class RenderHelper {
     public static void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
                                                 int scaled) {
         if (stack != null) {
-            if (stack.stackSize != 1 || text != null) {
-                String s = text == null ? String.valueOf(stack.stackSize) : text;
-                if (text == null && stack.stackSize < 1) {
-                    s = TextFormatting.RED + String.valueOf(stack.stackSize);
+            if (stack.func_190916_E() != 1 || text != null) {
+                String s = text == null ? String.valueOf(stack.func_190916_E()) : text;
+                if (text == null && stack.func_190916_E() < 1) {
+                    s = TextFormatting.RED + String.valueOf(stack.func_190916_E());
                 }
 
                 GlStateManager.disableLighting();
@@ -516,7 +516,7 @@ public class RenderHelper {
                 GlStateManager.enableDepth();
             }
 
-            EntityPlayerSP entityplayersp = Minecraft.getMinecraft().thePlayer;
+            EntityPlayerSP entityplayersp = Minecraft.getMinecraft().player;
             float f = entityplayersp == null ? 0.0F : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
 
             if (f > 0.0F) {

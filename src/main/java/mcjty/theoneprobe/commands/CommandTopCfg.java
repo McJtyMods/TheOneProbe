@@ -82,7 +82,7 @@ public class CommandTopCfg implements ICommand {
         if (args.length < 1) {
             if (sender instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) sender;
-                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
             }
             return;
         }

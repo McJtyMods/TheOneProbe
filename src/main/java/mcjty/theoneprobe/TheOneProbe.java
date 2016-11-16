@@ -8,7 +8,7 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.proxy.CommonProxy;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -25,9 +25,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 
 @Mod(modid = TheOneProbe.MODID, name="TheOneProbe", dependencies =
-        "required-after:Forge@["+ TheOneProbe.MIN_FORGE_VER+",)",
+        "required-after:forge@["+ TheOneProbe.MIN_FORGE_VER+",)",
         version = TheOneProbe.VERSION,
-        acceptedMinecraftVersions = "[1.9,1.11)",
         guiFactory = "mcjty.theoneprobe.config.TopModGuiFactory")
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
@@ -51,8 +50,8 @@ public class TheOneProbe {
     public static CreativeTabs tabProbe = new CreativeTabs("Probe") {
         @Override
         @SideOnly(Side.CLIENT)
-        public Item getTabIconItem() {
-            return ModItems.probe;
+        public ItemStack getTabIconItem() {
+            return new ItemStack(ModItems.probe);
         }
     };
 

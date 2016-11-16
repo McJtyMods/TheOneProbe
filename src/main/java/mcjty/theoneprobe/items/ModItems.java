@@ -13,6 +13,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -20,8 +21,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-
-import java.util.List;
 
 public class ModItems {
     public static CreativeProbe creativeProbe;
@@ -69,7 +68,7 @@ public class ModItems {
             }
 
             @Override
-            public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+            public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
                 ItemStack stack = new ItemStack(itemIn);
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setInteger(PROBETAG, 1);
@@ -147,7 +146,7 @@ public class ModItems {
     }
 
     private static boolean hasProbeInHelmet(EntityPlayer player) {
-        ItemStack helmet = player.inventory.armorInventory[3];
+        ItemStack helmet = player.inventory.armorInventory.get(3);
         return isProbeHelmet(helmet);
     }
 
