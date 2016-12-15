@@ -56,7 +56,7 @@ public class PacketGetInfo implements IMessage {
         if (buf.readBoolean()) {
             pickBlock = NetworkTools.readItemStack(buf);
         } else {
-            pickBlock = null;
+            pickBlock = ItemStack.EMPTY;
         }
     }
 
@@ -76,7 +76,7 @@ public class PacketGetInfo implements IMessage {
             buf.writeDouble(hitVec.yCoord);
             buf.writeDouble(hitVec.zCoord);
         }
-        if (pickBlock == null) {
+        if (pickBlock.isEmpty()) {
             buf.writeBoolean(false);
         } else {
             buf.writeBoolean(true);

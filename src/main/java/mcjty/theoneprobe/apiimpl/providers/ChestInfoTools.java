@@ -18,6 +18,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -59,14 +60,14 @@ public class ChestInfoTools {
         }
     }
 
-    private static void addItemStack(List<ItemStack> stacks, Set<Item> foundItems, ItemStack stack) {
-        if (stack == null || stack.func_190926_b()) {
+    private static void addItemStack(List<ItemStack> stacks, Set<Item> foundItems, @Nonnull ItemStack stack) {
+        if (stack.isEmpty()) {
             return;
         }
         if (foundItems != null && foundItems.contains(stack.getItem())) {
             for (ItemStack s : stacks) {
                 if (ItemHandlerHelper.canItemStacksStack(s, stack)) {
-                    s.func_190917_f(stack.func_190916_E());
+                    s.grow(stack.getCount());
 //                    s.stackSize += stack.stackSize;
                     return;
                 }

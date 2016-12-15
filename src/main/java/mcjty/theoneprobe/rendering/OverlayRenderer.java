@@ -301,9 +301,9 @@ public class OverlayRenderer {
         IBlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
-        if (pickBlock != null && pickBlock.getItem() == null) {
+        if (!pickBlock.isEmpty() && pickBlock.getItem() == null) {
             // Protection for some invalid items.
-            pickBlock = null;
+            pickBlock = ItemStack.EMPTY;
         }
         PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.provider.getDimension(), blockPos, mode, mouseOver, pickBlock));
     }

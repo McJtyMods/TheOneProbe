@@ -14,7 +14,7 @@ public class NetworkTools {
     public static NBTTagCompound readNBT(ByteBuf dataIn) {
         PacketBuffer buf = new PacketBuffer(dataIn);
         try {
-            return buf.readNBTTagCompoundFromBuffer();
+            return buf.readCompoundTag();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -24,7 +24,7 @@ public class NetworkTools {
     public static void writeNBT(ByteBuf dataOut, NBTTagCompound nbt) {
         PacketBuffer buf = new PacketBuffer(dataOut);
         try {
-            buf.writeNBTTagCompoundToBuffer(nbt);
+            buf.writeCompoundTag(nbt);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,14 +35,14 @@ public class NetworkTools {
     public static ItemStack readItemStack(ByteBuf dataIn) {
         PacketBuffer buf = new PacketBuffer(dataIn);
         try {
-            NBTTagCompound nbt = buf.readNBTTagCompoundFromBuffer();
+            NBTTagCompound nbt = buf.readCompoundTag();
             ItemStack stack = new ItemStack(nbt);
-            stack.func_190920_e(buf.readInt());
+            stack.setCount(buf.readInt());
             return stack;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
     /// This function supports itemstacks with more then 64 items.
@@ -51,8 +51,8 @@ public class NetworkTools {
         NBTTagCompound nbt = new NBTTagCompound();
         itemStack.writeToNBT(nbt);
         try {
-            buf.writeNBTTagCompoundToBuffer(nbt);
-            buf.writeInt(itemStack.func_190916_E());
+            buf.writeCompoundTag(nbt);
+            buf.writeInt(itemStack.getCount());
         } catch (Exception e) {
             e.printStackTrace();
         }

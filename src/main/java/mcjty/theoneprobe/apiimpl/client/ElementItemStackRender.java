@@ -10,8 +10,8 @@ public class ElementItemStackRender {
 
     public static void render(ItemStack itemStack, IItemStyle style, int x, int y) {
         RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
-        if (itemStack != null) {
-            int size = itemStack.func_190916_E();
+        if (!itemStack.isEmpty()) {
+            int size = itemStack.getCount();
             String amount;
             if (size <= 1) {
                 amount = "";

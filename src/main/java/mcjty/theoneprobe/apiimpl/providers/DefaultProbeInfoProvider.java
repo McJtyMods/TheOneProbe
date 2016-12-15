@@ -16,9 +16,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
@@ -148,18 +149,6 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                     }
                 }
             }
-        } else if (te instanceof IFluidHandler) {
-            IFluidHandler handler = (IFluidHandler) te;
-            FluidTankInfo[] info = handler.getTankInfo(null);
-            if (info != null) {
-                for (FluidTankInfo tankInfo : info) {
-                    if (tankInfo != null) {
-                        FluidStack fluidStack = tankInfo.fluid;
-                        int maxContents = tankInfo.capacity;
-                        addFluidInfo(probeInfo, config, fluidStack, maxContents);
-                    }
-                }
-            }
         }
     }
 
@@ -248,7 +237,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
 
         ItemStack pickBlock = data.getPickBlock();
-        if (pickBlock != null) {
+        if (!pickBlock.isEmpty()) {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.horizontal()
                         .item(pickBlock)

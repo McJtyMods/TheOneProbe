@@ -113,7 +113,7 @@ public class ModItems {
     }
 
     public static boolean isProbeInHand(ItemStack stack) {
-        if (stack == null) {
+        if (stack.isEmpty()) {
             return false;
         }
         if (stack.getItem() == probe || stack.getItem() == creativeProbe) {
@@ -126,7 +126,7 @@ public class ModItems {
     }
 
     private static boolean isProbeHelmet(ItemStack stack) {
-        if (stack == null) {
+        if (stack.isEmpty()) {
             return false;
         }
         if (stack.getTagCompound() == null) {

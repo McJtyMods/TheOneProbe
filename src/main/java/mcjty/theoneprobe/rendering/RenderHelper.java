@@ -85,7 +85,7 @@ public class RenderHelper {
         if (itm instanceof TextureAtlasSprite) {
             return renderIcon(mc, itemRender, (TextureAtlasSprite) itm, x, y, highlight);
         }
-        return renderItemStack(mc, itemRender, null, x, y, "", highlight);
+        return renderItemStack(mc, itemRender, ItemStack.EMPTY, x, y, "", highlight);
     }
 
     public static boolean renderIcon(Minecraft mc, RenderItem itemRender, TextureAtlasSprite itm, int xo, int yo, boolean highlight) {
@@ -94,10 +94,10 @@ public class RenderHelper {
     }
 
     public static boolean renderItemStackWithCount(Minecraft mc, RenderItem itemRender, ItemStack itm, int xo, int yo, boolean highlight) {
-        if (itm.func_190916_E() == 1 || itm.func_190916_E() == 0) {
+        if (itm.getCount() == 1 || itm.getCount() == 0) {
             return renderItemStack(mc, itemRender, itm, xo, yo, "", highlight);
         } else {
-            return renderItemStack(mc, itemRender, itm, xo, yo, "" + itm.func_190916_E(), highlight);
+            return renderItemStack(mc, itemRender, itm, xo, yo, "" + itm.getCount(), highlight);
         }
     }
 
@@ -109,7 +109,7 @@ public class RenderHelper {
             GlStateManager.disableLighting();
             drawVerticalGradientRect(x, y, x + 16, y + 16, 0x80ffffff, 0xffffffff);
         }
-        if (itm != null && itm.getItem() != null) {
+        if (!itm.isEmpty() && itm.getItem() != null) {
             rc = true;
             GlStateManager.pushMatrix();
             GlStateManager.translate(0.0F, 0.0F, 32.0F);
@@ -439,7 +439,7 @@ public class RenderHelper {
         GlStateManager.color(1.0F, 1.0F, 1.0F);
 
         int rc = 0;
-        if (itm != null && itm.getItem() != null) {
+        if (!itm.isEmpty() && itm.getItem() != null) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(0.0F, 0.0F, 32.0F);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -465,11 +465,11 @@ public class RenderHelper {
      */
     public static void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
                                                 int scaled) {
-        if (stack != null) {
-            if (stack.func_190916_E() != 1 || text != null) {
-                String s = text == null ? String.valueOf(stack.func_190916_E()) : text;
-                if (text == null && stack.func_190916_E() < 1) {
-                    s = TextFormatting.RED + String.valueOf(stack.func_190916_E());
+        if (!stack.isEmpty()) {
+            if (stack.getCount() != 1 || text != null) {
+                String s = text == null ? String.valueOf(stack.getCount()) : text;
+                if (text == null && stack.getCount() < 1) {
+                    s = TextFormatting.RED + String.valueOf(stack.getCount());
                 }
 
                 GlStateManager.disableLighting();
@@ -525,7 +525,7 @@ public class RenderHelper {
                 GlStateManager.disableTexture2D();
                 Tessellator tessellator1 = Tessellator.getInstance();
                 VertexBuffer vertexbuffer1 = tessellator1.getBuffer();
-                draw(vertexbuffer1, xPosition, yPosition + MathHelper.floor_float(16.0F * (1.0F - f)), 16, MathHelper.ceiling_float_int(16.0F * f), 255, 255, 255, 127);
+                draw(vertexbuffer1, xPosition, yPosition + MathHelper.floor(16.0F * (1.0F - f)), 16, MathHelper.ceil(16.0F * f), 255, 255, 255, 127);
                 GlStateManager.enableTexture2D();
                 GlStateManager.enableLighting();
                 GlStateManager.enableDepth();

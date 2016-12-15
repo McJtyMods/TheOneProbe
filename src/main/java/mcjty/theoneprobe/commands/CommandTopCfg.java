@@ -14,6 +14,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,13 +23,14 @@ import java.util.function.Consumer;
 
 public class CommandTopCfg implements ICommand {
 
+
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "topcfg";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         String args = StringUtils.join(SUBCOMMANDS.keySet(), " | ");
         return "topcfg [ " + args + " ]";
     }
@@ -73,7 +75,7 @@ public class CommandTopCfg implements ICommand {
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return Collections.emptyList();
     }
 
@@ -89,7 +91,7 @@ public class CommandTopCfg implements ICommand {
         String cmd = args[0];
         Consumer<String[]> consumer = SUBCOMMANDS.get(cmd);
         if (consumer == null) {
-            sender.addChatMessage(new TextComponentString(TextFormatting.RED + "Unknown style option!"));
+            sender.sendMessage(new TextComponentString(TextFormatting.RED + "Unknown style option!"));
         } else {
             consumer.accept(args);
         }
@@ -100,8 +102,9 @@ public class CommandTopCfg implements ICommand {
         return true;
     }
 
+
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         return CommandBase.getListOfStringsMatchingLastWord(args, SUBCOMMANDS.keySet());
     }
 
@@ -112,6 +115,6 @@ public class CommandTopCfg implements ICommand {
 
     @Override
     public int compareTo(ICommand o) {
-        return getCommandName().compareTo(o.getCommandName());
+        return getName().compareTo(o.getName());
     }
 }

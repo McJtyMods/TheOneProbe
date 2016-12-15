@@ -23,7 +23,7 @@ public class ElementItemStack implements IElement {
         if (buf.readBoolean()) {
             itemStack = NetworkTools.readItemStack(buf);
         } else {
-            itemStack = null;
+            itemStack = ItemStack.EMPTY;
         }
         style = new ItemStyle()
                 .width(buf.readInt())
