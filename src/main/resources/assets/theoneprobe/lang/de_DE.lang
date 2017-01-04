@@ -1,0 +1,12 @@
+key.toggleLiquids=Flüssigkeitenansicht umschalten
+key.toggleVisible=Sichtbarkeit umschalten
+key.categories.theoneprobe=The One Probe
+item.theoneprobe.probe.name=Die eine Sonde
+item.theoneprobe.probe_goggles.name=Die eine Sonde (Bauble)
+item.theoneprobe.diamond_helmet_probe.name=Diamanthelm mit Sonde
+item.theoneprobe.gold_helmet_probe.name=Goldhelm mit Sonde
+item.theoneprobe.iron_helmet_probe.name=Eisenhelm mit Sonde
+item.theoneprobe.creativeprobe.name=Die Kreativsonde
+item.theoneprobe.probenote.name=The One Probe-Liesmich
+
+itemGroup.Probe=The One Probe
