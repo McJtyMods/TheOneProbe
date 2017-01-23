@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
@@ -56,7 +57,7 @@ public class PacketGetInfo implements IMessage {
         if (buf.readBoolean()) {
             pickBlock = NetworkTools.readItemStack(buf);
         } else {
-            pickBlock = ItemStack.EMPTY;
+            pickBlock = ItemStackTools.getEmptyStack();
         }
     }
 
@@ -76,7 +77,7 @@ public class PacketGetInfo implements IMessage {
             buf.writeDouble(hitVec.yCoord);
             buf.writeDouble(hitVec.zCoord);
         }
-        if (pickBlock.isEmpty()) {
+        if (ItemStackTools.isEmpty(pickBlock)) {
             buf.writeBoolean(false);
         } else {
             buf.writeBoolean(true);

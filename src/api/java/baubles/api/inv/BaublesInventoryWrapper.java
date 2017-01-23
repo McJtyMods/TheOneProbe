@@ -1,6 +1,7 @@
 package baubles.api.inv;
 
 import baubles.api.cap.IBaublesItemHandler;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -54,7 +55,7 @@ public class BaublesInventoryWrapper implements IInventory {
 	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack out = this.getStackInSlot(index);
-		handler.setStackInSlot(index, ItemStack.EMPTY);
+		handler.setStackInSlot(index, ItemStackTools.getEmptyStack());
 		return out;
 	}
 
@@ -108,7 +109,7 @@ public class BaublesInventoryWrapper implements IInventory {
 	@Override
 	public void clear() {	
 		for (int i = 0; i < this.getSizeInventory(); ++i) {
-			this.setInventorySlotContents(i, ItemStack.EMPTY);
+			this.setInventorySlotContents(i, ItemStackTools.getEmptyStack());
         }
 	}
 }

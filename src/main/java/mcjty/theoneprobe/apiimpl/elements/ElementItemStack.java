@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IItemStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
@@ -23,7 +24,7 @@ public class ElementItemStack implements IElement {
         if (buf.readBoolean()) {
             itemStack = NetworkTools.readItemStack(buf);
         } else {
-            itemStack = ItemStack.EMPTY;
+            itemStack = ItemStackTools.getEmptyStack();
         }
         style = new ItemStyle()
                 .width(buf.readInt())

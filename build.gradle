@@ -18,11 +18,13 @@ apply plugin: 'maven-publish'
 repositories {
     maven { // The repo from which to get waila
         name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
+        url "http://tehnut.info/maven"
     }
     maven { // JEI
-//        url "http://dvs1.progwml6.com/files/maven"
-        url "http://104.168.20.187/files/maven"
+        url "http://dvs1.progwml6.com/files/maven"
+    }
+    maven { // CompatLayer
+        url "http://maven.k-4u.nl"
     }
     maven {
         name = "sonatype"
@@ -47,15 +49,17 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.11-13.19.1.2188"
+    version = "1.11.2-13.20.0.2201"
     runDir = "run"
-    mappings = "snapshot_20161208"
+    mappings = "snapshot_20161227"
     useDepAts = true
 }
 
 dependencies {
-    //deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
-    deobfCompile "mezz.jei:jei_1.11:4.0.2.194"
+    deobfCompile "mcp.mobius.waila:Hwyla:1.8.3-B15_1.11"
+    deobfCompile "mezz.jei:jei_1.11.2:4.2.0.210"
+    deobfCompile "com.github.mcjty:compatlayer:1.11.2-0.1.7"
+    deobfCompile "com.github.mcjty:intwheel:1.1x-1.1.0"
 }
 
 jar {

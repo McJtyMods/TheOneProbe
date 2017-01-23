@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.client;
 
+import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.api.IItemStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -10,7 +11,7 @@ public class ElementItemStackRender {
 
     public static void render(ItemStack itemStack, IItemStyle style, int x, int y) {
         RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
-        if (!itemStack.isEmpty()) {
+        if (ItemStackTools.isValid(itemStack)) {
             int size = itemStack.getCount();
             String amount;
             if (size <= 1) {

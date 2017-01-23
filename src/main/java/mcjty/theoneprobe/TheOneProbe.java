@@ -2,13 +2,14 @@ package mcjty.theoneprobe;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import mcjty.lib.compat.CompatCreativeTabs;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.proxy.CommonProxy;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -17,21 +18,25 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-@Mod(modid = TheOneProbe.MODID, name="TheOneProbe", dependencies =
-        "required-after:forge@["+ TheOneProbe.MIN_FORGE_VER+",)",
+@Mod(modid = TheOneProbe.MODID, name="TheOneProbe",
+        dependencies =
+                "required-after:compatlayer@[" + TheOneProbe.COMPATLAYER_VER + ",);" +
+                "after:Forge@[" + TheOneProbe.MIN_FORGE10_VER + ",);" +
+                "after:forge@[" + TheOneProbe.MIN_FORGE11_VER + ",)",
         version = TheOneProbe.VERSION,
-        guiFactory = "mcjty.theoneprobe.config.TopModGuiFactory")
+        guiFactory = "mcjty.theoneprobe.config.TopModGuiFactory",
+        acceptedMinecraftVersions = "[1.10,1.12)")
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
     public static final String VERSION = "1.3.4";
-    public static final String MIN_FORGE_VER = "13.19.0.2129";
+    public static final String MIN_FORGE10_VER = "12.18.1.2082";
+    public static final String MIN_FORGE11_VER = "13.19.0.2176";
+    public static final String COMPATLAYER_VER = "0.1.6";
 
     @SidedProxy(clientSide="mcjty.theoneprobe.proxy.ClientProxy", serverSide="mcjty.theoneprobe.proxy.ServerProxy")
     public static CommonProxy proxy;
@@ -47,11 +52,10 @@ public class TheOneProbe {
 
     public static boolean baubles = false;
 
-    public static CreativeTabs tabProbe = new CreativeTabs("Probe") {
+    public static CreativeTabs tabProbe = new CompatCreativeTabs("Probe") {
         @Override
-        @SideOnly(Side.CLIENT)
-        public ItemStack getTabIconItem() {
-            return new ItemStack(ModItems.probe);
+        protected Item getItem() {
+            return ModItems.probe;
         }
     };
 

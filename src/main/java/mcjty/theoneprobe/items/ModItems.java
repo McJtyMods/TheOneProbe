@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.items;
 
+import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -113,7 +114,7 @@ public class ModItems {
     }
 
     public static boolean isProbeInHand(ItemStack stack) {
-        if (stack.isEmpty()) {
+        if (ItemStackTools.isEmpty(stack)) {
             return false;
         }
         if (stack.getItem() == probe || stack.getItem() == creativeProbe) {
@@ -126,7 +127,7 @@ public class ModItems {
     }
 
     private static boolean isProbeHelmet(ItemStack stack) {
-        if (stack.isEmpty()) {
+        if (ItemStackTools.isEmpty(stack)) {
             return false;
         }
         if (stack.getTagCompound() == null) {

@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import cofh.api.energy.IEnergyHandler;
+import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
@@ -237,7 +238,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
 
         ItemStack pickBlock = data.getPickBlock();
-        if (!pickBlock.isEmpty()) {
+        if (ItemStackTools.isValid(pickBlock)) {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.horizontal()
                         .item(pickBlock)

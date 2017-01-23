@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -42,7 +43,7 @@ public class NetworkTools {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ItemStack.EMPTY;
+        return ItemStackTools.getEmptyStack();
     }
 
     /// This function supports itemstacks with more then 64 items.

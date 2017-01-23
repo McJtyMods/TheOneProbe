@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.rendering;
 
+import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -301,9 +302,9 @@ public class OverlayRenderer {
         IBlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
-        if (!pickBlock.isEmpty() && pickBlock.getItem() == null) {
+        if (ItemStackTools.isValid(pickBlock) && pickBlock.getItem() == null) {
             // Protection for some invalid items.
-            pickBlock = ItemStack.EMPTY;
+            pickBlock = ItemStackTools.getEmptyStack();
         }
         PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.provider.getDimension(), blockPos, mode, mouseOver, pickBlock));
     }

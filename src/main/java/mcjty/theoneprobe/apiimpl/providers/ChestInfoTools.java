@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IProbeConfig;
@@ -61,7 +62,7 @@ public class ChestInfoTools {
     }
 
     private static void addItemStack(List<ItemStack> stacks, Set<Item> foundItems, @Nonnull ItemStack stack) {
-        if (stack.isEmpty()) {
+        if (ItemStackTools.isEmpty(stack)) {
             return;
         }
         if (foundItems != null && foundItems.contains(stack.getItem())) {

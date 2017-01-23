@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.rendering;
 
+import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.TheOneProbe;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -85,7 +86,7 @@ public class RenderHelper {
         if (itm instanceof TextureAtlasSprite) {
             return renderIcon(mc, itemRender, (TextureAtlasSprite) itm, x, y, highlight);
         }
-        return renderItemStack(mc, itemRender, ItemStack.EMPTY, x, y, "", highlight);
+        return renderItemStack(mc, itemRender, ItemStackTools.getEmptyStack(), x, y, "", highlight);
     }
 
     public static boolean renderIcon(Minecraft mc, RenderItem itemRender, TextureAtlasSprite itm, int xo, int yo, boolean highlight) {
@@ -109,7 +110,7 @@ public class RenderHelper {
             GlStateManager.disableLighting();
             drawVerticalGradientRect(x, y, x + 16, y + 16, 0x80ffffff, 0xffffffff);
         }
-        if (!itm.isEmpty() && itm.getItem() != null) {
+        if (ItemStackTools.isValid(itm) && itm.getItem() != null) {
             rc = true;
             GlStateManager.pushMatrix();
             GlStateManager.translate(0.0F, 0.0F, 32.0F);
@@ -439,7 +440,7 @@ public class RenderHelper {
         GlStateManager.color(1.0F, 1.0F, 1.0F);
 
         int rc = 0;
-        if (!itm.isEmpty() && itm.getItem() != null) {
+        if (ItemStackTools.isValid(itm) && itm.getItem() != null) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(0.0F, 0.0F, 32.0F);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -465,7 +466,7 @@ public class RenderHelper {
      */
     public static void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
                                                 int scaled) {
-        if (!stack.isEmpty()) {
+        if (ItemStackTools.isValid(stack)) {
             if (stack.getCount() != 1 || text != null) {
                 String s = text == null ? String.valueOf(stack.getCount()) : text;
                 if (text == null && stack.getCount() < 1) {
