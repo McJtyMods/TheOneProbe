@@ -27,6 +27,8 @@ public class ElementTextRender {
                 middle = I18n.format(middle).trim();
                 String right = text.substring(end+2);
                 text = left + middle + right;
+            } else {
+                break;
             }
         }
         if (text.contains("{=")) {
