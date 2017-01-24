@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.items;
 
+import mcjty.lib.compat.CompatItem;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.proxy.GuiProxy;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Probe extends Item {
+public class Probe extends CompatItem {
 
     public Probe() {
         setUnlocalizedName(TheOneProbe.MODID + ".probe");
@@ -31,7 +32,7 @@ public class Probe extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    protected ActionResult<ItemStack> clOnItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
         if (world.isRemote) {
             player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);

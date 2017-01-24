@@ -14,7 +14,6 @@ public class AddProbeRecipe extends ShapedRecipes {
         super(2, 1, new ItemStack[] { new ItemStack(helmet), new ItemStack(ModItems.probe) }, new ItemStack(output));
     }
 
-    @Nullable
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
         ItemStack result = super.getCraftingResult(inv);
