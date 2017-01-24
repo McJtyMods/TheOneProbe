@@ -4,6 +4,7 @@ import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.EnumSet;
@@ -16,6 +17,18 @@ public class ElementTextRender {
     }
 
     private static String stylifyString(String text) {
+        while (text.contains("{*") && text.contains("*}")) {
+            int start = text.indexOf("{*");
+            int end = text.indexOf("*}");
+            if (start < end) {
+                // Translation is needed
+                String left = text.substring(0, start);
+                String middle = text.substring(start + 2, end);
+                middle = I18n.format(middle).trim();
+                String right = text.substring(end+2);
+                text = left + middle + right;
+            }
+        }
         if (text.contains("{=")) {
             Set<TextStyleClass> stylesNeedingContext = EnumSet.noneOf(TextStyleClass.class);
             TextStyleClass context = null;

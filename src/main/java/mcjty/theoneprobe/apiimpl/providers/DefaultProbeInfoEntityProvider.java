@@ -15,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 
@@ -23,6 +22,8 @@ import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.UUID;
 
+import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
+import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 
 public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider {
@@ -57,10 +58,10 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                     IProbeInfo vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(0xffffffff));
                     float durationFactor = 1.0f;
                     for (PotionEffect effect : effects) {
-                        String s1 = I18n.translateToLocal(effect.getEffectName()).trim();
+                        String s1 = STARTLOC + effect.getEffectName() + ENDLOC;
                         Potion potion = effect.getPotion();
                         if (effect.getAmplifier() > 0) {
-                            s1 = s1 + " " + I18n.translateToLocal("potion.potency." + effect.getAmplifier()).trim();
+                            s1 = s1 + " " + STARTLOC + "potion.potency." + effect.getAmplifier() + ENDLOC;
                         }
 
                         if (effect.getDuration() > 20) {

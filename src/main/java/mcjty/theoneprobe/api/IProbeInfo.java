@@ -16,6 +16,10 @@ import net.minecraft.util.ResourceLocation;
  */
 public interface IProbeInfo {
 
+    /// Use STARTLOC/ENDLOC in your strings for localization on the client
+    public static final String STARTLOC = "{*";
+    public static final String ENDLOC = "*}";
+
     /**
      * Create a default layout style for the horizontal or vertical elements
      */
@@ -60,7 +64,9 @@ public interface IProbeInfo {
 
     /**
      * Note that you can include TextStyleClass info in the given text which
-     * will be translated to the right style client-side
+     * will be translated to the right style client-side. You can also
+     * include STARTLOC/ENDLOC tags to force translation to localized
+     * data on the client
      */
     IProbeInfo text(String text, ITextStyle style);
     IProbeInfo text(String text);

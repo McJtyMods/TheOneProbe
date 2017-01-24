@@ -13,6 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.EnumFacing;
@@ -24,6 +25,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
+import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
+import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
@@ -243,24 +246,43 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.horizontal()
                         .item(pickBlock)
                         .vertical()
-                        .text(NAME + pickBlock.getDisplayName())
+                        .text(NAME + getStackUnlocalizedName(pickBlock))
                         .text(MODNAME + modid);
             } else {
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(pickBlock)
-                        .text(NAME + pickBlock.getDisplayName());
+                        .text(NAME + getStackUnlocalizedName(pickBlock));
 
             }
         } else {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.vertical()
-                        .text(NAME + block.getLocalizedName())
+                        .text(NAME + getBlockUnlocalizedName(block))
                         .text(MODNAME + modid);
             } else {
                 probeInfo.vertical()
-                        .text(NAME + block.getLocalizedName());
+                        .text(NAME + getBlockUnlocalizedName(block));
             }
         }
     }
 
+    private static String getBlockUnlocalizedName(Block block) {
+        return STARTLOC + block.getUnlocalizedName() + ".name" + ENDLOC;
+    }
+
+    private static String getStackUnlocalizedName(ItemStack stack) {
+        NBTTagCompound nbttagcompound = stack.getSubCompound("display");
+
+        if (nbttagcompound != null) {
+            if (nbttagcompound.hasKey("Name", 8)) {
+                return nbttagcompound.getString("Name");
+            }
+
+            if (nbttagcompound.hasKey("LocName", 8)) {
+                return STARTLOC + nbttagcompound.getString("LocName") + ENDLOC;
+            }
+        }
+
+        return STARTLOC + stack.getItem().getUnlocalizedNameInefficiently(stack) + ".name" + ENDLOC;
+    }
 }
