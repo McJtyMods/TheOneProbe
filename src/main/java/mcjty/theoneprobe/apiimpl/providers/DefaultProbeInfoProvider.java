@@ -271,7 +271,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private static String getStackUnlocalizedName(ItemStack stack) {
-        NBTTagCompound nbttagcompound = stack.getSubCompound("display");
+        NBTTagCompound nbttagcompound = getSubCompound(stack, "display");
 
         if (nbttagcompound != null) {
             if (nbttagcompound.hasKey("Name", 8)) {
@@ -285,4 +285,14 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         return STARTLOC + stack.getItem().getUnlocalizedNameInefficiently(stack) + ".name" + ENDLOC;
     }
+
+    private static NBTTagCompound getSubCompound(ItemStack stack, String key) {
+        if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(key, 10)) {
+            return stack.getTagCompound().getCompoundTag(key);
+        } else {
+            return null;
+        }
+    }
+
+
 }

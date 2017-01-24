@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.rendering;
 
 import mcjty.lib.tools.ItemStackTools;
+import mcjty.lib.tools.MinecraftTools;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -96,12 +97,12 @@ public class OverlayRenderer {
             }
         }
 
-        EntityPlayerSP entity = Minecraft.getMinecraft().player;
+        EntityPlayerSP entity = MinecraftTools.getPlayer(Minecraft.getMinecraft());
         Vec3d start  = entity.getPositionEyes(partialTicks);
         Vec3d vec31 = entity.getLook(partialTicks);
         Vec3d end = start.addVector(vec31.xCoord * dist, vec31.yCoord * dist, vec31.zCoord * dist);
 
-        mouseOver = entity.world.rayTraceBlocks(start, end, Config.showLiquids);
+        mouseOver = entity.getEntityWorld().rayTraceBlocks(start, end, Config.showLiquids);
         if (mouseOver == null) {
             return;
         }
@@ -164,7 +165,7 @@ public class OverlayRenderer {
 
         UUID uuid = entity.getPersistentID();
 
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        EntityPlayerSP player = MinecraftTools.getPlayer(Minecraft.getMinecraft());
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
@@ -196,7 +197,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, EntityPlayerSP player) {
-        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.world.provider.getDimension(), mode, mouseOver, entity));
+        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().provider.getDimension(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
@@ -204,8 +205,8 @@ public class OverlayRenderer {
         if (blockPos == null) {
             return;
         }
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
-        if (player.world.isAirBlock(blockPos)) {
+        EntityPlayerSP player = MinecraftTools.getPlayer(Minecraft.getMinecraft());
+        if (player.getEntityWorld().isAirBlock(blockPos)) {
             return;
         }
 
@@ -230,7 +231,7 @@ public class OverlayRenderer {
             }
         }
 
-        int dimension = player.world.provider.getDimension();
+        int dimension = player.getEntityWorld().provider.getDimension();
         Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(Pair.of(dimension, blockPos));
         if (cacheEntry == null) {
             requestBlockInfo(mode, mouseOver, blockPos, player);
@@ -263,7 +264,7 @@ public class OverlayRenderer {
     private static ProbeInfo getWaitingInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, EntityPlayerSP player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
 
-        World world = player.world;
+        World world = player.getEntityWorld();
         IBlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
@@ -298,7 +299,7 @@ public class OverlayRenderer {
     }
 
     private static void requestBlockInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, EntityPlayerSP player) {
-        World world = player.world;
+        World world = player.getEntityWorld();
         IBlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);

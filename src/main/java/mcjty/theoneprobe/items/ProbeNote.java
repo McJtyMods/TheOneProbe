@@ -5,7 +5,6 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.proxy.GuiProxy;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -36,9 +35,9 @@ public class ProbeNote extends CompatItem {
         ItemStack stack = player.getHeldItem(hand);
         if (world.isRemote) {
             if (player.isSneaking()) {
-                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
+                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
             } else {
-                player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
+                player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
             }
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }

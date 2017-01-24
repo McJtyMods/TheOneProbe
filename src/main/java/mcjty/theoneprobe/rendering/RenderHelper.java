@@ -1,6 +1,8 @@
 package mcjty.theoneprobe.rendering;
 
 import mcjty.lib.tools.ItemStackTools;
+import mcjty.lib.tools.MathTools;
+import mcjty.lib.tools.MinecraftTools;
 import mcjty.theoneprobe.TheOneProbe;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -13,7 +15,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
@@ -517,7 +518,7 @@ public class RenderHelper {
                 GlStateManager.enableDepth();
             }
 
-            EntityPlayerSP entityplayersp = Minecraft.getMinecraft().player;
+            EntityPlayerSP entityplayersp = MinecraftTools.getPlayer(Minecraft.getMinecraft());
             float f = entityplayersp == null ? 0.0F : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
 
             if (f > 0.0F) {
@@ -526,7 +527,7 @@ public class RenderHelper {
                 GlStateManager.disableTexture2D();
                 Tessellator tessellator1 = Tessellator.getInstance();
                 VertexBuffer vertexbuffer1 = tessellator1.getBuffer();
-                draw(vertexbuffer1, xPosition, yPosition + MathHelper.floor(16.0F * (1.0F - f)), 16, MathHelper.ceil(16.0F * f), 255, 255, 255, 127);
+                draw(vertexbuffer1, xPosition, yPosition + MathTools.floor(16.0F * (1.0F - f)), 16, MathTools.ceiling(16.0F * f), 255, 255, 255, 127);
                 GlStateManager.enableTexture2D();
                 GlStateManager.enableLighting();
                 GlStateManager.enableDepth();

@@ -1,19 +1,17 @@
 package mcjty.theoneprobe.apiimpl.client;
 
+import mcjty.lib.tools.MinecraftTools;
 import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class ElementEntityRender {
 
     public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, int x, int y) {
-        Entity entity = Minecraft.getMinecraft().world.getEntityByID(playerID);
+        Entity entity = MinecraftTools.getWorld(Minecraft.getMinecraft()).getEntityByID(playerID);
         if (entity != null) {
             renderEntity(style, x, y, entity);
         }
@@ -23,7 +21,7 @@ public class ElementEntityRender {
         if (entityName != null && !entityName.isEmpty()) {
             Entity entity = null;
             if (entityNBT != null) {
-                entity = EntityList.createEntityFromNBT(entityNBT, Minecraft.getMinecraft().world);
+                entity = EntityList.createEntityFromNBT(entityNBT, MinecraftTools.getWorld(Minecraft.getMinecraft()));
             } else {
 //                int id = EntityList.getIDFromString(entityName);
 //                Class<? extends Entity> clazz = EntityList.getClassFromID(id);

@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.items;
 
+import mcjty.lib.compat.CompatItemArmor;
 import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
@@ -14,7 +15,6 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -22,6 +22,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+
+import java.util.List;
 
 public class ModItems {
     public static CreativeProbe creativeProbe;
@@ -62,14 +64,14 @@ public class ModItems {
     }
 
     private static Item makeHelpmet(ItemArmor.ArmorMaterial material, int renderIndex, String name) {
-        Item item = new ItemArmor(material, renderIndex, EntityEquipmentSlot.HEAD) {
+        Item item = new CompatItemArmor(material, renderIndex, EntityEquipmentSlot.HEAD) {
             @Override
             public boolean getHasSubtypes() {
                 return true;
             }
 
             @Override
-            public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+            protected void clGetSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
                 ItemStack stack = new ItemStack(itemIn);
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setInteger(PROBETAG, 1);
