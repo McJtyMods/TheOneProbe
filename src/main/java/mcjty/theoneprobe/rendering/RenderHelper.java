@@ -95,10 +95,10 @@ public class RenderHelper {
     }
 
     public static boolean renderItemStackWithCount(Minecraft mc, RenderItem itemRender, ItemStack itm, int xo, int yo, boolean highlight) {
-        if (itm.getCount() == 1 || itm.getCount() == 0) {
+        if (ItemStackTools.getStackSize(itm) == 1 || ItemStackTools.getStackSize(itm) == 0) {
             return renderItemStack(mc, itemRender, itm, xo, yo, "", highlight);
         } else {
-            return renderItemStack(mc, itemRender, itm, xo, yo, "" + itm.getCount(), highlight);
+            return renderItemStack(mc, itemRender, itm, xo, yo, "" + ItemStackTools.getStackSize(itm), highlight);
         }
     }
 
@@ -467,10 +467,10 @@ public class RenderHelper {
     public static void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
                                                 int scaled) {
         if (ItemStackTools.isValid(stack)) {
-            if (stack.getCount() != 1 || text != null) {
-                String s = text == null ? String.valueOf(stack.getCount()) : text;
-                if (text == null && stack.getCount() < 1) {
-                    s = TextFormatting.RED + String.valueOf(stack.getCount());
+            if (ItemStackTools.getStackSize(stack) != 1 || text != null) {
+                String s = text == null ? String.valueOf(ItemStackTools.getStackSize(stack)) : text;
+                if (text == null && ItemStackTools.getStackSize(stack) < 1) {
+                    s = TextFormatting.RED + String.valueOf(ItemStackTools.getStackSize(stack));
                 }
 
                 GlStateManager.disableLighting();

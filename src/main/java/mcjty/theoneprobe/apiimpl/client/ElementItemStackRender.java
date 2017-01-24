@@ -12,7 +12,7 @@ public class ElementItemStackRender {
     public static void render(ItemStack itemStack, IItemStyle style, int x, int y) {
         RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
         if (ItemStackTools.isValid(itemStack)) {
-            int size = itemStack.getCount();
+            int size = ItemStackTools.getStackSize(itemStack);
             String amount;
             if (size <= 1) {
                 amount = "";

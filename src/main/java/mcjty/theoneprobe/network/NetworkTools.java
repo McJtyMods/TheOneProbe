@@ -37,8 +37,8 @@ public class NetworkTools {
         PacketBuffer buf = new PacketBuffer(dataIn);
         try {
             NBTTagCompound nbt = buf.readCompoundTag();
-            ItemStack stack = new ItemStack(nbt);
-            stack.setCount(buf.readInt());
+            ItemStack stack = ItemStackTools.loadFromNBT(nbt);
+            ItemStackTools.setStackSize(stack, buf.readInt());
             return stack;
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class NetworkTools {
         itemStack.writeToNBT(nbt);
         try {
             buf.writeCompoundTag(nbt);
-            buf.writeInt(itemStack.getCount());
+            buf.writeInt(ItemStackTools.getStackSize(itemStack));
         } catch (Exception e) {
             e.printStackTrace();
         }
