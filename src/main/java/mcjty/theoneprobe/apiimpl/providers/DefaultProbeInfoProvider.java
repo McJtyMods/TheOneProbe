@@ -19,6 +19,7 @@ import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -175,23 +176,32 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void showRF(IProbeInfo probeInfo, World world, BlockPos pos) {
+        ProbeConfig config = Config.getDefaultConfig();
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof IEnergyHandler) {
-            ProbeConfig config = Config.getDefaultConfig();
             IEnergyHandler handler = (IEnergyHandler) te;
             int energy = handler.getEnergyStored(EnumFacing.DOWN);
             int maxEnergy = handler.getMaxEnergyStored(EnumFacing.DOWN);
-            if (config.getRFMode() == 1) {
-                probeInfo.progress(energy, maxEnergy,
-                        probeInfo.defaultProgressStyle()
-                                .suffix("RF")
-                                .filledColor(Config.rfbarFilledColor)
-                                .alternateFilledColor(Config.rfbarAlternateFilledColor)
-                                .borderColor(Config.rfbarBorderColor)
-                                .numberFormat(Config.rfFormat));
-            } else {
-                probeInfo.text(PROGRESS + "RF: " + ElementProgress.format(energy, Config.rfFormat, "RF"));
+            addRFInfo(probeInfo, config, energy, maxEnergy);
+        } else if (te != null && te.hasCapability(CapabilityEnergy.ENERGY, null)) {
+            net.minecraftforge.energy.IEnergyStorage handler = te.getCapability(CapabilityEnergy.ENERGY, null);
+            if (handler != null) {
+                addRFInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
             }
+        }
+    }
+
+    private void addRFInfo(IProbeInfo probeInfo, ProbeConfig config, int energy, int maxEnergy) {
+        if (config.getRFMode() == 1) {
+            probeInfo.progress(energy, maxEnergy,
+                    probeInfo.defaultProgressStyle()
+                            .suffix("RF")
+                            .filledColor(Config.rfbarFilledColor)
+                            .alternateFilledColor(Config.rfbarAlternateFilledColor)
+                            .borderColor(Config.rfbarBorderColor)
+                            .numberFormat(Config.rfFormat));
+        } else {
+            probeInfo.text(PROGRESS + "RF: " + ElementProgress.format(energy, Config.rfFormat, "RF"));
         }
     }
 
