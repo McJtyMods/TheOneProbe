@@ -26,6 +26,9 @@ repositories {
     maven { // CompatLayer
         url "http://maven.k-4u.nl"
     }
+    maven { //Tesla
+        url "http://maven.epoxide.xyz"
+    }
     maven {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/repositories/snapshots/"
@@ -60,6 +63,7 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.11.2:4.2.0.210"
     deobfCompile "com.github.mcjty:compatlayer:1.11.2-0.1.7"
     deobfCompile "com.github.mcjty:intwheel:1.1x-1.1.0"
+    compile "net.darkhax.tesla:Tesla:1.11-1.3.0.51"
 }
 
 jar {

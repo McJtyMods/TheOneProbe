@@ -27,7 +27,8 @@ import java.io.File;
         dependencies =
                 "required-after:compatlayer@[" + TheOneProbe.COMPATLAYER_VER + ",);" +
                 "after:Forge@[" + TheOneProbe.MIN_FORGE10_VER + ",);" +
-                "after:forge@[" + TheOneProbe.MIN_FORGE11_VER + ",)",
+                "after:forge@[" + TheOneProbe.MIN_FORGE11_VER + ",);" +
+                "after:tesla",
         version = TheOneProbe.VERSION,
         guiFactory = "mcjty.theoneprobe.config.TopModGuiFactory",
         acceptedMinecraftVersions = "[1.10,1.12)")
