@@ -8,7 +8,6 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.config.Config;
-import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +25,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.common.Loader;
 
 import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
 import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
@@ -190,11 +188,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             if (handler != null) {
                 addRFInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
             }
-        } else if (Loader.isModLoaded("tesla") && te != null && te.hasCapability(TeslaCapabilities.CAPABILITY_HOLDER, null)) {
-            net.darkhax.tesla.api.ITeslaHolder handler = te.getCapability(TeslaCapabilities.CAPABILITY_HOLDER, null);
-            if (handler != null) {
-                addRFInfo(probeInfo, config, handler.getStoredPower(), handler.getCapacity());
-            }
+//        } else if (Loader.isModLoaded("tesla") && te != null && te.hasCapability(TeslaCapabilities.CAPABILITY_HOLDER, null)) {
+//            net.darkhax.tesla.api.ITeslaHolder handler = te.getCapability(TeslaCapabilities.CAPABILITY_HOLDER, null);
+//            if (handler != null) {
+//                addRFInfo(probeInfo, config, handler.getStoredPower(), handler.getCapacity());
+//            }
         }
     }
 
