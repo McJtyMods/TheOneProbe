@@ -18,7 +18,8 @@ public class ElementProgressRender {
         } else {
             RenderHelper.drawThickBeveledBox(x, y, x + w, y + h, 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
             if (current > 0 && max > 0) {
-                int dx = (int) (current * (w - 2) / max);
+                // Determine the progress bar width, but limit it to the size of the element (minus 2).
+                int dx = (int) Math.min((current * (w - 2) / max), w - 2);
 
                 if (style.getFilledColor() == style.getAlternatefilledColor()) {
                     if (dx > 0) {
