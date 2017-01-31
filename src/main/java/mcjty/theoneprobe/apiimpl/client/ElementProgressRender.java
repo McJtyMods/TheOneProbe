@@ -11,7 +11,6 @@ import net.minecraft.util.text.TextFormatting;
 public class ElementProgressRender {
 
     private static final ResourceLocation ICONS = new ResourceLocation("textures/gui/icons.png");
-    private static final int MAX_DX = 98;
 
     public static void render(IProgressStyle style, long current, long max, int x, int y, int w, int h) {
         if (style.isLifeBar()) {
@@ -19,8 +18,8 @@ public class ElementProgressRender {
         } else {
             RenderHelper.drawThickBeveledBox(x, y, x + w, y + h, 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
             if (current > 0 && max > 0) {
-                // Determine the progress bar width, but limit it to the size of the element.
-                int dx = (int) Math.min((current * (w - 2) / max), MAX_DX);
+                // Determine the progress bar width, but limit it to the size of the element (minus 2).
+                int dx = (int) Math.min((current * (w - 2) / max), w - 2);
 
                 if (style.getFilledColor() == style.getAlternatefilledColor()) {
                     if (dx > 0) {
