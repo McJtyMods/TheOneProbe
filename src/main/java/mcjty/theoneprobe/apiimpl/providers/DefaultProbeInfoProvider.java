@@ -298,7 +298,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             }
         }
 
-        return STARTLOC + stack.getItem().getUnlocalizedNameInefficiently(stack) + ".name" + ENDLOC;
+        return STARTLOC + stack.getItem().getUnlocalizedName(stack) + ".name" + ENDLOC;
     }
 
     private static NBTTagCompound getSubCompound(ItemStack stack, String key) {

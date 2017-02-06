@@ -10,6 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.EnumSet;
 import java.util.Set;
 
+import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
+import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
+
 public class ElementTextRender {
 
     public static void render(String text, int x, int y) {
@@ -17,9 +20,9 @@ public class ElementTextRender {
     }
 
     private static String stylifyString(String text) {
-        while (text.contains("{*") && text.contains("*}")) {
-            int start = text.indexOf("{*");
-            int end = text.indexOf("*}");
+        while (text.contains(STARTLOC) && text.contains(ENDLOC)) {
+            int start = text.indexOf(STARTLOC);
+            int end = text.indexOf(ENDLOC);
             if (start < end) {
                 // Translation is needed
                 String left = text.substring(0, start);
