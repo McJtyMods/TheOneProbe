@@ -58,6 +58,6 @@ public class ElementTextRender {
     }
 
     public static int getWidth(String text) {
-        return Minecraft.getMinecraft().fontRendererObj.getStringWidth(stylifyString(text));
+        return Minecraft.getMinecraft().fontRenderer.getStringWidth(stylifyString(text));
     }
 }

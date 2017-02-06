@@ -107,9 +107,9 @@ public class PacketGetInfo implements IMessage {
         private void handle(PacketGetInfo message, MessageContext ctx) {
             WorldServer world = DimensionManager.getWorld(message.dim);
             if (world != null) {
-                ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().playerEntity,
+                ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().player,
                         message.mode, world, message.pos, message.sideHit, message.hitVec, message.pickBlock);
-                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(message.dim, message.pos, probeInfo), ctx.getServerHandler().playerEntity);
+                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(message.dim, message.pos, probeInfo), ctx.getServerHandler().player);
             }
         }
     }

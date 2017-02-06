@@ -52,17 +52,17 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.11.2-13.20.0.2201"
+    version = "1.11.2-13.20.0.2227"
     runDir = "run"
-    mappings = "snapshot_20161227"
+    mappings = "snapshot_20170206"
     useDepAts = true
 }
 
 dependencies {
     deobfCompile "mcp.mobius.waila:Hwyla:1.8.3-B15_1.11"
     deobfCompile "mezz.jei:jei_1.11.2:4.2.0.210"
-    deobfCompile "com.github.mcjty:compatlayer:1.11.2-0.1.7"
-    deobfCompile "com.github.mcjty:intwheel:1.1x-1.1.0"
+    deobfCompile "com.github.mcjty:compatlayer:1.11.2-0.2.1"
+    deobfCompile "com.github.mcjty:intwheel:1.1x-1.2.0"
 }
 
 jar {

@@ -123,7 +123,7 @@ public class RenderHelper {
             net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, short1 / 1.0F, short2 / 1.0F);
             itemRender.renderItemAndEffectIntoGUI(itm, x, y);
-            itemRender.renderItemOverlayIntoGUI(mc.fontRendererObj, itm, x, y, txt);
+            itemRender.renderItemOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt);
             GlStateManager.popMatrix();
             GlStateManager.disableRescaleNormal();
             GlStateManager.disableLighting();
@@ -452,7 +452,7 @@ public class RenderHelper {
             net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, short1 / 1.0F, short2 / 1.0F);
             itemRender.renderItemAndEffectIntoGUI(itm, x, y);
-            renderItemOverlayIntoGUI(mc.fontRendererObj, itm, x, y, txt, txt.length() - 2);
+            renderItemOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
             GlStateManager.popMatrix();
             GlStateManager.disableRescaleNormal();
             GlStateManager.disableLighting();
@@ -561,8 +561,8 @@ public class RenderHelper {
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
         GlStateManager.disableBlend();
-        int width = mc.fontRendererObj.getStringWidth(txt);
-        mc.fontRendererObj.drawStringWithShadow(txt, x, y, 16777215);
+        int width = mc.fontRenderer.getStringWidth(txt);
+        mc.fontRenderer.drawStringWithShadow(txt, x, y, 16777215);
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
         // Fixes opaque cooldown overlay a bit lower
