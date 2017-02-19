@@ -10,10 +10,16 @@ import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 
@@ -27,6 +33,13 @@ public class HarvestInfoTools {
             "obsidian",
             "cobalt"
     };
+
+    private static final HashMap<String, ItemStack> testTools = new HashMap<>();
+    static {
+        testTools.put("shovel", new ItemStack(Items.WOODEN_SHOVEL));
+        testTools.put("axe", new ItemStack(Items.WOODEN_AXE));
+        testTools.put("pickaxe", new ItemStack(Items.WOODEN_PICKAXE));
+    }
 
     static void showHarvestLevel(IProbeInfo probeInfo, IBlockState blockState, Block block) {
         String harvestTool = block.getHarvestTool(blockState);
@@ -64,12 +77,34 @@ public class HarvestInfoTools {
 
         String harvestTool = block.getHarvestTool(blockState);
         String harvestName = null;
+
+        if (harvestTool == null) {
+            // The block doesn't have an explicitly-set harvest tool, so we're going to test our wooden tools against the block.
+            float blockHardness = blockState.getBlockHardness(world, pos);
+            if (blockHardness > 0f) {
+                for (Map.Entry<String, ItemStack> testToolEntry : testTools.entrySet()) {
+                    // loop through our test tools until we find a winner.
+                    ItemStack testTool = testToolEntry.getValue();
+
+                    if (testTool != null && testTool.getItem() instanceof ItemTool) {
+                        ItemTool toolItem = (ItemTool) testTool.getItem();
+                        if (testTool.getStrVsBlock(blockState) >= toolItem.getToolMaterial().getEfficiencyOnProperMaterial()) {
+                            // BINGO!
+                            harvestTool = testToolEntry.getKey();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         if (harvestTool != null) {
             int harvestLevel = block.getHarvestLevel(blockState);
-            if (harvestLevel >= harvestLevels.length) {
-                harvestName = Integer.toString(harvestLevel);
-            } else if (harvestLevel < 0) {
-                harvestName = Integer.toString(harvestLevel);
+            if (harvestLevel < 0) {
+                // NOTE: When a block doesn't have an explicitly-set harvest tool, getHarvestLevel will return -1 for ANY tool. (Expected behavior)
+                TheOneProbe.logger.info("HarvestLevel out of bounds (less than 0). Found " + harvestLevel);
+            } else if (harvestLevel >= harvestLevels.length) {
+                TheOneProbe.logger.info("HarvestLevel out of bounds (Max value " + harvestLevels.length + "). Found " + harvestLevel);
             } else {
                 harvestName = harvestLevels[harvestLevel];
             }
