@@ -75,6 +75,12 @@ public interface IProbeInfo {
     IProbeInfo item(ItemStack stack);
 
     /**
+     * A localized name of the stack
+     */
+    IProbeInfo itemLabel(ItemStack stack, ITextStyle style);
+    IProbeInfo itemLabel(ItemStack stack);
+
+    /**
      * This creates a progress bar of 100 width
      */
     IProbeInfo progress(int current, int max, IProgressStyle style);

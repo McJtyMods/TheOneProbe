@@ -84,6 +84,18 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
+    public IProbeInfo itemLabel(ItemStack stack, ITextStyle style) {
+        children.add(new ElementItemLabel(stack));
+        return this;
+    }
+
+    @Override
+    public IProbeInfo itemLabel(ItemStack stack) {
+        children.add(new ElementItemLabel(stack));
+        return this;
+    }
+
+    @Override
     public IProbeInfo entity(String entityName, IEntityStyle style) {
         children.add(new ElementEntity(entityName, style));
         return this;

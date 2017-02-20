@@ -261,13 +261,12 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.horizontal()
                         .item(pickBlock)
                         .vertical()
-                        .text(NAME + getStackUnlocalizedName(pickBlock))
+                        .itemLabel(pickBlock)
                         .text(MODNAME + modid);
             } else {
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(pickBlock)
-                        .text(NAME + getStackUnlocalizedName(pickBlock));
-
+                        .itemLabel(pickBlock);
             }
         } else {
             if (Tools.show(mode, config.getShowModName())) {
