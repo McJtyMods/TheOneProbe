@@ -48,7 +48,7 @@ public class ElementItemStack implements IElement {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        if (itemStack != null) {
+        if (ItemStackTools.isValid(itemStack)) {
             buf.writeBoolean(true);
             NetworkTools.writeItemStack(buf, itemStack);
         } else {
