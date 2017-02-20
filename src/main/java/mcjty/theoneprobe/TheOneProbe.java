@@ -72,7 +72,7 @@ public class TheOneProbe {
         modConfigDir = new File(mainConfigDir.getPath());
         config = new Configuration(new File(modConfigDir, "theoneprobe.cfg"));
 
-        baubles = Loader.isModLoaded("Baubles");
+        baubles = Loader.isModLoaded("Baubles") || Loader.isModLoaded("baubles");
         if (baubles) {
             if (Config.supportBaubles) {
                 logger.log(Level.INFO, "The One Probe Detected Baubles: enabling support");
