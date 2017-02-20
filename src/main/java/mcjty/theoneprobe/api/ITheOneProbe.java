@@ -69,4 +69,16 @@ public interface ITheOneProbe {
      * this server side.
      */
     void registerProbeConfigProvider(IProbeConfigProvider provider);
+
+    /**
+     * Register a block display override implementation so that you can change how the standard
+     * block information is shown for your blocks.
+     */
+    void registerBlockDisplayOverride(IBlockDisplayOverride override);
+
+    /**
+     * Register an entity display override implementation so that you can change how the standard
+     * entity information is shown for your entities.
+     */
+    void registerEntityDisplayOverride(IEntityDisplayOverride override);
 }

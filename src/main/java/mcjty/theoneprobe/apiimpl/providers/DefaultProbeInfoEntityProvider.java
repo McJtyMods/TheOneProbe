@@ -39,7 +39,16 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
     public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) {
         IProbeConfig config = Config.getRealConfig();
 
-        showStandardInfo(mode, probeInfo, entity, config);
+        boolean handled = false;
+        for (IEntityDisplayOverride override : TheOneProbe.theOneProbeImp.getEntityOverrides()) {
+            if (override.overrideStandardInfo(mode, probeInfo, player, world, entity, data)) {
+                handled = true;
+                break;
+            }
+        }
+        if (!handled) {
+            showStandardInfo(mode, probeInfo, entity, config);
+        }
 
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase livingBase = (EntityLivingBase) entity;

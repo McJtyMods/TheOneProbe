@@ -22,6 +22,8 @@ public class TheOneProbeImp implements ITheOneProbe {
 
     private List<IProbeInfoProvider> providers = new ArrayList<>();
     private List<IProbeInfoEntityProvider> entityProviders = new ArrayList<>();
+    private List<IBlockDisplayOverride> blockOverrides = new ArrayList<>();
+    private List<IEntityDisplayOverride> entityOverrides = new ArrayList<>();
     private Map<Integer,IElementFactory> factories = new HashMap<>();
     private int lastId = 0;
 
@@ -180,5 +182,23 @@ public class TheOneProbeImp implements ITheOneProbe {
 
     public List<IProbeConfigProvider> getConfigProviders() {
         return configProviders;
+    }
+
+    @Override
+    public void registerBlockDisplayOverride(IBlockDisplayOverride override) {
+        blockOverrides.add(override);
+    }
+
+    public List<IBlockDisplayOverride> getBlockOverrides() {
+        return blockOverrides;
+    }
+
+    @Override
+    public void registerEntityDisplayOverride(IEntityDisplayOverride override) {
+        entityOverrides.add(override);
+    }
+
+    public List<IEntityDisplayOverride> getEntityOverrides() {
+        return entityOverrides;
     }
 }

@@ -6,6 +6,7 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
+import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
@@ -13,7 +14,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.EnumFacing;
@@ -44,7 +44,16 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         IProbeConfig config = Config.getRealConfig();
 
-        showStandardBlockInfo(config, mode, probeInfo, blockState, block, world, pos, player, data);
+        boolean handled = false;
+        for (IBlockDisplayOverride override : TheOneProbe.theOneProbeImp.getBlockOverrides()) {
+            if (override.overrideStandardInfo(mode, probeInfo, player, world, blockState, data)) {
+                handled = true;
+                break;
+            }
+        }
+        if (!handled) {
+            showStandardBlockInfo(config, mode, probeInfo, blockState, block, world, pos, player, data);
+        }
 
         if (Tools.show(mode, config.getShowCropPercentage())) {
             showGrowthLevel(probeInfo, blockState, block);
@@ -283,30 +292,4 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private static String getBlockUnlocalizedName(Block block) {
         return STARTLOC + block.getUnlocalizedName() + ".name" + ENDLOC;
     }
-
-    private static String getStackUnlocalizedName(ItemStack stack) {
-        NBTTagCompound nbttagcompound = getSubCompound(stack, "display");
-
-        if (nbttagcompound != null) {
-            if (nbttagcompound.hasKey("Name", 8)) {
-                return nbttagcompound.getString("Name");
-            }
-
-            if (nbttagcompound.hasKey("LocName", 8)) {
-                return STARTLOC + nbttagcompound.getString("LocName") + ENDLOC;
-            }
-        }
-
-        return STARTLOC + stack.getItem().getUnlocalizedName(stack) + ".name" + ENDLOC;
-    }
-
-    private static NBTTagCompound getSubCompound(ItemStack stack, String key) {
-        if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(key, 10)) {
-            return stack.getTagCompound().getCompoundTag(key);
-        } else {
-            return null;
-        }
-    }
-
-
 }
