@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 
@@ -74,7 +75,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                         }
 
                         if (effect.getDuration() > 20) {
-                            s1 = s1 + " (" + Potion.getPotionDurationString(effect, durationFactor) + ")";
+                            s1 = s1 + " (" + getPotionDurationString(effect, durationFactor) + ")";
                         }
 
                         if (potion.isBadEffect()) {
@@ -122,6 +123,23 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             }
         }
     }
+
+    public static String getPotionDurationString(PotionEffect effect, float factor) {
+        if (effect.getDuration() == 32767) {
+            return "**:**";
+        } else {
+            int i = MathHelper.floor((float)effect.getDuration() * factor);
+            return ticksToElapsedTime(i);
+        }
+    }
+
+    public static String ticksToElapsedTime(int ticks) {
+        int i = ticks / 20;
+        int j = i / 60;
+        i = i % 60;
+        return i < 10 ? j + ":0" + i : j + ":" + i;
+    }
+
 
     public static void showStandardInfo(ProbeMode mode, IProbeInfo probeInfo, Entity entity, IProbeConfig config) {
         String modid = Tools.getModName(entity);
