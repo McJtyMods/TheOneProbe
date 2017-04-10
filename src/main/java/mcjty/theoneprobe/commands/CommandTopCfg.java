@@ -3,9 +3,13 @@ package mcjty.theoneprobe.commands;
 import mcjty.lib.compat.CompatCommand;
 import mcjty.lib.compat.CompatCommandBase;
 import mcjty.lib.tools.ChatTools;
+import mcjty.lib.tools.MinecraftTools;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.proxy.ClientProxy;
 import mcjty.theoneprobe.proxy.GuiProxy;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -84,10 +88,9 @@ public class CommandTopCfg implements CompatCommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length < 1) {
-            if (sender instanceof EntityPlayer) {
-                EntityPlayer player = (EntityPlayer) sender;
-                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
-            }
+            ClientProxy.ignoreNextGuiClose = true;
+            EntityPlayerSP player = MinecraftTools.getPlayer(Minecraft.getMinecraft());
+            player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
             return;
         }
         String cmd = args[0];

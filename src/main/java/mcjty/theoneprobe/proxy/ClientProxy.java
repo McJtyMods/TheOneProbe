@@ -4,16 +4,20 @@ import mcjty.lib.tools.MinecraftTools;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.commands.CommandTopCfg;
 import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.gui.GuiConfig;
+import mcjty.theoneprobe.gui.GuiNote;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.keys.KeyBindings;
 import mcjty.theoneprobe.keys.KeyInputHandler;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -73,6 +77,20 @@ public class ClientProxy extends CommonProxy {
 //                .progress(8, 10, probeInfo.defaultProgressStyle().lifeBar(true));
 //        renderer.render(style, probeInfo);
 //    }
+
+    public static boolean ignoreNextGuiClose = false;
+
+    @SubscribeEvent
+    public void onGuiOpen(GuiOpenEvent event) {
+        if (ignoreNextGuiClose) {
+            GuiScreen current = Minecraft.getMinecraft().currentScreen;
+            if (event.getGui() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
+                ignoreNextGuiClose = false;
+                // We don't want our gui to be closed for a new 'null' guil
+                event.setCanceled(true);
+            }
+        }
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void renderGameOverlayEvent(RenderGameOverlayEvent.Pre event) {
