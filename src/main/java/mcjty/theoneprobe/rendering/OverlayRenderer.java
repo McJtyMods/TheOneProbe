@@ -303,7 +303,7 @@ public class OverlayRenderer {
         IBlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
-        if (ItemStackTools.isValid(pickBlock) && pickBlock.getItem() == null) {
+        if (pickBlock == null || (ItemStackTools.isValid(pickBlock) && pickBlock.getItem() == null)) {
             // Protection for some invalid items.
             pickBlock = ItemStackTools.getEmptyStack();
         }
