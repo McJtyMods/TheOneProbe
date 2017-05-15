@@ -36,13 +36,13 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
 
     private void showDebugInfo(IProbeInfo probeInfo, World world, IBlockState blockState, BlockPos pos, Block block, EnumFacing side) {
         IProbeInfo vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2))
+                .text(LABEL + "Reg Name: " + INFO + block.getRegistryName().toString())
                 .text(LABEL + "Unlocname: " + INFO + block.getUnlocalizedName())
                 .text(LABEL + "Meta: " + INFO + blockState.getBlock().getMetaFromState(blockState))
                 .text(LABEL + "Hardness: " + INFO + block.getBlockHardness(blockState, world, pos))
-                .text(LABEL + "Weak power: " + INFO + block.getWeakPower(blockState, world, pos, side.getOpposite()))
-                .text(LABEL + "Strong power: " + INFO + block.getStrongPower(blockState, world, pos, side.getOpposite()))
-                .text(LABEL + "Light: " + INFO + block.getLightValue(blockState, world, pos))
-                ;
+                .text(LABEL + "Power W: " + INFO + block.getWeakPower(blockState, world, pos, side.getOpposite())
+                        + LABEL + ", S: " + INFO + block.getStrongPower(blockState, world, pos, side.getOpposite()))
+                .text(LABEL + "Light: " + INFO + block.getLightValue(blockState, world, pos));
         TileEntity te = world.getTileEntity(pos);
         if (te != null) {
             vertical.text(LABEL + "TE: " + INFO + te.getClass().getSimpleName());
