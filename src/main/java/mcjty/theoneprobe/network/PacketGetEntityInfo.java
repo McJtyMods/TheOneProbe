@@ -94,13 +94,13 @@ public class PacketGetEntityInfo implements IMessage {
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {
         if (Config.needsProbe == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
-            if (!ModItems.hasAProbeSomewhere(player)) {
+            if (!ProbeChecker.hasAProbeSomewhere(player)) {
                 // No probe anywhere, switch EXTENDED to NORMAL
                 if (mode == ProbeMode.EXTENDED) {
                     mode = ProbeMode.NORMAL;
                 }
             }
-        } else if (Config.needsProbe == PROBE_NEEDEDHARD && !ModItems.hasAProbeSomewhere(player)) {
+        } else if (Config.needsProbe == PROBE_NEEDEDHARD && !ProbeChecker.hasAProbeSomewhere(player)) {
             // The server says we need a probe but we don't have one in our hands or on our head
             return null;
         }

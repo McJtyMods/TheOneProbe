@@ -1,10 +1,13 @@
 package mcjty.theoneprobe.compat;
 
 import baubles.api.BaubleType;
+import baubles.api.BaublesApi;
 import baubles.api.IBauble;
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.IProbeItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
@@ -12,7 +15,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ProbeGoggles extends Item implements IBauble {
+public class ProbeGoggles extends Item implements IBauble, IProbeItem {
 
     public ProbeGoggles() {
         setUnlocalizedName(TheOneProbe.MODID + ".probe_goggles");
@@ -59,5 +62,10 @@ public class ProbeGoggles extends Item implements IBauble {
     @Override
     public boolean willAutoSync(ItemStack itemstack, EntityLivingBase player) {
         return false;
+    }
+
+    @Override
+    public boolean canWorkAsProbe(ItemStack stack, EntityPlayer player) {
+        return BaublesApi.getBaublesHandler(player).getStackInSlot(4) == stack;
     }
 }

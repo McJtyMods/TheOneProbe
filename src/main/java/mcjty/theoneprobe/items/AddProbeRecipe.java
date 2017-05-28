@@ -1,5 +1,7 @@
 package mcjty.theoneprobe.items;
 
+import mcjty.theoneprobe.api.IProbeItem;
+import mcjty.theoneprobe.api.ProbeChecker;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,9 +19,11 @@ public class AddProbeRecipe extends ShapedRecipes {
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
         ItemStack result = super.getCraftingResult(inv);
-        NBTTagCompound tc = new NBTTagCompound();
-        tc.setInteger(ModItems.PROBETAG, 1);
-        result.setTagCompound(tc);
+        if(!(result.getItem() instanceof IProbeItem)) { //Only set probetag if result item is not IProbeItem
+            NBTTagCompound tc = new NBTTagCompound();
+            tc.setInteger(ProbeChecker.PROBETAG, 1);
+            result.setTagCompound(tc);
+        }
         return result;
     }
 }

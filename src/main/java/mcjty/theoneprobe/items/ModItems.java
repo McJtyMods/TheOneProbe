@@ -1,8 +1,12 @@
 package mcjty.theoneprobe.items;
 
+import baubles.api.BaublesApi;
+import baubles.api.cap.IBaublesItemHandler;
 import mcjty.lib.compat.CompatItemArmor;
 import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.IProbeItem;
+import mcjty.theoneprobe.api.ProbeChecker;
 import mcjty.theoneprobe.compat.BaubleTools;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -34,9 +38,6 @@ public class ModItems {
     public static Item probeGoggles;
     public static ProbeNote probeNote;
 
-    public static String PROBETAG = "theoneprobe";
-    public static String PROBETAG_HAND = "theoneprobe_hand";
-
     static {
         RecipeSorter.register("theoneprobe:addproberecipe", AddProbeRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
     }
@@ -64,7 +65,12 @@ public class ModItems {
     }
 
     private static Item makeHelpmet(ItemArmor.ArmorMaterial material, int renderIndex, String name) {
-        Item item = new CompatItemArmor(material, renderIndex, EntityEquipmentSlot.HEAD) {
+        Item item = new ItemProbedArmor(material, renderIndex, EntityEquipmentSlot.HEAD) {
+            @Override
+            public boolean canWorkAsProbe(ItemStack stack, EntityPlayer player) {
+                return player.inventory.getStackInSlot(36+3) == stack;
+            }
+
             @Override
             public boolean getHasSubtypes() {
                 return true;
@@ -73,9 +79,11 @@ public class ModItems {
             @Override
             protected void clGetSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
                 ItemStack stack = new ItemStack(itemIn);
-                NBTTagCompound tag = new NBTTagCompound();
+
+                //No need for tag, because IProbeItem is implemented
+                /*NBTTagCompound tag = new NBTTagCompound();
                 tag.setInteger(PROBETAG, 1);
-                stack.setTagCompound(tag);
+                stack.setTagCompound(tag);*/
                 subItems.add(stack);
             }
         };
@@ -115,50 +123,44 @@ public class ModItems {
         }
     }
 
-    public static boolean isProbeInHand(ItemStack stack) {
-        if (ItemStackTools.isEmpty(stack)) {
-            return false;
-        }
-        if (stack.getItem() == probe || stack.getItem() == creativeProbe) {
-            return true;
-        }
-        if (stack.getTagCompound() == null) {
-            return false;
-        }
-        return stack.getTagCompound().hasKey(PROBETAG_HAND);
+    /**
+     * @deprecated See {@link ProbeChecker}
+     */
+    @Deprecated
+    public static boolean canWorkAsProbe(ItemStack stack, EntityPlayer player, String nbtProbeTagName) {
+       return ProbeChecker.canWorkAsProbe(stack ,player, nbtProbeTagName);
     }
 
-    private static boolean isProbeHelmet(ItemStack stack) {
-        if (ItemStackTools.isEmpty(stack)) {
-            return false;
-        }
-        if (stack.getTagCompound() == null) {
-            return false;
-        }
-        return stack.getTagCompound().hasKey(PROBETAG);
-    }
-
+    /**
+     * @deprecated See {@link ProbeChecker}
+     */
+    @Deprecated
     public static boolean hasAProbeSomewhere(EntityPlayer player) {
-        return hasProbeInHand(player, EnumHand.MAIN_HAND) || hasProbeInHand(player, EnumHand.OFF_HAND) || hasProbeInHelmet(player)
-                || hasProbeInBauble(player);
+        return ProbeChecker.hasAProbeSomewhere(player);
     }
 
-    private static boolean hasProbeInHand(EntityPlayer player, EnumHand hand) {
-        ItemStack item = player.getHeldItem(hand);
-        return isProbeInHand(item);
+    /**
+     * @deprecated See {@link ProbeChecker}
+     */
+    @Deprecated
+    public static boolean hasProbeInHand(EntityPlayer player, EnumHand hand) {
+        return ProbeChecker.hasProbeInHand(player, hand);
     }
 
-    private static boolean hasProbeInHelmet(EntityPlayer player) {
-        ItemStack helmet = player.inventory.getStackInSlot(36+3);
-//        ItemStack helmet = player.inventory.armorInventory.get(3);
-        return isProbeHelmet(helmet);
+    /**
+     * @deprecated See {@link ProbeChecker}
+     */
+    @Deprecated
+    public static boolean hasProbeInHelmet(EntityPlayer player) {
+        return ProbeChecker.hasProbeInHelmet(player);
     }
 
-    private static boolean hasProbeInBauble(EntityPlayer player) {
-        if (TheOneProbe.baubles) {
-            return BaubleTools.hasProbeGoggle(player);
-        } else {
-            return false;
-        }
+    /**
+     * @deprecated See {@link ProbeChecker}
+     */
+    @Deprecated
+    public static boolean hasProbeInBauble(EntityPlayer player) {
+        return ProbeChecker.hasProbeInBauble(player);
     }
+
 }
