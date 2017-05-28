@@ -1,9 +1,7 @@
 package mcjty.theoneprobe.items;
 
-import baubles.api.BaublesApi;
-import baubles.api.cap.IBaublesItemHandler;
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.IProbeItem;
+import mcjty.theoneprobe.api.ProbeChecker;
 import mcjty.theoneprobe.compat.BaubleTools;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -14,7 +12,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
@@ -34,9 +31,6 @@ public class ModItems {
     public static Item ironHelmetProbe;
     public static Item probeGoggles;
     public static ProbeNote probeNote;
-
-    public static String PROBETAG = "theoneprobe";
-    public static String PROBETAG_HAND = "theoneprobe_hand";
 
     static {
         RecipeSorter.register("theoneprobe:addproberecipe", AddProbeRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
@@ -122,39 +116,45 @@ public class ModItems {
         }
     }
 
+
+
+    /**
+     * @deprecated See {@link ProbeChecker}
+     */
+    @Deprecated
     public static boolean canWorkAsProbe(ItemStack stack, EntityPlayer player, String nbtProbeTagName) {
-        if (stack == null) {
-            return false;
-        }
-        if (stack.getItem() instanceof IProbeItem) {
-            return ((IProbeItem) stack.getItem()).canWorkAsProbe(stack, player);
-        }
-        return stack.getTagCompound() != null && stack.getTagCompound().hasKey(nbtProbeTagName);
+        return ProbeChecker.canWorkAsProbe(stack ,player, nbtProbeTagName);
     }
 
+    /**
+     * @deprecated See {@link ProbeChecker}
+     */
+    @Deprecated
     public static boolean hasAProbeSomewhere(EntityPlayer player) {
-        return hasProbeInHand(player, EnumHand.MAIN_HAND) || hasProbeInHand(player, EnumHand.OFF_HAND) || hasProbeInHelmet(player)
-                || hasProbeInBauble(player);
+        return ProbeChecker.hasAProbeSomewhere(player);
     }
 
+    /**
+     * @deprecated See {@link ProbeChecker}
+     */
+    @Deprecated
     public static boolean hasProbeInHand(EntityPlayer player, EnumHand hand) {
-        return canWorkAsProbe(player.getHeldItem(hand), player, PROBETAG_HAND);
+        return ProbeChecker.hasProbeInHand(player, hand);
     }
 
+    /**
+     * @deprecated See {@link ProbeChecker}
+     */
+    @Deprecated
     public static boolean hasProbeInHelmet(EntityPlayer player) {
-        return canWorkAsProbe(player.inventory.armorInventory[3], player, PROBETAG);
+        return ProbeChecker.hasProbeInHelmet(player);
     }
 
+    /**
+     * @deprecated See {@link ProbeChecker}
+     */
+    @Deprecated
     public static boolean hasProbeInBauble(EntityPlayer player) {
-        if (TheOneProbe.baubles) {
-            IBaublesItemHandler baubles = BaublesApi.getBaublesHandler(player);
-            int slots = baubles.getSlots();
-            for(int i = 0; i < slots; i++) {
-                if(canWorkAsProbe(baubles.getStackInSlot(i), player, PROBETAG)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return ProbeChecker.hasProbeInBauble(player);
     }
 }

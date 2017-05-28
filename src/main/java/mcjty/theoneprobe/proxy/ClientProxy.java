@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.proxy;
 
+import mcjty.theoneprobe.api.ProbeChecker;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.commands.CommandTopCfg;
 import mcjty.theoneprobe.config.Config;
@@ -99,7 +100,7 @@ public class ClientProxy extends CommonProxy {
                     break;
                 case PROBE_NEEDED:
                 case PROBE_NEEDEDHARD:
-                    if (ModItems.hasAProbeSomewhere(Minecraft.getMinecraft().thePlayer)) {
+                    if (ProbeChecker.hasAProbeSomewhere(Minecraft.getMinecraft().thePlayer)) {
                         OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
                     }
                     break;
