@@ -1,14 +1,17 @@
 package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.IProbeItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class CreativeProbe extends Item {
+public class CreativeProbe extends Item implements IProbeItem{
 
     public CreativeProbe() {
         setUnlocalizedName(TheOneProbe.MODID + ".creativeprobe");
@@ -23,4 +26,8 @@ public class CreativeProbe extends Item {
     }
 
 
+    @Override
+    public boolean canWorkAsProbe(ItemStack stack, EntityPlayer player) {
+        return true;
+    }
 }

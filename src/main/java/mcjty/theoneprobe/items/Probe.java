@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.IProbeItem;
 import mcjty.theoneprobe.proxy.GuiProxy;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Probe extends Item {
+public class Probe extends Item implements IProbeItem{
 
     public Probe() {
         setUnlocalizedName(TheOneProbe.MODID + ".probe");
@@ -39,4 +40,8 @@ public class Probe extends Item {
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
+    @Override
+    public boolean canWorkAsProbe(ItemStack stack, EntityPlayer player) {
+        return true;
+    }
 }

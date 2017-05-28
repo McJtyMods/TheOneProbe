@@ -1,6 +1,9 @@
 package mcjty.theoneprobe.items;
 
+import baubles.api.BaublesApi;
+import baubles.api.cap.IBaublesItemHandler;
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.IProbeItem;
 import mcjty.theoneprobe.compat.BaubleTools;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -62,7 +65,12 @@ public class ModItems {
     }
 
     private static Item makeHelpmet(ItemArmor.ArmorMaterial material, int renderIndex, String name) {
-        Item item = new ItemArmor(material, renderIndex, EntityEquipmentSlot.HEAD) {
+        Item item = new ItemProbedArmor(material, renderIndex, EntityEquipmentSlot.HEAD) {
+            @Override
+            public boolean canWorkAsProbe(ItemStack stack, EntityPlayer player) {
+                return player.inventory.armorInventory[3] == stack;
+            }
+
             @Override
             public boolean getHasSubtypes() {
                 return true;
@@ -113,27 +121,14 @@ public class ModItems {
         }
     }
 
-    public static boolean isProbeInHand(ItemStack stack) {
+    public static boolean canWorkAsProbe(ItemStack stack, EntityPlayer player, String nbtProbeTagName) {
         if (stack == null) {
             return false;
         }
-        if (stack.getItem() == probe || stack.getItem() == creativeProbe) {
-            return true;
+        if (stack.getItem() instanceof IProbeItem) {
+            return ((IProbeItem) stack.getItem()).canWorkAsProbe(stack, player);
         }
-        if (stack.getTagCompound() == null) {
-            return false;
-        }
-        return stack.getTagCompound().hasKey(PROBETAG_HAND);
-    }
-
-    private static boolean isProbeHelmet(ItemStack stack) {
-        if (stack == null) {
-            return false;
-        }
-        if (stack.getTagCompound() == null) {
-            return false;
-        }
-        return stack.getTagCompound().hasKey(PROBETAG);
+        return stack.getTagCompound() != null && stack.getTagCompound().hasKey(nbtProbeTagName);
     }
 
     public static boolean hasAProbeSomewhere(EntityPlayer player) {
@@ -141,21 +136,24 @@ public class ModItems {
                 || hasProbeInBauble(player);
     }
 
-    private static boolean hasProbeInHand(EntityPlayer player, EnumHand hand) {
-        ItemStack item = player.getHeldItem(hand);
-        return isProbeInHand(item);
+    public static boolean hasProbeInHand(EntityPlayer player, EnumHand hand) {
+        return canWorkAsProbe(player.getHeldItem(hand), player, PROBETAG_HAND);
     }
 
-    private static boolean hasProbeInHelmet(EntityPlayer player) {
-        ItemStack helmet = player.inventory.armorInventory[3];
-        return isProbeHelmet(helmet);
+    public static boolean hasProbeInHelmet(EntityPlayer player) {
+        return canWorkAsProbe(player.inventory.armorInventory[3], player, PROBETAG);
     }
 
-    private static boolean hasProbeInBauble(EntityPlayer player) {
+    public static boolean hasProbeInBauble(EntityPlayer player) {
         if (TheOneProbe.baubles) {
-            return BaubleTools.hasProbeGoggle(player);
-        } else {
-            return false;
+            IBaublesItemHandler baubles = BaublesApi.getBaublesHandler(player);
+            int slots = baubles.getSlots();
+            for(int i = 0; i < slots; i++) {
+                if(canWorkAsProbe(baubles.getStackInSlot(i), player, PROBETAG)) {
+                    return true;
+                }
+            }
         }
+        return false;
     }
 }
