@@ -79,9 +79,10 @@ public class ModItems {
             @Override
             public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
                 ItemStack stack = new ItemStack(itemIn);
-                NBTTagCompound tag = new NBTTagCompound();
+                //No need for tag, because IProbeItem is implemented
+                /*NBTTagCompound tag = new NBTTagCompound();
                 tag.setInteger(PROBETAG, 1);
-                stack.setTagCompound(tag);
+                stack.setTagCompound(tag);*/
                 subItems.add(stack);
             }
         };
