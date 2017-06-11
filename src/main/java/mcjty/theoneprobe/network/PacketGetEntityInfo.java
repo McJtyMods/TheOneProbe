@@ -84,8 +84,8 @@ public class PacketGetEntityInfo implements IMessage {
             if (world != null) {
                 Entity entity = world.getEntityFromUuid(message.uuid);
                 if (entity != null) {
-                    ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().player, message.mode, world, entity, message.hitVec);
-                    PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(message.uuid, probeInfo), ctx.getServerHandler().player);
+                    ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().playerEntity, message.mode, world, entity, message.hitVec);
+                    PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(message.uuid, probeInfo), ctx.getServerHandler().playerEntity);
                 }
             }
         }

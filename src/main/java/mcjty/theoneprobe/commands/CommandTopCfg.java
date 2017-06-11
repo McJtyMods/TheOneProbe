@@ -1,9 +1,5 @@
 package mcjty.theoneprobe.commands;
 
-import mcjty.lib.compat.CompatCommand;
-import mcjty.lib.compat.CompatCommandBase;
-import mcjty.lib.tools.ChatTools;
-import mcjty.lib.tools.MinecraftTools;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.proxy.ClientProxy;
@@ -27,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class CommandTopCfg implements CompatCommand {
+public class CommandTopCfg implements ICommand {
 
 
     @Override
@@ -89,14 +85,14 @@ public class CommandTopCfg implements CompatCommand {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length < 1) {
             ClientProxy.ignoreNextGuiClose = true;
-            EntityPlayerSP player = MinecraftTools.getPlayer(Minecraft.getMinecraft());
+            EntityPlayerSP player = Minecraft.getMinecraft().player;
             player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
             return;
         }
         String cmd = args[0];
         Consumer<String[]> consumer = SUBCOMMANDS.get(cmd);
         if (consumer == null) {
-            ChatTools.addChatMessage(sender, new TextComponentString(TextFormatting.RED + "Unknown style option!"));
+            ((EntityPlayer)sender).sendStatusMessage(new TextComponentString(TextFormatting.RED + "Unknown style option!"), false);
         } else {
             consumer.accept(args);
         }
@@ -120,6 +116,6 @@ public class CommandTopCfg implements CompatCommand {
 
     @Override
     public int compareTo(ICommand o) {
-        return getName().compareTo(CompatCommandBase.getCommandName(o));
+        return getName().compareTo(o.getName());
     }
 }

@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
-import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IProbeConfig;
@@ -62,14 +61,13 @@ public class ChestInfoTools {
     }
 
     private static void addItemStack(List<ItemStack> stacks, Set<Item> foundItems, @Nonnull ItemStack stack) {
-        if (ItemStackTools.isEmpty(stack)) {
+        if (stack.isEmpty()) {
             return;
         }
         if (foundItems != null && foundItems.contains(stack.getItem())) {
             for (ItemStack s : stacks) {
                 if (ItemHandlerHelper.canItemStacksStack(s, stack)) {
-                    ItemStackTools.incStackSize(s, ItemStackTools.getStackSize(stack));
-//                    s.stackSize += stack.stackSize;
+                    s.grow(stack.getCount());
                     return;
                 }
             }

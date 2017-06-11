@@ -5,13 +5,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 
 public class AddProbeRecipe extends ShapedRecipes {
 
     public AddProbeRecipe(Item helmet, Item output) {
-        super(2, 1, new ItemStack[] { new ItemStack(helmet), new ItemStack(ModItems.probe) }, new ItemStack(output));
+        //@todo
+//        super("todo", 2, 1, new ItemStack[] { new ItemStack(helmet), new ItemStack(ModItems.probe) }, new ItemStack(output));
+        super("todo", 2, 1, NonNullList.create(), new ItemStack(output));
     }
 
     @Override

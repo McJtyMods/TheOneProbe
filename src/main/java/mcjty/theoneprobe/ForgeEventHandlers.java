@@ -25,14 +25,15 @@ public class ForgeEventHandlers {
         }
     }
 
-    @SubscribeEvent
-    public void onEntityConstructing(AttachCapabilitiesEvent.Entity event){
-        if (event.getEntity() instanceof EntityPlayer) {
-            if (!event.getEntity().hasCapability(PlayerProperties.PLAYER_GOT_NOTE, null)) {
-                event.addCapability(new ResourceLocation(TheOneProbe.MODID, "Properties"), new PropertiesDispatcher());
-            }
-        }
-    }
+    // @todo
+//    @SubscribeEvent
+//    public void onEntityConstructing(AttachCapabilitiesEvent.Entity event){
+//        if (event.getEntity() instanceof EntityPlayer) {
+//            if (!event.getEntity().hasCapability(PlayerProperties.PLAYER_GOT_NOTE, null)) {
+//                event.addCapability(new ResourceLocation(TheOneProbe.MODID, "Properties"), new PropertiesDispatcher());
+//            }
+//        }
+//    }
 
     @SubscribeEvent
     public void onPlayerCloned(PlayerEvent.Clone event) {
@@ -48,14 +49,15 @@ public class ForgeEventHandlers {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
-        if (Config.spawnNote) {
-            PlayerGotNote note = PlayerProperties.getPlayerGotNote(event.player);
-            if (!note.isPlayerGotNote()) {
-                boolean success = event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.probeNote));
-                if (success) {
-                    note.setPlayerGotNote(true);
-                }
-            }
-        }
+//@todo
+//        if (Config.spawnNote) {
+//            PlayerGotNote note = PlayerProperties.getPlayerGotNote(event.player);
+//            if (!note.isPlayerGotNote()) {
+//                boolean success = event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.probeNote));
+//                if (success) {
+//                    note.setPlayerGotNote(true);
+//                }
+//            }
+//        }
     }
 }

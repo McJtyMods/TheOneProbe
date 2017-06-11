@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.proxy;
 
-import mcjty.lib.tools.MinecraftTools;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.commands.CommandTopCfg;
 import mcjty.theoneprobe.commands.CommandTopNeed;
@@ -120,7 +119,7 @@ public class ClientProxy extends CommonProxy {
                     break;
                 case PROBE_NEEDED:
                 case PROBE_NEEDEDHARD:
-                    if (ModItems.hasAProbeSomewhere(MinecraftTools.getPlayer(Minecraft.getMinecraft()))) {
+                    if (ModItems.hasAProbeSomewhere(Minecraft.getMinecraft().player)) {
                         OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
                     }
                     break;
@@ -129,7 +128,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     private ProbeMode getModeForPlayer() {
-        EntityPlayerSP player = MinecraftTools.getPlayer(Minecraft.getMinecraft());
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
         if (Config.extendedInMain) {
             if (hasItemInMainHand(ModItems.probe)) {
                 return ProbeMode.EXTENDED;
@@ -139,15 +138,15 @@ public class ClientProxy extends CommonProxy {
     }
 
     private boolean hasItemInEitherHand(Item item) {
-        ItemStack mainHeldItem = MinecraftTools.getPlayer(Minecraft.getMinecraft()).getHeldItem(EnumHand.MAIN_HAND);
-        ItemStack offHeldItem = MinecraftTools.getPlayer(Minecraft.getMinecraft()).getHeldItem(EnumHand.OFF_HAND);
+        ItemStack mainHeldItem = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
+        ItemStack offHeldItem = Minecraft.getMinecraft().player.getHeldItem(EnumHand.OFF_HAND);
         return (mainHeldItem != null && mainHeldItem.getItem() == item) ||
                 (offHeldItem != null && offHeldItem.getItem() == item);
     }
 
 
     private boolean hasItemInMainHand(Item item) {
-        ItemStack mainHeldItem = MinecraftTools.getPlayer(Minecraft.getMinecraft()).getHeldItem(EnumHand.MAIN_HAND);
+        ItemStack mainHeldItem = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
         return mainHeldItem != null && mainHeldItem.getItem() == item;
     }
 

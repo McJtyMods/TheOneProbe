@@ -1,13 +1,10 @@
 package mcjty.theoneprobe.items;
 
-import mcjty.lib.compat.CompatItemArmor;
-import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -15,15 +12,13 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.RecipeSorter;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-
-import java.util.List;
 
 public class ModItems {
     public static CreativeProbe creativeProbe;
@@ -64,15 +59,15 @@ public class ModItems {
     }
 
     private static Item makeHelpmet(ItemArmor.ArmorMaterial material, int renderIndex, String name) {
-        Item item = new CompatItemArmor(material, renderIndex, EntityEquipmentSlot.HEAD) {
+        Item item = new ItemArmor(material, renderIndex, EntityEquipmentSlot.HEAD) {
             @Override
             public boolean getHasSubtypes() {
                 return true;
             }
 
             @Override
-            protected void clGetSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-                ItemStack stack = new ItemStack(itemIn);
+            public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+                ItemStack stack = new ItemStack(this);
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setInteger(PROBETAG, 1);
                 stack.setTagCompound(tag);
@@ -103,20 +98,20 @@ public class ModItems {
     }
 
     public static void initCrafting() {
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probe, 1), "C  ", " n ", "  r", 'C', Items.COMPARATOR, 'n', "nuggetGold", 'r', "dustRedstone"));
-        GameRegistry.addRecipe(new AddProbeRecipe(Items.DIAMOND_HELMET, diamondHelmetProbe));
-        GameRegistry.addRecipe(new AddProbeRecipe(Items.GOLDEN_HELMET, goldHelmetProbe));
-        GameRegistry.addRecipe(new AddProbeRecipe(Items.IRON_HELMET, ironHelmetProbe));
-
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probeNote, 1), "r  ", " p ", "  r", 'p', Items.PAPER, 'r', "dustRedstone"));
-
-        if (TheOneProbe.baubles) {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probeGoggles, 1), " g ", "gpg", " g ", 'p', probe, 'g', "nuggetGold"));
-        }
+//        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probe, 1), "C  ", " n ", "  r", 'C', Items.COMPARATOR, 'n', "nuggetGold", 'r', "dustRedstone"));
+//        GameRegistry.addRecipe(new AddProbeRecipe(Items.DIAMOND_HELMET, diamondHelmetProbe));
+//        GameRegistry.addRecipe(new AddProbeRecipe(Items.GOLDEN_HELMET, goldHelmetProbe));
+//        GameRegistry.addRecipe(new AddProbeRecipe(Items.IRON_HELMET, ironHelmetProbe));
+//
+//        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probeNote, 1), "r  ", " p ", "  r", 'p', Items.PAPER, 'r', "dustRedstone"));
+//
+//        if (TheOneProbe.baubles) {
+//            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probeGoggles, 1), " g ", "gpg", " g ", 'p', probe, 'g', "nuggetGold"));
+//        }
     }
 
     public static boolean isProbeInHand(ItemStack stack) {
-        if (ItemStackTools.isEmpty(stack)) {
+        if (stack.isEmpty()) {
             return false;
         }
         if (stack.getItem() == probe || stack.getItem() == creativeProbe) {
@@ -129,7 +124,7 @@ public class ModItems {
     }
 
     private static boolean isProbeHelmet(ItemStack stack) {
-        if (ItemStackTools.isEmpty(stack)) {
+        if (stack.isEmpty()) {
             return false;
         }
         if (stack.getTagCompound() == null) {

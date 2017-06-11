@@ -88,11 +88,12 @@ public class HarvestInfoTools {
 
                     if (testTool != null && testTool.getItem() instanceof ItemTool) {
                         ItemTool toolItem = (ItemTool) testTool.getItem();
-                        if (testTool.getStrVsBlock(blockState) >= toolItem.getToolMaterial().getEfficiencyOnProperMaterial()) {
-                            // BINGO!
-                            harvestTool = testToolEntry.getKey();
-                            break;
-                        }
+                        // @todo
+//                        if (testTool.getStrVsBlock(blockState) >= toolItem.toolMaterial.getEfficiencyOnProperMaterial()) {
+//                            // BINGO!
+//                            harvestTool = testToolEntry.getKey();
+//                            break;
+//                        }
                     }
                 }
             }

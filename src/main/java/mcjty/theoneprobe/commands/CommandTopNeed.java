@@ -1,8 +1,5 @@
 package mcjty.theoneprobe.commands;
 
-import mcjty.lib.compat.CompatCommand;
-import mcjty.lib.compat.CompatCommandBase;
-import mcjty.lib.tools.MinecraftTools;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.proxy.ClientProxy;
 import mcjty.theoneprobe.proxy.GuiProxy;
@@ -17,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandTopNeed implements CompatCommand {
+public class CommandTopNeed implements ICommand {
 
 
     @Override
@@ -38,7 +35,7 @@ public class CommandTopNeed implements CompatCommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         ClientProxy.ignoreNextGuiClose = true;
-        EntityPlayerSP player = MinecraftTools.getPlayer(Minecraft.getMinecraft());
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
         player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
     }
 
@@ -60,6 +57,6 @@ public class CommandTopNeed implements CompatCommand {
 
     @Override
     public int compareTo(ICommand o) {
-        return getName().compareTo(CompatCommandBase.getCommandName(o));
+        return getName().compareTo(o.getName());
     }
 }

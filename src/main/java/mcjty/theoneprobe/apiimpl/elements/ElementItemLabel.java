@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
@@ -20,13 +19,13 @@ public class ElementItemLabel implements IElement {
         if (buf.readBoolean()) {
             itemStack = NetworkTools.readItemStack(buf);
         } else {
-            itemStack = ItemStackTools.getEmptyStack();
+            itemStack = ItemStack.EMPTY;
         }
     }
 
     @Override
     public void render(int x, int y) {
-        if (ItemStackTools.isValid(itemStack)) {
+        if (!itemStack.isEmpty()) {
             String text = itemStack.getDisplayName();
             ElementTextRender.render(text, x, y);
         }
@@ -34,7 +33,7 @@ public class ElementItemLabel implements IElement {
 
     @Override
     public int getWidth() {
-        if (ItemStackTools.isValid(itemStack)) {
+        if (!itemStack.isEmpty()) {
             String text = itemStack.getDisplayName();
             return ElementTextRender.getWidth(text);
         } else {
@@ -49,7 +48,7 @@ public class ElementItemLabel implements IElement {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        if (ItemStackTools.isValid(itemStack)) {
+        if (!itemStack.isEmpty()) {
             buf.writeBoolean(true);
             NetworkTools.writeItemStack(buf, itemStack);
         } else {

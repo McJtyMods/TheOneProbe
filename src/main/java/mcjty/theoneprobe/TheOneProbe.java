@@ -2,14 +2,13 @@ package mcjty.theoneprobe;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import mcjty.lib.compat.CompatCreativeTabs;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.proxy.CommonProxy;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -25,19 +24,14 @@ import java.io.File;
 
 @Mod(modid = TheOneProbe.MODID, name="TheOneProbe",
         dependencies =
-                "required-after:compatlayer@[" + TheOneProbe.COMPATLAYER_VER + ",);" +
-                "after:Forge@[" + TheOneProbe.MIN_FORGE10_VER + ",);" +
                 "after:forge@[" + TheOneProbe.MIN_FORGE11_VER + ",);" +
                 "after:tesla",
         version = TheOneProbe.VERSION,
-        guiFactory = "mcjty.theoneprobe.config.TopModGuiFactory",
-        acceptedMinecraftVersions = "[1.10,1.12)")
+        guiFactory = "mcjty.theoneprobe.config.TopModGuiFactory")
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
     public static final String VERSION = "1.4.7";
-    public static final String MIN_FORGE10_VER = "12.18.1.2082";
     public static final String MIN_FORGE11_VER = "13.19.0.2176";
-    public static final String COMPATLAYER_VER = "0.1.6";
 
     @SidedProxy(clientSide="mcjty.theoneprobe.proxy.ClientProxy", serverSide="mcjty.theoneprobe.proxy.ServerProxy")
     public static CommonProxy proxy;
@@ -53,10 +47,10 @@ public class TheOneProbe {
 
     public static boolean baubles = false;
 
-    public static CreativeTabs tabProbe = new CompatCreativeTabs("Probe") {
+    public static CreativeTabs tabProbe = new CreativeTabs("Probe") {
         @Override
-        protected Item getItem() {
-            return ModItems.probe;
+        public ItemStack getTabIconItem() {
+            return new ItemStack(ModItems.probe);
         }
     };
 

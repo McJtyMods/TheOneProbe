@@ -1,8 +1,6 @@
 package mcjty.theoneprobe.rendering;
 
-import mcjty.lib.tools.ItemStackTools;
-import mcjty.lib.tools.MinecraftTools;
-import mcjty.theoneprobe.TheOneProbe;
+    import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
@@ -25,7 +23,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -97,7 +94,7 @@ public class OverlayRenderer {
             }
         }
 
-        EntityPlayerSP entity = MinecraftTools.getPlayer(Minecraft.getMinecraft());
+        EntityPlayerSP entity = Minecraft.getMinecraft().player;
         Vec3d start  = entity.getPositionEyes(partialTicks);
         Vec3d vec31 = entity.getLook(partialTicks);
         Vec3d end = start.addVector(vec31.xCoord * dist, vec31.yCoord * dist, vec31.zCoord * dist);
@@ -150,12 +147,13 @@ public class OverlayRenderer {
         if (entity == null) {
             return;
         }
-        if (entity instanceof EntityDragonPart) {
-            EntityDragonPart part = (EntityDragonPart) entity;
-            if (part.entityDragonObj instanceof Entity) {
-                entity = (Entity) part.entityDragonObj;
-            }
-        }
+//@todo
+//        if (entity instanceof EntityDragonPart) {
+//            EntityDragonPart part = (EntityDragonPart) entity;
+//            if (part.entityDragonObj instanceof Entity) {
+//                entity = (Entity) part.entityDragonObj;
+//            }
+//        }
 
         String entityString = EntityList.getEntityString(entity);
         if (entityString == null && !(entity instanceof EntityPlayer)) {
@@ -165,7 +163,7 @@ public class OverlayRenderer {
 
         UUID uuid = entity.getPersistentID();
 
-        EntityPlayerSP player = MinecraftTools.getPlayer(Minecraft.getMinecraft());
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
@@ -205,7 +203,7 @@ public class OverlayRenderer {
         if (blockPos == null) {
             return;
         }
-        EntityPlayerSP player = MinecraftTools.getPlayer(Minecraft.getMinecraft());
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
         if (player.getEntityWorld().isAirBlock(blockPos)) {
             return;
         }
@@ -303,9 +301,9 @@ public class OverlayRenderer {
         IBlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
-        if (pickBlock == null || (ItemStackTools.isValid(pickBlock) && pickBlock.getItem() == null)) {
+        if (pickBlock == null || (!pickBlock.isEmpty() && pickBlock.getItem() == null)) {
             // Protection for some invalid items.
-            pickBlock = ItemStackTools.getEmptyStack();
+            pickBlock = ItemStack.EMPTY;
         }
         PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.provider.getDimension(), blockPos, mode, mouseOver, pickBlock));
     }

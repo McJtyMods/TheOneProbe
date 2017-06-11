@@ -1,12 +1,10 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import cofh.api.energy.IEnergyHandler;
-import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
-import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
@@ -265,7 +263,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
 
         ItemStack pickBlock = data.getPickBlock();
-        if (ItemStackTools.isValid(pickBlock)) {
+        if (!pickBlock.isEmpty()) {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.horizontal()
                         .item(pickBlock)

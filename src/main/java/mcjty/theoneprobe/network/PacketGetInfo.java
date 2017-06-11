@@ -1,12 +1,11 @@
 package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.lib.tools.ItemStackTools;
-import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +14,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -57,7 +55,7 @@ public class PacketGetInfo implements IMessage {
         if (buf.readBoolean()) {
             pickBlock = NetworkTools.readItemStack(buf);
         } else {
-            pickBlock = ItemStackTools.getEmptyStack();
+            pickBlock = ItemStack.EMPTY;
         }
     }
 
@@ -77,7 +75,7 @@ public class PacketGetInfo implements IMessage {
             buf.writeDouble(hitVec.yCoord);
             buf.writeDouble(hitVec.zCoord);
         }
-        if (ItemStackTools.isEmpty(pickBlock)) {
+        if (pickBlock.isEmpty()) {
             buf.writeBoolean(false);
         } else {
             buf.writeBoolean(true);
@@ -107,9 +105,9 @@ public class PacketGetInfo implements IMessage {
         private void handle(PacketGetInfo message, MessageContext ctx) {
             WorldServer world = DimensionManager.getWorld(message.dim);
             if (world != null) {
-                ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().player,
+                ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().playerEntity,
                         message.mode, world, message.pos, message.sideHit, message.hitVec, message.pickBlock);
-                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(message.dim, message.pos, probeInfo), ctx.getServerHandler().player);
+                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(message.dim, message.pos, probeInfo), ctx.getServerHandler().playerEntity);
             }
         }
     }

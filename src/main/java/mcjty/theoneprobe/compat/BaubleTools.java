@@ -2,7 +2,6 @@ package mcjty.theoneprobe.compat;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
-import mcjty.lib.tools.ItemStackTools;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -18,7 +17,7 @@ public class BaubleTools {
             return false;
         }
         ItemStack stackInSlot = handler.getStackInSlot(4);
-        if (ItemStackTools.isValid(stackInSlot) && stackInSlot.getItem() == ModItems.probeGoggles) {
+        if (!stackInSlot.isEmpty() && stackInSlot.getItem() == ModItems.probeGoggles) {
             return true;
         }
         return false;
