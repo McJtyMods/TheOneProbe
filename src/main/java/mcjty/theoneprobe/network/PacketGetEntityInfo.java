@@ -56,9 +56,9 @@ public class PacketGetEntityInfo implements IMessage {
             buf.writeBoolean(false);
         } else {
             buf.writeBoolean(true);
-            buf.writeDouble(hitVec.xCoord);
-            buf.writeDouble(hitVec.yCoord);
-            buf.writeDouble(hitVec.zCoord);
+            buf.writeDouble(hitVec.x);
+            buf.writeDouble(hitVec.y);
+            buf.writeDouble(hitVec.z);
         }
     }
 
@@ -84,8 +84,8 @@ public class PacketGetEntityInfo implements IMessage {
             if (world != null) {
                 Entity entity = world.getEntityFromUuid(message.uuid);
                 if (entity != null) {
-                    ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().playerEntity, message.mode, world, entity, message.hitVec);
-                    PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(message.uuid, probeInfo), ctx.getServerHandler().playerEntity);
+                    ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().player, message.mode, world, entity, message.hitVec);
+                    PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(message.uuid, probeInfo), ctx.getServerHandler().player);
                 }
             }
         }

@@ -32,7 +32,7 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
 
                 EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
                 int totalArmorValue = entityLivingBase.getTotalArmorValue();
-                int age = entityLivingBase.getAge();
+                int age = entityLivingBase.getIdleTime();
                 float absorptionAmount = entityLivingBase.getAbsorptionAmount();
                 float aiMoveSpeed = entityLivingBase.getAIMoveSpeed();
                 int revengeTimer = entityLivingBase.getRevengeTimer();
