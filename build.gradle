@@ -35,7 +35,7 @@ repositories {
     }
 }
 
-version = "1.2-1.4.7"
+version = "1.12-1.4.8"
 def ENV = System.getenv()
 if (ENV.DRONE_BUILD_NUMBER) {
     version += ".n" + ENV.DRONE_BUILD_NUMBER
