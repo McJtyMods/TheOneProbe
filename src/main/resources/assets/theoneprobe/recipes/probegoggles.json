@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "mod_loaded",
+      "mod": "baubles"
+    }
+  ],
+  "result": {
+    "item": "theoneprobe:probe_goggles"
+  },
+  "pattern": [
+    " g ",
+    "gpg",
+    " g "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "p": {
+      "item": "theoneprobe:probe"
+    },
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetGold"
+    }
+  }
+}

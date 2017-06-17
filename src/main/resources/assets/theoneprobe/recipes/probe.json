@@ -1,0 +1,24 @@
+{
+  "result": {
+    "item": "theoneprobe:probe"
+  },
+  "pattern": [
+    "C  ",
+    " n ",
+    "  r"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "r": {
+      "type": "forge:ore_dict",
+      "ore" : "dustRedstone"
+    },
+    "C": {
+      "item": "minecraft:comparator"
+    },
+    "n": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetGold"
+    }
+  }
+}

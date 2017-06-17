@@ -5,6 +5,7 @@ import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.playerdata.PlayerProperties;
 import mcjty.theoneprobe.playerdata.PropertiesDispatcher;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -25,15 +26,14 @@ public class ForgeEventHandlers {
         }
     }
 
-    // @todo
-//    @SubscribeEvent
-//    public void onEntityConstructing(AttachCapabilitiesEvent.Entity event){
-//        if (event.getEntity() instanceof EntityPlayer) {
-//            if (!event.getEntity().hasCapability(PlayerProperties.PLAYER_GOT_NOTE, null)) {
-//                event.addCapability(new ResourceLocation(TheOneProbe.MODID, "Properties"), new PropertiesDispatcher());
-//            }
-//        }
-//    }
+    @SubscribeEvent
+    public void onEntityConstructing(AttachCapabilitiesEvent<Entity> event){
+        if (event.getObject() instanceof EntityPlayer) {
+            if (!event.getObject().hasCapability(PlayerProperties.PLAYER_GOT_NOTE, null)) {
+                event.addCapability(new ResourceLocation(TheOneProbe.MODID, "Properties"), new PropertiesDispatcher());
+            }
+        }
+    }
 
     @SubscribeEvent
     public void onPlayerCloned(PlayerEvent.Clone event) {
@@ -49,15 +49,14 @@ public class ForgeEventHandlers {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
-//@todo
-//        if (Config.spawnNote) {
-//            PlayerGotNote note = PlayerProperties.getPlayerGotNote(event.player);
-//            if (!note.isPlayerGotNote()) {
-//                boolean success = event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.probeNote));
-//                if (success) {
-//                    note.setPlayerGotNote(true);
-//                }
-//            }
-//        }
+        if (Config.spawnNote) {
+            PlayerGotNote note = PlayerProperties.getPlayerGotNote(event.player);
+            if (!note.isPlayerGotNote()) {
+                boolean success = event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.probeNote));
+                if (success) {
+                    note.setPlayerGotNote(true);
+                }
+            }
+        }
     }
 }

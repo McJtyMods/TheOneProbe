@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "theoneprobe:probenote"
+  },
+  "pattern": [
+    "r  ",
+    " p ",
+    "  r"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "p": {
+      "item": "minecraft:paper"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore" : "dustRedstone"
+    }
+  }
+}

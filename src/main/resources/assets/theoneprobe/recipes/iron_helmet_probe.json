@@ -1,0 +1,15 @@
+{
+  "result": {
+    "item": "theoneprobe:iron_helmet_probe",
+    "data": 0
+  },
+  "ingredients": [
+    {
+      "item": "theoneprobe:probe"
+    },
+    {
+      "item": "minecraft:iron_helmet"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless"
+}

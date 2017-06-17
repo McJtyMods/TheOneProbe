@@ -42,7 +42,6 @@ public abstract class CommonProxy {
         readMainConfig();
         PacketHandler.registerMessages("theoneprobe");
         ModItems.init();
-        ModItems.initCrafting();
     }
 
     private static void registerCapabilities(){

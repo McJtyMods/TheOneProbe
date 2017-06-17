@@ -32,10 +32,6 @@ public class ModItems {
     public static String PROBETAG = "theoneprobe";
     public static String PROBETAG_HAND = "theoneprobe_hand";
 
-    static {
-        RecipeSorter.register("theoneprobe:addproberecipe", AddProbeRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
-    }
-
     public static void init() {
         probe = new Probe();
         creativeProbe = new CreativeProbe();
@@ -95,19 +91,6 @@ public class ModItems {
         if (TheOneProbe.baubles) {
             BaubleTools.initProbeModel(probeGoggles);
         }
-    }
-
-    public static void initCrafting() {
-//        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probe, 1), "C  ", " n ", "  r", 'C', Items.COMPARATOR, 'n', "nuggetGold", 'r', "dustRedstone"));
-//        GameRegistry.addRecipe(new AddProbeRecipe(Items.DIAMOND_HELMET, diamondHelmetProbe));
-//        GameRegistry.addRecipe(new AddProbeRecipe(Items.GOLDEN_HELMET, goldHelmetProbe));
-//        GameRegistry.addRecipe(new AddProbeRecipe(Items.IRON_HELMET, ironHelmetProbe));
-//
-//        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probeNote, 1), "r  ", " p ", "  r", 'p', Items.PAPER, 'r', "dustRedstone"));
-//
-//        if (TheOneProbe.baubles) {
-//            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(probeGoggles, 1), " g ", "gpg", " g ", 'p', probe, 'g', "nuggetGold"));
-//        }
     }
 
     public static boolean isProbeInHand(ItemStack stack) {
