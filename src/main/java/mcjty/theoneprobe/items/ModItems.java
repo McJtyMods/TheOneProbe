@@ -63,11 +63,13 @@ public class ModItems {
 
             @Override
             public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+                if (isInCreativeTab(tab)){
                 ItemStack stack = new ItemStack(this);
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setInteger(PROBETAG, 1);
                 stack.setTagCompound(tag);
                 subItems.add(stack);
+                }
             }
         };
         item.setUnlocalizedName(TheOneProbe.MODID + "." + name);
