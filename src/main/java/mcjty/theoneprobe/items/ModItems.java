@@ -18,7 +18,6 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.RecipeSorter;
 
 public class ModItems {
     public static CreativeProbe creativeProbe;
@@ -43,9 +42,9 @@ public class ModItems {
         ItemArmor.ArmorMaterial materialIronHelmet = EnumHelper.addArmorMaterial("iron_helmet_probe", TheOneProbe.MODID + ":probe_iron",
                 15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F);
 
-        diamondHelmetProbe = makeHelpmet(materialDiamondHelmet, 3, "diamond_helmet_probe");
-        goldHelmetProbe = makeHelpmet(materialGoldHelmet, 4, "gold_helmet_probe");
-        ironHelmetProbe = makeHelpmet(materialIronHelmet, 2, "iron_helmet_probe");
+        diamondHelmetProbe = makeHelmet(materialDiamondHelmet, 3, "diamond_helmet_probe");
+        goldHelmetProbe = makeHelmet(materialGoldHelmet, 4, "gold_helmet_probe");
+        ironHelmetProbe = makeHelmet(materialIronHelmet, 2, "iron_helmet_probe");
 
         probeNote = new ProbeNote();
 
@@ -54,7 +53,7 @@ public class ModItems {
         }
     }
 
-    private static Item makeHelpmet(ItemArmor.ArmorMaterial material, int renderIndex, String name) {
+    private static Item makeHelmet(ItemArmor.ArmorMaterial material, int renderIndex, String name) {
         Item item = new ItemArmor(material, renderIndex, EntityEquipmentSlot.HEAD) {
             @Override
             public boolean getHasSubtypes() {
@@ -63,17 +62,18 @@ public class ModItems {
 
             @Override
             public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-                ItemStack stack = new ItemStack(this);
-                NBTTagCompound tag = new NBTTagCompound();
-                tag.setInteger(PROBETAG, 1);
-                stack.setTagCompound(tag);
-                subItems.add(stack);
+                if (this.isInCreativeTab(tab)) {
+                    ItemStack stack = new ItemStack(this);
+                    NBTTagCompound tag = new NBTTagCompound();
+                    tag.setInteger(PROBETAG, 1);
+                    stack.setTagCompound(tag);
+                    subItems.add(stack);
+                }
             }
         };
         item.setUnlocalizedName(TheOneProbe.MODID + "." + name);
         item.setRegistryName(name);
         item.setCreativeTab(TheOneProbe.tabProbe);
-        GameRegistry.register(item);
         return item;
     }
 

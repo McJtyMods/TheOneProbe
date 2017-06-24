@@ -7,14 +7,34 @@ import mcjty.theoneprobe.playerdata.PlayerProperties;
 import mcjty.theoneprobe.playerdata.PropertiesDispatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ForgeEventHandlers {
+
+
+    @SubscribeEvent
+    public void registerItems(RegistryEvent.Register<Item> event) {
+        ModItems.init();
+
+        event.getRegistry().register(ModItems.probe);
+        event.getRegistry().register(ModItems.creativeProbe);
+        event.getRegistry().register(ModItems.probeNote);
+
+        event.getRegistry().register(ModItems.diamondHelmetProbe);
+        event.getRegistry().register(ModItems.goldHelmetProbe);
+        event.getRegistry().register(ModItems.ironHelmetProbe);
+
+        if (TheOneProbe.baubles) {
+            event.getRegistry().register(ModItems.probeGoggles);
+        }
+    }
 
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {

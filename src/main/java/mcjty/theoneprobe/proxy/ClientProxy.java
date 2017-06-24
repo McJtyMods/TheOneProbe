@@ -18,8 +18,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -33,17 +35,21 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
-        ModItems.initClient();
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
     public void init(FMLInitializationEvent e) {
         super.init(e);
-        MinecraftForge.EVENT_BUS.register(this);
         ClientCommandHandler.instance.registerCommand(new CommandTopCfg());
         ClientCommandHandler.instance.registerCommand(new CommandTopNeed());
         MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
         KeyBindings.init();
+    }
+
+    @SubscribeEvent
+    public void registerModels(ModelRegistryEvent event) {
+        ModItems.initClient();
     }
 
 //    @SubscribeEvent

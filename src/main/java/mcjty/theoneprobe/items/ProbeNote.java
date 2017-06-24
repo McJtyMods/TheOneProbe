@@ -22,7 +22,6 @@ public class ProbeNote extends Item {
         setRegistryName("probenote");
         setCreativeTab(TheOneProbe.tabProbe);
         setMaxStackSize(1);
-        GameRegistry.register(this);
     }
 
     @SideOnly(Side.CLIENT)

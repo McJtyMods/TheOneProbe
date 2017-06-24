@@ -1,7 +1,7 @@
 {
   "conditions": [
     {
-      "type": "mod_loaded",
+      "type": "forge:mod_loaded",
       "mod": "baubles"
     }
   ],

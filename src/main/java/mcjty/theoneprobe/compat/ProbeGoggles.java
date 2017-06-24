@@ -18,7 +18,6 @@ public class ProbeGoggles extends Item implements IBauble {
         setUnlocalizedName(TheOneProbe.MODID + ".probe_goggles");
         setRegistryName("probe_goggles");
         setCreativeTab(TheOneProbe.tabProbe);
-        GameRegistry.register(this);
     }
 
     @SideOnly(Side.CLIENT)

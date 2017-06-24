@@ -14,7 +14,6 @@ public class CreativeProbe extends Item {
         setUnlocalizedName(TheOneProbe.MODID + ".creativeprobe");
         setRegistryName("creativeprobe");
         setCreativeTab(TheOneProbe.tabProbe);
-        GameRegistry.register(this);
     }
 
     @SideOnly(Side.CLIENT)

@@ -30,6 +30,8 @@ import java.util.Set;
 public abstract class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent e) {
+        MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
+
         registerCapabilities();
         TheOneProbeImp.registerElements();
         TheOneProbe.theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
@@ -41,7 +43,6 @@ public abstract class CommonProxy {
 
         readMainConfig();
         PacketHandler.registerMessages("theoneprobe");
-        ModItems.init();
     }
 
     private static void registerCapabilities(){
@@ -82,7 +83,6 @@ public abstract class CommonProxy {
 
     public void init(FMLInitializationEvent e) {
         NetworkRegistry.INSTANCE.registerGuiHandler(TheOneProbe.instance, new GuiProxy());
-        MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
     }
 
     public void postInit(FMLPostInitializationEvent e) {
