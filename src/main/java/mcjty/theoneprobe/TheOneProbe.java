@@ -1,7 +1,5 @@
 package mcjty.theoneprobe;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.config.Config;
@@ -21,6 +19,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Mod(modid = TheOneProbe.MODID, name="TheOneProbe",
         dependencies =
