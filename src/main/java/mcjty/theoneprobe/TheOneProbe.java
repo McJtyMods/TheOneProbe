@@ -46,6 +46,7 @@ public class TheOneProbe {
     public static TheOneProbeImp theOneProbeImp = new TheOneProbeImp();
 
     public static boolean baubles = false;
+    public static boolean redstoneflux = false;
 
     public static CreativeTabs tabProbe = new CreativeTabs("Probe") {
         @Override
@@ -65,6 +66,11 @@ public class TheOneProbe {
         mainConfigDir = e.getModConfigurationDirectory();
         modConfigDir = new File(mainConfigDir.getPath());
         config = new Configuration(new File(modConfigDir, "theoneprobe.cfg"));
+
+        redstoneflux = Loader.isModLoaded("redstoneflux");
+        if (redstoneflux) {
+            logger.log(Level.INFO, "The One Probe Detected RedstoneFlux: enabling support");
+        }
 
         baubles = Loader.isModLoaded("Baubles") || Loader.isModLoaded("baubles");
         if (baubles) {

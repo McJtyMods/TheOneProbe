@@ -1,11 +1,11 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
-import cofh.api.energy.IEnergyHandler;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
+import mcjty.theoneprobe.compat.RedstoneFluxTools;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
@@ -14,7 +14,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -185,10 +184,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showRF(IProbeInfo probeInfo, World world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
         TileEntity te = world.getTileEntity(pos);
-        if (te instanceof IEnergyHandler) {
-            IEnergyHandler handler = (IEnergyHandler) te;
-            int energy = handler.getEnergyStored(EnumFacing.DOWN);
-            int maxEnergy = handler.getMaxEnergyStored(EnumFacing.DOWN);
+        if (TheOneProbe.redstoneflux && RedstoneFluxTools.isEnergyHandler(te)) {
+            int energy = RedstoneFluxTools.getEnergy(te);
+            int maxEnergy = RedstoneFluxTools.getMaxEnergy(te);
             addRFInfo(probeInfo, config, energy, maxEnergy);
         } else if (te != null && te.hasCapability(CapabilityEnergy.ENERGY, null)) {
             net.minecraftforge.energy.IEnergyStorage handler = te.getCapability(CapabilityEnergy.ENERGY, null);
