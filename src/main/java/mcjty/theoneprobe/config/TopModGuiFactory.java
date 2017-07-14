@@ -15,12 +15,12 @@ public class TopModGuiFactory implements IModGuiFactory {
 
     @Override
     public boolean hasConfigGui() {
-        return false;
+        return true;
     }
 
     @Override
     public GuiScreen createConfigGui(GuiScreen parentScreen) {
-        return null;
+        return new TopModConfigGui(parentScreen);
     }
 
     @Override
