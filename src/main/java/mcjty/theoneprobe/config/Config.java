@@ -34,7 +34,7 @@ public class Config {
     public static boolean extendedInMain = false;
     public static NumberFormat rfFormat = NumberFormat.COMPACT;
     public static NumberFormat tankFormat = NumberFormat.COMPACT;
-    public static int timeout = 400;
+    public static int timeout = 300;
     public static int waitingForServerTimeout = 2000;
 
     public static boolean supportBaubles = true;

@@ -169,8 +169,15 @@ public class OverlayRenderer {
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
-        if (cacheEntry == null) {
-            requestEntityInfo(mode, mouseOver, entity, player);
+        if (cacheEntry == null || cacheEntry.getValue() == null) {
+
+            // To make sure we don't ask it too many times before the server got a chance to send the answer
+            // we insert a dummy entry here for a while
+            if (cacheEntry == null || time >= cacheEntry.getLeft()) {
+                cachedEntityInfo.put(uuid, Pair.of(time + 500, null));
+                requestEntityInfo(mode, mouseOver, entity, player);
+            }
+
             if (lastPair != null && time < lastPairTime + Config.timeout) {
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
                 lastRenderedTime = time;
@@ -187,6 +194,10 @@ public class OverlayRenderer {
         } else {
             if (time > cacheEntry.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
+
+                // To make sure we don't ask it too many times before the server got a chance to send the answer
+                // we increase the time a bit here
+                cachedEntityInfo.put(uuid, Pair.of(time + 500, cacheEntry.getRight()));
                 requestEntityInfo(mode, mouseOver, entity, player);
             }
             renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
@@ -232,9 +243,17 @@ public class OverlayRenderer {
         }
 
         int dimension = player.getEntityWorld().provider.getDimension();
-        Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(Pair.of(dimension, blockPos));
-        if (cacheEntry == null) {
-            requestBlockInfo(mode, mouseOver, blockPos, player);
+        Pair<Integer, BlockPos> key = Pair.of(dimension, blockPos);
+        Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(key);
+        if (cacheEntry == null || cacheEntry.getValue() == null) {
+
+            // To make sure we don't ask it too many times before the server got a chance to send the answer
+            // we insert a dummy entry here for a while
+            if (cacheEntry == null || time >= cacheEntry.getLeft()) {
+                cachedInfo.put(key, Pair.of(time + 500, null));
+                requestBlockInfo(mode, mouseOver, blockPos, player);
+            }
+
             if (lastPair != null && time < lastPairTime + Config.timeout) {
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
                 lastRenderedTime = time;
@@ -251,6 +270,10 @@ public class OverlayRenderer {
         } else {
             if (time > cacheEntry.getLeft() + Config.timeout) {
                 // This info is slightly old. Update it
+
+                // To make sure we don't ask it too many times before the server got a chance to send the answer
+                // we increase the time a bit here
+                cachedInfo.put(key, Pair.of(time + 500, cacheEntry.getRight()));
                 requestBlockInfo(mode, mouseOver, blockPos, player);
             }
             renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
