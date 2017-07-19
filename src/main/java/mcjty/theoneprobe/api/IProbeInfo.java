@@ -57,6 +57,10 @@ public interface IProbeInfo {
     IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h, IIconStyle style);
     IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h);
 
+    /**
+     * entityName can be an old-style entity name (like 'Zombie') or the string
+     * representation of a resourcelocation (like 'minecraft:zombie')
+     */
     IProbeInfo entity(String entityName, IEntityStyle style);
     IProbeInfo entity(String entityName);
     IProbeInfo entity(Entity entity, IEntityStyle style);
