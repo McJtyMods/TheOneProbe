@@ -27,10 +27,11 @@ import java.util.function.Function;
                 "after:forge@[" + TheOneProbe.MIN_FORGE11_VER + ",);" +
                 "after:tesla",
         version = TheOneProbe.VERSION,
+        acceptedMinecraftVersions = "[1.12,1.13)",
         guiFactory = "mcjty.theoneprobe.config.TopModGuiFactory")
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
-    public static final String VERSION = "1.4.16";
+    public static final String VERSION = "1.4.17";
     public static final String MIN_FORGE10_VER = "12.18.1.2082";
     public static final String MIN_FORGE11_VER = "13.19.0.2176";
 
