@@ -10,20 +10,20 @@ public class ProbeConfig implements IProbeConfig {
     private int showRF = 1;
     private int showTank = 1;
 
-    private static IProbeConfig.ConfigMode showHarvestLevel = NORMAL;
-    private static IProbeConfig.ConfigMode showCanBeHarvested = NORMAL;
-    private static IProbeConfig.ConfigMode showModName = NORMAL;
-    private static IProbeConfig.ConfigMode showCropPercentage = NORMAL;
-    private static IProbeConfig.ConfigMode showChestContents = EXTENDED;
-    private static IProbeConfig.ConfigMode showChestContentsDetailed = EXTENDED;
-    private static IProbeConfig.ConfigMode showRedstone = NORMAL;
-    private static IProbeConfig.ConfigMode showMobHealth = NORMAL;
-    private static IProbeConfig.ConfigMode showMobPotionEffects = EXTENDED;
-    private static IProbeConfig.ConfigMode showLeverSetting = NORMAL;
-    private static IProbeConfig.ConfigMode showTankSetting = EXTENDED;
-    private static IProbeConfig.ConfigMode showBrewStand = NORMAL;
-    private static IProbeConfig.ConfigMode showMobOwner = EXTENDED;
-    private static IProbeConfig.ConfigMode showHorseStats = EXTENDED;
+    private IProbeConfig.ConfigMode showHarvestLevel = NORMAL;
+    private IProbeConfig.ConfigMode showCanBeHarvested = NORMAL;
+    private IProbeConfig.ConfigMode showModName = NORMAL;
+    private IProbeConfig.ConfigMode showCropPercentage = NORMAL;
+    private IProbeConfig.ConfigMode showChestContents = EXTENDED;
+    private IProbeConfig.ConfigMode showChestContentsDetailed = EXTENDED;
+    private IProbeConfig.ConfigMode showRedstone = NORMAL;
+    private IProbeConfig.ConfigMode showMobHealth = NORMAL;
+    private IProbeConfig.ConfigMode showMobPotionEffects = EXTENDED;
+    private IProbeConfig.ConfigMode showLeverSetting = NORMAL;
+    private IProbeConfig.ConfigMode showTankSetting = EXTENDED;
+    private IProbeConfig.ConfigMode showBrewStand = NORMAL;
+    private IProbeConfig.ConfigMode showMobOwner = EXTENDED;
+    private IProbeConfig.ConfigMode showHorseStats = EXTENDED;
 
     /// Make a lazy copy of this probe config.
     public IProbeConfig lazyCopy() {
