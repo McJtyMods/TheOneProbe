@@ -4,6 +4,7 @@ import mcjty.theoneprobe.api.IProbeConfig;
 
 import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.EXTENDED;
 import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.NORMAL;
+import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.NOT;
 
 public class ProbeConfig implements IProbeConfig {
 
@@ -24,6 +25,7 @@ public class ProbeConfig implements IProbeConfig {
     private static IProbeConfig.ConfigMode showBrewStand = NORMAL;
     private static IProbeConfig.ConfigMode showMobOwner = EXTENDED;
     private static IProbeConfig.ConfigMode showHorseStats = EXTENDED;
+    private static IProbeConfig.ConfigMode showSilverfish = NOT;
 
     /// Make a lazy copy of this probe config.
     public IProbeConfig lazyCopy() {
@@ -204,5 +206,16 @@ public class ProbeConfig implements IProbeConfig {
     @Override
     public ConfigMode getShowTankSetting() {
         return showTankSetting;
+    }
+    
+    @Override
+    public IProbeConfig showSilverfish(ConfigMode mode) {
+        showSilverfish = mode;
+        return this;
+    }
+    
+    @Override
+    public ConfigMode getShowSilverfish() {
+        return showSilverfish;
     }
 }
