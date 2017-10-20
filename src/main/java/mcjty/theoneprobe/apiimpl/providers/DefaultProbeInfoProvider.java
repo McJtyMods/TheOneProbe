@@ -228,7 +228,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                                              BlockPos pos, EntityPlayer player, IProbeHitData data) {
         String modid = Tools.getModName(block);
 
-        if (block instanceof BlockSilverfish && mode != ProbeMode.DEBUG) {
+        if (block instanceof BlockSilverfish && mode == ProbeMode.NORMAL) {
             BlockSilverfish.EnumType type = blockState.getValue(BlockSilverfish.VARIANT);
             blockState = type.getModelBlock();
             block = blockState.getBlock();
