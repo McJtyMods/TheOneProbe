@@ -71,4 +71,7 @@ public interface IProbeConfig {
 
     IProbeConfig showMobPotionEffects(ConfigMode mode);
     ConfigMode getShowMobPotionEffects();
+    
+    IProbeConfig showSilverfish(ConfigMode mode);
+    ConfigMode getShowSilverfish();
 }
