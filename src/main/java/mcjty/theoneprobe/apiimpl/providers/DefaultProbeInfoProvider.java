@@ -6,7 +6,6 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
-import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
@@ -14,8 +13,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -90,6 +91,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (Tools.show(mode, config.getShowBrewStandSetting())) {
             showBrewingStandInfo(probeInfo, world, data, block);
         }
+        
+        if (Tools.show(mode, config.getShowMobSpawnerSetting())) {
+            showMobSpawnerInfo(probeInfo, world, data, block);
+        }
     }
 
     private void showBrewingStandInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
@@ -105,6 +110,19 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                     probeInfo.text(LABEL + "Time: " + INFO + brewtime + " ticks");
                 }
 
+            }
+        }
+    }
+
+    private void showMobSpawnerInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
+        if (block instanceof BlockMobSpawner) {
+            TileEntity te = world.getTileEntity(data.getPos());
+            if (te instanceof TileEntityMobSpawner) {
+                MobSpawnerBaseLogic logic = ((TileEntityMobSpawner) te).getSpawnerBaseLogic();
+                String mobName = logic.getCachedEntity().getName();
+                probeInfo.horizontal(probeInfo.defaultLayoutStyle()
+                    .alignment(ElementAlignment.ALIGN_CENTER))
+                    .text(LABEL + "Mob: " + INFO + mobName);
             }
         }
     }
