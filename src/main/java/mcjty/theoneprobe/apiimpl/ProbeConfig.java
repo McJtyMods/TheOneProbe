@@ -18,6 +18,7 @@ public class ProbeConfig implements IProbeConfig {
     private IProbeConfig.ConfigMode showChestContentsDetailed = EXTENDED;
     private IProbeConfig.ConfigMode showRedstone = NORMAL;
     private IProbeConfig.ConfigMode showMobHealth = NORMAL;
+    private IProbeConfig.ConfigMode showMobGrowth = NORMAL;
     private IProbeConfig.ConfigMode showMobPotionEffects = EXTENDED;
     private IProbeConfig.ConfigMode showLeverSetting = NORMAL;
     private IProbeConfig.ConfigMode showTankSetting = EXTENDED;
@@ -171,6 +172,17 @@ public class ProbeConfig implements IProbeConfig {
     @Override
     public ConfigMode getShowMobHealth() {
         return showMobHealth;
+    }
+
+    @Override
+    public IProbeConfig showMobGrowth(ConfigMode mode) {
+        showMobGrowth = mode;
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowMobGrowth() {
+        return showMobGrowth;
     }
 
     @Override
