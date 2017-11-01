@@ -15,6 +15,8 @@ public class ElementProgressRender {
     public static void render(IProgressStyle style, long current, long max, int x, int y, int w, int h) {
         if (style.isLifeBar()) {
             renderLifeBar(current, x, y, w, h);
+        } else if (style.isArmorBar()) {
+            renderArmorBar(current, x, y, w, h);
         } else {
             RenderHelper.drawThickBeveledBox(x, y, x + w, y + h, 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
             if (current > 0 && max > 0) {
@@ -53,6 +55,24 @@ public class ElementProgressRender {
             }
             if (current % 2 != 0) {
                 RenderHelper.drawTexturedModalRect(x, y, 61, 0, 9, 9);
+            }
+        }
+    }
+
+    private static void renderArmorBar(long current, int x, int y, int w, int h) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
+        if (current * 4 >= w) {
+            // Shortened view
+            RenderHelper.drawTexturedModalRect(x, y, 43, 9, 9, 9);
+            RenderHelper.renderText(Minecraft.getMinecraft(), x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
+        } else {
+            for (int i = 0; i < current / 2; i++) {
+                RenderHelper.drawTexturedModalRect(x, y, 43, 9, 9, 9);
+                x += 8;
+            }
+            if (current % 2 != 0) {
+                RenderHelper.drawTexturedModalRect(x, y, 25, 9, 9, 9);
             }
         }
     }

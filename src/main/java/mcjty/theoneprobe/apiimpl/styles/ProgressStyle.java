@@ -17,6 +17,7 @@ public class ProgressStyle implements IProgressStyle {
     private int width = 100;
     private int height = 12;
     private boolean lifeBar = false;
+    private boolean armorBar = false;
 
     private NumberFormat numberFormat = NumberFormat.FULL;
 
@@ -93,6 +94,12 @@ public class ProgressStyle implements IProgressStyle {
     }
 
     @Override
+    public IProgressStyle armorBar(boolean b) {
+        this.armorBar = b;
+        return this;
+    }
+
+    @Override
     public int getBorderColor() {
         return borderColor;
     }
@@ -145,5 +152,10 @@ public class ProgressStyle implements IProgressStyle {
     @Override
     public boolean isLifeBar() {
         return lifeBar;
+    }
+
+    @Override
+    public boolean isArmorBar() {
+        return armorBar;
     }
 }
