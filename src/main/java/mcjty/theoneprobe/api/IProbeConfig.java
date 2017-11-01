@@ -72,6 +72,9 @@ public interface IProbeConfig {
     IProbeConfig showMobHealth(ConfigMode mode);
     ConfigMode getShowMobHealth();
 
+    IProbeConfig showMobGrowth(ConfigMode mode);
+    ConfigMode getShowMobGrowth();
+
     IProbeConfig showMobPotionEffects(ConfigMode mode);
     ConfigMode getShowMobPotionEffects();
     
