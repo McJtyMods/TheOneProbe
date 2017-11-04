@@ -1,0 +1,12 @@
+key.toggleLiquids=Afficher les liquides
+key.toggleVisible=Afficher
+key.categories.theoneprobe=La Sonde
+item.theoneprobe.probe.name=La Sonde
+item.theoneprobe.probe_goggles.name=La Sonde (Bauble)
+item.theoneprobe.diamond_helmet_probe.name=Casque en diamant avec Sonde
+item.theoneprobe.gold_helmet_probe.name=Casque en or avec Sonde
+item.theoneprobe.iron_helmet_probe.name=Casque en fer avec Sonde
+item.theoneprobe.creativeprobe.name=La Sonde créative
+item.theoneprobe.probenote.name=The One Probe: à lire
+
+itemGroup.Probe=La Sonde

@@ -12,10 +12,13 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
+import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -89,7 +92,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (Tools.show(mode, config.getShowBrewStandSetting())) {
             showBrewingStandInfo(probeInfo, world, data, block);
         }
-        
+
         if (Tools.show(mode, config.getShowMobSpawnerSetting())) {
             showMobSpawnerInfo(probeInfo, world, data, block);
         }
@@ -260,7 +263,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                                              BlockPos pos, EntityPlayer player, IProbeHitData data) {
         String modid = Tools.getModName(block);
 
-        if (block instanceof BlockSilverfish && mode != ProbeMode.DEBUG) {
+        if (block instanceof BlockSilverfish && mode != ProbeMode.DEBUG && !Tools.show(mode,config.getShowSilverfish())) {
             BlockSilverfish.EnumType type = blockState.getValue(BlockSilverfish.VARIANT);
             blockState = type.getModelBlock();
             block = blockState.getBlock();
