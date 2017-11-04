@@ -34,7 +34,7 @@ import java.io.File;
         acceptedMinecraftVersions = "[1.10,1.12)")
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
-    public static final String VERSION = "1.4.18";
+    public static final String VERSION = "1.4.19";
     public static final String MIN_FORGE10_VER = "12.18.1.2082";
     public static final String MIN_FORGE11_VER = "13.19.0.2176";
     public static final String COMPATLAYER_VER = "0.1.6";
