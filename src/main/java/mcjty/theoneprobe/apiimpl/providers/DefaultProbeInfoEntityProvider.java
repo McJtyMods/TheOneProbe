@@ -6,6 +6,8 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -53,6 +55,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
 
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase livingBase = (EntityLivingBase) entity;
+
             if (Tools.show(mode, config.getShowMobHealth())) {
                 int health = (int) livingBase.getHealth();
                 int maxHealth = (int) livingBase.getMaxHealth();
@@ -67,6 +70,13 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 if (armor > 0) {
                     probeInfo.progress(armor, armor, probeInfo.defaultProgressStyle().armorBar(true).showText(false).width(80).height(10));
                 }
+            }
+
+            if (Tools.show(mode, config.getShowMobGrowth()) && entity instanceof EntityAgeable) {
+               int age = ((EntityAgeable) entity).getGrowingAge();
+               if (age < 0) {
+                   probeInfo.text(LABEL + "Growing time: " + ((age * -1) / 20) + "s");
+               }
             }
 
             if (Tools.show(mode, config.getShowMobPotionEffects())) {
@@ -110,6 +120,8 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 } else {
                     probeInfo.text(LABEL + "Owned by: " + INFO + username);
                 }
+            } else if (entity instanceof EntityTameable) {
+                probeInfo.text(LABEL + "Tameable");
             }
         }
 
