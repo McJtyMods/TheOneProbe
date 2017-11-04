@@ -22,6 +22,7 @@ public class ProbeConfig implements IProbeConfig {
     private IProbeConfig.ConfigMode showLeverSetting = NORMAL;
     private IProbeConfig.ConfigMode showTankSetting = EXTENDED;
     private IProbeConfig.ConfigMode showBrewStand = NORMAL;
+    private IProbeConfig.ConfigMode showMobSpawner = NORMAL;
     private IProbeConfig.ConfigMode showMobOwner = EXTENDED;
     private IProbeConfig.ConfigMode showHorseStats = EXTENDED;
 
@@ -83,6 +84,17 @@ public class ProbeConfig implements IProbeConfig {
     @Override
     public ConfigMode getShowBrewStandSetting() {
         return showBrewStand;
+    }
+
+    @Override
+    public IProbeConfig showMobSpawnerSetting(ConfigMode mode) {
+        showMobSpawner = mode;
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowMobSpawnerSetting() {
+        return showMobSpawner;
     }
 
     @Override
