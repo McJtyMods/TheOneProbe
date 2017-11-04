@@ -37,7 +37,8 @@ public class ElementProgress implements IElement {
                 .backgroundColor(buf.readInt())
                 .showText(buf.readBoolean())
                 .numberFormat(NumberFormat.values()[buf.readByte()])
-                .lifeBar(buf.readBoolean());
+                .lifeBar(buf.readBoolean())
+                .armorBar(buf.readBoolean());
     }
 
     private static DecimalFormat dfCommas = new DecimalFormat("###,###");
@@ -114,6 +115,7 @@ public class ElementProgress implements IElement {
         buf.writeBoolean(style.isShowText());
         buf.writeByte(style.getNumberFormat().ordinal());
         buf.writeBoolean(style.isLifeBar());
+        buf.writeBoolean(style.isArmorBar());
     }
 
     @Override

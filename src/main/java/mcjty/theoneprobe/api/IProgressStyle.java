@@ -32,6 +32,8 @@ public interface IProgressStyle {
     IProgressStyle height(int h);
 
     IProgressStyle lifeBar(boolean b);
+    
+    IProgressStyle armorBar(boolean b);
 
     int getBorderColor();
 
@@ -54,4 +56,6 @@ public interface IProgressStyle {
     int getHeight();
 
     boolean isLifeBar();
+
+    boolean isArmorBar();
 }
