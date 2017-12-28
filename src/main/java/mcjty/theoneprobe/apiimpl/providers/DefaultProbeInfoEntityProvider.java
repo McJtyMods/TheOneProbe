@@ -3,6 +3,8 @@ package mcjty.theoneprobe.apiimpl.providers;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
+import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,10 +13,12 @@ import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.MathHelper;
@@ -102,6 +106,19 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                         }
                     }
                 }
+            }
+        } else if (entity instanceof EntityItemFrame) {
+            EntityItemFrame itemFrame = (EntityItemFrame)entity;
+            ItemStack stack = itemFrame.getDisplayedItem();
+            if(!stack.isEmpty()) {
+                probeInfo.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER))
+                        .item(stack, new ItemStyle().width(16).height(16))
+                        .text(INFO + stack.getDisplayName());
+                if (mode == ProbeMode.EXTENDED) {
+                    probeInfo.text(LABEL + "Rotation: " + INFO + itemFrame.getRotation());
+                }
+            } else {
+                probeInfo.text(LABEL + "Empty");
             }
         }
 
