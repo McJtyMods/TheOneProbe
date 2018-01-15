@@ -92,23 +92,21 @@ public interface IRenderBauble {
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
 			GlStateManager.translate(0F, -3.2F, -0.85F);
 		}
-
 	}
 
 	public enum RenderType {
 		/**
 		 * Render Type for the player's body, translations apply on the player's rotation.
 		 * Sneaking is not handled and should be done during the render.
-		 * @see IBaubleRender.Helper
+		 * @see IRenderBauble.Helper
 		 */
 		BODY,
 
 		/**
 		 * Render Type for the player's body, translations apply on the player's head rotations.
 		 * Sneaking is not handled and should be done during the render.
-		 * @see IBaubleRender.Helper
+		 * @see IRenderBauble.Helper
 		 */
 		HEAD;
 	}
-
 }
