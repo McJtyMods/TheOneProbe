@@ -47,6 +47,7 @@ public class TheOneProbe {
     public static TheOneProbeImp theOneProbeImp = new TheOneProbeImp();
 
     public static boolean baubles = false;
+    public static boolean tesla = false;
     public static boolean redstoneflux = false;
 
     public static CreativeTabs tabProbe = new CreativeTabs("Probe") {
@@ -67,6 +68,11 @@ public class TheOneProbe {
         mainConfigDir = e.getModConfigurationDirectory();
         modConfigDir = new File(mainConfigDir.getPath());
         config = new Configuration(new File(modConfigDir, "theoneprobe.cfg"));
+
+        tesla = Loader.isModLoaded("tesla");
+        if (tesla) {
+            logger.log(Level.INFO, "The One Probe Detected TESLA: enabling support");
+        }
 
         redstoneflux = Loader.isModLoaded("redstoneflux");
         if (redstoneflux) {

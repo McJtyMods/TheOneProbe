@@ -6,6 +6,7 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.compat.RedstoneFluxTools;
+import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
@@ -206,7 +207,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showRF(IProbeInfo probeInfo, World world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
         TileEntity te = world.getTileEntity(pos);
-        if (TheOneProbe.redstoneflux && RedstoneFluxTools.isEnergyHandler(te)) {
+        if (TheOneProbe.tesla && TeslaTools.isEnergyHandler(te)) {
+            long energy = TeslaTools.getEnergy(te);
+            long maxEnergy = TeslaTools.getMaxEnergy(te);
+            addRFInfo(probeInfo, config, energy, maxEnergy);
+        } else if (TheOneProbe.redstoneflux && RedstoneFluxTools.isEnergyHandler(te)) {
             int energy = RedstoneFluxTools.getEnergy(te);
             int maxEnergy = RedstoneFluxTools.getMaxEnergy(te);
             addRFInfo(probeInfo, config, energy, maxEnergy);
@@ -215,11 +220,6 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             if (handler != null) {
                 addRFInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
             }
-//        } else if (Loader.isModLoaded("tesla") && te != null && te.hasCapability(TeslaCapabilities.CAPABILITY_HOLDER, null)) {
-//            net.darkhax.tesla.api.ITeslaHolder handler = te.getCapability(TeslaCapabilities.CAPABILITY_HOLDER, null);
-//            if (handler != null) {
-//                addRFInfo(probeInfo, config, handler.getStoredPower(), handler.getCapacity());
-//            }
         }
     }
 
