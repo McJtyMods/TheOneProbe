@@ -5,7 +5,6 @@ import mcjty.theoneprobe.proxy.ClientProxy;
 import mcjty.theoneprobe.proxy.GuiProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -33,7 +32,7 @@ public class CommandTopNeed implements ICommand {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         ClientProxy.ignoreNextGuiClose = true;
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);

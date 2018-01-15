@@ -53,12 +53,8 @@ public class PacketReturnInfo implements IMessage {
     public static class Handler implements IMessageHandler<PacketReturnInfo, IMessage> {
         @Override
         public IMessage onMessage(PacketReturnInfo message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(() -> handle(message, ctx));
+            Minecraft.getMinecraft().addScheduledTask(() -> OverlayRenderer.registerProbeInfo(message.dim, message.pos, message.probeInfo));
             return null;
-        }
-
-        private void handle(PacketReturnInfo message, MessageContext ctx) {
-            OverlayRenderer.registerProbeInfo(message.dim, message.pos, message.probeInfo);
         }
     }
 }

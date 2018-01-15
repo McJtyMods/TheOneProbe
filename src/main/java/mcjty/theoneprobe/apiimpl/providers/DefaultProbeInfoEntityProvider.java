@@ -164,7 +164,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
         if (effect.getDuration() == 32767) {
             return "**:**";
         } else {
-            int i = MathHelper.floor((float)effect.getDuration() * factor);
+            int i = MathHelper.floor(effect.getDuration() * factor);
             return ticksToElapsedTime(i);
         }
     }

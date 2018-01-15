@@ -11,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -25,7 +24,6 @@ import java.util.UUID;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
-import static mcjty.theoneprobe.config.Config.PROBE_NEEDED;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 

@@ -17,9 +17,6 @@ import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityMobSpawner;
-import net.minecraft.tileentity.MobSpawnerBaseLogic;
-import net.minecraft.tileentity.TileEntityMobSpawner;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -248,7 +245,6 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.text(LABEL + "Growth: " + WARNING + (age * 100) / maxAge + "%");
             }
         } else if (block instanceof BlockNetherWart) {
-            BlockNetherWart wart = (BlockNetherWart) block;
             int age = blockState.getValue(BlockNetherWart.AGE);
             int maxAge = 3;
             if (age == maxAge) {

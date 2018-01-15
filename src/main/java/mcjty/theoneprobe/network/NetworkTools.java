@@ -118,7 +118,7 @@ public class NetworkTools {
         dataOut.writeInt(pos.getZ());
     }
 
-    public static <T extends Enum> void writeEnum(ByteBuf buf, T value, T nullValue) {
+    public static <T extends Enum<T>> void writeEnum(ByteBuf buf, T value, T nullValue) {
         if (value == null) {
             buf.writeInt(nullValue.ordinal());
         } else {
@@ -126,18 +126,18 @@ public class NetworkTools {
         }
     }
 
-    public static <T extends Enum> T readEnum(ByteBuf buf, T[] values) {
+    public static <T extends Enum<T>> T readEnum(ByteBuf buf, T[] values) {
         return values[buf.readInt()];
     }
 
-    public static void writeEnumCollection(ByteBuf buf, Collection<? extends Enum> collection) {
+    public static <T extends Enum<T>> void writeEnumCollection(ByteBuf buf, Collection<T> collection) {
         buf.writeInt(collection.size());
-        for (Enum type : collection) {
+        for (T type : collection) {
             buf.writeInt(type.ordinal());
         }
     }
 
-    public static <T extends Enum> void readEnumCollection(ByteBuf buf, Collection<T> collection, T[] values) {
+    public static <T extends Enum<T>> void readEnumCollection(ByteBuf buf, Collection<T> collection, T[] values) {
         collection.clear();
         int size = buf.readInt();
         for (int i = 0 ; i < size ; i++) {

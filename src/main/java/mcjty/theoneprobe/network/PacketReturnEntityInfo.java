@@ -49,12 +49,8 @@ public class PacketReturnEntityInfo implements IMessage {
     public static class Handler implements IMessageHandler<PacketReturnEntityInfo, IMessage> {
         @Override
         public IMessage onMessage(PacketReturnEntityInfo message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(() -> handle(message, ctx));
+            Minecraft.getMinecraft().addScheduledTask(() -> OverlayRenderer.registerProbeInfo(message.uuid, message.probeInfo));
             return null;
-        }
-
-        private void handle(PacketReturnEntityInfo message, MessageContext ctx) {
-            OverlayRenderer.registerProbeInfo(message.uuid, message.probeInfo);
         }
     }
 }

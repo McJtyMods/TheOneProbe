@@ -7,7 +7,6 @@ import mcjty.theoneprobe.proxy.GuiProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -82,7 +81,7 @@ public class CommandTopCfg implements ICommand {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         if (args.length < 1) {
             ClientProxy.ignoreNextGuiClose = true;
             EntityPlayerSP player = Minecraft.getMinecraft().player;

@@ -7,7 +7,6 @@ import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import net.minecraft.nbt.NBTBase;

@@ -14,6 +14,7 @@ class Preset {
     private final int boxOffset;
     private final Map<TextStyleClass, String> textStyleClasses;
 
+    @SafeVarargs
     public Preset(String name, int boxBorderColor, int boxFillColor, int boxThickness, int boxOffset, Pair<TextStyleClass, String>... styles) {
         this.name = name;
         this.boxBorderColor = boxBorderColor;
