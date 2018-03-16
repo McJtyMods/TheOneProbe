@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import mcjty.lib.api.power.IBigPower;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
@@ -207,6 +208,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (TheOneProbe.tesla && TeslaTools.isEnergyHandler(te)) {
             long energy = TeslaTools.getEnergy(te);
             long maxEnergy = TeslaTools.getMaxEnergy(te);
+            addRFInfo(probeInfo, config, energy, maxEnergy);
+        } else if (te instanceof IBigPower) {
+            long energy = ((IBigPower) te).getBigEnergy();
+            long maxEnergy = ((IBigPower) te).getBigMaxEnergy();
             addRFInfo(probeInfo, config, energy, maxEnergy);
         } else if (TheOneProbe.redstoneflux && RedstoneFluxTools.isEnergyHandler(te)) {
             int energy = RedstoneFluxTools.getEnergy(te);
