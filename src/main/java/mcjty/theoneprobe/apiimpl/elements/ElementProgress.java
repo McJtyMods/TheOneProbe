@@ -60,13 +60,13 @@ public class ElementProgress implements IElement {
                 if (suffix.startsWith("m")) {
                     suffix = suffix.substring(1);
                     if (exp - 2 >= 0) {
-                        pre = "KMGTP".charAt(exp - 2);
+                        pre = "KMGTPE".charAt(exp - 2);
                         return String.format("%.1f %s", in / Math.pow(unit, exp), pre) + suffix;
                     } else {
                         return String.format("%.1f %s", in / Math.pow(unit, exp), suffix);
                     }
                 } else {
-                    pre = "KMGTP".charAt(exp - 1);
+                    pre = "KMGTPE".charAt(exp - 1);
                     return String.format("%.1f %s", in / Math.pow(unit, exp), pre) + suffix;
                 }
             }
