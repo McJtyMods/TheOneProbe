@@ -56,7 +56,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.12.2-14.23.1.2583"
+    version = "1.12.2-14.23.2.2628"
     runDir = "run"
     mappings = "snapshot_20170810"
     useDepAts = true
@@ -64,7 +64,7 @@ minecraft {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.8.5.140"
+    deobfCompile "mezz.jei:jei_1.12.2:4.8.5.159"
     compile "cofh:RedstoneFlux:1.12-2.0.0.+:deobf"
     //deobfCompile "mcp.mobius.waila:Hwyla:1.8.9-B22_1.11"
     //deobfCompile "mezz.jei:jei_1.11.2:4.2.5.234"
