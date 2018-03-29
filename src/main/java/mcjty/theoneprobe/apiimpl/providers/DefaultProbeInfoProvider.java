@@ -21,9 +21,11 @@ import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
@@ -270,14 +272,21 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             block = blockState.getBlock();
         }
 
-        if (block instanceof BlockLiquid) {
+        if (block instanceof BlockFluidBase || block instanceof BlockLiquid) {
             Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
             if (fluid != null) {
-                FluidStack stack = new FluidStack(fluid, 1);
-                probeInfo.horizontal()
-                        .icon(fluid.getStill(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20))
-                        .vertical()
-                        .text(NAME + stack.getLocalizedName())
+                FluidStack fluidStack = new FluidStack(fluid, Fluid.BUCKET_VOLUME);
+                ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
+
+                IProbeInfo horizontal = probeInfo.horizontal();
+                if (fluidStack.isFluidEqual(FluidUtil.getFluidContained(bucketStack))) {
+                    horizontal.item(bucketStack);
+                } else {
+                    horizontal.icon(fluid.getStill(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20));
+                }
+
+                horizontal.vertical()
+                        .text(NAME + fluidStack.getLocalizedName())
                         .text(MODNAME + modid);
                 return;
             }
