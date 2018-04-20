@@ -114,18 +114,22 @@ public class ChestInfoTools {
 
         Set<Item> foundItems = Config.compactEqualStacks ? new HashSet<>() : null;
         int maxSlots = 0;
-        if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
-            IItemHandler capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-            maxSlots = capability.getSlots();
-            for (int i = 0; i < maxSlots; i++) {
-                addItemStack(stacks, foundItems, capability.getStackInSlot(i));
+        try {
+            if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+                IItemHandler capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+                maxSlots = capability.getSlots();
+                for (int i = 0; i < maxSlots; i++) {
+                    addItemStack(stacks, foundItems, capability.getStackInSlot(i));
+                }
+            } else if (te instanceof IInventory) {
+                IInventory inventory = (IInventory) te;
+                maxSlots = inventory.getSizeInventory();
+                for (int i = 0; i < maxSlots; i++) {
+                    addItemStack(stacks, foundItems, inventory.getStackInSlot(i));
+                }
             }
-        } else if (te instanceof IInventory) {
-            IInventory inventory = (IInventory) te;
-            maxSlots = inventory.getSizeInventory();
-            for (int i = 0; i < maxSlots; i++) {
-                addItemStack(stacks, foundItems, inventory.getStackInSlot(i));
-            }
+        } catch(RuntimeException e) {
+            throw new RuntimeException("Getting the contents of a " + world.getBlockState(pos).getBlock().getRegistryName() + " (" + te.getClass().getName() + ")", e);
         }
         return maxSlots;
     }

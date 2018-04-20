@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.rendering;
 
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -435,10 +436,10 @@ public class RenderHelper {
         buffer.pos(p4.getX(), p4.getY(), p4.getZ()).tex(0.0D, 1.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
     }
 
-    public static int renderItemStack(Minecraft mc, RenderItem itemRender, ItemStack itm, int x, int y, String txt) {
+    public static boolean renderItemStack(Minecraft mc, RenderItem itemRender, ItemStack itm, int x, int y, String txt) {
         GlStateManager.color(1.0F, 1.0F, 1.0F);
 
-        int rc = 0;
+        boolean rc = true;
         if (!itm.isEmpty() && itm.getItem() != null) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(0.0F, 0.0F, 32.0F);
@@ -449,12 +450,16 @@ public class RenderHelper {
             short short2 = 240;
             net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, short1 / 1.0F, short2 / 1.0F);
-            itemRender.renderItemAndEffectIntoGUI(itm, x, y);
-            renderItemOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
+            try {
+                itemRender.renderItemAndEffectIntoGUI(itm, x, y);
+                renderItemOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
+            } catch (Exception e) {
+                ThrowableIdentity.registerThrowable(e);
+                rc = false; // Report error
+            }
             GlStateManager.popMatrix();
             GlStateManager.disableRescaleNormal();
             GlStateManager.disableLighting();
-            rc = 20;
         }
 
         return rc;

@@ -43,7 +43,7 @@ public class Config {
     // Chest related settings
     public static int showSmallChestContentsWithoutSneaking = 0;
     public static int showItemDetailThresshold = 4;
-    public static String[] showContentsWithoutSneaking = { "storagedrawers:basicDrawers" };
+    public static String[] showContentsWithoutSneaking = { "storagedrawers:basicDrawers", "storagedrawersextra:extra_drawers" };
     public static String[] dontShowContentsUnlessSneaking = {};
     private static Set<ResourceLocation> inventoriesToShow = null;
     private static Set<ResourceLocation> inventoriesToNotShow = null;

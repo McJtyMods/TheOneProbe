@@ -1,10 +1,12 @@
 package mcjty.theoneprobe.apiimpl.client;
 
 import mcjty.theoneprobe.api.IItemStyle;
+import mcjty.theoneprobe.network.ThrowableIdentity;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 public class ElementItemStackRender {
 
@@ -25,7 +27,10 @@ public class ElementItemStackRender {
                 amount = String.valueOf(size / 1000000000) + "g";
             }
 
-            RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount);
+            if (!RenderHelper.renderItemStack(Minecraft.getMinecraft(), itemRender, itemStack, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount)) {
+                // There was a crash rendering this item
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, TextFormatting.RED + "ERROR: " + itemStack.getDisplayName());
+            }
         }
     }
 
