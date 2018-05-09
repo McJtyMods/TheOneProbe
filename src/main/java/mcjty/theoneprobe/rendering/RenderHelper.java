@@ -41,7 +41,7 @@ public class RenderHelper {
         GlStateManager.translate(0.0F, (float) entity.getYOffset() + (entity instanceof EntityHanging ? 0.5F : 0.0F), 0.0F);
         Minecraft.getMinecraft().getRenderManager().playerViewY = 180F;
         try {
-            Minecraft.getMinecraft().getRenderManager().doRenderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+            Minecraft.getMinecraft().getRenderManager().renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
         } catch (Exception e) {
             TheOneProbe.logger.error("Error rendering entity!", e);
         }
