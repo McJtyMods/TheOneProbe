@@ -148,16 +148,16 @@ public class OverlayRenderer {
             return;
         }
 //@todo
-//        if (bindings instanceof EntityDragonPart) {
-//            EntityDragonPart part = (EntityDragonPart) bindings;
+//        if (entity instanceof EntityDragonPart) {
+//            EntityDragonPart part = (EntityDragonPart) entity;
 //            if (part.entityDragonObj instanceof Entity) {
-//                bindings = (Entity) part.entityDragonObj;
+//                entity = (Entity) part.entityDragonObj;
 //            }
 //        }
 
         String entityString = EntityList.getEntityString(entity);
         if (entityString == null && !(entity instanceof EntityPlayer)) {
-            // We can't show info for this bindings
+            // We can't show info for this entity
             return;
         }
 

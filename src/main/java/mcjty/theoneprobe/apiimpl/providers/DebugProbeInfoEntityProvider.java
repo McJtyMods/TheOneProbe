@@ -20,7 +20,7 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
 
     @Override
     public String getID() {
-        return TheOneProbe.MODID + ":bindings.debug";
+        return TheOneProbe.MODID + ":entity.debug";
     }
 
     @Override

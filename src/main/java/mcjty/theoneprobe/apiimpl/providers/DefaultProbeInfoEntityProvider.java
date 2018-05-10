@@ -37,7 +37,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
 
     @Override
     public String getID() {
-        return TheOneProbe.MODID + ":bindings.default";
+        return TheOneProbe.MODID + ":entity.default";
     }
 
     private static DecimalFormat dfCommas = new DecimalFormat("##.#");

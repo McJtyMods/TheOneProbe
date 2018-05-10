@@ -49,7 +49,7 @@ public class GuiNote extends GuiScreen {
         y += 10;
 
         RenderHelper.renderText(Minecraft.getMinecraft(), x, y, BOLD + "This mod can show a tooltip on screen"); y += 10;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, BOLD + "when you look at a block or an bindings"); y += 10;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, BOLD + "when you look at a block or an entity"); y += 10;
 
         y += 10;
         switch (Config.needsProbe) {

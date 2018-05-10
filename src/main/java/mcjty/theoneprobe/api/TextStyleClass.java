@@ -7,7 +7,7 @@ package mcjty.theoneprobe.api;
  */
 public enum TextStyleClass {
     MODNAME("m", "ModName"),         // Name of the mod
-    NAME("n", "Name"),               // Name of the block or bindings
+    NAME("n", "Name"),               // Name of the block or entity
     INFO("i", "Info"),               // General info, neutral
     INFOIMP("I", "InfoImportant"),   // General info, important
     WARNING("w", "Warning"),         // Warning, something is not ready (not mature), or missing stuff

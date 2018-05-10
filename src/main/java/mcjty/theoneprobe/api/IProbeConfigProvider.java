@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 public interface IProbeConfigProvider {
 
     /**
-     * Possibly override the config for this bindings. You can make modifications to the given 'config' which starts
+     * Possibly override the config for this entity. You can make modifications to the given 'config' which starts
      * from default.
      */
     void getProbeConfig(IProbeConfig config, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data);

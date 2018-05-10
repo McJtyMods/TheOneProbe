@@ -41,7 +41,7 @@ public interface IProbeInfo {
     IItemStyle defaultItemStyle();
 
     /**
-     * Create a default style for the bindings element
+     * Create a default style for the entity element
      */
     IEntityStyle defaultEntityStyle();
 
@@ -58,7 +58,7 @@ public interface IProbeInfo {
     IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h);
 
     /**
-     * entityName can be an old-style bindings name (like 'Zombie') or the string
+     * entityName can be an old-style entity name (like 'Zombie') or the string
      * representation of a resourcelocation (like 'minecraft:zombie')
      */
     IProbeInfo entity(String entityName, IEntityStyle style);

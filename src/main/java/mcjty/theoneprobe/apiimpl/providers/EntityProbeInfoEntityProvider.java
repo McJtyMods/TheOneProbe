@@ -10,7 +10,7 @@ public class EntityProbeInfoEntityProvider implements IProbeInfoEntityProvider {
 
     @Override
     public String getID() {
-        return TheOneProbe.MODID + ":bindings.bindings";
+        return TheOneProbe.MODID + ":entity.entity";
     }
 
     @Override

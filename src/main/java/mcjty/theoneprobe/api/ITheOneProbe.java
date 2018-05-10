@@ -34,11 +34,11 @@ public interface ITheOneProbe {
      * is one way to replace the standard providers. TheOneProbe has the following standard
      * providers (registered in the given order):
      *
-     *   - "theoneprobe:bindings.default": this is the default provider that takes care of showing
-     *     the bindings name and modid as well as the current health of the bindings.
-     *   - "theoneprobe:bindings.debug": this provider shows debug information if the creative probe
+     *   - "theoneprobe:entity.default": this is the default provider that takes care of showing
+     *     the entity name and modid as well as the current health of the entity.
+     *   - "theoneprobe:entity.debug": this provider shows debug information if the creative probe
      *     is being used.
-     *   - "theoneprobe:bindings.bindings": this provider will check if the bindings has an IProbeInfoEntityAccessor
+     *   - "theoneprobe:entity.entity": this provider will check if the entity has an IProbeInfoEntityAccessor
      *     and then use that. i.e. this is the provider that takes care of making sure
      *     that IProbeInfoEntityAccessor works.
      *
@@ -77,8 +77,8 @@ public interface ITheOneProbe {
     void registerBlockDisplayOverride(IBlockDisplayOverride override);
 
     /**
-     * Register an bindings display override implementation so that you can change how the standard
-     * bindings information is shown for your entities.
+     * Register an entity display override implementation so that you can change how the standard
+     * entity information is shown for your entities.
      */
     void registerEntityDisplayOverride(IEntityDisplayOverride override);
 }
