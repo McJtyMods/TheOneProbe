@@ -41,11 +41,11 @@ public class ElementEntityRender {
     private static final EntityId FIXER = new EntityId();
 
     /**
-     * This method attempts to fix an old-style (1.10.2) entity Id and convert it to the
+     * This method attempts to fix an old-style (1.10.2) bindings Id and convert it to the
      * string representation of the new ResourceLocation. The 1.10 version of this function will just return
      * the given id
      * This does not work for modded entities.
-     * @param id an old-style entity id as used in 1.10
+     * @param id an old-style bindings id as used in 1.10
      * @return
      */
     public static String fixEntityId(String id) {

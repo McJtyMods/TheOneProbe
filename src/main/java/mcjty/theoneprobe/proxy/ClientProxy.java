@@ -70,14 +70,14 @@ public class ClientProxy extends CommonProxy {
 //                .item(new ItemStack(Items.EMERALD));
 //        vertical
 //                .horizontal(probeInfo.defaultLayoutStyle().borderColor(0xffffffff))
-//                .entity(EntityList.getEntityStringFromClass(EntityCaveSpider.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityCow.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityWither.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityChicken.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityEnderman.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityHorse.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityWolf.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityDragon.class))
+//                .bindings(EntityList.getEntityStringFromClass(EntityCaveSpider.class))
+//                .bindings(EntityList.getEntityStringFromClass(EntityCow.class))
+//                .bindings(EntityList.getEntityStringFromClass(EntityWither.class))
+//                .bindings(EntityList.getEntityStringFromClass(EntityChicken.class))
+//                .bindings(EntityList.getEntityStringFromClass(EntityEnderman.class))
+//                .bindings(EntityList.getEntityStringFromClass(EntityHorse.class))
+//                .bindings(EntityList.getEntityStringFromClass(EntityWolf.class))
+//                .bindings(EntityList.getEntityStringFromClass(EntityDragon.class))
 //                ;
 //        vertical
 //                .progress(8, 10, probeInfo.defaultProgressStyle().lifeBar(true));

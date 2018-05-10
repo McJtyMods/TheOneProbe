@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.api;
 
 /**
- * Style for the entity element.
+ * Style for the bindings element.
  */
 public interface IEntityStyle {
     /**
@@ -15,7 +15,7 @@ public interface IEntityStyle {
     IEntityStyle height(int h);
 
     /**
-     * Change the scale of the entity inside the element. Default is 1.0 which
+     * Change the scale of the bindings inside the element. Default is 1.0 which
      * tries to fit as good as possible.
      */
     IEntityStyle scale(float scale);

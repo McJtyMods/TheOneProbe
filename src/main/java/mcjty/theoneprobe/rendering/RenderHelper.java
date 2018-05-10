@@ -36,14 +36,14 @@ public class RenderHelper {
         GlStateManager.rotate(-135F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(rot, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(0.0F, 1.0F, 0.0F, 0.0F);
-//        entity.renderYawOffset = entity.rotationYaw = entity.prevRotationYaw = entity.prevRotationYawHead = entity.rotationYawHead = 0;//this.rotateTurret;
+//        bindings.renderYawOffset = bindings.rotationYaw = bindings.prevRotationYaw = bindings.prevRotationYawHead = bindings.rotationYawHead = 0;//this.rotateTurret;
         entity.rotationPitch = 0.0F;
         GlStateManager.translate(0.0F, (float) entity.getYOffset() + (entity instanceof EntityHanging ? 0.5F : 0.0F), 0.0F);
         Minecraft.getMinecraft().getRenderManager().playerViewY = 180F;
         try {
             Minecraft.getMinecraft().getRenderManager().renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
         } catch (Exception e) {
-            TheOneProbe.logger.error("Error rendering entity!", e);
+            TheOneProbe.logger.error("Error rendering bindings!", e);
         }
         GlStateManager.popMatrix();
         net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();

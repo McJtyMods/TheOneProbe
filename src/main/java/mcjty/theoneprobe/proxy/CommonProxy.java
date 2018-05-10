@@ -117,7 +117,7 @@ public abstract class CommonProxy {
             defaultValues[i++] = provider.getID();
         }
 
-        String[] sortedProviders = TheOneProbe.config.getStringList("sortedEntityProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which entity providers should be used");
+        String[] sortedProviders = TheOneProbe.config.getStringList("sortedEntityProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which bindings providers should be used");
         String[] excludedProviders = TheOneProbe.config.getStringList("excludedEntityProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Entity providers that should be excluded");
         Set<String> excluded = new HashSet<>();
         Collections.addAll(excluded, excludedProviders);
