@@ -266,10 +266,13 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                                              BlockPos pos, EntityPlayer player, IProbeHitData data) {
         String modid = Tools.getModName(block);
 
+        ItemStack pickBlock = data.getPickBlock();
+
         if (block instanceof BlockSilverfish && mode != ProbeMode.DEBUG && !Tools.show(mode,config.getShowSilverfish())) {
             BlockSilverfish.EnumType type = blockState.getValue(BlockSilverfish.VARIANT);
             blockState = type.getModelBlock();
             block = blockState.getBlock();
+            pickBlock = new ItemStack(block, 1, block.getMetaFromState(blockState));
         }
 
         if (block instanceof BlockFluidBase || block instanceof BlockLiquid) {
@@ -292,7 +295,6 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             }
         }
 
-        ItemStack pickBlock = data.getPickBlock();
         if (!pickBlock.isEmpty()) {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.horizontal()
