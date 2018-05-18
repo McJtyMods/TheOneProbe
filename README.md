@@ -14,6 +14,18 @@ This mod also has a flexible API that other mods can use to add more information
 
 ***
 
+## Maven
+
+    repositories {
+        maven { // TOP
+            name 'tterrag maven'
+            url "https://maven.tterrag.com/"
+        }
+
+    dependencies {
+        deobfCompile "mcjty.theoneprobe:TheOneProbe-${top_version}"
+    }
+
 ## Licence
 
 #### MIT
