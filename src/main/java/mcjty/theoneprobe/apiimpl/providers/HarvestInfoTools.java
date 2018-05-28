@@ -128,7 +128,7 @@ public class HarvestInfoTools {
                         .text(WARNING + ((harvestTool != null) ? harvestTool : "No tool"));
             } else {
                 horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
-                        .text(WARNING + ((harvestTool != null) ? harvestTool : "No tool") + " (" + harvestName + ")");
+                        .text(WARNING + ((harvestTool != null) ? harvestTool : "No tool") + " (level " + harvestName + ")");
             }
         }
     }
