@@ -42,6 +42,10 @@ repositories {
         name = "CoFH Maven"
         url = "http://maven.covers1624.net"
     }
+    maven {
+        name = "TESLA"
+        url = "https://maven.mcmoddev.com"
+    }
 }
 
 def ENV = System.getenv()
