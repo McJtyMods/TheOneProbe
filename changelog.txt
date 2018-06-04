@@ -1,3 +1,8 @@
+1.4.23:
+- Compatible with the latest version of McJtyLib (for big power api)
+- Fixed a bug where the one probe would show if a stone block contains a silverfish
+- Added the word ‘level’ to the TOP info when a block cannot be harvested to hopefully lessen confusion with this
+
 1.4.23alpha:
 - Compatible with the latest version of McJtyLib (for big power api)
 - Fixed a bug where the one probe would show if a stone block contains a silverfish
