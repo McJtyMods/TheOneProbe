@@ -5,6 +5,7 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
@@ -45,11 +46,11 @@ public class GuiNote extends GuiScreen {
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "Things you should know about" + TextFormatting.GOLD + " The One Probe"); y += 10;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.title")); y += 10;
         y += 10;
 
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, BOLD + "This mod can show a tooltip on screen"); y += 10;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, BOLD + "when you look at a block or an entity"); y += 10;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.body.1")); y += 10;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.body.2")); y += 10;
 
         y += 10;
         switch (Config.needsProbe) {

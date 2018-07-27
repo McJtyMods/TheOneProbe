@@ -1,6 +1,6 @@
-key.toggleLiquids=Toggle Liquid View
-key.toggleVisible=Visibility Toggle
-key.categories.theoneprobe=The One Probe
+itemGroup.Probe=The One Probe
+
+# Item
 item.theoneprobe.probe.name=The One Probe
 item.theoneprobe.probe_goggles.name=The One Probe (Bauble)
 item.theoneprobe.diamond_helmet_probe.name=Diamond Helmet with Probe
@@ -9,4 +9,29 @@ item.theoneprobe.iron_helmet_probe.name=Iron Helmet with Probe
 item.theoneprobe.creativeprobe.name=The Creative Probe
 item.theoneprobe.probenote.name=The One Probe Read Me
 
-itemGroup.Probe=The One Probe
+# GUI
+gui.theoneprobe.gui_note.title=Things you should know about §6The One Probe
+gui.theoneprobe.gui_note.body.1=§lThis mod can show a tooltip on screen
+gui.theoneprobe.gui_note.body.2=§lwhen you look at a block or an entity
+gui.theoneprobe.gui_note.needed.1=In this pack the probe is configured to be
+gui.theoneprobe.gui_note.needed.2=required in order to see the tooltip
+gui.theoneprobe.gui_note.not_needed.1=In this pack the probe is configured to be not
+gui.theoneprobe.gui_note.not_needed.2=required in order to see the tooltip
+gui.theoneprobe.gui_note.needed_for_extended.1=In this pack the probe is configured to be
+gui.theoneprobe.gui_note.needed_for_extended.2=required to see extended information (when
+gui.theoneprobe.gui_note.needed_for_extended.3=sneaking) but not for basic information
+gui.theoneprobe.gui_note.needed_hard.1=In this pack the probe is configured to be
+gui.theoneprobe.gui_note.needed_hard.2=required in order to see the tooltip
+gui.theoneprobe.gui_note.needed_hard.3=This is set server side
+gui.theoneprobe.gui_note.tail.1=Check out the 'Mod Options... for many client'
+gui.theoneprobe.gui_note.tail.2=side configuration settings or sneak-right click
+gui.theoneprobe.gui_note.tail.3=this note for more user-friendly setup
+gui.theoneprobe.gui_note.button.needed=Needed
+gui.theoneprobe.gui_note.button.not_needed=Not needed
+gui.theoneprobe.gui_note.button.extended=Extended
+
+# Key
+key.toggleLiquids=Toggle Liquid View
+key.toggleVisible=Visibility Toggle
+key.categories.theoneprobe=The One Probe
+

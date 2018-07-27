@@ -8,3 +8,9 @@ item.theoneprobe.iron_helmet_probe.name=带检测器的铁头盔
 item.theoneprobe.creativeprobe.name=创造模式检测器
 
 #itemGroup.Probe=The One Probe
+
+# GUI
+gui.theoneprobe.gui_note.main.1=关于 §6The One Probe §r你应当知道的一些事
+gui.theoneprobe.gui_note.main.2=
+gui.theoneprobe.gui_note.main.3=
+gui.theoneprobe.gui_note.main.4=
