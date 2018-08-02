@@ -11,10 +11,10 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
@@ -40,10 +40,10 @@ public class GuiConfig extends GuiScreen {
     private List<HitBox> hitboxes = Collections.emptyList();
 
     static {
-        presets.add(new Preset("Default style", 0xff999999, 0x55006699, 2, 0));
-        presets.add(new Preset("WAILA style", 0xff4503d0, 0xff000000, 1, 1));
-        presets.add(new Preset("Full transparent style", 0x00000000, 0x00000000, 0, 0));
-        presets.add(new Preset("Black & White style", 0xffffffff, 0xff000000, 2, 0,
+        presets.add(new Preset(I18n.format("gui.theoneprobe.gui_config.style.default"), 0xff999999, 0x55006699, 2, 0));
+        presets.add(new Preset(I18n.format("gui.theoneprobe.gui_config.style.waila"), 0xff4503d0, 0xff000000, 1, 1));
+        presets.add(new Preset(I18n.format("gui.theoneprobe.gui_config.style.transparent"), 0x00000000, 0x00000000, 0, 0));
+        presets.add(new Preset(I18n.format("gui.theoneprobe.gui_config.style.black_and_white"), 0xffffffff, 0xff000000, 2, 0,
                 Pair.of(MODNAME, "white,italic"),
                 Pair.of(NAME, "white,bold"),
                 Pair.of(INFO, "white"),
@@ -82,17 +82,17 @@ public class GuiConfig extends GuiScreen {
 
         int x = WIDTH + guiLeft + 10;
         int y = guiTop + 10;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, TextFormatting.GOLD + "Placement:");
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_config.placement.title"));
         y += 12;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x+10, y, "Click on corner in screenshot");
+        RenderHelper.renderText(Minecraft.getMinecraft(), x + 10, y, I18n.format("gui.theoneprobe.gui_config.placement.body.1"));
         y += 10;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x+10, y, "to move tooltip there");
+        RenderHelper.renderText(Minecraft.getMinecraft(), x + 10, y, I18n.format("gui.theoneprobe.gui_config.placement.body.2"));
         y += 10;
 
         y += 20;
 
         hitboxes = new ArrayList<>();
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, TextFormatting.GOLD + "Presets:");
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_config.presets.title"));
         y += 12;
         for (Preset preset : presets) {
             y = addPreset(x, y, preset);
@@ -100,13 +100,28 @@ public class GuiConfig extends GuiScreen {
 
         y += 20;
 
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, TextFormatting.GOLD + "Scale:");
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_config.scale.title"));
         y += 12;
-        addButton(x+10, y, 30, 14, "--", () -> { Config.setScale(1.2f);}); x += 36;
-        addButton(x+10, y, 30, 14, "-", () -> { Config.setScale(1.1f);}); x += 36;
-        addButton(x+10, y, 30, 14, "0", () -> { Config.setScale(1f);}); x += 36;
-        addButton(x+10, y, 30, 14, "+", () -> { Config.setScale(0.9f);}); x += 36;
-        addButton(x+10, y, 30, 14, "++", () -> { Config.setScale(0.8f);}); x += 36;
+        addButton(x + 10, y, 30, 14, "--", () -> {
+            Config.setScale(1.2f);
+        });
+        x += 36;
+        addButton(x + 10, y, 30, 14, "-", () -> {
+            Config.setScale(1.1f);
+        });
+        x += 36;
+        addButton(x + 10, y, 30, 14, "0", () -> {
+            Config.setScale(1f);
+        });
+        x += 36;
+        addButton(x + 10, y, 30, 14, "+", () -> {
+            Config.setScale(0.9f);
+        });
+        x += 36;
+        addButton(x + 10, y, 30, 14, "++", () -> {
+            Config.setScale(0.8f);
+        });
+        x += 36;
 
         int margin = 90;
         hitboxes.add(new HitBox(0, 0, margin, margin, () -> {
@@ -143,7 +158,7 @@ public class GuiConfig extends GuiScreen {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         if (mouseButton == 0) {
             for (HitBox box : hitboxes) {
-                if (box.isHit(mouseX-guiLeft, mouseY-guiTop)) {
+                if (box.isHit(mouseX - guiLeft, mouseY - guiTop)) {
                     box.call();
                 }
             }
@@ -173,9 +188,9 @@ public class GuiConfig extends GuiScreen {
     }
 
     private void addButton(int x, int y, int width, int height, String text, Runnable runnable) {
-        drawRect(x, y, x + width-1, y + height-1, 0xff000000);
+        drawRect(x, y, x + width - 1, y + height - 1, 0xff000000);
         RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 3, text);
-        hitboxes.add(new HitBox(x - guiLeft, y - guiTop, x + width -1 - guiLeft, y + height -1 - guiTop, runnable));
+        hitboxes.add(new HitBox(x - guiLeft, y - guiTop, x + width - 1 - guiLeft, y + height - 1 - guiTop, runnable));
     }
 
     private void renderProbe() {
@@ -188,8 +203,8 @@ public class GuiConfig extends GuiScreen {
                 .vertical()
                 .text(NAME + pickBlock.getDisplayName())
                 .text(MODNAME + modid);
-        probeInfo.text(LABEL + "Fuel: " + INFO + "5 volts");
-        probeInfo.text(LABEL + "Error: " + ERROR + "Oups!");
+        probeInfo.text(I18n.format("gui.theoneprobe.gui_config.render_probe.1", LABEL, INFO));
+        probeInfo.text(I18n.format("gui.theoneprobe.gui_config.render_probe.2", LABEL, ERROR));
 
         renderElements(probeInfo, Config.getDefaultOverlayStyle());
     }
@@ -197,7 +212,7 @@ public class GuiConfig extends GuiScreen {
     private void renderElements(ProbeInfo probeInfo, IOverlayStyle style) {
 
         GlStateManager.pushMatrix();
-        GlStateManager.scale(1/Config.tooltipScale, 1/Config.tooltipScale, 1/Config.tooltipScale);
+        GlStateManager.scale(1 / Config.tooltipScale, 1 / Config.tooltipScale, 1 / Config.tooltipScale);
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
@@ -245,7 +260,7 @@ public class GuiConfig extends GuiScreen {
             if (offset > 0) {
                 RenderHelper.drawThickBeveledBox(x, y, x2, y2, thick, style.getBoxColor(), style.getBoxColor(), style.getBoxColor());
             }
-            RenderHelper.drawThickBeveledBox(x+offset, y+offset, x2-offset, y2-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
+            RenderHelper.drawThickBeveledBox(x + offset, y + offset, x2 - offset, y2 - offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
         if (!Minecraft.getMinecraft().isGamePaused()) {

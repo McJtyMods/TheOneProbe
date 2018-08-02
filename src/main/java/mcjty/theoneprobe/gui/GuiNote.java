@@ -7,12 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
 
 import java.io.IOException;
 
 import static mcjty.theoneprobe.config.Config.*;
-import static net.minecraft.util.text.TextFormatting.*;
 
 public class GuiNote extends GuiScreen {
     private static final int WIDTH = 256;
@@ -44,47 +42,63 @@ public class GuiNote extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTicks);
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
-        int x = guiLeft+5;
-        int y = guiTop+8;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.title")); y += 10;
+        int x = guiLeft + 5;
+        int y = guiTop + 8;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.title"));
+        y += 10;
         y += 10;
 
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.body.1")); y += 10;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.body.2")); y += 10;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.body.1"));
+        y += 10;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.body.2"));
+        y += 10;
 
         y += 10;
         switch (Config.needsProbe) {
             case PROBE_NEEDED:
-                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "In this pack the probe is configured to be"); y += 10;
-                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "required in order to see the tooltip"); y += 10;
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.needed.1"));
+                y += 10;
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.needed.2"));
+                y += 10;
                 y += 16;
                 y = setInConfig(x, y);
                 break;
             case PROBE_NOTNEEDED:
-                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "In this pack the probe is configured to be not"); y += 10;
-                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "required in order to see the tooltip"); y += 10;
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.not_needed.1"));
+                y += 10;
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.not_needed.2"));
+                y += 10;
                 y += 16;
                 y = setInConfig(x, y);
                 break;
             case PROBE_NEEDEDFOREXTENDED:
-                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "In this pack the probe is configured to be"); y += 10;
-                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "required to see extended information (when"); y += 10;
-                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "sneaking) but not for basic information"); y += 10;
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.needed_for_extended.1"));
+                y += 10;
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.needed_for_extended.2"));
+                y += 10;
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.needed_for_extended.3"));
+                y += 10;
                 y += 6;
                 y = setInConfig(x, y);
                 break;
             case PROBE_NEEDEDHARD:
-                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "In this pack the probe is configured to be"); y += 10;
-                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "required in order to see the tooltip"); y += 10;
-                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "This is set server side"); y += 10;
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.needed_hard.1"));
+                y += 10;
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.needed_hard.2"));
+                y += 10;
+                RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.needed_hard.3"));
+                y += 10;
                 break;
         }
 
         y += 10;
 
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "Check out the 'Mod Options... for many client'"); y += 10;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "side configuration settings or sneak-right click"); y += 10;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "this note for more user-friendly setup"); y += 10;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.tail.1"));
+        y += 10;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.tail.2"));
+        y += 10;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.tail.3"));
+        y += 10;
     }
 
     private int hitX;
@@ -98,28 +112,31 @@ public class GuiNote extends GuiScreen {
         if (mouseY >= hitY && mouseY < hitY + BUTTON_HEIGHT) {
             if (mouseX >= hitX && mouseX < hitX + BUTTON_WIDTH) {
                 Config.setProbeNeeded(PROBE_NEEDED);
-            } else if (mouseX >= hitX+BUTTON_MARGIN && mouseX < hitX + BUTTON_WIDTH+BUTTON_MARGIN) {
+            } else if (mouseX >= hitX + BUTTON_MARGIN && mouseX < hitX + BUTTON_WIDTH + BUTTON_MARGIN) {
                 Config.setProbeNeeded(PROBE_NOTNEEDED);
-            } else if (mouseX >= hitX+BUTTON_MARGIN*2 && mouseX < hitX + BUTTON_WIDTH+BUTTON_MARGIN*2) {
+            } else if (mouseX >= hitX + BUTTON_MARGIN * 2 && mouseX < hitX + BUTTON_WIDTH + BUTTON_MARGIN * 2) {
                 Config.setProbeNeeded(PROBE_NEEDEDFOREXTENDED);
             }
         }
     }
 
     private int setInConfig(int x, int y) {
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, BOLD + "" + GREEN + "You can change this here:");
+        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, I18n.format("gui.theoneprobe.gui_note.button.title"));
         y += 10;
 
         hitY = y + guiTop;
         hitX = x + guiLeft;
         drawRect(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
-        RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 4, "Needed"); x += BUTTON_MARGIN;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 4, I18n.format("gui.theoneprobe.gui_note.button.needed"));
+        x += BUTTON_MARGIN;
 
         drawRect(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
-        RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 4, "Not needed"); x += BUTTON_MARGIN;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 4, I18n.format("gui.theoneprobe.gui_note.button.not_needed"));
+        x += BUTTON_MARGIN;
 
         drawRect(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
-        RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 4, "Extended"); x += BUTTON_MARGIN;
+        RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 4, I18n.format("gui.theoneprobe.gui_note.button.extended"));
+        x += BUTTON_MARGIN;
 
         y += BUTTON_HEIGHT - 4;
         return y;

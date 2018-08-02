@@ -1,16 +1,89 @@
-key.toggleLiquids=液体信息显示开关
-key.toggleVisible=信息显示开关
-#key.categories.theoneprobe=The One Probe
-item.theoneprobe.probe.name=检测器No.1
+itemGroup.Probe=The One Probe
+
+# Item
+item.theoneprobe.probe.name=检测器 No.1
+item.theoneprobe.probe_goggles.name=检测器(视频)
 item.theoneprobe.diamond_helmet_probe.name=带检测器的钻石头盔
 item.theoneprobe.gold_helmet_probe.name=带检测器的金头盔
 item.theoneprobe.iron_helmet_probe.name=带检测器的铁头盔
 item.theoneprobe.creativeprobe.name=创造模式检测器
-
-#itemGroup.Probe=The One Probe
+item.theoneprobe.probenote.name=The One Probe 说明书
 
 # GUI
-gui.theoneprobe.gui_note.main.1=关于 §6The One Probe §r你应当知道的一些事
-gui.theoneprobe.gui_note.main.2=
-gui.theoneprobe.gui_note.main.3=
-gui.theoneprobe.gui_note.main.4=
+gui.theoneprobe.gui_note.title=关于 §6The One Probe §r你应当知道的一些事
+gui.theoneprobe.gui_note.body.1=§l这个模组能够在你看向方块或者实体的时候，在屏幕上
+gui.theoneprobe.gui_note.body.2=§l显示文本提示
+gui.theoneprobe.gui_note.needed.1=这个整合中，该模组被配置为需要检测器才能够看到文本
+gui.theoneprobe.gui_note.needed.2=提示
+gui.theoneprobe.gui_note.not_needed.1=这个整合中，该模组被配置为不需要检测器即可看到文本提
+gui.theoneprobe.gui_note.not_needed.2=示
+gui.theoneprobe.gui_note.needed_for_extended.1=在这个整合中，该模组被配置为需要检测器才能够看到拓展
+gui.theoneprobe.gui_note.needed_for_extended.2=信息（也就是 Shift 时看到的信息），在普通模式下则不
+gui.theoneprobe.gui_note.needed_for_extended.3=需要
+gui.theoneprobe.gui_note.needed_hard.1=这个整合中，该模组被配置为需要检测器才能够看到文本提
+gui.theoneprobe.gui_note.needed_hard.2=示
+gui.theoneprobe.gui_note.needed_hard.3=且此配置在服务端设定
+gui.theoneprobe.gui_note.tail.1=打开“Mod 选项”按钮查看更多客户端设置，还可以 shift 点
+gui.theoneprobe.gui_note.tail.2=击此说明来打开一个人性化的配置界面
+gui.theoneprobe.gui_note.tail.3=
+gui.theoneprobe.gui_note.button.title=§l§a你可以在此处更改模式：
+gui.theoneprobe.gui_note.button.needed=需要检测器
+gui.theoneprobe.gui_note.button.not_needed=无需检测器
+gui.theoneprobe.gui_note.button.extended=拓展模式
+
+gui.theoneprobe.gui_config.style.default=默认样式
+gui.theoneprobe.gui_config.style.waila=WAILA样式
+gui.theoneprobe.gui_config.style.transparent=全透明样式
+gui.theoneprobe.gui_config.style.black_and_white=黑白样式
+gui.theoneprobe.gui_config.placement.title=§6显示位置：
+gui.theoneprobe.gui_config.placement.body.1=点击左侧图片来移动文本提示位置
+gui.theoneprobe.gui_config.placement.body.2=
+gui.theoneprobe.gui_config.presets.title=§6预制样式：
+gui.theoneprobe.gui_config.scale.title=§6显示大小：
+gui.theoneprobe.gui_config.render_probe.1=%s燃料值：%s5 伏特
+gui.theoneprobe.gui_config.render_probe.2=%s错误：%s我的天！
+
+gui.theoneprobe.default_provider.brewing.fuel=%s燃料：%s%s
+gui.theoneprobe.default_provider.brewing.time=%s时间：%s%s ticks
+gui.theoneprobe.default_provider.spawner.mob=%生物：%s%s
+gui.theoneprobe.default_provider.rf.power=%s能量：%s%s
+gui.theoneprobe.default_provider.lever.state=%s状态：%s%s
+gui.theoneprobe.default_provider.lever.mode=%s模式：%s%s
+gui.theoneprobe.default_provider.lever.mode:compare=比较模式
+gui.theoneprobe.default_provider.lever.mode:subtract=减法模式
+gui.theoneprobe.default_provider.lever.delay=%s延时：%s%s ticks
+gui.theoneprobe.default_provider.lever.locked=%s锁死
+gui.theoneprobe.default_provider.fluid.name=%s流体：%s
+gui.theoneprobe.default_provider.growth.full_grown=%s成熟
+gui.theoneprobe.default_provider.growth.growth=%s生长进度：%s%s%%
+
+gui.theoneprobe.entity_provider.health=%s生命值：%s%d / %d
+gui.theoneprobe.entity_provider.growing_time=%s成长时间：%ds
+gui.theoneprobe.entity_provider.rotation=%s旋转：%s%d
+gui.theoneprobe.entity_provider.empty=%s空
+gui.theoneprobe.entity_provider.unknown_owner=%s未知主人
+gui.theoneprobe.entity_provider.owner=%s主人：%s%s
+gui.theoneprobe.entity_provider.tameable=%s可驯服
+gui.theoneprobe.entity_provider.jump_height=%s跳跃高度：%s%s
+gui.theoneprobe.entity_provider.speed=%s速度：%s%s
+gui.theoneprobe.entity_provider.collar=%s项圈颜色：%s%s
+
+gui.theoneprobe.harvest_info_tools.harvest_tool:shovel=铲
+gui.theoneprobe.harvest_info_tools.harvest_tool:axe=斧
+gui.theoneprobe.harvest_info_tools.harvest_tool:pickaxe=镐
+gui.theoneprobe.harvest_info_tools.harvest_name:stone=石
+gui.theoneprobe.harvest_info_tools.harvest_name:iron=铁
+gui.theoneprobe.harvest_info_tools.harvest_name:diamond=钻石
+gui.theoneprobe.harvest_info_tools.harvest_name:obsidian=黑曜石
+gui.theoneprobe.harvest_info_tools.harvest_name:cobalt=钴
+
+gui.theoneprobe.harvest_info_tools.show_harvest_level=%s工具：%s%s（等级 %s）
+gui.theoneprobe.harvest_info_tools.show_can_be_harvested_yes=%s可采掘
+gui.theoneprobe.harvest_info_tools.show_can_be_harvested_no=%s不可采掘
+gui.theoneprobe.harvest_info_tools.show_harvest_info:no_tool=无工具
+gui.theoneprobe.harvest_info_tools.show_harvest_info:level=（等级 %s）
+
+# Key
+key.toggleLiquids=液体信息显示开关
+key.toggleVisible=信息显示开关
+key.categories.theoneprobe=The One Probe

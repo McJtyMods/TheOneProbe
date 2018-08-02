@@ -26,9 +26,62 @@ gui.theoneprobe.gui_note.needed_hard.3=This is set server side
 gui.theoneprobe.gui_note.tail.1=Check out the 'Mod Options... for many client'
 gui.theoneprobe.gui_note.tail.2=side configuration settings or sneak-right click
 gui.theoneprobe.gui_note.tail.3=this note for more user-friendly setup
+gui.theoneprobe.gui_note.button.title=§l§aYou can change this here:
 gui.theoneprobe.gui_note.button.needed=Needed
 gui.theoneprobe.gui_note.button.not_needed=Not needed
 gui.theoneprobe.gui_note.button.extended=Extended
+
+gui.theoneprobe.gui_config.style.default=Default style
+gui.theoneprobe.gui_config.style.waila=WAILA style
+gui.theoneprobe.gui_config.style.transparent=Full transparent style
+gui.theoneprobe.gui_config.style.black_and_white=Black & White style
+gui.theoneprobe.gui_config.placement.title=§6Placement:
+gui.theoneprobe.gui_config.placement.body.1=Click on corner in screenshot
+gui.theoneprobe.gui_config.placement.body.2=to move tooltip there
+gui.theoneprobe.gui_config.presets.title=§6Presets:
+gui.theoneprobe.gui_config.scale.title=§6Scale:
+gui.theoneprobe.gui_config.render_probe.1=%sFuel: %s5 volts
+gui.theoneprobe.gui_config.render_probe.2=%sError: %sOups!
+
+gui.theoneprobe.default_provider.brewing.fuel=%sFuel: %s%s
+gui.theoneprobe.default_provider.brewing.time=%sTime: %s%s ticks
+gui.theoneprobe.default_provider.spawner.mob=%Mob: %s%s
+gui.theoneprobe.default_provider.rf.power=%sPower: %s%s
+gui.theoneprobe.default_provider.lever.state=%sState: %s%s
+gui.theoneprobe.default_provider.lever.mode=%sMode: %s%s
+gui.theoneprobe.default_provider.lever.mode:compare=Compare
+gui.theoneprobe.default_provider.lever.mode:subtract=Subtract
+gui.theoneprobe.default_provider.lever.delay=%sDelay: %s%s ticks
+gui.theoneprobe.default_provider.lever.locked=%sLocked
+gui.theoneprobe.default_provider.fluid.name=%sLiquid: %s
+gui.theoneprobe.default_provider.growth.full_grown=%sFully grown
+gui.theoneprobe.default_provider.growth.growth=%sGrowth: %s%s%%
+
+gui.theoneprobe.entity_provider.health=%sHealth: %s%d / %d
+gui.theoneprobe.entity_provider.growing_time=%sGrowing time: %ds
+gui.theoneprobe.entity_provider.rotation=%sRotation: %s%d
+gui.theoneprobe.entity_provider.empty=%sEmpty
+gui.theoneprobe.entity_provider.unknown_owner=%sUnknown owner
+gui.theoneprobe.entity_provider.owner=%sOwned by: %s%s
+gui.theoneprobe.entity_provider.tameable=%sTameable
+gui.theoneprobe.entity_provider.jump_height=%sJump height: %s%s
+gui.theoneprobe.entity_provider.speed=%sSpeed: %s%s
+gui.theoneprobe.entity_provider.collar=%sCollar: %s%s
+
+gui.theoneprobe.harvest_info_tools.harvest_tool:shovel=Shovel
+gui.theoneprobe.harvest_info_tools.harvest_tool:axe=Axe
+gui.theoneprobe.harvest_info_tools.harvest_tool:pickaxe=Pickaxe
+gui.theoneprobe.harvest_info_tools.harvest_name:stone=stone
+gui.theoneprobe.harvest_info_tools.harvest_name:iron=iron
+gui.theoneprobe.harvest_info_tools.harvest_name:diamond=diamond
+gui.theoneprobe.harvest_info_tools.harvest_name:obsidian=obsidian
+gui.theoneprobe.harvest_info_tools.harvest_name:cobalt=cobalt
+
+gui.theoneprobe.harvest_info_tools.show_harvest_level=%sTool: %s%s (level %s)
+gui.theoneprobe.harvest_info_tools.show_can_be_harvested_yes=%sHarvestable
+gui.theoneprobe.harvest_info_tools.show_can_be_harvested_no=%sNot harvestable
+gui.theoneprobe.harvest_info_tools.show_harvest_info:no_tool=No tool
+gui.theoneprobe.harvest_info_tools.show_harvest_info:level= (level %s)
 
 # Key
 key.toggleLiquids=Toggle Liquid View

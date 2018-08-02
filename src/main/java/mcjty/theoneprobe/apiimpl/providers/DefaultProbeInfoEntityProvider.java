@@ -6,15 +6,12 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.passive.EntityTameable;
-import net.minecraft.entity.IEntityOwnable;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
@@ -68,7 +65,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 probeInfo.progress(health, maxHealth, probeInfo.defaultProgressStyle().lifeBar(true).showText(false).width(150).height(10));
 
                 if (mode == ProbeMode.EXTENDED) {
-                    probeInfo.text(LABEL + "Health: " + INFOIMP + health + " / " + maxHealth);
+                    probeInfo.text(I18n.format("gui.theoneprobe.entity_provider.health", LABEL, INFOIMP, health, maxHealth));
                 }
 
                 if (armor > 0) {
@@ -77,10 +74,10 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             }
 
             if (Tools.show(mode, config.getShowMobGrowth()) && entity instanceof EntityAgeable) {
-               int age = ((EntityAgeable) entity).getGrowingAge();
-               if (age < 0) {
-                   probeInfo.text(LABEL + "Growing time: " + ((age * -1) / 20) + "s");
-               }
+                int age = ((EntityAgeable) entity).getGrowingAge();
+                if (age < 0) {
+                    probeInfo.text(I18n.format("gui.theoneprobe.entity_provider.growing_time", LABEL, ((age * -1) / 20)));
+                }
             }
 
             if (Tools.show(mode, config.getShowMobPotionEffects())) {
@@ -108,17 +105,17 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 }
             }
         } else if (entity instanceof EntityItemFrame) {
-            EntityItemFrame itemFrame = (EntityItemFrame)entity;
+            EntityItemFrame itemFrame = (EntityItemFrame) entity;
             ItemStack stack = itemFrame.getDisplayedItem();
-            if(!stack.isEmpty()) {
+            if (!stack.isEmpty()) {
                 probeInfo.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER))
                         .item(stack, new ItemStyle().width(16).height(16))
                         .text(INFO + stack.getDisplayName());
                 if (mode == ProbeMode.EXTENDED) {
-                    probeInfo.text(LABEL + "Rotation: " + INFO + itemFrame.getRotation());
+                    probeInfo.text(I18n.format("gui.theoneprobe.entity_provider.rotation", LABEL, INFO, itemFrame.getRotation()));
                 }
             } else {
-                probeInfo.text(LABEL + "Empty");
+                probeInfo.text(I18n.format("gui.theoneprobe.entity_provider.empty", LABEL));
             }
         }
 
@@ -133,12 +130,12 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if (ownerId != null) {
                 String username = UsernameCache.getLastKnownUsername(ownerId);
                 if (username == null) {
-                    probeInfo.text(WARNING + "Unknown owner");
+                    probeInfo.text(I18n.format("gui.theoneprobe.entity_provider.unknown_owner", WARNING));
                 } else {
-                    probeInfo.text(LABEL + "Owned by: " + INFO + username);
+                    probeInfo.text(I18n.format("gui.theoneprobe.entity_provider.owner", LABEL, INFO, username));
                 }
             } else if (entity instanceof EntityTameable) {
-                probeInfo.text(LABEL + "Tameable");
+                probeInfo.text(I18n.format("gui.theoneprobe.entity_provider.tameable", LABEL));
             }
         }
 
@@ -146,16 +143,16 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if (entity instanceof EntityHorse) {
                 double jumpStrength = ((EntityHorse) entity).getHorseJumpStrength();
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
-                probeInfo.text(LABEL + "Jump height: " + INFO + dfCommas.format(jumpHeight));
+                probeInfo.text(I18n.format("gui.theoneprobe.entity_provider.jump_height", LABEL, INFO, dfCommas.format(jumpHeight)));
                 IAttributeInstance iattributeinstance = ((EntityHorse) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-                probeInfo.text(LABEL + "Speed: " + INFO + dfCommas.format(iattributeinstance.getAttributeValue()));
+                probeInfo.text(I18n.format("gui.theoneprobe.entity_provider.speed", LABEL, INFO, dfCommas.format(iattributeinstance.getAttributeValue())));
             }
         }
 
         if (entity instanceof EntityWolf && Config.showCollarColor) {
             if (((EntityWolf) entity).isTamed()) {
                 EnumDyeColor collarColor = ((EntityWolf) entity).getCollarColor();
-                probeInfo.text(LABEL + "Collar: " + INFO + collarColor.getName());
+                probeInfo.text(I18n.format("gui.theoneprobe.entity_provider.collar", LABEL, INFO, I18n.format("item.fireworksCharge." + collarColor.getUnlocalizedName())));
             }
         }
     }
@@ -184,8 +181,8 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             probeInfo.horizontal()
                     .entity(entity)
                     .vertical()
-                        .text(NAME + entity.getDisplayName().getFormattedText())
-                        .text(MODNAME + modid);
+                    .text(NAME + entity.getDisplayName().getFormattedText())
+                    .text(MODNAME + modid);
         } else {
             probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                     .entity(entity)

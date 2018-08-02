@@ -9,6 +9,7 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -35,6 +36,7 @@ public class HarvestInfoTools {
     };
 
     private static final HashMap<String, ItemStack> testTools = new HashMap<>();
+
     static {
         testTools.put("shovel", new ItemStack(Items.WOODEN_SHOVEL));
         testTools.put("axe", new ItemStack(Items.WOODEN_AXE));
@@ -53,7 +55,9 @@ public class HarvestInfoTools {
             } else {
                 harvestName = harvestLevels[harvestLevel];
             }
-            probeInfo.text(LABEL + "Tool: " + INFO + harvestTool + " (level " + harvestName + ")");
+            probeInfo.text(I18n.format("gui.theoneprobe.harvest_info_tools.show_harvest_level", LABEL, INFO,
+                    I18n.format("gui.theoneprobe.harvest_info_tools.harvest_tool:" + harvestTool.toLowerCase()),
+                    I18n.format("gui.theoneprobe.harvest_info_tools.harvest_name:" + harvestName.toLowerCase())));
         }
     }
 
@@ -66,9 +70,9 @@ public class HarvestInfoTools {
 
         boolean harvestable = block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
         if (harvestable) {
-            probeInfo.text(OK + "Harvestable");
+            probeInfo.text(I18n.format("gui.theoneprobe.harvest_info_tools.show_can_be_harvested_yes", OK));
         } else {
-            probeInfo.text(WARNING + "Not harvestable");
+            probeInfo.text(I18n.format("gui.theoneprobe.harvest_info_tools.show_can_be_harvested_no", WARNING));
         }
     }
 
@@ -121,14 +125,15 @@ public class HarvestInfoTools {
         IProbeInfo horizontal = probeInfo.horizontal(alignment);
         if (harvestable) {
             horizontal.icon(ICONS, 0, offs, dim, dim, iconStyle)
-                    .text(OK + ((harvestTool != null) ? harvestTool : "No tool"));
+                    .text(OK + ((harvestTool != null) ? I18n.format("gui.theoneprobe.harvest_info_tools.harvest_tool:" + harvestTool.toLowerCase()) : I18n.format("gui.theoneprobe.harvest_info_tools.show_harvest_info:no_tool")));
         } else {
             if (harvestName == null || harvestName.isEmpty()) {
                 horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
-                        .text(WARNING + ((harvestTool != null) ? harvestTool : "No tool"));
+                        .text(WARNING + ((harvestTool != null) ? I18n.format("gui.theoneprobe.harvest_info_tools.harvest_tool:" + harvestTool.toLowerCase()) : I18n.format("gui.theoneprobe.harvest_info_tools.show_harvest_info:no_tool")));
             } else {
                 horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
-                        .text(WARNING + ((harvestTool != null) ? harvestTool : "No tool") + " (level " + harvestName + ")");
+                        .text(WARNING + ((harvestTool != null) ? I18n.format("gui.theoneprobe.harvest_info_tools.harvest_tool:" + harvestTool.toLowerCase()) : I18n.format("gui.theoneprobe.harvest_info_tools.show_harvest_info:no_tool"))
+                                + I18n.format("gui.theoneprobe.harvest_info_tools.show_harvest_info:level", I18n.format("gui.theoneprobe.harvest_info_tools.harvest_name:" + harvestName.toLowerCase())));
             }
         }
     }

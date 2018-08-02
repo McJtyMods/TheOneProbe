@@ -11,6 +11,7 @@ import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -21,11 +22,7 @@ import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.BlockFluidBase;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
@@ -107,9 +104,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 int fuel = ((TileEntityBrewingStand) te).getField(1);
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
-                        .text(LABEL + "Fuel: " + INFO + fuel);
+                        .text(I18n.format("gui.theoneprobe.default_provider.brewing.fuel", LABEL, INFO, fuel));
                 if (brewtime > 0) {
-                    probeInfo.text(LABEL + "Time: " + INFO + brewtime + " ticks");
+                    probeInfo.text(I18n.format("gui.theoneprobe.default_provider.brewing.time", LABEL, INFO, brewtime));
                 }
 
             }
@@ -123,8 +120,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 MobSpawnerBaseLogic logic = ((TileEntityMobSpawner) te).getSpawnerBaseLogic();
                 String mobName = logic.getCachedEntity().getName();
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle()
-                    .alignment(ElementAlignment.ALIGN_CENTER))
-                    .text(LABEL + "Mob: " + INFO + mobName);
+                        .alignment(ElementAlignment.ALIGN_CENTER))
+                        .text(I18n.format("gui.theoneprobe.default_provider.spawner.mob", LABEL, INFO, mobName));
             }
         }
     }
@@ -144,7 +141,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (redstonePower > 0) {
             probeInfo.horizontal()
                     .item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
-                    .text(LABEL + "Power: " + INFO + redstonePower);
+                    .text(I18n.format("gui.theoneprobe.default_provider.rf.power", LABEL, INFO, redstonePower));
         }
     }
 
@@ -152,16 +149,16 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (block instanceof BlockLever) {
             Boolean powered = blockState.getValue(BlockLever.POWERED);
             probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
-                    .text(LABEL + "State: " + INFO + (powered ? "On" : "Off"));
+                    .text(I18n.format("gui.theoneprobe.default_provider.lever.state", LABEL, INFO, (powered ? "On" : "Off")));
         } else if (block instanceof BlockRedstoneComparator) {
             BlockRedstoneComparator.Mode mode = blockState.getValue(BlockRedstoneComparator.MODE);
-            probeInfo.text(LABEL + "Mode: " + INFO + mode.getName());
+            probeInfo.text(I18n.format("gui.theoneprobe.default_provider.lever.mode", LABEL, INFO, I18n.format("gui.theoneprobe.default_provider.lever.mode:" + mode.getName())));
         } else if (block instanceof BlockRedstoneRepeater) {
             Boolean locked = blockState.getValue(BlockRedstoneRepeater.LOCKED);
             Integer delay = blockState.getValue(BlockRedstoneRepeater.DELAY);
-            probeInfo.text(LABEL + "Delay: " + INFO + delay + " ticks");
+            probeInfo.text(I18n.format("gui.theoneprobe.default_provider.lever.delay", LABEL, INFO, delay));
             if (locked) {
-                probeInfo.text(INFO + "Locked");
+                probeInfo.text(I18n.format("gui.theoneprobe.default_provider.lever.locked", INFO));
             }
         }
     }
@@ -189,7 +186,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
         int contents = fluidStack == null ? 0 : fluidStack.amount;
         if (fluidStack != null) {
-            probeInfo.text(NAME + "Liquid: " + fluidStack.getLocalizedName());
+            probeInfo.text(I18n.format("gui.theoneprobe.default_provider.fluid.name", NAME, fluidStack.getLocalizedName()));
         }
         if (config.getTankMode() == 1) {
             probeInfo.progress(contents, maxContents,
@@ -247,17 +244,17 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             int age = crops.getAge(blockState);
             int maxAge = crops.getMaxAge();
             if (age == maxAge) {
-                probeInfo.text(OK + "Fully grown");
+                probeInfo.text(I18n.format("gui.theoneprobe.default_provider.growth.full_grown", OK));
             } else {
-                probeInfo.text(LABEL + "Growth: " + WARNING + (age * 100) / maxAge + "%");
+                probeInfo.text(I18n.format("gui.theoneprobe.default_provider.growth.growth", LABEL, WARNING, (age * 100) / maxAge));
             }
         } else if (block instanceof BlockNetherWart) {
             int age = blockState.getValue(BlockNetherWart.AGE);
             int maxAge = 3;
             if (age == maxAge) {
-                probeInfo.text(OK + "Fully grown");
+                probeInfo.text(I18n.format("gui.theoneprobe.default_provider.growth.full_grown", OK));
             } else {
-                probeInfo.text(LABEL + "Growth: " + WARNING + (age * 100) / maxAge + "%");
+                probeInfo.text(I18n.format("gui.theoneprobe.default_provider.growth.growth", LABEL, WARNING, (age * 100) / maxAge));
             }
         }
     }
@@ -268,7 +265,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         ItemStack pickBlock = data.getPickBlock();
 
-        if (block instanceof BlockSilverfish && mode != ProbeMode.DEBUG && !Tools.show(mode,config.getShowSilverfish())) {
+        if (block instanceof BlockSilverfish && mode != ProbeMode.DEBUG && !Tools.show(mode, config.getShowSilverfish())) {
             BlockSilverfish.EnumType type = blockState.getValue(BlockSilverfish.VARIANT);
             blockState = type.getModelBlock();
             block = blockState.getBlock();
