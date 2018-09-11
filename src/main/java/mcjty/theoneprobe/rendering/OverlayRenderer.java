@@ -328,6 +328,10 @@ public class OverlayRenderer {
             // Protection for some invalid items.
             pickBlock = ItemStack.EMPTY;
         }
+        if (pickBlock != null && (!pickBlock.isEmpty()) && Config.getDontSendNBTSet().contains(pickBlock.getItem().getRegistryName())) {
+            pickBlock = pickBlock.copy();
+            pickBlock.setTagCompound(null);
+        }
         PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.provider.getDimension(), blockPos, mode, mouseOver, pickBlock));
     }
 

@@ -45,8 +45,10 @@ public class Config {
     public static int showItemDetailThresshold = 4;
     public static String[] showContentsWithoutSneaking = { "storagedrawers:basicDrawers", "storagedrawersextra:extra_drawers" };
     public static String[] dontShowContentsUnlessSneaking = {};
+    public static String[] dontSendNBT = { };
     private static Set<ResourceLocation> inventoriesToShow = null;
     private static Set<ResourceLocation> inventoriesToNotShow = null;
+    private static Set<ResourceLocation> dontSendNBTSet = null;
 
     public static float probeDistance = 6;
     public static boolean showLiquids = false;
@@ -148,6 +150,7 @@ public class Config {
         showSmallChestContentsWithoutSneaking = cfg.getInt("showSmallChestContentsWithoutSneaking", CATEGORY_THEONEPROBE, showSmallChestContentsWithoutSneaking, 0, 1000, "The maximum amount of slots (empty or not) to show without sneaking");
         showContentsWithoutSneaking = cfg.getStringList("showContentsWithoutSneaking", CATEGORY_THEONEPROBE, showContentsWithoutSneaking, "A list of blocks for which we automatically show chest contents even if not sneaking");
         dontShowContentsUnlessSneaking = cfg.getStringList("dontShowContentsUnlessSneaking", CATEGORY_THEONEPROBE, dontShowContentsUnlessSneaking, "A list of blocks for which we don't show chest contents automatically except if sneaking");
+        dontSendNBT = cfg.getStringList("dontSendNBT", CATEGORY_THEONEPROBE, dontSendNBT, "A list of blocks for which we don't send NBT over the network. This is mostly useful for blocks that have HUGE NBT in their pickblock (itemstack)");
 
         setupStyleConfig(cfg);
     }
@@ -348,4 +351,15 @@ public class Config {
         }
         return inventoriesToNotShow;
     }
+
+    public static Set<ResourceLocation> getDontSendNBTSet() {
+        if (dontSendNBTSet == null) {
+            dontSendNBTSet = new HashSet<>();
+            for (String s : dontSendNBT) {
+                dontSendNBTSet.add(new ResourceLocation(s));
+            }
+        }
+        return dontSendNBTSet;
+    }
+
 }
