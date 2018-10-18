@@ -1,3 +1,6 @@
+1.4.25:
+- More optimal way to send 'pick data' from the client to the server (to avoid overloading the packet limit). TOP now honors the 'share tag' of the item if presnet
+
 1.4.24:
 - Added a new config option ('dontSendNBT') which contains a set of registry names for blocks that don't want their NBT data to be sent from client to server. This is to avoid network packets becoming too large for blocks that have huge itemstacks as a result of 'picking' them
 

@@ -1,6 +1,9 @@
 package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.handler.codec.EncoderException;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -9,7 +12,11 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTSizeTracker;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -22,6 +29,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.List;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
@@ -52,11 +61,16 @@ public class PacketGetInfo implements IMessage {
         if (buf.readBoolean()) {
             hitVec = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
         }
-        if (buf.readBoolean()) {
-            pickBlock = NetworkTools.readItemStack(buf);
-        } else {
-            pickBlock = ItemStack.EMPTY;
+        try {
+            pickBlock = readItemStack(buf);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+//        if (buf.readBoolean()) {
+//            pickBlock = NetworkTools.readItemStack(buf);
+//        } else {
+//            pickBlock = ItemStack.EMPTY;
+//        }
     }
 
     @Override
@@ -75,13 +89,77 @@ public class PacketGetInfo implements IMessage {
             buf.writeDouble(hitVec.y);
             buf.writeDouble(hitVec.z);
         }
-        if (pickBlock.isEmpty()) {
-            buf.writeBoolean(false);
+        writeItemStackShareTag(buf, pickBlock);
+//        if (pickBlock.isEmpty()) {
+//            buf.writeBoolean(false);
+//        } else {
+//            buf.writeBoolean(true);
+//            NetworkTools.writeItemStack(buf, pickBlock);
+//        }
+    }
+
+    private static ItemStack readItemStack(ByteBuf dataOut) throws IOException {
+        int i = dataOut.readShort();
+
+        if (i < 0) {
+            return ItemStack.EMPTY;
         } else {
-            buf.writeBoolean(true);
-            NetworkTools.writeItemStack(buf, pickBlock);
+            int j = dataOut.readByte();
+            int k = dataOut.readShort();
+            ItemStack itemstack = new ItemStack(Item.getItemById(i), j, k);
+            itemstack.getItem().readNBTShareTag(itemstack, readCompoundTag(dataOut));
+            return itemstack;
         }
     }
+
+    @Nullable
+    private static NBTTagCompound readCompoundTag(ByteBuf dataOut) throws IOException {
+        int i = dataOut.readerIndex();
+        byte b0 = dataOut.readByte();
+
+        if (b0 == 0) {
+            return null;
+        } else {
+            dataOut.readerIndex(i);
+
+            try {
+                return CompressedStreamTools.read(new ByteBufInputStream(dataOut), new NBTSizeTracker(2097152L));
+            } catch (IOException ioexception) {
+                throw new EncoderException(ioexception);
+            }
+        }
+    }
+
+
+    private static void writeItemStackShareTag(ByteBuf dataOut, ItemStack stack) {
+        if (stack.isEmpty()) {
+            dataOut.writeShort(-1);
+        } else {
+            dataOut.writeShort(Item.getIdFromItem(stack.getItem()));
+            dataOut.writeByte(stack.getCount());
+            dataOut.writeShort(stack.getMetadata());
+            NBTTagCompound nbttagcompound = null;
+
+            if (stack.getItem().isDamageable() || stack.getItem().getShareTag()) {
+                nbttagcompound = stack.getItem().getNBTShareTag(stack);
+            }
+
+            writeCompoundTag(dataOut, nbttagcompound);
+        }
+    }
+
+    private static void writeCompoundTag(ByteBuf dataOut, @Nullable NBTTagCompound nbt) {
+        if (nbt == null) {
+            dataOut.writeByte(0);
+        } else {
+            try {
+                CompressedStreamTools.write(nbt, new ByteBufOutputStream(dataOut));
+            } catch (IOException ioexception) {
+                throw new EncoderException(ioexception);
+            }
+        }
+    }
+
 
     public PacketGetInfo() {
     }
