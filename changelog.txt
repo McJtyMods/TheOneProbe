@@ -1,3 +1,6 @@
+1.4.26:
+- Joseph made growth show up for any block with an integer property named "age".
+
 1.4.25:
 - More optimal way to send 'pick data' from the client to the server (to avoid overloading the packet limit). TOP now honors the 'share tag' of the item if presnet
 - Added a new 'maxPacketToServer' config option (default 20000). If the size of the full NBT of the pick block would exceed this limit it will send over the item without NBT instead
