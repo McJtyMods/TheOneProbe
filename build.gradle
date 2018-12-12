@@ -1,189 +1,23 @@
-
-// For those who want the bleeding edge
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
-}
-
 plugins {
-    id 'com.matthewprenger.cursegradle' version '1.1.0'
+	id 'fabric-loom' version '0.1.0-SNAPSHOT'
 }
-
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'maven-publish'
-
-repositories {
-    maven { // The repo from which to get waila
-        name "Mobius Repo"
-        url "https://tehnut.info/maven"
-    }
-    maven { // JEI
-        url "http://dvs1.progwml6.com/files/maven"
-    }
-    maven { // CompatLayer
-        url "http://maven.k-4u.nl"
-    }
-    maven { //Tesla
-        url "http://maven.epoxide.xyz"
-    }
-    maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-    maven {
-        name = "CoFH Maven"
-        url = "http://maven.covers1624.net"
-    }
-    maven {
-        name = "TESLA"
-        url = "https://maven.mcmoddev.com"
-    }
-}
-
-def ENV = System.getenv()
-if (ENV.DRONE_BUILD_NUMBER) {
-    version += ".n" + ENV.DRONE_BUILD_NUMBER
-}
-group= "mcjty.theoneprobe" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "theoneprobe"
-
-if (System.getenv('BUILD_NUMBER') != null) {
-    version += "-${System.getenv('BUILD_NUMBER')}"
-}
-
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+group= "mcjty.theoneprobe"
+archivesBaseName = "theoneprobe"
+
 minecraft {
-    version = "${minecraft_version}-${forge_version}"
-    runDir = "run"
-    mappings = mcp_mappings
-    useDepAts = true
 
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_${jei_version}"
-    deobfCompile "cofh:RedstoneFlux:${redstoneflux_version}"
-    deobfCompile "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
+	minecraft "com.mojang:minecraft:18w49a"
+	mappings "net.fabricmc:yarn:18w49a.10"
+	modCompile "net.fabricmc:fabric-loader:0.2.0.64"
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modCompile "net.fabricmc:fabric:0.1.0.37"
 }
 
-jar {
-    manifest {
-        attributes 'FMLAT': 'top_at.cfg'
-    }
-}
-
-processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
-
-task apiJar(type: Jar) {
-    classifier = "api"
-    from(sourceSets.main.output) {
-        include "mcjty/theoneprobe/api/**"
-    }
-}
-
-artifacts {
-    archives apiJar
-}
-
-publishing {
-    tasks.publish.dependsOn 'build'
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact apiJar
-            artifact sourceJar
-        }
-    }
-
-    repositories {
-        if (project.hasProperty('mavendir')) {
-            maven { url mavendir }
-        } else {
-            mavenLocal()
-        }
-    }
-}
-
-String getChangelogText() {
-    def changelogFile = file('changelog.txt')
-    String str = ''
-    int lineCount = 0
-    boolean done = false
-    changelogFile.eachLine {
-        if (done || it == null) {
-            return
-        }
-        if (it.size() > 1) {
-            def temp = it
-            if (lineCount == 0) {
-                temp = "${modname} ${version}"
-                temp = "<h2>$temp</h2>"
-            } else if (it.startsWith('-')) {
-                temp = "&nbsp;&nbsp;&nbsp;$temp"
-                temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>");
-                temp = temp.replaceAll("#([0-9]+)\\b(?!<\\/a>)", "<a href=\"https://github.com/$github_project/issues/\$1\">\$0</a>");
-            } else {
-                temp = "<h4>$temp</h4>"
-            }
-            str += "$temp<br/>"
-            lineCount++
-            return
-        } else {
-            done = true
-        }
-    }
-    return str
-}
-
-tasks.curseforge.enabled = project.hasProperty('curseforge_key')
-
-curseforge {
-    if (project.hasProperty('curseforge_key')) {
-        apiKey = project.curseforge_key
-    }
-
-    project {
-        id = project.projectId
-        changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
-        changelogType = 'html'
-        releaseType = project.curse_type
-        addGameVersion '1.12.2'
-        mainArtifact(jar) {
-            displayName = "${modname} - ${version}"
-        }
-        relations {
-            optionalLibrary 'baubles'
-            optionalLibrary 'tesla'
-            optionalLibrary 'redstone-flux'
-        }
-    }
-}
