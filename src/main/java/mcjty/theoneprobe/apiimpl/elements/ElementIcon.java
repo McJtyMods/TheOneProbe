@@ -7,18 +7,18 @@ import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementIconRender;
 import mcjty.theoneprobe.apiimpl.styles.IconStyle;
 import mcjty.theoneprobe.network.NetworkTools;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 public class ElementIcon implements IElement {
 
-    private final ResourceLocation icon;
+    private final Identifier icon;
     private final int u;
     private final int v;
     private final int w;
     private final int h;
     private final IIconStyle style;
 
-    public ElementIcon(ResourceLocation icon, int u, int v, int w, int h, IIconStyle style) {
+    public ElementIcon(Identifier icon, int u, int v, int w, int h, IIconStyle style) {
         this.icon = icon;
         this.u = u;
         this.v = v;
@@ -28,7 +28,7 @@ public class ElementIcon implements IElement {
     }
 
     public ElementIcon(ByteBuf buf) {
-        icon = new ResourceLocation(NetworkTools.readString(buf), NetworkTools.readString(buf));
+        icon = new Identifier(NetworkTools.readString(buf), NetworkTools.readString(buf));
         u = buf.readInt();
         v = buf.readInt();
         w = buf.readInt();

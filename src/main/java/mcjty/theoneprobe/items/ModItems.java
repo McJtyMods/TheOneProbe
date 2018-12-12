@@ -2,7 +2,7 @@ package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelIdentifier;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -10,7 +10,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.model.ModelLoader;
@@ -63,7 +63,7 @@ public class ModItems {
             public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
                 if (this.isInCreativeTab(tab)) {
                     ItemStack stack = new ItemStack(this);
-                    NBTTagCompound tag = new NBTTagCompound();
+                    CompoundTag tag = new CompoundTag();
                     tag.setInteger(PROBETAG, 1);
                     stack.setTagCompound(tag);
                     subItems.add(stack);
@@ -81,9 +81,9 @@ public class ModItems {
         probe.initModel();
         creativeProbe.initModel();
 
-        ModelLoader.setCustomModelResourceLocation(diamondHelmetProbe, 0, new ModelResourceLocation(diamondHelmetProbe.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(goldHelmetProbe, 0, new ModelResourceLocation(goldHelmetProbe.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(ironHelmetProbe, 0, new ModelResourceLocation(ironHelmetProbe.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelIdentifier(diamondHelmetProbe, 0, new ModelIdentifier(diamondHelmetProbe.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelIdentifier(goldHelmetProbe, 0, new ModelIdentifier(goldHelmetProbe.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelIdentifier(ironHelmetProbe, 0, new ModelIdentifier(ironHelmetProbe.getRegistryName(), "inventory"));
 
         probeNote.initModel();
 

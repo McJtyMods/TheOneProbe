@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.api;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 /**
@@ -14,6 +14,6 @@ public interface IEntityDisplayOverride {
      * This function returns true if you handled the probe info yourselves and TOP doesn't have to add its
      * own info.
      */
-    boolean overrideStandardInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data);
+    boolean overrideStandardInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, Entity entity, IProbeHitEntityData data);
 
 }

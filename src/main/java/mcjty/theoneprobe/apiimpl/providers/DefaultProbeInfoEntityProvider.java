@@ -7,23 +7,17 @@ import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.passive.EntityTameable;
-import net.minecraft.entity.IEntityOwnable;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.item.EntityItemFrame;
-import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstnace;
+import net.minecraft.entity.passive.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.UsernameCache;
 
 import java.text.DecimalFormat;
 import java.util.Collection;
@@ -43,7 +37,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
     private static DecimalFormat dfCommas = new DecimalFormat("##.#");
 
     @Override
-    public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) {
+    public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, Entity entity, IProbeHitEntityData data) {
         IProbeConfig config = Config.getRealConfig();
 
         boolean handled = false;
@@ -57,13 +51,13 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             showStandardInfo(mode, probeInfo, entity, config);
         }
 
-        if (entity instanceof EntityLivingBase) {
-            EntityLivingBase livingBase = (EntityLivingBase) entity;
+        if (entity instanceof LivingEntity) {
+            LivingEntity livingBase = (LivingEntity) entity;
 
             if (Tools.show(mode, config.getShowMobHealth())) {
                 int health = (int) livingBase.getHealth();
-                int maxHealth = (int) livingBase.getMaxHealth();
-                int armor = livingBase.getTotalArmorValue();
+                int maxHealth = (int) livingBase.getHealthMaximum();
+                int armor = livingBase.method_6096();   // getTotalArmorValue()
 
                 probeInfo.progress(health, maxHealth, probeInfo.defaultProgressStyle().lifeBar(true).showText(false).width(150).height(10));
 
@@ -76,21 +70,21 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 }
             }
 
-            if (Tools.show(mode, config.getShowMobGrowth()) && entity instanceof EntityAgeable) {
-               int age = ((EntityAgeable) entity).getGrowingAge();
+            if (Tools.show(mode, config.getShowMobGrowth()) && entity instanceof PassiveEntity) {
+               int age = ((PassiveEntity) entity).getBreedingAge();
                if (age < 0) {
                    probeInfo.text(LABEL + "Growing time: " + ((age * -1) / 20) + "s");
                }
             }
 
             if (Tools.show(mode, config.getShowMobPotionEffects())) {
-                Collection<PotionEffect> effects = livingBase.getActivePotionEffects();
+                Collection<StatusEffectInstnace> effects = livingBase.getPotionEffects();
                 if (!effects.isEmpty()) {
                     IProbeInfo vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(0xffffffff));
                     float durationFactor = 1.0f;
-                    for (PotionEffect effect : effects) {
-                        String s1 = STARTLOC + effect.getEffectName() + ENDLOC;
-                        Potion potion = effect.getPotion();
+                    for (StatusEffectInstnace effect : effects) {
+                        String s1 = STARTLOC + effect.getTranslationKey() + ENDLOC;
+                        StatusEffect potion = effect.getEffectType();
                         if (effect.getAmplifier() > 0) {
                             s1 = s1 + " " + STARTLOC + "potion.potency." + effect.getAmplifier() + ENDLOC;
                         }
@@ -99,7 +93,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                             s1 = s1 + " (" + getPotionDurationString(effect, durationFactor) + ")";
                         }
 
-                        if (potion.isBadEffect()) {
+                        if (potion.isNegative()) {
                             vertical.text(ERROR + s1);
                         } else {
                             vertical.text(OK + s1);
@@ -107,13 +101,13 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                     }
                 }
             }
-        } else if (entity instanceof EntityItemFrame) {
-            EntityItemFrame itemFrame = (EntityItemFrame)entity;
-            ItemStack stack = itemFrame.getDisplayedItem();
+        } else if (entity instanceof ItemFrameEntity) {
+            ItemFrameEntity itemFrame = (ItemFrameEntity)entity;
+            ItemStack stack = itemFrame.getHeldItemStack();
             if(!stack.isEmpty()) {
                 probeInfo.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER))
                         .item(stack, new ItemStyle().width(16).height(16))
-                        .text(INFO + stack.getDisplayName());
+                        .text(INFO + stack.getDisplayName().getFormattedText());    // @todo fabric
                 if (mode == ProbeMode.EXTENDED) {
                     probeInfo.text(LABEL + "Rotation: " + INFO + itemFrame.getRotation());
                 }
@@ -124,43 +118,46 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
 
         if (Tools.show(mode, config.getAnimalOwnerSetting())) {
             UUID ownerId = null;
-            if (entity instanceof IEntityOwnable) {
-                ownerId = ((IEntityOwnable) entity).getOwnerId();
-            } else if (entity instanceof EntityHorse) {
-                ownerId = ((EntityHorse) entity).getOwnerUniqueId();
+            if (entity instanceof OwnableEntity) {
+                ownerId = ((OwnableEntity) entity).getOwnerUuid();
+            } else if (entity instanceof HorseEntity) {
+                ownerId = ((HorseEntity) entity).getOwnerUuid();
             }
 
             if (ownerId != null) {
-                String username = UsernameCache.getLastKnownUsername(ownerId);
-                if (username == null) {
+                // @todo fabric
+//                String username = UsernameCache.getLastKnownUsername(ownerId);
+//                if (username == null) {
                     probeInfo.text(WARNING + "Unknown owner");
-                } else {
-                    probeInfo.text(LABEL + "Owned by: " + INFO + username);
-                }
-            } else if (entity instanceof EntityTameable) {
+//                } else {
+//                    probeInfo.text(LABEL + "Owned by: " + INFO + username);
+//                }
+            } else if (entity instanceof TameableEntity) {
                 probeInfo.text(LABEL + "Tameable");
             }
         }
 
         if (Tools.show(mode, config.getHorseStatSetting())) {
-            if (entity instanceof EntityHorse) {
-                double jumpStrength = ((EntityHorse) entity).getHorseJumpStrength();
+            if (entity instanceof HorseEntity) {
+//                double jumpStrength = ((HorseEntity) entity).getHorseJumpStrength();
+                double jumpStrength = 0;    // @todo fabric
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
                 probeInfo.text(LABEL + "Jump height: " + INFO + dfCommas.format(jumpHeight));
-                IAttributeInstance iattributeinstance = ((EntityHorse) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-                probeInfo.text(LABEL + "Speed: " + INFO + dfCommas.format(iattributeinstance.getAttributeValue()));
+                EntityAttributeInstance iattributeinstance = ((HorseEntity) entity).getAttributeInstance(EntityAttributes.MOVEMENT_SPEED);
+                probeInfo.text(LABEL + "Speed: " + INFO + dfCommas.format(iattributeinstance.getValue()));
             }
         }
 
-        if (entity instanceof EntityWolf && Config.showCollarColor) {
-            if (((EntityWolf) entity).isTamed()) {
-                EnumDyeColor collarColor = ((EntityWolf) entity).getCollarColor();
-                probeInfo.text(LABEL + "Collar: " + INFO + collarColor.getName());
+        if (entity instanceof WolfEntity && Config.showCollarColor) {
+            if (((WolfEntity) entity).isTamed()) {
+                // @todo fabric
+//                EnumDyeColor collarColor = ((WolfEntity) entity).getCollarColor();
+//                probeInfo.text(LABEL + "Collar: " + INFO + collarColor.getName());
             }
         }
     }
 
-    public static String getPotionDurationString(PotionEffect effect, float factor) {
+    public static String getPotionDurationString(StatusEffectInstnace effect, float factor) {
         if (effect.getDuration() == 32767) {
             return "**:**";
         } else {

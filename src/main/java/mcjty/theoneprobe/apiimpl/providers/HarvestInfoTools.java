@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +25,7 @@ import static mcjty.theoneprobe.api.TextStyleClass.*;
 
 public class HarvestInfoTools {
 
-    private static final ResourceLocation ICONS = new ResourceLocation(TheOneProbe.MODID, "textures/gui/icons.png");
+    private static final Identifier ICONS = new Identifier(TheOneProbe.MODID, "textures/gui/icons.png");
     private static String[] harvestLevels = new String[]{
             "stone",
             "iron",

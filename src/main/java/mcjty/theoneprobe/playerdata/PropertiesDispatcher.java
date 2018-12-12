@@ -1,12 +1,12 @@
 package mcjty.theoneprobe.playerdata;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class PropertiesDispatcher implements ICapabilityProvider, INBTSerializable<NBTTagCompound> {
+public class PropertiesDispatcher implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
     private PlayerGotNote playerGotNote = new PlayerGotNote();
 
@@ -24,14 +24,14 @@ public class PropertiesDispatcher implements ICapabilityProvider, INBTSerializab
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound nbt = new NBTTagCompound();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         playerGotNote.saveNBTData(nbt);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         playerGotNote.loadNBTData(nbt);
     }
 }

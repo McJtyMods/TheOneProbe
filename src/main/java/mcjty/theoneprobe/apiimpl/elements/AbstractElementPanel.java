@@ -7,7 +7,7 @@ import mcjty.theoneprobe.apiimpl.styles.*;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,12 +61,12 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h) {
+    public IProbeInfo icon(Identifier icon, int u, int v, int w, int h) {
         return icon(icon, u, v, w, h, new IconStyle());
     }
 
     @Override
-    public IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h, IIconStyle style) {
+    public IProbeInfo icon(Identifier icon, int u, int v, int w, int h, IIconStyle style) {
         children.add(new ElementIcon(icon, u, v, w, h, style));
         return this;
     }

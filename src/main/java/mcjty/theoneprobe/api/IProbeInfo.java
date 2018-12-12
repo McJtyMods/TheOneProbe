@@ -2,7 +2,7 @@ package mcjty.theoneprobe.api;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 /**
  * Information to return to the probe. Most methods here return the same probe info
@@ -54,12 +54,12 @@ public interface IProbeInfo {
      * Create an icon. If u and v are -1 then the default texture atlas is used
      * and TheOneProbe will try to find the resource location on that atlas
      */
-    IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h, IIconStyle style);
-    IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h);
+    IProbeInfo icon(Identifier icon, int u, int v, int w, int h, IIconStyle style);
+    IProbeInfo icon(Identifier icon, int u, int v, int w, int h);
 
     /**
      * entityName can be an old-style entity name (like 'Zombie') or the string
-     * representation of a resourcelocation (like 'minecraft:zombie')
+     * representation of a Identifier (like 'minecraft:zombie')
      */
     IProbeInfo entity(String entityName, IEntityStyle style);
     IProbeInfo entity(String entityName);

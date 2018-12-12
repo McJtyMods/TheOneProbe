@@ -4,7 +4,7 @@ import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -34,8 +34,8 @@ public class Tools {
         if (modNamesForIds.isEmpty()) {
             init();
         }
-        ResourceLocation itemResourceLocation = block.getRegistryName();
-        String modId = itemResourceLocation.getResourceDomain();
+        Identifier itemIdentifier = block.getRegistryName();
+        String modId = itemIdentifier.getResourceDomain();
         String lowercaseModId = modId.toLowerCase(Locale.ENGLISH);
         String modName = modNamesForIds.get(lowercaseModId);
         if (modName == null) {

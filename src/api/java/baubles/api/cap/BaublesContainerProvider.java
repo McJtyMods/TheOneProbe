@@ -1,12 +1,12 @@
 package baubles.api.cap;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class BaublesContainerProvider implements INBTSerializable<NBTTagCompound>, ICapabilityProvider {
+public class BaublesContainerProvider implements INBTSerializable<CompoundTag>, ICapabilityProvider {
 
 	private final BaublesContainer container;
 
@@ -27,12 +27,12 @@ public class BaublesContainerProvider implements INBTSerializable<NBTTagCompound
 	}
 
 	@Override
-	public NBTTagCompound serializeNBT () {
+	public CompoundTag serializeNBT () {
 		return this.container.serializeNBT();
 	}
 
 	@Override
-	public void deserializeNBT (NBTTagCompound nbt) {
+	public void deserializeNBT (CompoundTag nbt) {
 		this.container.deserializeNBT(nbt);
 	}
 }

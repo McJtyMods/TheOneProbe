@@ -10,7 +10,7 @@ import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.BlockEntity.BlockEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -45,7 +45,7 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
                 .text(LABEL + "Power W: " + INFO + block.getWeakPower(blockState, world, pos, side.getOpposite())
                         + LABEL + ", S: " + INFO + block.getStrongPower(blockState, world, pos, side.getOpposite()))
                 .text(LABEL + "Light: " + INFO + block.getLightValue(blockState, world, pos));
-        TileEntity te = world.getTileEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
         if (te != null) {
             vertical.text(LABEL + "TE: " + INFO + te.getClass().getSimpleName());
         }

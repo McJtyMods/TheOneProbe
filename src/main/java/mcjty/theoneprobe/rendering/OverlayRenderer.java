@@ -73,14 +73,14 @@ public class OverlayRenderer {
     public static void renderHUD(ProbeMode mode, float partialTicks) {
         float dist = Config.probeDistance;
 
-        RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
+        RayTraceResult mouseOver = MinecraftClient.getInstance().objectMouseOver;
         if (mouseOver != null) {
             if (mouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {
                 GlStateManager.pushMatrix();
 
                 double scale = Config.tooltipScale;
 
-                ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+                ScaledResolution scaledresolution = new ScaledResolution(MinecraftClient.getInstance());
                 double sw = scaledresolution.getScaledWidth_double();
                 double sh = scaledresolution.getScaledHeight_double();
 
@@ -94,7 +94,7 @@ public class OverlayRenderer {
             }
         }
 
-        EntityPlayerSP entity = Minecraft.getMinecraft().player;
+        EntityPlayerSP entity = MinecraftClient.getInstance().player;
         Vec3d start  = entity.getPositionEyes(partialTicks);
         Vec3d vec31 = entity.getLook(partialTicks);
         Vec3d end = start.addVector(vec31.x * dist, vec31.y * dist, vec31.z * dist);
@@ -109,7 +109,7 @@ public class OverlayRenderer {
 
             double scale = Config.tooltipScale;
 
-            ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+            ScaledResolution scaledresolution = new ScaledResolution(MinecraftClient.getInstance());
             double sw = scaledresolution.getScaledWidth_double();
             double sh = scaledresolution.getScaledHeight_double();
 
@@ -163,7 +163,7 @@ public class OverlayRenderer {
 
         UUID uuid = entity.getPersistentID();
 
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        EntityPlayerSP player = MinecraftClient.getInstance().player;
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
@@ -214,7 +214,7 @@ public class OverlayRenderer {
         if (blockPos == null) {
             return;
         }
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        EntityPlayerSP player = MinecraftClient.getInstance().player;
         if (player.getEntityWorld().isAirBlock(blockPos)) {
             return;
         }
@@ -223,7 +223,7 @@ public class OverlayRenderer {
 
         IElement damageElement = null;
         if (Config.showBreakProgress > 0) {
-            float damage = Minecraft.getMinecraft().playerController.curBlockDamageMP;
+            float damage = MinecraftClient.getInstance().playerController.curBlockDamageMP;
             if (damage > 0) {
                 if (Config.showBreakProgress == 2) {
                     damageElement = new ElementText("" + TextFormatting.RED + "Progress " + (int) (damage * 100) + "%");
@@ -340,7 +340,7 @@ public class OverlayRenderer {
 
         double scale = Config.tooltipScale;
 
-        Minecraft minecraft = Minecraft.getMinecraft();
+        Minecraft minecraft = MinecraftClient.getInstance();
         ScaledResolution scaledresolution = new ScaledResolution(minecraft);
         double sw = scaledresolution.getScaledWidth_double();
         double sh = scaledresolution.getScaledHeight_double();
@@ -384,7 +384,7 @@ public class OverlayRenderer {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
 
-//        final ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+//        final ScaledResolution scaledresolution = new ScaledResolution(MinecraftClient.getInstance());
 //        final int scaledWidth = scaledresolution.getScaledWidth();
 //        final int scaledHeight = scaledresolution.getScaledHeight();
         int scaledWidth = (int) sw;
@@ -426,7 +426,7 @@ public class OverlayRenderer {
             RenderHelper.drawThickBeveledBox(x+offset, y+offset, x + w-1-offset, y + h-1-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
-        if (!Minecraft.getMinecraft().isGamePaused()) {
+        if (!MinecraftClient.getInstance().isGamePaused()) {
             RenderHelper.rot += .5f;
         }
 

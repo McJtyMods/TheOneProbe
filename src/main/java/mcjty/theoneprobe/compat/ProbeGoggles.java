@@ -3,7 +3,7 @@ package mcjty.theoneprobe.compat;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import mcjty.theoneprobe.TheOneProbe;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelIdentifier;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,7 +21,7 @@ public class ProbeGoggles extends Item implements IBauble {
 
     @SideOnly(Side.CLIENT)
     public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelIdentifier(this, 0, new ModelIdentifier(getRegistryName(), "inventory"));
     }
 
     @Override

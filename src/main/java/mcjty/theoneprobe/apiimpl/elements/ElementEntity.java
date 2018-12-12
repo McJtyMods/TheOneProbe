@@ -8,15 +8,14 @@ import mcjty.theoneprobe.apiimpl.client.ElementEntityRender;
 import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
 import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundTag;
 
 public class ElementEntity implements IElement {
 
     private final String entityName;
     private final Integer playerID;
-    private final NBTTagCompound entityNBT;
+    private final CompoundTag entityNBT;
     private final IEntityStyle style;
 
     public ElementEntity(String entityName, IEntityStyle style) {
@@ -27,15 +26,17 @@ public class ElementEntity implements IElement {
     }
 
     public ElementEntity(Entity entity, IEntityStyle style) {
-        if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
+        if (entity instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) entity;
             entityNBT = null;
             playerID = player.getEntityId();
         } else {
-            entityNBT = entity.serializeNBT();
+            entityNBT = new CompoundTag();
+            entity.saveSelfToTag(entityNBT);
             playerID = null;
         }
-        this.entityName = EntityList.getEntityString(entity);
+//        this.entityName = EntityList.getEntityString(entity);
+        this.entityName = entity.getEntityName();
         this.style = style;
     }
 

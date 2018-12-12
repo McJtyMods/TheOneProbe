@@ -15,10 +15,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.MobSpawnerBaseLogic;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.BlockEntity.MobSpawnerBaseLogic;
+import net.minecraft.BlockEntity.BlockEntity;
+import net.minecraft.BlockEntity.BlockEntityBrewingStand;
+import net.minecraft.BlockEntity.BlockEntityMobSpawner;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -104,10 +104,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showBrewingStandInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
         if (block instanceof BlockBrewingStand) {
-            TileEntity te = world.getTileEntity(data.getPos());
-            if (te instanceof TileEntityBrewingStand) {
-                int brewtime = ((TileEntityBrewingStand) te).getField(0);
-                int fuel = ((TileEntityBrewingStand) te).getField(1);
+            BlockEntity te = world.getBlockEntity(data.getPos());
+            if (te instanceof BlockEntityBrewingStand) {
+                int brewtime = ((BlockEntityBrewingStand) te).getField(0);
+                int fuel = ((BlockEntityBrewingStand) te).getField(1);
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
                         .text(LABEL + "Fuel: " + INFO + fuel);
@@ -121,9 +121,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showMobSpawnerInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
         if (block instanceof BlockMobSpawner) {
-            TileEntity te = world.getTileEntity(data.getPos());
-            if (te instanceof TileEntityMobSpawner) {
-                MobSpawnerBaseLogic logic = ((TileEntityMobSpawner) te).getSpawnerBaseLogic();
+            BlockEntity te = world.getBlockEntity(data.getPos());
+            if (te instanceof BlockEntityMobSpawner) {
+                MobSpawnerBaseLogic logic = ((BlockEntityMobSpawner) te).getSpawnerBaseLogic();
                 String mobName = logic.getCachedEntity().getName();
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                     .alignment(ElementAlignment.ALIGN_CENTER))
@@ -171,7 +171,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showTankInfo(IProbeInfo probeInfo, World world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
-        TileEntity te = world.getTileEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
         if (te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
             net.minecraftforge.fluids.capability.IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
             if (handler != null) {
@@ -209,7 +209,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showRF(IProbeInfo probeInfo, World world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
-        TileEntity te = world.getTileEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
         if (TheOneProbe.tesla && TeslaTools.isEnergyHandler(te)) {
             long energy = TeslaTools.getEnergy(te);
             long maxEnergy = TeslaTools.getMaxEnergy(te);

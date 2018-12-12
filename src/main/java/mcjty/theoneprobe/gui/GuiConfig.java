@@ -13,7 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -32,8 +32,8 @@ public class GuiConfig extends GuiScreen {
     private int guiLeft;
     private int guiTop;
 
-    private static final ResourceLocation background = new ResourceLocation(TheOneProbe.MODID, "textures/gui/config.png");
-    private static final ResourceLocation scene = new ResourceLocation(TheOneProbe.MODID, "textures/gui/scene.png");
+    private static final Identifier background = new Identifier(TheOneProbe.MODID, "textures/gui/config.png");
+    private static final Identifier scene = new Identifier(TheOneProbe.MODID, "textures/gui/scene.png");
 
     private static final List<Preset> presets = new ArrayList<>();
 
@@ -82,17 +82,17 @@ public class GuiConfig extends GuiScreen {
 
         int x = WIDTH + guiLeft + 10;
         int y = guiTop + 10;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, TextFormatting.GOLD + "Placement:");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormatting.GOLD + "Placement:");
         y += 12;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x+10, y, "Click on corner in screenshot");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x+10, y, "Click on corner in screenshot");
         y += 10;
-        RenderHelper.renderText(Minecraft.getMinecraft(), x+10, y, "to move tooltip there");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x+10, y, "to move tooltip there");
         y += 10;
 
         y += 20;
 
         hitboxes = new ArrayList<>();
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, TextFormatting.GOLD + "Presets:");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormatting.GOLD + "Presets:");
         y += 12;
         for (Preset preset : presets) {
             y = addPreset(x, y, preset);
@@ -100,7 +100,7 @@ public class GuiConfig extends GuiScreen {
 
         y += 20;
 
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, TextFormatting.GOLD + "Scale:");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormatting.GOLD + "Scale:");
         y += 12;
         addButton(x+10, y, 30, 14, "--", () -> { Config.setScale(1.2f);}); x += 36;
         addButton(x+10, y, 30, 14, "-", () -> { Config.setScale(1.1f);}); x += 36;
@@ -164,7 +164,7 @@ public class GuiConfig extends GuiScreen {
 
     private int addPreset(int x, int y, Preset preset) {
         drawRect(x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
-        RenderHelper.renderText(Minecraft.getMinecraft(), x + 20, y, preset.getName());
+        RenderHelper.renderText(MinecraftClient.getInstance(), x + 20, y, preset.getName());
         hitboxes.add(new HitBox(x + 10 - guiLeft, y - 1 - guiTop, x + 10 + WIDTH - 50 - guiLeft, y + 10 - guiTop, () -> {
             applyPreset(preset);
         }));
@@ -174,7 +174,7 @@ public class GuiConfig extends GuiScreen {
 
     private void addButton(int x, int y, int width, int height, String text, Runnable runnable) {
         drawRect(x, y, x + width-1, y + height-1, 0xff000000);
-        RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 3, text);
+        RenderHelper.renderText(MinecraftClient.getInstance(), x + 3, y + 3, text);
         hitboxes.add(new HitBox(x - guiLeft, y - guiTop, x + width -1 - guiLeft, y + height -1 - guiTop, runnable));
     }
 
@@ -248,7 +248,7 @@ public class GuiConfig extends GuiScreen {
             RenderHelper.drawThickBeveledBox(x+offset, y+offset, x2-offset, y2-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
-        if (!Minecraft.getMinecraft().isGamePaused()) {
+        if (!MinecraftClient.getInstance().isGamePaused()) {
             RenderHelper.rot += .5f;
         }
 
