@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.rendering;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.sun.istack.internal.Nullable;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -12,19 +13,19 @@ import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoEntityProvider;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.network.PacketGetInfo;
-import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TextFormat;
 import net.minecraft.util.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.FluidRayTraceMode;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -122,13 +123,13 @@ public class OverlayRenderer {
     }
 
     public static void setupOverlayRendering(double sw, double sh) {
-        GlStateManager.clear(256);
+        GlStateManager.clear(256, false);
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
         GlStateManager.loadIdentity();
         GlStateManager.ortho(0.0D, sw, sh, 0.0D, 1000.0D, 3000.0D);
         GlStateManager.matrixMode(GL11.GL_MODELVIEW);
         GlStateManager.loadIdentity();
-        GlStateManager.translate(0.0F, 0.0F, -2000.0F);
+        GlStateManager.translatef(0.0F, 0.0F, -2000.0F);
     }
 
     private static void checkCleanup() {
@@ -149,14 +150,14 @@ public class OverlayRenderer {
         // @todo fabric
 //        String entityString = EntityList.getEntityString(entity);
         String entityString = entity.getEntityName();
-        if (entityString == null && !(entity instanceof EntityPlayer)) {
+        if (entityString == null && !(entity instanceof PlayerEntity)) {
             // We can't show info for this entity
             return;
         }
 
-        UUID uuid = entity.getPersistentID();
+        UUID uuid = entity.getUuid();
 
-        EntityPlayerSP player = MinecraftClient.getInstance().player;
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
@@ -284,9 +285,8 @@ public class OverlayRenderer {
         World world = player.getEntityWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        block.get
-        ItemStack pickBlock = block.getPickStack(blockState, mouseOver, world, blockPos, player);
-        IProbeHitData data = new ProbeHitData(blockPos, mouseOver.hitVec, mouseOver.sideHit, pickBlock);
+        ItemStack pickBlock = block.getPickStack(world, blockPos, blockState);
+        IProbeHitData data = new ProbeHitData(blockPos, mouseOver.pos, mouseOver.side, pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
         try {
@@ -300,9 +300,9 @@ public class OverlayRenderer {
         return probeInfo;
     }
 
-    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, EntityPlayerSP player) {
+    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, ClientPlayerEntity player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
-        IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.hitVec);
+        IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.pos);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
         try {
@@ -316,20 +316,22 @@ public class OverlayRenderer {
         return probeInfo;
     }
 
-    private static void requestBlockInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, EntityPlayerSP player) {
+    private static void requestBlockInfo(ProbeMode mode, HitResult mouseOver, BlockPos blockPos, ClientPlayerEntity player) {
         World world = player.getEntityWorld();
-        IBlockState blockState = world.getBlockState(blockPos);
+        BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
+        ItemStack pickBlock = block.getPickStack(world, blockPos, blockState);
+//        ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player); // @todo fabric
         if (pickBlock == null || (!pickBlock.isEmpty() && pickBlock.getItem() == null)) {
             // Protection for some invalid items.
             pickBlock = ItemStack.EMPTY;
         }
-        if (pickBlock != null && (!pickBlock.isEmpty()) && Config.getDontSendNBTSet().contains(pickBlock.getItem().getRegistryName())) {
+        if (pickBlock != null && (!pickBlock.isEmpty()) && Config.getDontSendNBTSet().contains(Registry.ITEM.getId(pickBlock.getItem()))) {
             pickBlock = pickBlock.copy();
-            pickBlock.setTagCompound(null);
+            pickBlock.setTag(null);
         }
-        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.provider.getDimension(), blockPos, mode, mouseOver, pickBlock));
+        // @todo fabric
+//        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.provider.getDimension(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo) {
@@ -337,10 +339,9 @@ public class OverlayRenderer {
 
         double scale = Config.tooltipScale;
 
-        Minecraft minecraft = MinecraftClient.getInstance();
-        ScaledResolution scaledresolution = new ScaledResolution(minecraft);
-        double sw = scaledresolution.getScaledWidth_double();
-        double sh = scaledresolution.getScaledHeight_double();
+        MinecraftClient minecraft = MinecraftClient.getInstance();
+        double sw = minecraft.window.getScaledWidth();
+        double sh = minecraft.window.getScaledHeight();
 
         setupOverlayRendering(sw * scale, sh * scale);
         renderElements((ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
@@ -378,7 +379,7 @@ public class OverlayRenderer {
             probeInfo.element(extra);
         }
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
 
 //        final ScaledResolution scaledresolution = new ScaledResolution(MinecraftClient.getInstance());
@@ -423,9 +424,10 @@ public class OverlayRenderer {
             RenderHelper.drawThickBeveledBox(x+offset, y+offset, x + w-1-offset, y + h-1-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
-        if (!MinecraftClient.getInstance().isGamePaused()) {
-            RenderHelper.rot += .5f;
-        }
+        // @todo fabric
+//        if (!MinecraftClient.getInstance().isGamePaused()) {
+//            RenderHelper.rot += .5f;
+//        }
 
         probeInfo.render(x + margin, y + margin);
         if (extra != null) {

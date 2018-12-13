@@ -129,7 +129,7 @@ public class NetworkTools {
     public static <T extends Enum<T>> void readEnumCollection(ByteBuf buf, Collection<T> collection, T[] values) {
         collection.clear();
         int size = buf.readInt();
-        for (int i = 0 ; i < size ; i++) {
+        for (int i = 0; i < size; i++) {
             collection.add(values[buf.readInt()]);
         }
     }
@@ -150,4 +150,17 @@ public class NetworkTools {
             return null;
         }
     }
+
+
+    public static void writeItemStack(PacketByteBuf to, ItemStack stack) {
+        PacketByteBuf pb = new PacketByteBuf(to);
+        pb.writeItemStack(stack);
+    }
+
+    public static ItemStack readItemStack(PacketByteBuf from) {
+        PacketByteBuf pb = new PacketByteBuf(from);
+        return pb.readItemStack();
+    }
+
+
 }

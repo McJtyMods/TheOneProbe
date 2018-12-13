@@ -8,11 +8,11 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
+import net.minecraft.item.Items;
+import net.minecraft.item.ToolItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -41,30 +41,31 @@ public class HarvestInfoTools {
         testTools.put("pickaxe", new ItemStack(Items.WOODEN_PICKAXE));
     }
 
-    static void showHarvestLevel(IProbeInfo probeInfo, IBlockState blockState, Block block) {
-        String harvestTool = block.getHarvestTool(blockState);
-        if (harvestTool != null) {
-            int harvestLevel = block.getHarvestLevel(blockState);
-            String harvestName;
-            if (harvestLevel >= harvestLevels.length) {
-                harvestName = Integer.toString(harvestLevel);
-            } else if (harvestLevel < 0) {
-                harvestName = Integer.toString(harvestLevel);
-            } else {
-                harvestName = harvestLevels[harvestLevel];
-            }
-            probeInfo.text(LABEL + "Tool: " + INFO + harvestTool + " (level " + harvestName + ")");
-        }
+    static void showHarvestLevel(IProbeInfo probeInfo, BlockState blockState, Block block) {
+        // @todo fabric
+//        String harvestTool = block.getHarvestTool(blockState);
+//        if (harvestTool != null) {
+//            int harvestLevel = block.getHarvestLevel(blockState);
+//            String harvestName;
+//            if (harvestLevel >= harvestLevels.length) {
+//                harvestName = Integer.toString(harvestLevel);
+//            } else if (harvestLevel < 0) {
+//                harvestName = Integer.toString(harvestLevel);
+//            } else {
+//                harvestName = harvestLevels[harvestLevel];
+//            }
+//            probeInfo.text(LABEL + "Tool: " + INFO + harvestTool + " (level " + harvestName + ")");
+//        }
     }
 
-    static void showCanBeHarvested(IProbeInfo probeInfo, World world, BlockPos pos, Block block, EntityPlayer player) {
-        if (ModItems.isProbeInHand(player.getHeldItemMainhand())) {
+    static void showCanBeHarvested(IProbeInfo probeInfo, World world, BlockPos pos, Block block, PlayerEntity player) {
+        if (ModItems.isProbeInHand(player.getMainHandStack())) {
             // If the player holds the probe there is no need to show harvestability information as the
             // probe cannot harvest anything. This is only supposed to work in off hand.
             return;
         }
 
-        boolean harvestable = block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
+        boolean harvestable = false;// @todo fabric:  block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
         if (harvestable) {
             probeInfo.text(OK + "Harvestable");
         } else {
@@ -72,24 +73,24 @@ public class HarvestInfoTools {
         }
     }
 
-    static void showHarvestInfo(IProbeInfo probeInfo, World world, BlockPos pos, Block block, IBlockState blockState, EntityPlayer player) {
-        boolean harvestable = block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
+    static void showHarvestInfo(IProbeInfo probeInfo, World world, BlockPos pos, Block block, BlockState blockState, PlayerEntity player) {
+        boolean harvestable = false;// @todo fabric: block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
 
-        String harvestTool = block.getHarvestTool(blockState);
+        String harvestTool = null;// @todo fabric: block.getHarvestTool(blockState);
         String harvestName = null;
 
         if (harvestTool == null) {
             // The block doesn't have an explicitly-set harvest tool, so we're going to test our wooden tools against the block.
-            float blockHardness = blockState.getBlockHardness(world, pos);
+            float blockHardness = blockState.getHardness(world, pos);
             if (blockHardness > 0f) {
                 for (Map.Entry<String, ItemStack> testToolEntry : testTools.entrySet()) {
                     // loop through our test tools until we find a winner.
                     ItemStack testTool = testToolEntry.getValue();
 
-                    if (testTool != null && testTool.getItem() instanceof ItemTool) {
-                        ItemTool toolItem = (ItemTool) testTool.getItem();
+                    if (testTool != null && testTool.getItem() instanceof ToolItem) {
+                        ToolItem toolItem = (ToolItem) testTool.getItem();
                         // @todo
-                        if (testTool.getDestroySpeed(blockState) >= toolItem.toolMaterial.getEfficiency()) {
+                        if (testTool.getBlockBreakingSpeed(blockState) >= toolItem.getType().getBlockBreakingSpeed()) {
                             // BINGO!
                             harvestTool = testToolEntry.getKey();
                             break;
@@ -100,7 +101,7 @@ public class HarvestInfoTools {
         }
 
         if (harvestTool != null) {
-            int harvestLevel = block.getHarvestLevel(blockState);
+            int harvestLevel = 0; // @todo fabric: block.getHarvestLevel(blockState);
             if (harvestLevel < 0) {
                 // NOTE: When a block doesn't have an explicitly-set harvest tool, getHarvestLevel will return -1 for ANY tool. (Expected behavior)
 //                TheOneProbe.logger.info("HarvestLevel out of bounds (less than 0). Found " + harvestLevel);

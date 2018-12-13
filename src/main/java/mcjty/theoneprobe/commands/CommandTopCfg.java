@@ -64,14 +64,14 @@ public class CommandTopCfg /*implements ICommand*/ {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         if (args.length < 1) {
             ClientProxy.ignoreNextGuiClose = true;
-            EntityPlayerSP player = MinecraftClient.getInstance().player;
+            PlayerEntitySP player = MinecraftClient.getInstance().player;
             player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
             return;
         }
         String cmd = args[0];
         Consumer<String[]> consumer = SUBCOMMANDS.get(cmd);
         if (consumer == null) {
-            ((EntityPlayer)sender).sendStatusMessage(new TextComponentString(TextFormatting.RED + "Unknown style option!"), false);
+            ((PlayerEntity)sender).sendStatusMessage(new TextComponentString(TextFormatting.RED + "Unknown style option!"), false);
         } else {
             consumer.accept(args);
         }

@@ -34,12 +34,12 @@ public class CommonProxy {
 //        CapabilityManager.INSTANCE.register(PlayerGotNote.class, new Capability.IStorage<PlayerGotNote>() {
 //
 //            @Override
-//            public NBTBase writeNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, EnumFacing side) {
+//            public NBTBase writeNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side) {
 //                throw new UnsupportedOperationException();
 //            }
 //
 //            @Override
-//            public void readNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, EnumFacing side, NBTBase nbt) {
+//            public void readNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side, NBTBase nbt) {
 //                throw new UnsupportedOperationException();
 //            }
 //

@@ -57,8 +57,8 @@ public class ElementIcon implements IElement {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        NetworkTools.writeString(buf, icon.getResourceDomain());
-        NetworkTools.writeString(buf, icon.getResourcePath());
+        NetworkTools.writeString(buf, icon.getNamespace());
+        NetworkTools.writeString(buf, icon.getPath());
         buf.writeInt(u);
         buf.writeInt(v);
         buf.writeInt(w);

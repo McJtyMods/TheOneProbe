@@ -7,12 +7,12 @@ public class PropertiesDispatcher /*implements ICapabilityProvider, INBTSerializ
     private PlayerGotNote playerGotNote = new PlayerGotNote();
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, Direction facing) {
         return capability == PlayerProperties.PLAYER_GOT_NOTE;
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, Direction facing) {
         if (capability == PlayerProperties.PLAYER_GOT_NOTE) {
             return (T) playerGotNote;
         }

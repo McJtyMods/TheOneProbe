@@ -212,33 +212,33 @@ public class Config {
 //        extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
 //    }
 //
-//    public static void setTextStyle(TextStyleClass styleClass, String style) {
+    public static void setTextStyle(TextStyleClass styleClass, String style) {
 //        Configuration cfg = TheOneProbe.config;
 //        Config.textStyleClasses.put(styleClass, style);
 //        cfg.get(CATEGORY_CLIENT, "textStyle" + styleClass.getReadableName(), style).set(style);
 //        cfg.save();
-//    }
+    }
 //
-//    public static void setExtendedInMain(boolean extendedInMain) {
+    public static void setExtendedInMain(boolean extendedInMain) {
 //        Configuration cfg = TheOneProbe.config;
 //        Config.extendedInMain = extendedInMain;
 //        cfg.get(CATEGORY_CLIENT, "extendedInMain", extendedInMain).set(extendedInMain);
 //        cfg.save();
-//    }
+    }
 //
-//    public static void setLiquids(boolean liquids) {
+    public static void setLiquids(boolean liquids) {
 //        Configuration cfg = TheOneProbe.config;
 //        Config.showLiquids = liquids;
 //        cfg.get(CATEGORY_CLIENT, "showLiquids", showLiquids).set(liquids);
 //        cfg.save();
-//    }
+    }
 //
-//    public static void setVisible(boolean visible) {
+    public static void setVisible(boolean visible) {
 //        Configuration cfg = TheOneProbe.config;
 //        Config.isVisible = visible;
 //        cfg.get(CATEGORY_CLIENT, "isVisible", isVisible).set(visible);
 //        cfg.save();
-//    }
+    }
 //
 //    public static void setCompactEqualStacks(boolean compact) {
 //        Configuration cfg = TheOneProbe.config;
@@ -247,7 +247,7 @@ public class Config {
 //        cfg.save();
 //    }
 //
-//    public static void setPos(int leftx, int topy, int rightx, int bottomy) {
+    public static void setPos(int leftx, int topy, int rightx, int bottomy) {
 //        Configuration cfg = TheOneProbe.config;
 //        Config.leftX = leftx;
 //        Config.topY = topy;
@@ -259,7 +259,7 @@ public class Config {
 //        cfg.get(CATEGORY_CLIENT, "boxBottomY", bottomy).set(bottomy);
 //        cfg.save();
 //        updateDefaultOverlayStyle();
-//    }
+    }
 
     public static void setScale(float scale) {
 //        Configuration cfg = TheOneProbe.config;

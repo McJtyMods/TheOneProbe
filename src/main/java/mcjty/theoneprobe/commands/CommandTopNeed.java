@@ -1,16 +1,9 @@
 package mcjty.theoneprobe.commands;
 
-import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.proxy.ClientProxy;
-import mcjty.theoneprobe.proxy.GuiProxy;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
+// @todo fabric
+public class CommandTopNeed /*implements ICommand*/ {
 
-import java.util.Collections;
-import java.util.List;
-
-public class CommandTopNeed implements ICommand {
-
+    /*
 
     @Override
     public String getName() {
@@ -30,7 +23,7 @@ public class CommandTopNeed implements ICommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         ClientProxy.ignoreNextGuiClose = true;
-        EntityPlayerSP player = MinecraftClient.getInstance().player;
+        PlayerEntitySP player = MinecraftClient.getInstance().player;
         player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
     }
 
@@ -54,4 +47,5 @@ public class CommandTopNeed implements ICommand {
     public int compareTo(ICommand o) {
         return getName().compareTo(o.getName());
     }
+    */
 }

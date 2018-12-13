@@ -3,8 +3,8 @@ package mcjty.theoneprobe.apiimpl.providers;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 public class BlockProbeInfoProvider implements IProbeInfoProvider {
@@ -15,7 +15,7 @@ public class BlockProbeInfoProvider implements IProbeInfoProvider {
     }
 
     @Override
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data) {
         Block block = blockState.getBlock();
         if (block instanceof IProbeInfoAccessor) {
             IProbeInfoAccessor accessor = (IProbeInfoAccessor) block;

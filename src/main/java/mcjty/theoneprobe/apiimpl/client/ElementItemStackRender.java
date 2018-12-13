@@ -1,19 +1,18 @@
 package mcjty.theoneprobe.apiimpl.client;
 
 import mcjty.theoneprobe.api.IItemStyle;
-import mcjty.theoneprobe.network.ThrowableIdentity;
 import mcjty.theoneprobe.rendering.RenderHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.text.TextFormat;
 
 public class ElementItemStackRender {
 
     public static void render(ItemStack itemStack, IItemStyle style, int x, int y) {
-        RenderItem itemRender = MinecraftClient.getInstance().getRenderItem();
+        ItemRenderer itemRender = MinecraftClient.getInstance().getItemRenderer();
         if (!itemStack.isEmpty()) {
-            int size = itemStack.getCount();
+            int size = itemStack.getAmount();
             String amount;
             if (size <= 1) {
                 amount = "";
@@ -29,7 +28,7 @@ public class ElementItemStackRender {
 
             if (!RenderHelper.renderItemStack(MinecraftClient.getInstance(), itemRender, itemStack, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount)) {
                 // There was a crash rendering this item
-                RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormatting.RED + "ERROR: " + itemStack.getDisplayName());
+                RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormat.RED + "ERROR: " + itemStack.getDisplayName());
             }
         }
     }

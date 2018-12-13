@@ -3,19 +3,16 @@ package mcjty.theoneprobe.network;
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketReturnInfo implements IMessage {
+// @todo fabric
+public class PacketReturnInfo /* implements IMessage*/ {
 
     private int dim;
     private BlockPos pos;
     private ProbeInfo probeInfo;
 
-    @Override
+//    @Override
     public void fromBytes(ByteBuf buf) {
         dim = buf.readInt();
         pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
@@ -27,7 +24,7 @@ public class PacketReturnInfo implements IMessage {
         }
     }
 
-    @Override
+//    @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(dim);
         buf.writeInt(pos.getX());
@@ -50,11 +47,12 @@ public class PacketReturnInfo implements IMessage {
         this.probeInfo = probeInfo;
     }
 
-    public static class Handler implements IMessageHandler<PacketReturnInfo, IMessage> {
-        @Override
-        public IMessage onMessage(PacketReturnInfo message, MessageContext ctx) {
-            MinecraftClient.getInstance().addScheduledTask(() -> OverlayRenderer.registerProbeInfo(message.dim, message.pos, message.probeInfo));
-            return null;
-        }
-    }
+    // @todo fabric
+//    public static class Handler implements IMessageHandler<PacketReturnInfo, IMessage> {
+//        @Override
+//        public IMessage onMessage(PacketReturnInfo message, MessageContext ctx) {
+//            MinecraftClient.getInstance().addScheduledTask(() -> OverlayRenderer.registerProbeInfo(message.dim, message.pos, message.probeInfo));
+//            return null;
+//        }
+//    }
 }

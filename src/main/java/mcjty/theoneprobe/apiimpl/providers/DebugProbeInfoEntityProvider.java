@@ -1,16 +1,16 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
-import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeHitEntityData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
+import mcjty.theoneprobe.config.Config;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 import static mcjty.theoneprobe.api.TextStyleClass.INFO;
@@ -24,18 +24,18 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
     }
 
     @Override
-    public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) {
+    public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, Entity entity, IProbeHitEntityData data) {
         if (mode == ProbeMode.DEBUG && Config.showDebugInfo) {
             IProbeInfo vertical = null;
-            if (entity instanceof EntityLivingBase) {
+            if (entity instanceof LivingEntity) {
                 vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2));
 
-                EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
-                int totalArmorValue = entityLivingBase.getTotalArmorValue();
-                int age = entityLivingBase.getIdleTime();
+                LivingEntity entityLivingBase = (LivingEntity) entity;
+                int totalArmorValue = entityLivingBase.method_6096();   // @todo fabric: getTotalArmorValue
+                int age = entityLivingBase.getLastAttackedTime();   // @todo fabric: getIdleTime();
                 float absorptionAmount = entityLivingBase.getAbsorptionAmount();
-                float aiMoveSpeed = entityLivingBase.getAIMoveSpeed();
-                int revengeTimer = entityLivingBase.getRevengeTimer();
+                float aiMoveSpeed = 0; // @todo fabric: entityLivingBase.getAIMoveSpeed();
+                int revengeTimer = 0; // @todo fabric: entityLivingBase.getRevengeTimer();
                 vertical
                         .text(LABEL + "Tot armor: " + INFO + totalArmorValue)
                         .text(LABEL + "Age: " + INFO + age)
@@ -43,13 +43,13 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                         .text(LABEL + "AI Move Speed: " + INFO + aiMoveSpeed)
                         .text(LABEL + "Revenge Timer: " + INFO + revengeTimer);
             }
-            if (entity instanceof EntityAgeable) {
+            if (entity instanceof PassiveEntity) {
                 if (vertical == null) {
                     vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2));
                 }
 
-                EntityAgeable entityAgeable = (EntityAgeable) entity;
-                int growingAge = entityAgeable.getGrowingAge();
+                PassiveEntity entityAgeable = (PassiveEntity) entity;
+                int growingAge = entityAgeable.getBreedingAge();
                 vertical
                         .text(LABEL + "Growing Age: " + INFO + growingAge);
             }

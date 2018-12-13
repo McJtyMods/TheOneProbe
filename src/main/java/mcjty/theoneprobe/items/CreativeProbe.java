@@ -14,7 +14,7 @@ public class CreativeProbe extends Item {
                 .itemGroup(ItemGroup.DECORATIONS));
 
         // @todo fabric, registration
-        Registry.ITEM.register(new Identifier(TheOneProbe.MODID, "creativeprove"), this);
+        Registry.ITEM.register(new Identifier(TheOneProbe.MODID, "creativeprobe"), this);
     }
 
 }

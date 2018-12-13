@@ -33,7 +33,7 @@ public class ForgeEventHandlers {
 //
 //    @SubscribeEvent
 //    public void onEntityConstructing(AttachCapabilitiesEvent<Entity> event){
-//        if (event.getObject() instanceof EntityPlayer) {
+//        if (event.getObject() instanceof PlayerEntity) {
 //            if (!event.getObject().hasCapability(PlayerProperties.PLAYER_GOT_NOTE, null)) {
 //                event.addCapability(new Identifier(TheOneProbe.MODID, "Properties"), new PropertiesDispatcher());
 //            }
@@ -46,7 +46,7 @@ public class ForgeEventHandlers {
 //            // We need to copyFrom the capabilities
 //            if (event.getOriginal().hasCapability(PlayerProperties.PLAYER_GOT_NOTE, null)) {
 //                PlayerGotNote oldStore = event.getOriginal().getCapability(PlayerProperties.PLAYER_GOT_NOTE, null);
-//                PlayerGotNote newStore = PlayerProperties.getPlayerGotNote(event.getEntityPlayer());
+//                PlayerGotNote newStore = PlayerProperties.getPlayerGotNote(event.getPlayerEntity());
 //                newStore.copyFrom(oldStore);
 //            }
 //        }

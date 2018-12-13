@@ -26,7 +26,7 @@ public class ElementItemLabel implements IElement {
     @Override
     public void render(int x, int y) {
         if (!itemStack.isEmpty()) {
-            String text = itemStack.getDisplayName();
+            String text = itemStack.getDisplayName().getFormattedText();
             ElementTextRender.render(text, x, y);
         }
     }
@@ -34,7 +34,7 @@ public class ElementItemLabel implements IElement {
     @Override
     public int getWidth() {
         if (!itemStack.isEmpty()) {
-            String text = itemStack.getDisplayName();
+            String text = itemStack.getDisplayName().getFormattedText();
             return ElementTextRender.getWidth(text);
         } else {
             return 10;

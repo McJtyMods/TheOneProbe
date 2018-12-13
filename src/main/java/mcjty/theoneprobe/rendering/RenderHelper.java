@@ -83,21 +83,21 @@ public class RenderHelper {
         itemRender.zOffset = lvl;
 
         if (itm == null) {
-            return ItemRendererStack(mc, itemRender, null, x, y, "", highlight);
+            return renderItemStack(mc, itemRender, null, x, y, "", highlight);
         }
         if (itm instanceof Item) {
-            return ItemRendererStack(mc, itemRender, new ItemStack((Item) itm, 1), x, y, "", highlight);
+            return renderItemStack(mc, itemRender, new ItemStack((Item) itm, 1), x, y, "", highlight);
         }
         if (itm instanceof Block) {
-            return ItemRendererStack(mc, itemRender, new ItemStack((Block) itm, 1), x, y, "", highlight);
+            return renderItemStack(mc, itemRender, new ItemStack((Block) itm, 1), x, y, "", highlight);
         }
         if (itm instanceof ItemStack) {
-            return ItemRendererStackWithCount(mc, itemRender, (ItemStack) itm, x, y, highlight);
+            return itemRendererStackWithCount(mc, itemRender, (ItemStack) itm, x, y, highlight);
         }
         if (itm instanceof Sprite) {
             return renderIcon(mc, itemRender, (Sprite) itm, x, y, highlight);
         }
-        return ItemRendererStack(mc, itemRender, ItemStack.EMPTY, x, y, "", highlight);
+        return renderItemStack(mc, itemRender, ItemStack.EMPTY, x, y, "", highlight);
     }
 
     public static boolean renderIcon(MinecraftClient mc, ItemRenderer itemRender, Sprite itm, int xo, int yo, boolean highlight) {
@@ -105,15 +105,15 @@ public class RenderHelper {
         return true;
     }
 
-    public static boolean ItemRendererStackWithCount(MinecraftClient mc, ItemRenderer itemRender, ItemStack itm, int xo, int yo, boolean highlight) {
+    public static boolean itemRendererStackWithCount(MinecraftClient mc, ItemRenderer itemRender, ItemStack itm, int xo, int yo, boolean highlight) {
         if (itm.getAmount() <= 1) {
-            return ItemRendererStack(mc, itemRender, itm, xo, yo, "", highlight);
+            return renderItemStack(mc, itemRender, itm, xo, yo, "", highlight);
         } else {
-            return ItemRendererStack(mc, itemRender, itm, xo, yo, "" + itm.getAmount(), highlight);
+            return renderItemStack(mc, itemRender, itm, xo, yo, "" + itm.getAmount(), highlight);
         }
     }
 
-    public static boolean ItemRendererStack(MinecraftClient mc, ItemRenderer itemRender, ItemStack itm, int x, int y, String txt, boolean highlight) {
+    public static boolean renderItemStack(MinecraftClient mc, ItemRenderer itemRender, ItemStack itm, int x, int y, String txt, boolean highlight) {
         GlStateManager.color3f(1F, 1F, 1F);
 
         boolean rc = false;
@@ -444,7 +444,7 @@ public class RenderHelper {
         buffer.vertex(p4.getX(), p4.getY(), p4.getZ()).texture(0.0D, 1.0D).texture(b1, b2).color(255, 255, 255, 128).end();
     }
 
-    public static boolean ItemRendererStack(MinecraftClient mc, ItemRenderer itemRender, ItemStack itm, int x, int y, String txt) {
+    public static boolean renderItemStack(MinecraftClient mc, ItemRenderer itemRender, ItemStack itm, int x, int y, String txt) {
         GlStateManager.color3f(1.0F, 1.0F, 1.0F);
 
         boolean rc = true;
@@ -532,8 +532,8 @@ public class RenderHelper {
 //                GlStateManager.enableDepth();
             }
 
-            ClientPlayerEntity entityplayersp = MinecraftClient.getInstance().player;
-            float f = entityplayersp == null ? 0.0F : entityplayersp.getItemCooldownManager().method_7905(stack.getItem(), MinecraftClient.getInstance().getTickDelta());
+            ClientPlayerEntity PlayerEntitysp = MinecraftClient.getInstance().player;
+            float f = PlayerEntitysp == null ? 0.0F : PlayerEntitysp.getItemCooldownManager().method_7905(stack.getItem(), MinecraftClient.getInstance().getTickDelta());
 
             if (f > 0.0F) {
                 GlStateManager.disableLighting();

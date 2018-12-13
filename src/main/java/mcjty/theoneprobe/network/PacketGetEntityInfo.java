@@ -8,6 +8,8 @@ import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -19,14 +21,15 @@ import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
-public class PacketGetEntityInfo implements IMessage {
+// @todo fabric
+public class PacketGetEntityInfo /*implements IMessage*/ {
 
     private int dim;
     private UUID uuid;
     private ProbeMode mode;
     private Vec3d hitVec;
 
-    @Override
+//    @Override
     public void fromBytes(ByteBuf buf) {
         dim = buf.readInt();
         uuid = new UUID(buf.readLong(), buf.readLong());
@@ -36,7 +39,7 @@ public class PacketGetEntityInfo implements IMessage {
         }
     }
 
-    @Override
+//    @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(dim);
         buf.writeLong(uuid.getMostSignificantBits());
@@ -55,33 +58,34 @@ public class PacketGetEntityInfo implements IMessage {
     public PacketGetEntityInfo() {
     }
 
-    public PacketGetEntityInfo(int dim, ProbeMode mode, RayTraceResult mouseOver, Entity entity) {
+    public PacketGetEntityInfo(int dim, ProbeMode mode, HitResult mouseOver, Entity entity) {
         this.dim = dim;
-        this.uuid = entity.getPersistentID();
+        this.uuid = entity.getUuid();
         this.mode = mode;
-        this.hitVec = mouseOver.hitVec;
+        this.hitVec = mouseOver.pos;
     }
 
-    public static class Handler implements IMessageHandler<PacketGetEntityInfo, IMessage> {
-        @Override
-        public IMessage onMessage(PacketGetEntityInfo message, MessageContext ctx) {
-            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
-            return null;
-        }
+    // @todo fabric
+//    public static class Handler implements IMessageHandler<PacketGetEntityInfo, IMessage> {
+//        @Override
+//        public IMessage onMessage(PacketGetEntityInfo message, MessageContext ctx) {
+//            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
+//            return null;
+//        }
+//
+//        private void handle(PacketGetEntityInfo message, MessageContext ctx) {
+//            WorldServer world = DimensionManager.getWorld(message.dim);
+//            if (world != null) {
+//                Entity entity = world.getEntityFromUuid(message.uuid);
+//                if (entity != null) {
+//                    ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().player, message.mode, world, entity, message.hitVec);
+//                    PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(message.uuid, probeInfo), ctx.getServerHandler().player);
+//                }
+//            }
+//        }
+//    }
 
-        private void handle(PacketGetEntityInfo message, MessageContext ctx) {
-            WorldServer world = DimensionManager.getWorld(message.dim);
-            if (world != null) {
-                Entity entity = world.getEntityFromUuid(message.uuid);
-                if (entity != null) {
-                    ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().player, message.mode, world, entity, message.hitVec);
-                    PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(message.uuid, probeInfo), ctx.getServerHandler().player);
-                }
-            }
-        }
-    }
-
-    private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {
+    private static ProbeInfo getProbeInfo(PlayerEntity player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {
         if (Config.needsProbe == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
             if (!ModItems.hasAProbeSomewhere(player)) {

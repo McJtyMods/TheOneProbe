@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import com.sun.istack.internal.NotNull;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IProbeConfig;
@@ -8,6 +9,8 @@ import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +40,7 @@ public class ChestInfoTools {
                 }
             }
         } else if (chestMode == IProbeConfig.ConfigMode.NORMAL && !Config.getInventoriesToNotShow().isEmpty()) {
-            if (Config.getInventoriesToNotShow().contains(world.getBlockState(pos).getBlock().getRegistryName())) {
+            if (Config.getInventoriesToNotShow().contains(Registry.BLOCK.getId(world.getBlockState(pos).getBlock()))) {
                 chestMode = IProbeConfig.ConfigMode.EXTENDED;
             }
         }
@@ -55,14 +58,21 @@ public class ChestInfoTools {
         }
     }
 
-    private static void addItemStack(List<ItemStack> stacks, Set<Item> foundItems, @Nonnull ItemStack stack) {
+    public static boolean canItemStacksStack(@NotNull ItemStack a, @NotNull ItemStack b) {
+        if (a.isEmpty() || !a.isEqualIgnoreTags(b) || a.hasTag() != b.hasTag())
+            return false;
+
+        return (!a.hasTag() || a.getTag().equals(b.getTag()));
+    }
+
+    private static void addItemStack(List<ItemStack> stacks, Set<Item> foundItems, @NotNull ItemStack stack) {
         if (stack.isEmpty()) {
             return;
         }
         if (foundItems != null && foundItems.contains(stack.getItem())) {
             for (ItemStack s : stacks) {
-                if (ItemHandlerHelper.canItemStacksStack(s, stack)) {
-                    s.grow(stack.getCount());
+                if (canItemStacksStack(s, stack)) {
+                    s.addAmount(stack.getAmount());
                     return;
                 }
             }
@@ -87,7 +97,7 @@ public class ChestInfoTools {
             for (ItemStack stackInSlot : stacks) {
                 horizontal = vertical.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER));
                 horizontal.item(stackInSlot, new ItemStyle().width(16).height(16))
-                    .text(INFO + stackInSlot.getDisplayName());
+                    .text(INFO + stackInSlot.getDisplayName().getFormattedText());
             }
         } else {
             for (ItemStack stackInSlot : stacks) {
@@ -110,21 +120,21 @@ public class ChestInfoTools {
         Set<Item> foundItems = Config.compactEqualStacks ? new HashSet<>() : null;
         int maxSlots = 0;
         try {
-            if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
-                IItemHandler capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-                maxSlots = capability.getSlots();
+//            if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+//                IItemHandler capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+//                maxSlots = capability.getSlots();
+//                for (int i = 0; i < maxSlots; i++) {
+//                    addItemStack(stacks, foundItems, capability.getStackInSlot(i));
+//                }
+            if (te instanceof Inventory) {
+                Inventory inventory = (Inventory) te;
+                maxSlots = inventory.getInvSize();
                 for (int i = 0; i < maxSlots; i++) {
-                    addItemStack(stacks, foundItems, capability.getStackInSlot(i));
-                }
-            } else if (te instanceof IInventory) {
-                IInventory inventory = (IInventory) te;
-                maxSlots = inventory.getSizeInventory();
-                for (int i = 0; i < maxSlots; i++) {
-                    addItemStack(stacks, foundItems, inventory.getStackInSlot(i));
+                    addItemStack(stacks, foundItems, inventory.getInvStack(i));
                 }
             }
         } catch(RuntimeException e) {
-            throw new RuntimeException("Getting the contents of a " + world.getBlockState(pos).getBlock().getRegistryName() + " (" + te.getClass().getName() + ")", e);
+            throw new RuntimeException("Getting the contents of a " + Registry.BLOCK.getId(world.getBlockState(pos).getBlock()) + " (" + te.getClass().getName() + ")", e);
         }
         return maxSlots;
     }

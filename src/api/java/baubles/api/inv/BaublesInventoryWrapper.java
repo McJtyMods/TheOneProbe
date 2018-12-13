@@ -1,7 +1,7 @@
 package baubles.api.inv;
 
 import baubles.api.cap.IBaublesItemHandler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -9,7 +9,7 @@ import net.minecraft.util.text.TextComponentString;
 
 public class BaublesInventoryWrapper implements IInventory {
 	final IBaublesItemHandler handler;
-	final EntityPlayer player;
+	final PlayerEntity player;
 
 	public BaublesInventoryWrapper(IBaublesItemHandler handler) {
 		super();
@@ -17,7 +17,7 @@ public class BaublesInventoryWrapper implements IInventory {
 		this.player = null;
 	}
 
-	public BaublesInventoryWrapper(IBaublesItemHandler handler, EntityPlayer player) {
+	public BaublesInventoryWrapper(IBaublesItemHandler handler, PlayerEntity player) {
 		super();
 		this.handler = handler;
 		this.player = player;
@@ -79,15 +79,15 @@ public class BaublesInventoryWrapper implements IInventory {
 	public void markDirty() { }
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) { }
+	public void openInventory(PlayerEntity player) { }
 
 	@Override
-	public void closeInventory(EntityPlayer player) { }
+	public void closeInventory(PlayerEntity player) { }
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {

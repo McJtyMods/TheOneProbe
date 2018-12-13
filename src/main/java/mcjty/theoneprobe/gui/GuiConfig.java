@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.gui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.IOverlayStyle;
@@ -8,16 +9,14 @@ import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.TextFormat;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.Map;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 
-public class GuiConfig extends GuiScreen {
+public class GuiConfig extends Gui {
     private static final int WIDTH = 230;
     private static final int HEIGHT = 230;
 
@@ -59,30 +58,30 @@ public class GuiConfig extends GuiScreen {
 
 
     @Override
-    public boolean doesGuiPauseGame() {
+    public boolean isPauseScreen() {
         return false;
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    protected void onInitialized() {
+        super.onInitialized();
         guiLeft = (this.width - WIDTH - WIDTH) / 2;
         guiTop = (this.height - HEIGHT) / 2;
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        mc.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
-        mc.getTextureManager().bindTexture(scene);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
+    public void draw(int mouseX, int mouseY, float partialTicks) {
+        super.draw(mouseX, mouseY, partialTicks);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(background);
+        drawTexturedRect(guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(scene);
+        drawTexturedRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
 
         renderProbe();
 
         int x = WIDTH + guiLeft + 10;
         int y = guiTop + 10;
-        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormatting.GOLD + "Placement:");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormat.GOLD + "Placement:");
         y += 12;
         RenderHelper.renderText(MinecraftClient.getInstance(), x+10, y, "Click on corner in screenshot");
         y += 10;
@@ -92,7 +91,7 @@ public class GuiConfig extends GuiScreen {
         y += 20;
 
         hitboxes = new ArrayList<>();
-        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormatting.GOLD + "Presets:");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormat.GOLD + "Presets:");
         y += 12;
         for (Preset preset : presets) {
             y = addPreset(x, y, preset);
@@ -100,7 +99,7 @@ public class GuiConfig extends GuiScreen {
 
         y += 20;
 
-        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormatting.GOLD + "Scale:");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormat.GOLD + "Scale:");
         y += 12;
         addButton(x+10, y, 30, 14, "--", () -> { Config.setScale(1.2f);}); x += 36;
         addButton(x+10, y, 30, 14, "-", () -> { Config.setScale(1.1f);}); x += 36;
@@ -139,15 +138,19 @@ public class GuiConfig extends GuiScreen {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        if (super.mouseClicked(mouseX, mouseY, mouseButton)) {
+            return true;
+        }
         if (mouseButton == 0) {
             for (HitBox box : hitboxes) {
-                if (box.isHit(mouseX-guiLeft, mouseY-guiTop)) {
+                if (box.isHit((int)mouseX-guiLeft, (int)mouseY-guiTop)) {
                     box.call();
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     private void applyPreset(Preset preset) {
@@ -179,14 +182,14 @@ public class GuiConfig extends GuiScreen {
     }
 
     private void renderProbe() {
-        Block block = Blocks.LOG;
+        Block block = Blocks.OAK_LOG;
         String modid = Tools.getModName(block);
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         ItemStack pickBlock = new ItemStack(block);
         probeInfo.horizontal()
                 .item(pickBlock)
                 .vertical()
-                .text(NAME + pickBlock.getDisplayName())
+                .text(NAME + pickBlock.getDisplayName().getFormattedText())
                 .text(MODNAME + modid);
         probeInfo.text(LABEL + "Fuel: " + INFO + "5 volts");
         probeInfo.text(LABEL + "Error: " + ERROR + "Oups!");
@@ -197,9 +200,9 @@ public class GuiConfig extends GuiScreen {
     private void renderElements(ProbeInfo probeInfo, IOverlayStyle style) {
 
         GlStateManager.pushMatrix();
-        GlStateManager.scale(1/Config.tooltipScale, 1/Config.tooltipScale, 1/Config.tooltipScale);
+        GlStateManager.scalef(1/Config.tooltipScale, 1/Config.tooltipScale, 1/Config.tooltipScale);
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
 
         int w = probeInfo.getWidth();
@@ -248,9 +251,10 @@ public class GuiConfig extends GuiScreen {
             RenderHelper.drawThickBeveledBox(x+offset, y+offset, x2-offset, y2-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
-        if (!MinecraftClient.getInstance().isGamePaused()) {
-            RenderHelper.rot += .5f;
-        }
+        // @todo fabric
+//        if (!MinecraftClient.getInstance().isGamePaused()) {
+//            RenderHelper.rot += .5f;
+//        }
 
         probeInfo.render(x + margin, y + margin);
 

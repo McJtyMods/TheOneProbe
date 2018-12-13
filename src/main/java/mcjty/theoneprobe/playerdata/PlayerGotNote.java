@@ -23,7 +23,7 @@ public class PlayerGotNote {
 
 
     public void saveNBTData(CompoundTag compound) {
-        compound.setBoolean("gotNote", playerGotNote);
+        compound.putBoolean("gotNote", playerGotNote);
     }
 
     public void loadNBTData(CompoundTag compound) {
