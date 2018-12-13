@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "mcjty.theoneprobe.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "HudMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

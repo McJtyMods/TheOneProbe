@@ -6,6 +6,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class ModItems {
     public static CreativeProbe creativeProbe;
@@ -21,7 +23,9 @@ public class ModItems {
 
     public static void init() {
         probe = new Probe();
+        Registry.ITEM.register(new Identifier(TheOneProbe.MODID, "probe"), probe);
         creativeProbe = new CreativeProbe();
+        Registry.ITEM.register(new Identifier(TheOneProbe.MODID, "creativeprobe"), creativeProbe);
 
         // @todo fabric
 //        ArmorItem.ArmorMaterial materialDiamondHelmet = EnumHelper.addArmorMaterial("diamond_helmet_probe", TheOneProbe.MODID + ":probe_diamond",
@@ -36,6 +40,7 @@ public class ModItems {
 //        ironHelmetProbe = makeHelmet(materialIronHelmet, 2, "iron_helmet_probe");
 
         probeNote = new ProbeNote();
+        Registry.ITEM.register(new Identifier(TheOneProbe.MODID, "probenote"), probeNote);
 
         if (TheOneProbe.baubles) {
             probeGoggles = BaubleTools.initProbeGoggle();

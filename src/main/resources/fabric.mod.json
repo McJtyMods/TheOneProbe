@@ -1,0 +1,11 @@
+{
+  "id": "theoneprobe",
+  "name": "The One Probe",
+  "version": "1.0.0",
+  "side": "universal",
+  "initializer": "mcjty.theoneprobe.TheOneProbe",
+  "mixins": {
+    "client": "theoneprobe.client.json",
+    "common": "theoneprobe.common.json"
+  }
+}
