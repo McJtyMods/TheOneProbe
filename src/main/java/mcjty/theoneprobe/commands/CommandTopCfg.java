@@ -1,29 +1,9 @@
 package mcjty.theoneprobe.commands;
 
-import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.proxy.ClientProxy;
-import mcjty.theoneprobe.proxy.GuiProxy;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import org.apache.commons.lang3.StringUtils;
+// @todo fabric
+public class CommandTopCfg /*implements ICommand*/ {
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
-public class CommandTopCfg implements ICommand {
-
+    /*
 
     @Override
     public String getName() {
@@ -117,4 +97,5 @@ public class CommandTopCfg implements ICommand {
     public int compareTo(ICommand o) {
         return getName().compareTo(o.getName());
     }
+    */
 }

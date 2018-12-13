@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.rendering;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -11,29 +12,24 @@ import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoEntityProvider;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.TextFormat;
+import net.minecraft.util.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.FluidRayTraceMode;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -73,16 +69,18 @@ public class OverlayRenderer {
     public static void renderHUD(ProbeMode mode, float partialTicks) {
         float dist = Config.probeDistance;
 
-        RayTraceResult mouseOver = MinecraftClient.getInstance().objectMouseOver;
+        HitResult mouseOver = MinecraftClient.getInstance().hitResult;
         if (mouseOver != null) {
-            if (mouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {
+            if (mouseOver.type == HitResult.Type.ENTITY) {
                 GlStateManager.pushMatrix();
 
                 double scale = Config.tooltipScale;
 
-                ScaledResolution scaledresolution = new ScaledResolution(MinecraftClient.getInstance());
-                double sw = scaledresolution.getScaledWidth_double();
-                double sh = scaledresolution.getScaledHeight_double();
+                double sw = MinecraftClient.getInstance().window.getScaledWidth();
+                double sh = MinecraftClient.getInstance().window.getScaledHeight();
+//                ScaledResolution scaledresolution = new ScaledResolution(MinecraftClient.getInstance());
+//                double sw = scaledresolution.getScaledWidth_double();
+//                double sh = scaledresolution.getScaledHeight_double();
 
                 setupOverlayRendering(sw * scale, sh * scale);
                 renderHUDEntity(mode, mouseOver, sw * scale, sh * scale);
@@ -94,24 +92,24 @@ public class OverlayRenderer {
             }
         }
 
-        EntityPlayerSP entity = MinecraftClient.getInstance().player;
-        Vec3d start  = entity.getPositionEyes(partialTicks);
-        Vec3d vec31 = entity.getLook(partialTicks);
-        Vec3d end = start.addVector(vec31.x * dist, vec31.y * dist, vec31.z * dist);
+        ClientPlayerEntity entity = MinecraftClient.getInstance().player;
+        Vec3d start  = entity.getCameraPosVec(partialTicks);
+        Vec3d vec31 = entity.getRotationVec(partialTicks);
+        Vec3d end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
 
-        mouseOver = entity.getEntityWorld().rayTraceBlocks(start, end, Config.showLiquids);
+//        mouseOver = entity.getEntityWorld().rayTrace(start, end, Config.showLiquids);
+        mouseOver = entity.getEntityWorld().rayTrace(start, end, FluidRayTraceMode.ALWAYS);
         if (mouseOver == null) {
             return;
         }
 
-        if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
+        if (mouseOver.type == HitResult.Type.BLOCK) {
             GlStateManager.pushMatrix();
 
             double scale = Config.tooltipScale;
 
-            ScaledResolution scaledresolution = new ScaledResolution(MinecraftClient.getInstance());
-            double sw = scaledresolution.getScaledWidth_double();
-            double sh = scaledresolution.getScaledHeight_double();
+            double sw = MinecraftClient.getInstance().window.getScaledWidth();
+            double sh = MinecraftClient.getInstance().window.getScaledHeight();
 
             setupOverlayRendering(sw * scale, sh * scale);
             renderHUDBlock(mode, mouseOver, sw * scale, sh * scale);
@@ -142,20 +140,15 @@ public class OverlayRenderer {
         }
     }
 
-    private static void renderHUDEntity(ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
-        Entity entity = mouseOver.entityHit;
+    private static void renderHUDEntity(ProbeMode mode, HitResult mouseOver, double sw, double sh) {
+        Entity entity = mouseOver.entity;
         if (entity == null) {
             return;
         }
-//@todo
-//        if (entity instanceof EntityDragonPart) {
-//            EntityDragonPart part = (EntityDragonPart) entity;
-//            if (part.entityDragonObj instanceof Entity) {
-//                entity = (Entity) part.entityDragonObj;
-//            }
-//        }
 
-        String entityString = EntityList.getEntityString(entity);
+        // @todo fabric
+//        String entityString = EntityList.getEntityString(entity);
+        String entityString = entity.getEntityName();
         if (entityString == null && !(entity instanceof EntityPlayer)) {
             // We can't show info for this entity
             return;
@@ -205,17 +198,18 @@ public class OverlayRenderer {
         }
     }
 
-    private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, EntityPlayerSP player) {
-        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().provider.getDimension(), mode, mouseOver, entity));
+    private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, ClientPlayerEntity player) {
+        // @todo fabric
+//        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().provider.getDimension(), mode, mouseOver, entity));
     }
 
-    private static void renderHUDBlock(ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
+    private static void renderHUDBlock(ProbeMode mode, HitResult mouseOver, double sw, double sh) {
         BlockPos blockPos = mouseOver.getBlockPos();
         if (blockPos == null) {
             return;
         }
-        EntityPlayerSP player = MinecraftClient.getInstance().player;
-        if (player.getEntityWorld().isAirBlock(blockPos)) {
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        if (player.getEntityWorld().isAir(blockPos)) {
             return;
         }
 
@@ -223,10 +217,12 @@ public class OverlayRenderer {
 
         IElement damageElement = null;
         if (Config.showBreakProgress > 0) {
-            float damage = MinecraftClient.getInstance().playerController.curBlockDamageMP;
+            // @todo fabric
+//            float damage = MinecraftClient.getInstance().interactionManager.curBlockDamageMP;
+            float damage = 0;   // @todo fabric
             if (damage > 0) {
                 if (Config.showBreakProgress == 2) {
-                    damageElement = new ElementText("" + TextFormatting.RED + "Progress " + (int) (damage * 100) + "%");
+                    damageElement = new ElementText("" + TextFormat.RED + "Progress " + (int) (damage * 100) + "%");
                 } else {
                     damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
                             .prefix("Progress ")
@@ -240,7 +236,7 @@ public class OverlayRenderer {
             }
         }
 
-        int dimension = player.getEntityWorld().provider.getDimension();
+        int dimension = player.getEntityWorld().dimension.getType().getRawId(); // @todo fabric: this may not be right!
         Pair<Integer, BlockPos> key = Pair.of(dimension, blockPos);
         Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(key);
         if (cacheEntry == null || cacheEntry.getValue() == null) {
@@ -282,13 +278,14 @@ public class OverlayRenderer {
     }
 
     // Information for when the server is laggy
-    private static ProbeInfo getWaitingInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, EntityPlayerSP player) {
+    private static ProbeInfo getWaitingInfo(ProbeMode mode, HitResult mouseOver, BlockPos blockPos, ClientPlayerEntity player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
 
         World world = player.getEntityWorld();
-        IBlockState blockState = world.getBlockState(blockPos);
+        BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
+        block.get
+        ItemStack pickBlock = block.getPickStack(blockState, mouseOver, world, blockPos, player);
         IProbeHitData data = new ProbeHitData(blockPos, mouseOver.hitVec, mouseOver.sideHit, pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();

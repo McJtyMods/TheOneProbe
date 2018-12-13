@@ -2,43 +2,39 @@ package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.proxy.GuiProxy;
-import net.minecraft.client.renderer.block.model.ModelIdentifier;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ProbeNote extends Item {
 
     public ProbeNote() {
-        setUnlocalizedName(TheOneProbe.MODID + ".probenote");
-        setRegistryName("probenote");
-        setCreativeTab(TheOneProbe.tabProbe);
-        setMaxStackSize(1);
+        super(new Settings().stackSize(1).itemGroup(ItemGroup.DECORATIONS));
+
+        // @todo fabric, registration
+        Registry.ITEM.register(new Identifier(TheOneProbe.MODID, "probenote"), this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ModelLoader.setCustomModelIdentifier(this, 0, new ModelIdentifier(getRegistryName(), "inventory"));
-    }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-        ItemStack stack = player.getHeldItem(hand);
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getStackInHand(hand);
         if (world.isRemote) {
             if (player.isSneaking()) {
-                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
+                // @todo fabric
+//                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
             } else {
-                player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
+//                player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
             }
-            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+            return new TypedActionResult<>(ActionResult.SUCCESS, stack);
         }
-        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+        return new TypedActionResult<>(ActionResult.SUCCESS, stack);
     }
 }
