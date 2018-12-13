@@ -1,12 +1,12 @@
 package mcjty.theoneprobe.apiimpl.client;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.rendering.RenderHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.TextFormat;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.text.TextFormatting;
 
 public class ElementProgressRender {
 
@@ -42,12 +42,12 @@ public class ElementProgressRender {
     }
 
     private static void renderLifeBar(long current, int x, int y, int w, int h) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         MinecraftClient.getInstance().getTextureManager().bindTexture(ICONS);
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(x, y, 52, 0, 9, 9);
-            RenderHelper.renderText(MinecraftClient.getInstance(), x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
+            RenderHelper.renderText(MinecraftClient.getInstance(), x + 12, y, TextFormat.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
                 RenderHelper.drawTexturedModalRect(x, y, 52, 0, 9, 9);
@@ -60,12 +60,12 @@ public class ElementProgressRender {
     }
 
     private static void renderArmorBar(long current, int x, int y, int w, int h) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         MinecraftClient.getInstance().getTextureManager().bindTexture(ICONS);
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(x, y, 43, 9, 9, 9);
-            RenderHelper.renderText(MinecraftClient.getInstance(), x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
+            RenderHelper.renderText(MinecraftClient.getInstance(), x + 12, y, TextFormat.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
                 RenderHelper.drawTexturedModalRect(x, y, 43, 9, 9, 9);

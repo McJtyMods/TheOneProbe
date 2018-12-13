@@ -1,11 +1,11 @@
 package mcjty.theoneprobe.api;
 
+import com.sun.istack.internal.Nullable;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
-import javax.annotation.Nullable;
 
 /**
  * Access information about where the probe hit the block
@@ -16,7 +16,7 @@ public interface IProbeHitData {
 
     Vec3d getHitVec();
 
-    EnumFacing getSideHit();
+    Direction getSideHit();
 
     /**
      * Access the client-side result of getPickBlock() for the given block. That way

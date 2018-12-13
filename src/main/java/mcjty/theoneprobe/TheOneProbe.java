@@ -29,13 +29,14 @@ public class TheOneProbe {
     public static boolean redstoneflux = false;
 
     // @todo fabric
-//    public static CreativeTabs tabProbe = new CreativeTabs("Probe") {
+//    public static ItemGroup tabProbe = new ItemGroup(1,  "Probe") { // @todo fabric (what is that number)?
+//
 //        @Override
-//        public ItemStack getTabIconItem() {
+//        public ItemStack getIconItem() {
 //            return new ItemStack(ModItems.probe);
 //        }
 //    };
-
+//
 
     /**
      * Run before anything else. Read your config, create blocks, items, etc, and

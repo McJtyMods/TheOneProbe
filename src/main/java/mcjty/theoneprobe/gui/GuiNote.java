@@ -3,17 +3,15 @@ package mcjty.theoneprobe.gui;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.ContainerGui;
+import net.minecraft.container.Container;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.text.TextFormatting;
-
-import java.io.IOException;
 
 import static mcjty.theoneprobe.config.Config.*;
-import static net.minecraft.util.text.TextFormatting.*;
+import static net.minecraft.text.TextFormat.*;
 
-public class GuiNote extends GuiScreen {
+public class GuiNote extends ContainerGui {
     private static final int WIDTH = 256;
     private static final int HEIGHT = 160;
 
@@ -26,26 +24,38 @@ public class GuiNote extends GuiScreen {
 
     private static final Identifier background = new Identifier(TheOneProbe.MODID, "textures/gui/note.png");
 
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
+    public GuiNote(Container var1) {
+        super(var1);
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+
+    @Override
+    protected void onInitialized() {
+        super.onInitialized();
         guiLeft = (this.width - WIDTH) / 2;
         guiTop = (this.height - HEIGHT) / 2;
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        mc.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
+    protected void drawBackground(float var1, int var2, int var3) {
+
+    }
+
+
+
+    @Override
+    public void draw(int mouseX, int mouseY, float partialTicks) {
+        super.draw(mouseX, mouseY, partialTicks);
+        client.getTextureManager().bindTexture(background);
+        drawTexturedRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;
-        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, "Things you should know about" + TextFormatting.GOLD + " The One Probe"); y += 10;
+        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, "Things you should know about" + GOLD + " The One Probe"); y += 10;
         y += 10;
 
         RenderHelper.renderText(MinecraftClient.getInstance(), x, y, BOLD + "This mod can show a tooltip on screen"); y += 10;
@@ -90,19 +100,27 @@ public class GuiNote extends GuiScreen {
     private int hitY;
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        boolean rc = super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (rc) {
+            return rc;
+        }
         mouseX += guiLeft;
         mouseY += guiTop;
         if (mouseY >= hitY && mouseY < hitY + BUTTON_HEIGHT) {
             if (mouseX >= hitX && mouseX < hitX + BUTTON_WIDTH) {
-                Config.setProbeNeeded(PROBE_NEEDED);
+                // @todo fabric
+//                Config.setProbeNeeded(PROBE_NEEDED);
+                return true;
             } else if (mouseX >= hitX+BUTTON_MARGIN && mouseX < hitX + BUTTON_WIDTH+BUTTON_MARGIN) {
-                Config.setProbeNeeded(PROBE_NOTNEEDED);
+//                Config.setProbeNeeded(PROBE_NOTNEEDED);
+                return true;
             } else if (mouseX >= hitX+BUTTON_MARGIN*2 && mouseX < hitX + BUTTON_WIDTH+BUTTON_MARGIN*2) {
-                Config.setProbeNeeded(PROBE_NEEDEDFOREXTENDED);
+//                Config.setProbeNeeded(PROBE_NEEDEDFOREXTENDED);
+                return true;
             }
         }
+        return false;
     }
 
     private int setInConfig(int x, int y) {

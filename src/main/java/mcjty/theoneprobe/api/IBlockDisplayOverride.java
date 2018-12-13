@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 /**
@@ -15,6 +15,6 @@ public interface IBlockDisplayOverride {
      * This function returns true if you handled the probe info yourselves and TOP doesn't have to add its
      * own info.
      */
-    boolean overrideStandardInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data);
+    boolean overrideStandardInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data);
 
 }

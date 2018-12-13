@@ -12,7 +12,7 @@ import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstnace;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -78,11 +78,11 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             }
 
             if (Tools.show(mode, config.getShowMobPotionEffects())) {
-                Collection<StatusEffectInstnace> effects = livingBase.getPotionEffects();
+                Collection<StatusEffectInstance> effects = livingBase.getPotionEffects();
                 if (!effects.isEmpty()) {
                     IProbeInfo vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(0xffffffff));
                     float durationFactor = 1.0f;
-                    for (StatusEffectInstnace effect : effects) {
+                    for (StatusEffectInstance effect : effects) {
                         String s1 = STARTLOC + effect.getTranslationKey() + ENDLOC;
                         StatusEffect potion = effect.getEffectType();
                         if (effect.getAmplifier() > 0) {
@@ -157,7 +157,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
         }
     }
 
-    public static String getPotionDurationString(StatusEffectInstnace effect, float factor) {
+    public static String getPotionDurationString(StatusEffectInstance effect, float factor) {
         if (effect.getDuration() == 32767) {
             return "**:**";
         } else {
