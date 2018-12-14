@@ -5,49 +5,14 @@ import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
-import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.network.PacketHandler;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class CommonProxy {
 
     public void preInit() {
-        registerCapabilities();
-        TheOneProbeImp.registerElements();
-        TheOneProbe.theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
-        TheOneProbe.theOneProbeImp.registerProvider(new DebugProbeInfoProvider());
-        TheOneProbe.theOneProbeImp.registerProvider(new BlockProbeInfoProvider());
-        TheOneProbe.theOneProbeImp.registerEntityProvider(new DefaultProbeInfoEntityProvider());
-        TheOneProbe.theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
-        TheOneProbe.theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
-
         readMainConfig();
-        PacketHandler.registerMessages("theoneprobe");
     }
-
-    private static void registerCapabilities(){
-        // @todo fabric
-//        CapabilityManager.INSTANCE.register(PlayerGotNote.class, new Capability.IStorage<PlayerGotNote>() {
-//
-//            @Override
-//            public NBTBase writeNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side) {
-//                throw new UnsupportedOperationException();
-//            }
-//
-//            @Override
-//            public void readNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side, NBTBase nbt) {
-//                throw new UnsupportedOperationException();
-//            }
-//
-//        }, () -> {
-//            throw new UnsupportedOperationException();
-//        });
-    }
-
 
     private void readMainConfig() {
         // @todo fabric

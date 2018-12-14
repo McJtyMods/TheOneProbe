@@ -13,6 +13,9 @@ import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoEntityProvider;
 import mcjty.theoneprobe.apiimpl.providers.DefaultProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.network.NetworkInit;
+import mcjty.theoneprobe.network.PacketGetEntityInfo;
+import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -200,8 +203,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, ClientPlayerEntity player) {
-        // @todo fabric
-//        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().provider.getDimension(), mode, mouseOver, entity));
+        NetworkInit.getEntityInfo(new PacketGetEntityInfo(player.getEntityWorld().dimension.getType().getRawId(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(ProbeMode mode, HitResult mouseOver, double sw, double sh) {
@@ -330,8 +332,7 @@ public class OverlayRenderer {
             pickBlock = pickBlock.copy();
             pickBlock.setTag(null);
         }
-        // @todo fabric
-//        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.provider.getDimension(), blockPos, mode, mouseOver, pickBlock));
+        NetworkInit.getInfo(new PacketGetInfo(world.dimension.getType().getRawId(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo) {

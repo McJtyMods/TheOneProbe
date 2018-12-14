@@ -1,6 +1,7 @@
 package mcjty.theoneprobe;
 
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
+import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.proxy.ClientProxy;
 import mcjty.theoneprobe.proxy.CommonProxy;
@@ -44,6 +45,17 @@ public class TheOneProbe implements ModInitializer {
     @Override
     public void onInitialize() {
         ModItems.init();
+        initDefaultProbe();
+    }
+
+    private void initDefaultProbe() {
+        TheOneProbeImp.registerElements();
+        TheOneProbe.theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
+        TheOneProbe.theOneProbeImp.registerProvider(new DebugProbeInfoProvider());
+        TheOneProbe.theOneProbeImp.registerProvider(new BlockProbeInfoProvider());
+        TheOneProbe.theOneProbeImp.registerEntityProvider(new DefaultProbeInfoEntityProvider());
+        TheOneProbe.theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
+        TheOneProbe.theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
     }
 
     /**

@@ -3,7 +3,10 @@
   "name": "The One Probe",
   "version": "1.0.0",
   "side": "universal",
-  "initializer": "mcjty.theoneprobe.TheOneProbe",
+  "initializers": [
+    "mcjty.theoneprobe.TheOneProbe",
+    "mcjty.theoneprobe.network.NetworkInit"
+  ],
   "mixins": {
     "client": "theoneprobe.client.json",
     "common": "theoneprobe.common.json"

@@ -2,8 +2,12 @@ package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
+import mcjty.theoneprobe.rendering.OverlayRenderer;
+import net.fabricmc.fabric.networking.PacketContext;
+import net.minecraft.util.PacketByteBuf;
 
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 public class PacketReturnEntityInfo /*implements IMessage*/ {
 
@@ -33,6 +37,7 @@ public class PacketReturnEntityInfo /*implements IMessage*/ {
         }
     }
 
+
     public PacketReturnEntityInfo() {
     }
 
@@ -41,11 +46,17 @@ public class PacketReturnEntityInfo /*implements IMessage*/ {
         this.probeInfo = probeInfo;
     }
 
-//    public static class Handler implements IMessageHandler<PacketReturnEntityInfo, IMessage> {
-//        @Override
-//        public IMessage onMessage(PacketReturnEntityInfo message, MessageContext ctx) {
-//            MinecraftClient.getInstance().addScheduledTask(() -> OverlayRenderer.registerProbeInfo(message.uuid, message.probeInfo));
-//            return null;
-//        }
-//    }
+    public static class Handler implements BiConsumer<PacketContext, PacketByteBuf> {
+        @Override
+        public void accept(PacketContext context, PacketByteBuf packetByteBuf) {
+            PacketReturnEntityInfo packet = new PacketReturnEntityInfo();
+            packet.fromBytes(packetByteBuf);
+            context.getTaskQueue().execute(() -> handle(context, packet));
+
+        }
+
+        public void handle(PacketContext context, PacketReturnEntityInfo message) {
+            OverlayRenderer.registerProbeInfo(message.uuid, message.probeInfo);
+        }
+    }
 }

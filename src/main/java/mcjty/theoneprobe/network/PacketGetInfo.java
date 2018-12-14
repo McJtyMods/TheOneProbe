@@ -8,16 +8,22 @@ import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import net.fabricmc.fabric.networking.PacketContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.HitResult;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
@@ -90,23 +96,24 @@ public class PacketGetInfo /*implements IMessage*/ {
         this.pickBlock = pickBlock;
     }
 
-    // @todo fabric
-//    public static class Handler implements IMessageHandler<PacketGetInfo, IMessage> {
-//        @Override
-//        public IMessage onMessage(PacketGetInfo message, MessageContext ctx) {
-//            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
-//            return null;
-//        }
-//
-//        private void handle(PacketGetInfo message, MessageContext ctx) {
-//            WorldServer world = DimensionManager.getWorld(message.dim);
-//            if (world != null) {
-//                ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().player,
-//                        message.mode, world, message.pos, message.sideHit, message.hitVec, message.pickBlock);
-//                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(message.dim, message.pos, probeInfo), ctx.getServerHandler().player);
-//            }
-//        }
-//    }
+    public static class Handler implements BiConsumer<PacketContext, PacketByteBuf> {
+
+        @Override
+        public void accept(PacketContext context, PacketByteBuf packetByteBuf) {
+            PacketGetInfo packet = new PacketGetInfo();
+            packet.fromBytes(packetByteBuf);
+            context.getTaskQueue().execute(() -> handle(context, packet));
+        }
+
+        private void handle(PacketContext context, PacketGetInfo message) {
+            ServerWorld world = context.getPlayer().getEntityWorld().getServer().getWorld(DimensionType.byRawId(message.dim));
+            if (world != null) {
+                ProbeInfo probeInfo = getProbeInfo(context.getPlayer(),
+                        message.mode, world, message.pos, message.sideHit, message.hitVec, message.pickBlock);
+                NetworkInit.returnInfo(new PacketReturnInfo(message.dim, message.pos, probeInfo), (ServerPlayerEntity) context.getPlayer());
+            }
+        }
+    }
 
     private static ProbeInfo getProbeInfo(PlayerEntity player, ProbeMode mode, World world, BlockPos blockPos, Direction sideHit, Vec3d hitVec, ItemStack pickBlock) {
         if (Config.needsProbe == PROBE_NEEDEDFOREXTENDED) {

@@ -167,10 +167,10 @@ public class RenderHelper {
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getVertexBuffer();
         buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR);
-        buffer.vertex(x2, y1, zLevel).color(f1, f2, f3, f).end();
-        buffer.vertex(x1, y1, zLevel).color(f1, f2, f3, f).end();
-        buffer.vertex(x1, y2, zLevel).color(f5, f6, f7, f4).end();
-        buffer.vertex(x2, y2, zLevel).color(f5, f6, f7, f4).end();
+        buffer.vertex(x2, y1, zLevel).color(f1, f2, f3, f).next();
+        buffer.vertex(x1, y1, zLevel).color(f1, f2, f3, f).next();
+        buffer.vertex(x1, y2, zLevel).color(f5, f6, f7, f4).next();
+        buffer.vertex(x2, y2, zLevel).color(f5, f6, f7, f4).next();
         tessellator.draw();
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -203,10 +203,10 @@ public class RenderHelper {
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getVertexBuffer();
         buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR);
-        buffer.vertex(x1, y1, zLevel).color(f1, f2, f3, f).end();
-        buffer.vertex(x1, y2, zLevel).color(f1, f2, f3, f).end();
-        buffer.vertex(x2, y2, zLevel).color(f5, f6, f7, f4).end();
-        buffer.vertex(x2, y1, zLevel).color(f5, f6, f7, f4).end();
+        buffer.vertex(x1, y1, zLevel).color(f1, f2, f3, f).next();
+        buffer.vertex(x1, y2, zLevel).color(f1, f2, f3, f).next();
+        buffer.vertex(x2, y2, zLevel).color(f5, f6, f7, f4).next();
+        buffer.vertex(x2, y1, zLevel).color(f5, f6, f7, f4).next();
         tessellator.draw();
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
@@ -305,10 +305,10 @@ public class RenderHelper {
         VertexBuffer buffer = tessellator.getVertexBuffer();
         buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
 
-        buffer.vertex((x + 0), (y + height), zLevel).texture(((u + 0.0) * f), ((v + height) * f1)).end();
-        buffer.vertex((x + width), (y + height), zLevel).texture(((u + width) * f), ((v + height) * f1)).end();
-        buffer.vertex((x + width), (y + 0), zLevel).texture(((u + width) * f), ((v + 0.0) * f1)).end();
-        buffer.vertex((x + 0), (y + 0), zLevel).texture(((u + 0.0) * f), ((v + 0.0) * f1)).end();
+        buffer.vertex((x + 0), (y + height), zLevel).texture(((u + 0.0) * f), ((v + height) * f1)).next();
+        buffer.vertex((x + width), (y + height), zLevel).texture(((u + width) * f), ((v + height) * f1)).next();
+        buffer.vertex((x + width), (y + 0), zLevel).texture(((u + width) * f), ((v + 0.0) * f1)).next();
+        buffer.vertex((x + 0), (y + 0), zLevel).texture(((u + 0.0) * f), ((v + 0.0) * f1)).next();
         tessellator.draw();
     }
 
@@ -323,10 +323,10 @@ public class RenderHelper {
         VertexBuffer buffer = tessellator.getVertexBuffer();
         buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
 
-        buffer.vertex((x + 0), (y + height), zLevel).texture(((u + 0.0) * f), ((v + height) * f1)).end();
-        buffer.vertex((x + width), (y + height), zLevel).texture(((u + width) * f), ((v + height) * f1)).end();
-        buffer.vertex((x + width), (y + 0), zLevel).texture(((u + width) * f), ((v + 0.0) * f1)).end();
-        buffer.vertex((x + 0), (y + 0), zLevel).texture(((u + 0.0) * f), ((v + 0.0) * f1)).end();
+        buffer.vertex((x + 0), (y + height), zLevel).texture(((u + 0.0) * f), ((v + height) * f1)).next();
+        buffer.vertex((x + width), (y + height), zLevel).texture(((u + width) * f), ((v + height) * f1)).next();
+        buffer.vertex((x + width), (y + 0), zLevel).texture(((u + width) * f), ((v + 0.0) * f1)).next();
+        buffer.vertex((x + 0), (y + 0), zLevel).texture(((u + 0.0) * f), ((v + 0.0) * f1)).next();
         tessellator.draw();
     }
 
@@ -343,10 +343,10 @@ public class RenderHelper {
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getVertexBuffer();
         buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
-        buffer.vertex((x + 0), (y + height), zLevel).texture(u1, v1).end();
-        buffer.vertex((x + width), (y + height), zLevel).texture(u1, v2).end();
-        buffer.vertex((x + width), (y + 0), zLevel).texture(u2, v2).end();
-        buffer.vertex((x + 0), (y + 0), zLevel).texture(u2, v1).end();
+        buffer.vertex((x + 0), (y + height), zLevel).texture(u1, v1).next();
+        buffer.vertex((x + width), (y + height), zLevel).texture(u1, v2).next();
+        buffer.vertex((x + width), (y + 0), zLevel).texture(u2, v2).next();
+        buffer.vertex((x + 0), (y + 0), zLevel).texture(u2, v1).next();
         tessellator.draw();
     }
 
@@ -359,10 +359,10 @@ public class RenderHelper {
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getVertexBuffer();
         buffer.begin(7, VertexFormats.field_1586);
-        buffer.vertex(-scale, -scale, 0.0D).texture(0.0D, 0.0D).texture(b1, b2).color(255, 255, 255, 128).end();
-        buffer.vertex(-scale, scale, 0.0D).texture(0.0D, 1.0D).texture(b1, b2).color(255, 255, 255, 128).end();
-        buffer.vertex(scale, scale, 0.0D).texture(1.0D, 1.0D).texture(b1, b2).color(255, 255, 255, 128).end();
-        buffer.vertex(scale, -scale, 0.0D).texture(1.0D, 0.0D).texture(b1, b2).color(255, 255, 255, 128).end();
+        buffer.vertex(-scale, -scale, 0.0D).texture(0.0D, 0.0D).texture(b1, b2).color(255, 255, 255, 128).next();
+        buffer.vertex(-scale, scale, 0.0D).texture(0.0D, 1.0D).texture(b1, b2).color(255, 255, 255, 128).next();
+        buffer.vertex(scale, scale, 0.0D).texture(1.0D, 1.0D).texture(b1, b2).color(255, 255, 255, 128).next();
+        buffer.vertex(scale, -scale, 0.0D).texture(1.0D, 0.0D).texture(b1, b2).color(255, 255, 255, 128).next();
         tessellator.draw();
         GlStateManager.popMatrix();
     }
@@ -375,10 +375,10 @@ public class RenderHelper {
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getVertexBuffer();
         buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
-        buffer.vertex(-scale, -scale, 0).texture(0.0, 0.0).end();
-        buffer.vertex(-scale, +scale, 0).texture(0.0, 1.0).end();
-        buffer.vertex(+scale, +scale, 0).texture(1.0, 1.0).end();
-        buffer.vertex(+scale, -scale, 0).texture(1.0, 0.0).end();
+        buffer.vertex(-scale, -scale, 0).texture(0.0, 0.0).next();
+        buffer.vertex(-scale, +scale, 0).texture(0.0, 1.0).next();
+        buffer.vertex(+scale, +scale, 0).texture(1.0, 1.0).next();
+        buffer.vertex(+scale, -scale, 0).texture(1.0, 0.0).next();
 
         tessellator.draw();
         GlStateManager.popMatrix();
@@ -394,10 +394,10 @@ public class RenderHelper {
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getVertexBuffer();
         buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
-        buffer.vertex(-scale, -scale, 0).texture(0.0, 0.0).end();
-        buffer.vertex(-scale, +scale, 0).texture(0.0, 1.0).end();
-        buffer.vertex(+scale, +scale, 0).texture(1.0, 1.0).end();
-        buffer.vertex(+scale, -scale, 0).texture(1.0, 0.0).end();
+        buffer.vertex(-scale, -scale, 0).texture(0.0, 0.0).next();
+        buffer.vertex(-scale, +scale, 0).texture(0.0, 1.0).next();
+        buffer.vertex(+scale, +scale, 0).texture(1.0, 1.0).next();
+        buffer.vertex(+scale, -scale, 0).texture(1.0, 0.0).next();
 
         tessellator.draw();
         GlStateManager.popMatrix();
@@ -438,10 +438,10 @@ public class RenderHelper {
         int b2 = brightness & 65535;
 
         VertexBuffer buffer = tessellator.getVertexBuffer();
-        buffer.vertex(p1.getX(), p1.getY(), p1.getZ()).texture(0.0D, 0.0D).texture(b1, b2).color(255, 255, 255, 128).end();
-        buffer.vertex(p2.getX(), p2.getY(), p2.getZ()).texture(1.0D, 0.0D).texture(b1, b2).color(255, 255, 255, 128).end();
-        buffer.vertex(p3.getX(), p3.getY(), p3.getZ()).texture(1.0D, 1.0D).texture(b1, b2).color(255, 255, 255, 128).end();
-        buffer.vertex(p4.getX(), p4.getY(), p4.getZ()).texture(0.0D, 1.0D).texture(b1, b2).color(255, 255, 255, 128).end();
+        buffer.vertex(p1.getX(), p1.getY(), p1.getZ()).texture(0.0D, 0.0D).texture(b1, b2).color(255, 255, 255, 128).next();
+        buffer.vertex(p2.getX(), p2.getY(), p2.getZ()).texture(1.0D, 0.0D).texture(b1, b2).color(255, 255, 255, 128).next();
+        buffer.vertex(p3.getX(), p3.getY(), p3.getZ()).texture(1.0D, 1.0D).texture(b1, b2).color(255, 255, 255, 128).next();
+        buffer.vertex(p4.getX(), p4.getY(), p4.getZ()).texture(0.0D, 1.0D).texture(b1, b2).color(255, 255, 255, 128).next();
     }
 
     public static boolean renderItemStack(MinecraftClient mc, ItemRenderer itemRender, ItemStack itm, int x, int y, String txt) {
@@ -554,10 +554,10 @@ public class RenderHelper {
      */
     private static void draw(VertexBuffer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
         renderer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR);
-        renderer.vertex((x + 0), (y + 0), 0.0D).color(red, green, blue, alpha).end();
-        renderer.vertex((x + 0), (y + height), 0.0D).color(red, green, blue, alpha).end();
-        renderer.vertex((x + width), (y + height), 0.0D).color(red, green, blue, alpha).end();
-        renderer.vertex((x + width), (y + 0), 0.0D).color(red, green, blue, alpha).end();
+        renderer.vertex((x + 0), (y + 0), 0.0D).color(red, green, blue, alpha).next();
+        renderer.vertex((x + 0), (y + height), 0.0D).color(red, green, blue, alpha).next();
+        renderer.vertex((x + width), (y + height), 0.0D).color(red, green, blue, alpha).next();
+        renderer.vertex((x + width), (y + 0), 0.0D).color(red, green, blue, alpha).next();
         Tessellator.getInstance().draw();
     }
 

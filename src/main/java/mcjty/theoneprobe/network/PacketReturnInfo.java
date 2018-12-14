@@ -3,7 +3,11 @@ package mcjty.theoneprobe.network;
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
+import net.fabricmc.fabric.networking.PacketContext;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.function.BiConsumer;
 
 // @todo fabric
 public class PacketReturnInfo /* implements IMessage*/ {
@@ -47,12 +51,17 @@ public class PacketReturnInfo /* implements IMessage*/ {
         this.probeInfo = probeInfo;
     }
 
-    // @todo fabric
-//    public static class Handler implements IMessageHandler<PacketReturnInfo, IMessage> {
-//        @Override
-//        public IMessage onMessage(PacketReturnInfo message, MessageContext ctx) {
-//            MinecraftClient.getInstance().addScheduledTask(() -> OverlayRenderer.registerProbeInfo(message.dim, message.pos, message.probeInfo));
-//            return null;
-//        }
-//    }
+    public static class Handler implements BiConsumer<PacketContext, PacketByteBuf> {
+
+        @Override
+        public void accept(PacketContext context, PacketByteBuf packetByteBuf) {
+            PacketReturnInfo packet = new PacketReturnInfo();
+            packet.fromBytes(packetByteBuf);
+            context.getTaskQueue().execute(() -> handle(context, packet));
+        }
+
+        public void handle(PacketContext context, PacketReturnInfo message) {
+            OverlayRenderer.registerProbeInfo(message.dim, message.pos, message.probeInfo);
+        }
+    }
 }
