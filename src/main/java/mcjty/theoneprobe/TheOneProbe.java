@@ -2,6 +2,7 @@ package mcjty.theoneprobe;
 
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.proxy.ClientProxy;
 import mcjty.theoneprobe.proxy.CommonProxy;
@@ -56,6 +57,7 @@ public class TheOneProbe implements ModInitializer {
         TheOneProbe.theOneProbeImp.registerEntityProvider(new DefaultProbeInfoEntityProvider());
         TheOneProbe.theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
         TheOneProbe.theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
+        Config.setupStyleConfig();  // @todo fabric: should be done when reading config
     }
 
     /**

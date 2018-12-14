@@ -7,7 +7,9 @@ import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
+import net.minecraft.text.TextFormat;
 import net.minecraft.util.Identifier;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,9 +42,9 @@ public class Config {
     // Chest related settings
     public static int showSmallChestContentsWithoutSneaking = 0;
     public static int showItemDetailThresshold = 4;
-    public static String[] showContentsWithoutSneaking = { "storagedrawers:basicDrawers", "storagedrawersextra:extra_drawers" };
+    public static String[] showContentsWithoutSneaking = {"storagedrawers:basicDrawers", "storagedrawersextra:extra_drawers"};
     public static String[] dontShowContentsUnlessSneaking = {};
-    public static String[] dontSendNBT = { };
+    public static String[] dontSendNBT = {};
     private static Set<Identifier> inventoriesToShow = null;
     private static Set<Identifier> inventoriesToNotShow = null;
     private static Set<Identifier> dontSendNBTSet = null;
@@ -80,7 +82,7 @@ public class Config {
     public static int tankbarBorderColor = 0xff555555;
 
     public static Map<TextStyleClass, String> defaultTextStyleClasses = new HashMap<>();
-    public static Map<TextStyleClass, String> textStyleClasses = new HashMap<>();
+    public static Map<TextStyleClass, String> textStyleClasses;
 
     static {
         defaultTextStyleClasses.put(NAME, "white");
@@ -181,37 +183,56 @@ public class Config {
 //        cfg.save();
 //    }
 //
-//
-//    public static void setupStyleConfig(Configuration cfg) {
-//        leftX = cfg.getInt("boxLeftX", CATEGORY_CLIENT, leftX, -1, 10000, "The distance to the left side of the screen. Use -1 if you don't want to set this");
-//        rightX = cfg.getInt("boxRightX", CATEGORY_CLIENT, rightX, -1, 10000, "The distance to the right side of the screen. Use -1 if you don't want to set this");
-//        topY = cfg.getInt("boxTopY", CATEGORY_CLIENT, topY, -1, 10000, "The distance to the top side of the screen. Use -1 if you don't want to set this");
-//        bottomY = cfg.getInt("boxBottomY", CATEGORY_CLIENT, bottomY, -1, 10000, "The distance to the bottom side of the screen. Use -1 if you don't want to set this");
-//        boxBorderColor = parseColor(cfg.getString("boxBorderColor", CATEGORY_CLIENT, Integer.toHexString(boxBorderColor), "Color of the border of the box (0 to disable)"));
-//        boxFillColor = parseColor(cfg.getString("boxFillColor", CATEGORY_CLIENT, Integer.toHexString(boxFillColor), "Color of the box (0 to disable)"));
-//        boxThickness = cfg.getInt("boxThickness", CATEGORY_CLIENT, boxThickness, 0, 20, "Thickness of the border of the box (0 to disable)");
-//        boxOffset = cfg.getInt("boxOffset", CATEGORY_CLIENT, boxOffset, 0, 20, "How much the border should be offset (i.e. to create an 'outer' border)");
-//        showLiquids = cfg.getBoolean("showLiquids", CATEGORY_CLIENT, showLiquids, "If true show liquid information when the probe hits liquid first");
-//        isVisible = cfg.getBoolean("isVisible", CATEGORY_CLIENT, isVisible, "Toggle default probe visibility (client can override)");
-//        holdKeyToMakeVisible = cfg.getBoolean("holdKeyToMakeVisible", CATEGORY_CLIENT, holdKeyToMakeVisible, "If true then the probe hotkey must be held down to show the tooltip");
-//        compactEqualStacks = cfg.getBoolean("compactEqualStacks", CATEGORY_CLIENT, compactEqualStacks, "If true equal stacks will be compacted in the chest contents overlay");
-//        tooltipScale = cfg.getFloat("tooltipScale", CATEGORY_CLIENT, tooltipScale, 0.4f, 5.0f, "The scale of the tooltips, 1 is default, 2 is smaller");
-//        chestContentsBorderColor = parseColor(cfg.getString("chestContentsBorderColor", CATEGORY_CLIENT, Integer.toHexString(chestContentsBorderColor), "Color of the border of the chest contents box (0 to disable)"));
-//        showBreakProgress = cfg.getInt("showBreakProgress", CATEGORY_CLIENT, showBreakProgress, 0, 2, "0 means don't show break progress, 1 is show as bar, 2 is show as text");
-//        harvestStyleVanilla = cfg.getBoolean("harvestStyleVanilla", CATEGORY_CLIENT, harvestStyleVanilla, "true means shows harvestability with vanilla style icons");
-//
-//        Map<TextStyleClass, String> newformat = new HashMap<>();
-//        for (TextStyleClass styleClass : textStyleClasses.keySet()) {
-//            String style = cfg.getString("textStyle" + styleClass.getReadableName(),
-//                    CATEGORY_CLIENT, textStyleClasses.get(styleClass),
-//                    "Text style. Use a comma delimited list with colors like: 'red', 'green', 'blue', ... or style codes like 'underline', 'bold', 'italic', 'strikethrough', ...");
-//            newformat.put(styleClass, style);
-//        }
-//        textStyleClasses = newformat;
-//
-//        extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
-//    }
-//
+
+    // @todo fabric: temporary until we have a real config
+    private static class DummyConfiguration {
+        public int getInt(String name, String category, int def, int min, int max, String desc) {
+            return def;
+        }
+
+        public float getFloat(String name, String category, float def, float min, float max, String desc) {
+            return def;
+        }
+
+        public String getString(String name, String category, String def, String desc) {
+            return def;
+        }
+
+        public boolean getBoolean(String name, String category, boolean def, String desc) {
+            return def;
+        }
+    }
+
+    public static void setupStyleConfig() {
+        DummyConfiguration cfg = new DummyConfiguration();
+        leftX = cfg.getInt("boxLeftX", CATEGORY_CLIENT, leftX, -1, 10000, "The distance to the left side of the screen. Use -1 if you don't want to set this");
+        rightX = cfg.getInt("boxRightX", CATEGORY_CLIENT, rightX, -1, 10000, "The distance to the right side of the screen. Use -1 if you don't want to set this");
+        topY = cfg.getInt("boxTopY", CATEGORY_CLIENT, topY, -1, 10000, "The distance to the top side of the screen. Use -1 if you don't want to set this");
+        bottomY = cfg.getInt("boxBottomY", CATEGORY_CLIENT, bottomY, -1, 10000, "The distance to the bottom side of the screen. Use -1 if you don't want to set this");
+        boxBorderColor = parseColor(cfg.getString("boxBorderColor", CATEGORY_CLIENT, Integer.toHexString(boxBorderColor), "Color of the border of the box (0 to disable)"));
+        boxFillColor = parseColor(cfg.getString("boxFillColor", CATEGORY_CLIENT, Integer.toHexString(boxFillColor), "Color of the box (0 to disable)"));
+        boxThickness = cfg.getInt("boxThickness", CATEGORY_CLIENT, boxThickness, 0, 20, "Thickness of the border of the box (0 to disable)");
+        boxOffset = cfg.getInt("boxOffset", CATEGORY_CLIENT, boxOffset, 0, 20, "How much the border should be offset (i.e. to create an 'outer' border)");
+        showLiquids = cfg.getBoolean("showLiquids", CATEGORY_CLIENT, showLiquids, "If true show liquid information when the probe hits liquid first");
+        isVisible = cfg.getBoolean("isVisible", CATEGORY_CLIENT, isVisible, "Toggle default probe visibility (client can override)");
+        holdKeyToMakeVisible = cfg.getBoolean("holdKeyToMakeVisible", CATEGORY_CLIENT, holdKeyToMakeVisible, "If true then the probe hotkey must be held down to show the tooltip");
+        compactEqualStacks = cfg.getBoolean("compactEqualStacks", CATEGORY_CLIENT, compactEqualStacks, "If true equal stacks will be compacted in the chest contents overlay");
+        tooltipScale = cfg.getFloat("tooltipScale", CATEGORY_CLIENT, tooltipScale, 0.4f, 5.0f, "The scale of the tooltips, 1 is default, 2 is smaller");
+        chestContentsBorderColor = parseColor(cfg.getString("chestContentsBorderColor", CATEGORY_CLIENT, Integer.toHexString(chestContentsBorderColor), "Color of the border of the chest contents box (0 to disable)"));
+        showBreakProgress = cfg.getInt("showBreakProgress", CATEGORY_CLIENT, showBreakProgress, 0, 2, "0 means don't show break progress, 1 is show as bar, 2 is show as text");
+        harvestStyleVanilla = cfg.getBoolean("harvestStyleVanilla", CATEGORY_CLIENT, harvestStyleVanilla, "true means shows harvestability with vanilla style icons");
+        Map<TextStyleClass, String> newformat = new HashMap<>();
+        for (TextStyleClass styleClass : textStyleClasses.keySet()) {
+            String style = cfg.getString("textStyle" + styleClass.getReadableName(),
+                    CATEGORY_CLIENT, textStyleClasses.get(styleClass),
+                    "Text style. Use a comma delimited list with colors like: 'red', 'green', 'blue', ... or style codes like 'underline', 'bold', 'italic', 'strikethrough', ...");
+            newformat.put(styleClass, style);
+        }
+        textStyleClasses = newformat;
+
+        extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
+    }
+
     public static void setTextStyle(TextStyleClass styleClass, String style) {
 //        Configuration cfg = TheOneProbe.config;
 //        Config.textStyleClasses.put(styleClass, style);
@@ -284,19 +305,18 @@ public class Config {
     }
 
     private static String configToTextFormat(String input) {
-//        if ("context".equals(input)) {
-//            return "context";
-//        }
-//        StringBuilder builder = new StringBuilder();
-//        String[] splitted = StringUtils.split(input, ',');
-//        for (String s : splitted) {
-//            TextFormatting format = TextFormatting.getValueByName(s);
-//            if (format != null) {
-//                builder.append(format.toString());
-//            }
-//        }
-//        return builder.toString();
-        return input;
+        if ("context".equals(input)) {
+            return "context";
+        }
+        StringBuilder builder = new StringBuilder();
+        String[] splitted = StringUtils.split(input, ',');
+        for (String s : splitted) {
+            TextFormat format = TextFormat.getFormatByName(s);
+            if (format != null) {
+                builder.append(format.toString());
+            }
+        }
+        return builder.toString();
     }
 
     public static String getTextStyle(TextStyleClass styleClass) {
