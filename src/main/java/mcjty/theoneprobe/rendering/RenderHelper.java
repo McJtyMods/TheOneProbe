@@ -2,7 +2,6 @@ package mcjty.theoneprobe.rendering;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.sun.istack.internal.Nullable;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
@@ -21,6 +20,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TextFormat;
 import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nullable;
 
 public class RenderHelper {
     public static float rot = 0.0f;

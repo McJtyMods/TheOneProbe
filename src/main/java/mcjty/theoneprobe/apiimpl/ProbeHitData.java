@@ -1,11 +1,12 @@
 package mcjty.theoneprobe.apiimpl;
 
-import com.sun.istack.internal.Nullable;
 import mcjty.theoneprobe.api.IProbeHitData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+
+import javax.annotation.Nullable;
 
 public class ProbeHitData implements IProbeHitData {
 

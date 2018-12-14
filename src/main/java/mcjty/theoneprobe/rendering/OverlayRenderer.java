@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.rendering;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.sun.istack.internal.Nullable;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -34,6 +33,7 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

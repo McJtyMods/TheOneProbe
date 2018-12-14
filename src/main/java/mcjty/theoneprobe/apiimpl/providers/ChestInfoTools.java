@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
-import com.sun.istack.internal.NotNull;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IProbeConfig;
@@ -17,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -58,14 +58,14 @@ public class ChestInfoTools {
         }
     }
 
-    public static boolean canItemStacksStack(@NotNull ItemStack a, @NotNull ItemStack b) {
+    public static boolean canItemStacksStack(@Nonnull ItemStack a, @Nonnull ItemStack b) {
         if (a.isEmpty() || !a.isEqualIgnoreTags(b) || a.hasTag() != b.hasTag())
             return false;
 
         return (!a.hasTag() || a.getTag().equals(b.getTag()));
     }
 
-    private static void addItemStack(List<ItemStack> stacks, Set<Item> foundItems, @NotNull ItemStack stack) {
+    private static void addItemStack(List<ItemStack> stacks, Set<Item> foundItems, @Nonnull ItemStack stack) {
         if (stack.isEmpty()) {
             return;
         }

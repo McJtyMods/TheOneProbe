@@ -1,10 +1,11 @@
 package mcjty.theoneprobe.api;
 
-import com.sun.istack.internal.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+
+import javax.annotation.Nullable;
 
 
 /**
