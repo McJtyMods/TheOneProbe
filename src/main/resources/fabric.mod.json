@@ -1,7 +1,7 @@
 {
   "id": "theoneprobe",
   "name": "The One Probe",
-  "version": "1.0.0",
+  "version": "1.4.25.alpha",
   "side": "universal",
   "initializers": [
     "mcjty.theoneprobe.TheOneProbe",
