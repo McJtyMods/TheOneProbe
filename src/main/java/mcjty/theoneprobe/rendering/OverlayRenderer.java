@@ -203,7 +203,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, ClientPlayerEntity player) {
-        NetworkInit.getEntityInfo(new PacketGetEntityInfo(player.getEntityWorld().dimension.getType().getRawId(), mode, mouseOver, entity));
+        NetworkInit.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().dimension.getType().getRawId(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(ProbeMode mode, HitResult mouseOver, double sw, double sh) {
@@ -332,7 +332,7 @@ public class OverlayRenderer {
             pickBlock = pickBlock.copy();
             pickBlock.setTag(null);
         }
-        NetworkInit.getInfo(new PacketGetInfo(world.dimension.getType().getRawId(), blockPos, mode, mouseOver, pickBlock));
+        NetworkInit.sendToServer(new PacketGetInfo(world.dimension.getType().getRawId(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo) {

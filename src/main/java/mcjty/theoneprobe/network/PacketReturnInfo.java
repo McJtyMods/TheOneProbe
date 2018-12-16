@@ -1,22 +1,27 @@
 package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.fabricmc.fabric.networking.PacketContext;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.function.BiConsumer;
-
-// @todo fabric
-public class PacketReturnInfo /* implements IMessage*/ {
+public class PacketReturnInfo implements IPacket {
 
     private int dim;
     private BlockPos pos;
     private ProbeInfo probeInfo;
 
-//    @Override
+    public static final Identifier RETURN_INFO = new Identifier(TheOneProbe.MODID, "return_info");
+
+    @Override
+    public Identifier getId() {
+        return RETURN_INFO;
+    }
+
+    @Override
     public void fromBytes(ByteBuf buf) {
         dim = buf.readInt();
         pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
@@ -28,7 +33,7 @@ public class PacketReturnInfo /* implements IMessage*/ {
         }
     }
 
-//    @Override
+    @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(dim);
         buf.writeInt(pos.getX());
@@ -51,15 +56,14 @@ public class PacketReturnInfo /* implements IMessage*/ {
         this.probeInfo = probeInfo;
     }
 
-    public static class Handler implements BiConsumer<PacketContext, PacketByteBuf> {
+    public static class Handler extends MessageHandler<PacketReturnInfo> {
 
         @Override
-        public void accept(PacketContext context, PacketByteBuf packetByteBuf) {
-            PacketReturnInfo packet = new PacketReturnInfo();
-            packet.fromBytes(packetByteBuf);
-            context.getTaskQueue().execute(() -> handle(context, packet));
+        protected PacketReturnInfo createPacket() {
+            return new PacketReturnInfo();
         }
 
+        @Override
         public void handle(PacketContext context, PacketReturnInfo message) {
             OverlayRenderer.registerProbeInfo(message.dim, message.pos, message.probeInfo);
         }

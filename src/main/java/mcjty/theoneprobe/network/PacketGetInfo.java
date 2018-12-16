@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.HitResult;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -23,15 +23,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
-// @todo fabric
-public class PacketGetInfo /*implements IMessage*/ {
+public class PacketGetInfo implements IPacket {
+
+    public static final Identifier GET_INFO = new Identifier(TheOneProbe.MODID, "get_info");
 
     private int dim;
     private BlockPos pos;
@@ -40,7 +40,12 @@ public class PacketGetInfo /*implements IMessage*/ {
     private Vec3d hitVec;
     private ItemStack pickBlock;
 
-//    @Override
+    @Override
+    public Identifier getId() {
+        return GET_INFO;
+    }
+
+    @Override
     public void fromBytes(ByteBuf buf) {
         dim = buf.readInt();
         pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
@@ -57,7 +62,7 @@ public class PacketGetInfo /*implements IMessage*/ {
         pickBlock = NetworkTools.readItemStack(buf);
     }
 
-//    @Override
+    @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(dim);
         buf.writeInt(pos.getX());
@@ -96,21 +101,20 @@ public class PacketGetInfo /*implements IMessage*/ {
         this.pickBlock = pickBlock;
     }
 
-    public static class Handler implements BiConsumer<PacketContext, PacketByteBuf> {
+    public static class Handler extends MessageHandler<PacketGetInfo> {
 
         @Override
-        public void accept(PacketContext context, PacketByteBuf packetByteBuf) {
-            PacketGetInfo packet = new PacketGetInfo();
-            packet.fromBytes(packetByteBuf);
-            context.getTaskQueue().execute(() -> handle(context, packet));
+        protected PacketGetInfo createPacket() {
+            return new PacketGetInfo();
         }
 
-        private void handle(PacketContext context, PacketGetInfo message) {
+        @Override
+        void handle(PacketContext context, PacketGetInfo message) {
             ServerWorld world = context.getPlayer().getEntityWorld().getServer().getWorld(DimensionType.byRawId(message.dim));
             if (world != null) {
                 ProbeInfo probeInfo = getProbeInfo(context.getPlayer(),
                         message.mode, world, message.pos, message.sideHit, message.hitVec, message.pickBlock);
-                NetworkInit.returnInfo(new PacketReturnInfo(message.dim, message.pos, probeInfo), (ServerPlayerEntity) context.getPlayer());
+                NetworkInit.sendToClient(new PacketReturnInfo(message.dim, message.pos, probeInfo), (ServerPlayerEntity) context.getPlayer());
             }
         }
     }

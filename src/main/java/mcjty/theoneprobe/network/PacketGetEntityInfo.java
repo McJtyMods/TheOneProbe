@@ -13,29 +13,34 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.HitResult;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.BiConsumer;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
-// @todo fabric
-public class PacketGetEntityInfo /*implements IMessage*/ {
+public class PacketGetEntityInfo implements IPacket {
+
+    public static final Identifier GET_ENTITY_INFO = new Identifier(TheOneProbe.MODID, "get_entity_info");
 
     private int dim;
     private UUID uuid;
     private ProbeMode mode;
     private Vec3d hitVec;
 
-//    @Override
+    @Override
+    public Identifier getId() {
+        return GET_ENTITY_INFO;
+    }
+
+    @Override
     public void fromBytes(ByteBuf buf) {
         dim = buf.readInt();
         uuid = new UUID(buf.readLong(), buf.readLong());
@@ -45,7 +50,7 @@ public class PacketGetEntityInfo /*implements IMessage*/ {
         }
     }
 
-//    @Override
+    @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(dim);
         buf.writeLong(uuid.getMostSignificantBits());
@@ -71,22 +76,21 @@ public class PacketGetEntityInfo /*implements IMessage*/ {
         this.hitVec = mouseOver.pos;
     }
 
-    public static class Handler implements BiConsumer<PacketContext, PacketByteBuf> {
+    public static class Handler extends MessageHandler<PacketGetEntityInfo> {
 
         @Override
-        public void accept(PacketContext context, PacketByteBuf packetByteBuf) {
-            PacketGetEntityInfo packet = new PacketGetEntityInfo();
-            packet.fromBytes(packetByteBuf);
-            context.getTaskQueue().execute(() -> handle(context, packet));
+        protected PacketGetEntityInfo createPacket() {
+            return new PacketGetEntityInfo();
         }
 
-        private void handle(PacketContext context, PacketGetEntityInfo message) {
+        @Override
+        void handle(PacketContext context, PacketGetEntityInfo message) {
             ServerWorld world = context.getPlayer().getEntityWorld().getServer().getWorld(DimensionType.byRawId(message.dim));
             if (world != null) {
                 Entity entity = world.getEntityByUuid(message.uuid);
                 if (entity != null) {
                     ProbeInfo probeInfo = getProbeInfo(context.getPlayer(), message.mode, world, entity, message.hitVec);
-                    NetworkInit.returnEntityInfo(new PacketReturnEntityInfo(message.uuid, probeInfo), (ServerPlayerEntity) context.getPlayer());
+                    NetworkInit.sendToClient(new PacketReturnEntityInfo(message.uuid, probeInfo), (ServerPlayerEntity) context.getPlayer());
                 }
             }
         }

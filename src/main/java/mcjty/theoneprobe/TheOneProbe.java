@@ -4,7 +4,6 @@ import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import mcjty.theoneprobe.proxy.ClientProxy;
 import mcjty.theoneprobe.proxy.CommonProxy;
 import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.Logger;
@@ -17,9 +16,7 @@ public class TheOneProbe implements ModInitializer {
     public static final String MIN_FORGE11_VER = "13.19.0.2176";
 
     public static CommonProxy proxy = new CommonProxy();
-    public static ClientProxy clientProxy = new ClientProxy();
 
-    public static TheOneProbe instance = new TheOneProbe();
     public static Logger logger;
     public static File mainConfigDir;
     public static File modConfigDir;

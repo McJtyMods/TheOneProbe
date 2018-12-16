@@ -1,20 +1,27 @@
 package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
+import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.fabricmc.fabric.networking.PacketContext;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.Identifier;
 
 import java.util.UUID;
-import java.util.function.BiConsumer;
 
-public class PacketReturnEntityInfo /*implements IMessage*/ {
+public class PacketReturnEntityInfo implements IPacket {
 
     private UUID uuid;
     private ProbeInfo probeInfo;
 
-//    @Override
+    public static final Identifier RETURN_ENTITY_INFO = new Identifier(TheOneProbe.MODID, "return_entity_info");
+
+    @Override
+    public Identifier getId() {
+        return RETURN_ENTITY_INFO;
+    }
+
+    @Override
     public void fromBytes(ByteBuf buf) {
         uuid = new UUID(buf.readLong(), buf.readLong());
         if (buf.readBoolean()) {
@@ -25,7 +32,7 @@ public class PacketReturnEntityInfo /*implements IMessage*/ {
         }
     }
 
-//    @Override
+    @Override
     public void toBytes(ByteBuf buf) {
         buf.writeLong(uuid.getMostSignificantBits());
         buf.writeLong(uuid.getLeastSignificantBits());
@@ -46,15 +53,14 @@ public class PacketReturnEntityInfo /*implements IMessage*/ {
         this.probeInfo = probeInfo;
     }
 
-    public static class Handler implements BiConsumer<PacketContext, PacketByteBuf> {
-        @Override
-        public void accept(PacketContext context, PacketByteBuf packetByteBuf) {
-            PacketReturnEntityInfo packet = new PacketReturnEntityInfo();
-            packet.fromBytes(packetByteBuf);
-            context.getTaskQueue().execute(() -> handle(context, packet));
+    public static class Handler extends MessageHandler<PacketReturnEntityInfo> {
 
+        @Override
+        protected PacketReturnEntityInfo createPacket() {
+            return new PacketReturnEntityInfo();
         }
 
+        @Override
         public void handle(PacketContext context, PacketReturnEntityInfo message) {
             OverlayRenderer.registerProbeInfo(message.uuid, message.probeInfo);
         }
