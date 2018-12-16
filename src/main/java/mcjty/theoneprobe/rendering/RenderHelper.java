@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
+import net.minecraft.class_308;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.FontRenderer;
 import net.minecraft.client.gui.Drawable;
@@ -37,7 +38,7 @@ public class RenderHelper {
         GlStateManager.rotatef(180F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotatef(135F, 0.0F, 1.0F, 0.0F);
         // @todo fabric
-//        net.MinecraftClient.client.render.Renderer.enableStandardItemLighting();
+        class_308.method_1452(); //        net.MinecraftClient.client.render.Renderer.enableStandardItemLighting();
         GlStateManager.rotatef(-135F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotatef(rot, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotatef(0.0F, 1.0F, 0.0F, 0.0F);
@@ -56,7 +57,7 @@ public class RenderHelper {
         }
         GlStateManager.popMatrix();
         // @todo fabric
-//        net.MinecraftClient.client.render.RenderHelper.disableStandardItemLighting();
+        class_308.method_1450(); //        net.MinecraftClient.client.render.RenderHelper.disableStandardItemLighting();
 
         GlStateManager.disableRescaleNormal();
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
