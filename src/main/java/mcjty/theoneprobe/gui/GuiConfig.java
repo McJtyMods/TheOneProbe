@@ -252,9 +252,9 @@ public class GuiConfig extends Gui {
         }
 
         // @todo fabric
-//        if (!MinecraftClient.getInstance().isGamePaused()) {
-//            RenderHelper.rot += .5f;
-//        }
+        if (!(MinecraftClient.getInstance().currentGui != null && MinecraftClient.getInstance().currentGui.isPauseScreen())) {
+            RenderHelper.rot += .5f;
+        }
 
         probeInfo.render(x + margin, y + margin);
 

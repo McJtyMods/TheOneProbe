@@ -10,16 +10,18 @@ import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class ElementEntity implements IElement {
 
-    private final String entityName;
+    private final Identifier entityIdentifier;
     private final Integer playerID;
     private final CompoundTag entityNBT;
     private final IEntityStyle style;
 
-    public ElementEntity(String entityName, IEntityStyle style) {
-        this.entityName = entityName;
+    public ElementEntity(Identifier entityIdentifier, IEntityStyle style) {
+        this.entityIdentifier = entityIdentifier;
         this.entityNBT = null;
         this.style = style;
         this.playerID = null;
@@ -30,18 +32,24 @@ public class ElementEntity implements IElement {
             PlayerEntity player = (PlayerEntity) entity;
             entityNBT = null;
             playerID = player.getEntityId();
+            entityIdentifier = null;
         } else {
             entityNBT = new CompoundTag();
             entity.saveSelfToTag(entityNBT);
             playerID = null;
+            this.entityIdentifier = Registry.ENTITY_TYPE.getId(entity.getType());
         }
-//        this.entityName = EntityList.getEntityString(entity);
-        this.entityName = entity.getEntityName();
         this.style = style;
     }
 
     public ElementEntity(ByteBuf buf) {
-        entityName = NetworkTools.readString(buf);
+        String id = NetworkTools.readString(buf);
+        if (id == null) {
+            entityIdentifier = null;
+        } else {
+            entityIdentifier = new Identifier(id);
+        }
+
         style = new EntityStyle()
                 .width(buf.readInt())
                 .height(buf.readInt())
@@ -61,9 +69,9 @@ public class ElementEntity implements IElement {
     @Override
     public void render(int x, int y) {
         if (playerID != null) {
-            ElementEntityRender.renderPlayer(entityName, playerID, style, x, y);
+            ElementEntityRender.renderPlayer(playerID, style, x, y);
         } else {
-            ElementEntityRender.render(entityName, entityNBT, style, x, y);
+            ElementEntityRender.render(entityIdentifier, entityNBT, style, x, y);
         }
     }
 
@@ -79,7 +87,7 @@ public class ElementEntity implements IElement {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        NetworkTools.writeString(buf, entityName);
+        NetworkTools.writeString(buf, entityIdentifier == null ? null : entityIdentifier.toString());
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
         buf.writeFloat(style.getScale());

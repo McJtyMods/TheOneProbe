@@ -150,13 +150,11 @@ public class OverlayRenderer {
             return;
         }
 
-        // @todo fabric
-//        String entityString = EntityList.getEntityString(entity);
-        String entityString = entity.getEntityName();
-        if (entityString == null && !(entity instanceof PlayerEntity)) {
-            // We can't show info for this entity
-            return;
-        }
+//        String entityString = entity.getEntityName();
+//        if (entityString == null && !(entity instanceof PlayerEntity)) {
+//            // We can't show info for this entity
+//            return;
+//        }
 
         UUID uuid = entity.getUuid();
 
@@ -426,9 +424,9 @@ public class OverlayRenderer {
         }
 
         // @todo fabric
-//        if (!MinecraftClient.getInstance().isGamePaused()) {
-//            RenderHelper.rot += .5f;
-//        }
+        if (!(MinecraftClient.getInstance().currentGui != null && MinecraftClient.getInstance().currentGui.isPauseScreen())) {
+            RenderHelper.rot += .5f;
+        }
 
         probeInfo.render(x + margin, y + margin);
         if (extra != null) {
