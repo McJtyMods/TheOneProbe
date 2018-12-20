@@ -19,7 +19,7 @@ public class ProbeNote extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
-        if (world.isRemote) {
+        if (world.isClient) {
             if (player.isSneaking()) {
                 // @todo fabric
 //                player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
