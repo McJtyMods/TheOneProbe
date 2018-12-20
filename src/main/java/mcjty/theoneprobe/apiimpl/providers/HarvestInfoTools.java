@@ -1,5 +1,8 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IIconStyle;
@@ -7,17 +10,18 @@ import mcjty.theoneprobe.api.ILayoutStyle;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import net.fabricmc.fabric.tags.FabricItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.ToolItem;
+import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,28 +38,120 @@ public class HarvestInfoTools {
             "cobalt"
     };
 
-    private static final HashMap<String, ItemStack> testTools = new HashMap<>();
+    private static final Map<String, ItemStack> testTools = new HashMap<>();
     static {
         testTools.put("shovel", new ItemStack(Items.WOODEN_SHOVEL));
         testTools.put("axe", new ItemStack(Items.WOODEN_AXE));
         testTools.put("pickaxe", new ItemStack(Items.WOODEN_PICKAXE));
     }
 
+    private static int checkHarvestability(Collection<Item> itemsToCheck, BlockState state) {
+        int smallestNeededLevel = 100000;
+        for (Item item : itemsToCheck) {
+            ItemStack s = new ItemStack(item);
+            if (state.getMaterial().canBreakByHand() || s.isEffectiveOn(state)) {
+                if (item instanceof ToolItem) {
+                    ToolMaterial type = ((ToolItem) item).getType();
+                    int level = type.getMiningLevel();
+                    if (level < smallestNeededLevel) {
+                        smallestNeededLevel = level;
+                    }
+                }
+            }
+        }
+        return smallestNeededLevel >= 100000 ? -1 : smallestNeededLevel;
+    }
+
+    private static class MiningInfo {
+        private final String tool;
+        private final int level;
+
+        public MiningInfo(String tool, int level) {
+            this.tool = tool;
+            this.level = level;
+        }
+    }
+
+    private static LoadingCache<BlockState, MiningInfo> miningInfoCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .build(CacheLoader.from((state) -> fetchMiningInfo(state)));
+
+    private static MiningInfo fetchMiningInfo(BlockState blockState) {
+        /*
+         *     Wood:    0
+         *     Stone:   1
+         *     Iron:    2
+         *     Diamond: 3
+         */
+
+        String harvestTool = null;
+        int level = -1;
+        level = checkHarvestability(FabricItemTags.AXES.values(), blockState);
+        if (level != -1) {
+            harvestTool = "axe";
+        } else {
+            level = checkHarvestability(FabricItemTags.PICKAXES.values(), blockState);
+            if (level != -1) {
+                harvestTool = "pickaxe";
+            } else {
+                level = checkHarvestability(FabricItemTags.SHOVELS.values(), blockState);
+                if (level != -1) {
+                    harvestTool = "shovel";
+                } else {
+                    level = checkHarvestability(FabricItemTags.HOES.values(), blockState);
+                    if (level != -1) {
+                        harvestTool = "hoe";
+                    } else {
+                        level = checkHarvestability(FabricItemTags.SWORDS.values(), blockState);
+                        if (level != -1) {
+                            harvestTool = "sword";
+                        }
+                    }
+                }
+            }
+        }
+        if (harvestTool == null) {
+            return new MiningInfo(null, -1);
+        } else {
+            return new MiningInfo(harvestTool, level);
+        }
+    }
+
     static void showHarvestLevel(IProbeInfo probeInfo, BlockState blockState, Block block) {
-        // @todo fabric
-//        String harvestTool = block.getHarvestTool(blockState);
-//        if (harvestTool != null) {
-//            int harvestLevel = block.getHarvestLevel(blockState);
-//            String harvestName;
-//            if (harvestLevel >= harvestLevels.length) {
-//                harvestName = Integer.toString(harvestLevel);
-//            } else if (harvestLevel < 0) {
-//                harvestName = Integer.toString(harvestLevel);
-//            } else {
-//                harvestName = harvestLevels[harvestLevel];
-//            }
-//            probeInfo.text(LABEL + "Tool: " + INFO + harvestTool + " (level " + harvestName + ")");
+        MiningInfo info = miningInfoCache.getUnchecked(blockState);
+        if (info.tool != null) {
+            int harvestLevel = info.level;
+            String harvestName;
+            if (harvestLevel >= harvestLevels.length) {
+                harvestName = Integer.toString(harvestLevel);
+            } else if (harvestLevel < 0) {
+                harvestName = Integer.toString(harvestLevel);
+            } else {
+                harvestName = harvestLevels[harvestLevel];
+            }
+            probeInfo.text(LABEL + "Tool: " + INFO + info.tool + " (level " + harvestName + ")");
+        }
+    }
+
+    private static boolean canHarvestBlock(@Nonnull Block block, @Nonnull PlayerEntity player, @Nonnull World world, @Nonnull BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
+        if (state.getMaterial().canBreakByHand()) {
+            return true;
+        }
+        ItemStack stack = player.getMainHandStack();
+        return stack.isEffectiveOn(state);
+//        MiningInfo info = miningInfoCache.getUnchecked(state);
+//        String tool = info.tool;
+//        if (stack.isEmpty() || tool == null) {
+//            return true;
 //        }
+//
+//        int toolLevel = info.level;
+//        if (toolLevel < 0) {
+//            return true;
+//        }
+//
+//        return toolLevel >= block.getHarvestLevel(state);
     }
 
     static void showCanBeHarvested(IProbeInfo probeInfo, World world, BlockPos pos, Block block, PlayerEntity player) {
@@ -65,7 +161,8 @@ public class HarvestInfoTools {
             return;
         }
 
-        boolean harvestable = false;// @todo fabric:  block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
+        boolean harvestable = canHarvestBlock(block, player, world, pos);
+//        boolean harvestable = false;// @todo fabric:  block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
         if (harvestable) {
             probeInfo.text(OK + "Harvestable");
         } else {
@@ -74,9 +171,11 @@ public class HarvestInfoTools {
     }
 
     static void showHarvestInfo(IProbeInfo probeInfo, World world, BlockPos pos, Block block, BlockState blockState, PlayerEntity player) {
-        boolean harvestable = false;// @todo fabric: block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
+        boolean harvestable = canHarvestBlock(block, player, world, pos);
+//        boolean harvestable = false;// @todo fabric: block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
 
-        String harvestTool = null;// @todo fabric: block.getHarvestTool(blockState);
+        MiningInfo info = miningInfoCache.getUnchecked(blockState);
+        String harvestTool = info.tool;
         String harvestName = null;
 
         if (harvestTool == null) {
@@ -101,7 +200,7 @@ public class HarvestInfoTools {
         }
 
         if (harvestTool != null) {
-            int harvestLevel = 0; // @todo fabric: block.getHarvestLevel(blockState);
+            int harvestLevel = info.level;
             if (harvestLevel < 0) {
                 // NOTE: When a block doesn't have an explicitly-set harvest tool, getHarvestLevel will return -1 for ANY tool. (Expected behavior)
 //                TheOneProbe.logger.info("HarvestLevel out of bounds (less than 0). Found " + harvestLevel);

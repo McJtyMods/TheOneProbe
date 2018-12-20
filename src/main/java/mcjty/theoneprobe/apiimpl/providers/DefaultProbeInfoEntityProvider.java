@@ -16,6 +16,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -139,8 +140,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
 
         if (Tools.show(mode, config.getHorseStatSetting())) {
             if (entity instanceof HorseEntity) {
-//                double jumpStrength = ((HorseEntity) entity).getHorseJumpStrength();
-                double jumpStrength = 0;    // @todo fabric
+                double jumpStrength = ((HorseEntity) entity).method_6771();
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
                 probeInfo.text(LABEL + "Jump height: " + INFO + dfCommas.format(jumpHeight));
                 EntityAttributeInstance iattributeinstance = ((HorseEntity) entity).getAttributeInstance(EntityAttributes.MOVEMENT_SPEED);
@@ -149,10 +149,10 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
         }
 
         if (entity instanceof WolfEntity && Config.showCollarColor) {
-            if (((WolfEntity) entity).isTamed()) {
-                // @todo fabric
-//                EnumDyeColor collarColor = ((WolfEntity) entity).getCollarColor();
-//                probeInfo.text(LABEL + "Collar: " + INFO + collarColor.getName());
+            WolfEntity wolf = (WolfEntity) entity;
+            if (wolf.isTamed()) {
+                DyeColor collarColor = wolf.method_6713();
+                probeInfo.text(LABEL + "Collar: " + INFO + collarColor.getName());
             }
         }
     }

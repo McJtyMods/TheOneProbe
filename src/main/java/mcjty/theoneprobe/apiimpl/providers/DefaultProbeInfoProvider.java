@@ -14,13 +14,16 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BrewingStandBlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
 import net.minecraft.block.enums.ComparatorMode;
+import net.minecraft.class_2263;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sortme.MobSpawnerLogic;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -266,34 +269,28 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         if (block instanceof StoneInfestedBlock && mode != ProbeMode.DEBUG && !Tools.show(mode,config.getShowSilverfish())) {
             block = ((StoneInfestedBlock) block).method_10271();
-            // @todo fabric check
-//            BlockSilverfish.EnumType type = blockState.get(StoneInfestedBlock.VARIANT);
-//            blockState = type.getModelBlock();
-//            block = blockState.getBlock();
-//            pickBlock = new ItemStack(block, 1, block.getMetaFromState(blockState));
             pickBlock = new ItemStack(block, 1);
         }
 
-        // @todo fabric
-//        if (block instanceof FluidBlock || block instanceof BlockLiquid) {
-//            Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
-//            if (fluid != null) {
-//                FluidStack fluidStack = new FluidStack(fluid, Fluid.BUCKET_VOLUME);
-//                ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
-//
-//                IProbeInfo horizontal = probeInfo.horizontal();
-//                if (fluidStack.isFluidEqual(FluidUtil.getFluidContained(bucketStack))) {
-//                    horizontal.item(bucketStack);
+        if (block instanceof class_2263) {
+            FluidState fluidState = world.getFluidState(pos);
+            if (fluidState != null) {
+                Fluid fluid = fluidState.getFluid();
+                Item bucketItem = fluid.getBucketItem();
+
+                IProbeInfo horizontal = probeInfo.horizontal();
+                if (bucketItem != Items.AIR) {
+                    horizontal.item(new ItemStack(bucketItem));
 //                } else {
 //                    horizontal.icon(fluid.getStill(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20));
-//                }
-//
-//                horizontal.vertical()
-//                        .text(NAME + fluidStack.getLocalizedName())
-//                        .text(MODNAME + modid);
-//                return;
-//            }
-//        }
+                }
+
+                horizontal.vertical()
+                        .text(NAME + STARTLOC + block.getTranslationKey() + ENDLOC)
+                        .text(MODNAME + modid);
+                return;
+            }
+        }
 
         if (!pickBlock.isEmpty()) {
             if (Tools.show(mode, config.getShowModName())) {

@@ -50,7 +50,7 @@ public class Config {
     private static Set<Identifier> dontSendNBTSet = null;
 
     public static float probeDistance = 6;
-    public static boolean showLiquids = false;
+    public static boolean showLiquids = true;   // @todo fabric, until we have a config
     public static boolean isVisible = true;
     public static boolean compactEqualStacks = true;
     public static boolean holdKeyToMakeVisible = false;
