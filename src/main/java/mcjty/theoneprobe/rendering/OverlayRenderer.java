@@ -423,7 +423,6 @@ public class OverlayRenderer {
             RenderHelper.drawThickBeveledBox(x+offset, y+offset, x + w-1-offset, y + h-1-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
-        // @todo fabric
         if (!(MinecraftClient.getInstance().currentGui != null && MinecraftClient.getInstance().currentGui.isPauseScreen())) {
             RenderHelper.rot += .5f;
         }

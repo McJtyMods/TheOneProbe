@@ -17,6 +17,7 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TextFormat;
@@ -44,9 +45,7 @@ public class RenderHelper {
 //        entity.renderYawOffset = entity.rotationYaw = entity.prevRotationYaw = entity.prevRotationYawHead = entity.rotationYawHead = 0;//this.rotateTurret;
         entity.pitch = 0.0F;
 
-        // @todo fabric
-//        GlStateManager.translatef(0.0F, (float) entity.getHeightOffset() + (entity instanceof EntityHanging ? 0.5F : 0.0F), 0.0F);
-        GlStateManager.translatef(0.0F, (float) entity.getHeightOffset() + 0.0F, 0.0F); //
+        GlStateManager.translatef(0.0F, (float) entity.getHeightOffset() + (entity instanceof AbstractDecorationEntity ? 0.5F : 0.0F), 0.0F);
 
         MinecraftClient.getInstance().getEntityRenderManager().field_4679 = 180F;
         try {
@@ -130,9 +129,8 @@ public class RenderHelper {
             GlStateManager.enableLighting();
             short short1 = 240;
             short short2 = 240;
-            // @todo fabric
-//            net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-//            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, short1 / 1.0F, short2 / 1.0F);
+            GuiLighting.enableForItems();
+            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             itemRender.renderItemAndGlowInGui(itm, x, y);
             itemRender.renderItemOverlaysInGUIWithText(mc.fontRenderer, itm, x, y, txt);
             GlStateManager.popMatrix();
@@ -456,9 +454,9 @@ public class RenderHelper {
             GlStateManager.enableLighting();
             short short1 = 240;
             short short2 = 240;
-            // @todo fabric
-//            net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-//            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, short1 / 1.0F, short2 / 1.0F);
+            GuiLighting.enableForItems();
+            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
+
             try {
                 itemRender.renderItemAndGlowInGui(itm, x, y);
                 itemRendererOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
