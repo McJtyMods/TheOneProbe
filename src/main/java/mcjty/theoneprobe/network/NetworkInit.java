@@ -38,7 +38,6 @@ public class NetworkInit implements ModInitializer {
 
     }
 
-    @Environment(EnvType.SERVER)
     public static void sendToClient(IPacket packet, ServerPlayerEntity player) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         packet.toBytes(buf);

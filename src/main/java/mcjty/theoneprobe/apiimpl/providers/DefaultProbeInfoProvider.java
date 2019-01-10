@@ -14,7 +14,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BrewingStandBlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
 import net.minecraft.block.enums.ComparatorMode;
-import net.minecraft.class_2263;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -101,17 +100,18 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showBrewingStandInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
         if (block instanceof BrewingStandBlock) {
             BlockEntity te = world.getBlockEntity(data.getPos());
-            if (te instanceof BrewingStandBlockEntity) {
-                int brewtime = ((BrewingStandBlockEntity) te).getInvProperty(0);
-                int fuel = ((BrewingStandBlockEntity) te).getInvProperty(1);
-                probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
-                        .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
-                        .text(LABEL + "Fuel: " + INFO + fuel);
-                if (brewtime > 0) {
-                    probeInfo.text(LABEL + "Time: " + INFO + brewtime + " ticks");
-                }
-
-            }
+            // @todo fabric
+//            if (te instanceof BrewingStandBlockEntity) {
+//                int brewtime = ((BrewingStandBlockEntity) te).getInvProperty(0);
+//                int fuel = ((BrewingStandBlockEntity) te).getInvProperty(1);
+//                probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
+//                        .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
+//                        .text(LABEL + "Fuel: " + INFO + fuel);
+//                if (brewtime > 0) {
+//                    probeInfo.text(LABEL + "Time: " + INFO + brewtime + " ticks");
+//                }
+//
+//            }
         }
     }
 
@@ -272,7 +272,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             pickBlock = new ItemStack(block, 1);
         }
 
-        if (block instanceof class_2263) {
+        if (block instanceof FluidBlock) {
             FluidState fluidState = world.getFluidState(pos);
             if (fluidState != null) {
                 Fluid fluid = fluidState.getFluid();

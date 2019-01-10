@@ -13,10 +13,10 @@ minecraft {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:18w50a"
-	mappings "net.fabricmc:yarn:18w50a.48"
+	minecraft "com.mojang:minecraft:19w02a"
+	mappings "net.fabricmc:yarn:19w02a.13"
 	compile 'com.google.code.findbugs:jsr305:3.0.2'
-	modCompile "net.fabricmc:fabric-loader:0.2.0.71"
-	modCompile "net.fabricmc:fabric:0.1.1.58"
+	modCompile "net.fabricmc:fabric-loader:0.3.2.92"
+	modCompile "net.fabricmc:fabric:0.1.4.71"
 }
 

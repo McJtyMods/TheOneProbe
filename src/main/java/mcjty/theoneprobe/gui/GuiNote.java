@@ -6,6 +6,8 @@ import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.ContainerGui;
 import net.minecraft.container.Container;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.TextComponent;
 import net.minecraft.util.Identifier;
 
 import static mcjty.theoneprobe.config.Config.*;
@@ -24,8 +26,8 @@ public class GuiNote extends ContainerGui {
 
     private static final Identifier background = new Identifier(TheOneProbe.MODID, "textures/gui/note.png");
 
-    public GuiNote(Container var1) {
-        super(var1);
+    public GuiNote(Container container_1, PlayerInventory playerInventory_1, TextComponent textComponent_1) {
+        super(container_1, playerInventory_1, textComponent_1);
     }
 
     @Override

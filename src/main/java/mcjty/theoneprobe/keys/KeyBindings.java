@@ -2,7 +2,7 @@ package mcjty.theoneprobe.keys;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 
 @Environment(EnvType.CLIENT)

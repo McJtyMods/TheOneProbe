@@ -49,7 +49,7 @@ public class RenderHelper {
 
         MinecraftClient.getInstance().getEntityRenderManager().field_4679 = 180F;
         try {
-            MinecraftClient.getInstance().getEntityRenderManager().method_3954(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+            MinecraftClient.getInstance().getEntityRenderManager().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
         } catch (Exception e) {
             TheOneProbe.logger.error("Error rendering entity!", e);
         }
