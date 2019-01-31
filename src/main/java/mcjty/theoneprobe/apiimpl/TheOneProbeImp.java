@@ -171,6 +171,7 @@ public class TheOneProbeImp implements ITheOneProbe {
         return new DefaultOverlayRenderer();
     }
 
+    @Override
     public IProbeConfig createProbeConfig() {
         return Config.getDefaultConfig().lazyCopy();
     }

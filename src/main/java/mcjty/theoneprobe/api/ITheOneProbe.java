@@ -64,6 +64,13 @@ public interface ITheOneProbe {
     IOverlayRenderer getOverlayRenderer();
 
     /**
+     * Get a copy of the default configuration as it is given to the probe providers. This is
+     * only useful for checking what options are enabled. It is not useful to make changes here
+     * as this is a copy and changes will not have any effect
+     */
+    IProbeConfig createProbeConfig();
+
+    /**
      * Register a probe config provider so that you can override the default
      * config for your own blocks or entities. Note that you have to register
      * this server side.
