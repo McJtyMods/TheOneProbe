@@ -1,3 +1,6 @@
+1.4.28:
+- Small api method to allow getting the default config
+
 1.4.27:
 - Joseph made growth show up for any block with an integer property named "age".
 

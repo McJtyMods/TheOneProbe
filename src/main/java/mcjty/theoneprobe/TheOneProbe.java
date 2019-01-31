@@ -31,7 +31,7 @@ import java.util.function.Function;
         guiFactory = "mcjty.theoneprobe.config.TopModGuiFactory")
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
-    public static final String VERSION = "1.4.27";
+    public static final String VERSION = "1.4.28";
     public static final String MIN_FORGE11_VER = "13.19.0.2176";
 
     @SidedProxy(clientSide="mcjty.theoneprobe.proxy.ClientProxy", serverSide="mcjty.theoneprobe.proxy.ServerProxy")
