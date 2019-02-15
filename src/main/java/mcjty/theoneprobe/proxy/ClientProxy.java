@@ -1,8 +1,6 @@
 package mcjty.theoneprobe.proxy;
 
 import mcjty.theoneprobe.api.ProbeMode;
-import mcjty.theoneprobe.commands.CommandTopCfg;
-import mcjty.theoneprobe.commands.CommandTopNeed;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.gui.GuiConfig;
 import mcjty.theoneprobe.gui.GuiNote;
@@ -16,32 +14,25 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import static mcjty.theoneprobe.config.Config.*;
 
-public class ClientProxy extends CommonProxy {
+public class ClientProxy implements IProxy {
 
     @Override
-    public void preInit(FMLPreInitializationEvent e) {
-        super.preInit(e);
+    public void setup(FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
-    }
 
-    @Override
-    public void init(FMLInitializationEvent e) {
-        super.init(e);
-        ClientCommandHandler.instance.registerCommand(new CommandTopCfg());
-        ClientCommandHandler.instance.registerCommand(new CommandTopNeed());
+        // @todo 1.13
+//        ClientCommandHandler.instance.registerCommand(new CommandTopCfg());
+//        ClientCommandHandler.instance.registerCommand(new CommandTopNeed());
         MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
         KeyBindings.init();
     }
@@ -89,7 +80,7 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
         if (ignoreNextGuiClose) {
-            GuiScreen current = Minecraft.getMinecraft().currentScreen;
+            GuiScreen current = Minecraft.getInstance().currentScreen;
             if (event.getGui() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
                 ignoreNextGuiClose = false;
                 // We don't want our gui to be closed for a new 'null' guil
@@ -124,7 +115,7 @@ public class ClientProxy extends CommonProxy {
                     break;
                 case PROBE_NEEDED:
                 case PROBE_NEEDEDHARD:
-                    if (ModItems.hasAProbeSomewhere(Minecraft.getMinecraft().player)) {
+                    if (ModItems.hasAProbeSomewhere(Minecraft.getInstance().player)) {
                         OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
                     }
                     break;
@@ -133,7 +124,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     private ProbeMode getModeForPlayer() {
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        EntityPlayerSP player = Minecraft.getInstance().player;
         if (Config.extendedInMain) {
             if (hasItemInMainHand(ModItems.probe)) {
                 return ProbeMode.EXTENDED;
@@ -143,21 +134,15 @@ public class ClientProxy extends CommonProxy {
     }
 
     private boolean hasItemInEitherHand(Item item) {
-        ItemStack mainHeldItem = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
-        ItemStack offHeldItem = Minecraft.getMinecraft().player.getHeldItem(EnumHand.OFF_HAND);
+        ItemStack mainHeldItem = Minecraft.getInstance().player.getHeldItem(EnumHand.MAIN_HAND);
+        ItemStack offHeldItem = Minecraft.getInstance().player.getHeldItem(EnumHand.OFF_HAND);
         return (mainHeldItem != null && mainHeldItem.getItem() == item) ||
                 (offHeldItem != null && offHeldItem.getItem() == item);
     }
 
 
     private boolean hasItemInMainHand(Item item) {
-        ItemStack mainHeldItem = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
+        ItemStack mainHeldItem = Minecraft.getInstance().player.getHeldItem(EnumHand.MAIN_HAND);
         return mainHeldItem != null && mainHeldItem.getItem() == item;
-    }
-
-
-    @Override
-    public void postInit(FMLPostInitializationEvent e) {
-        super.postInit(e);
     }
 }

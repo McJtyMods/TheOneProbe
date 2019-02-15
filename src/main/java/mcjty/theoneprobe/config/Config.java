@@ -10,7 +10,6 @@ import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.config.Configuration;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -179,10 +178,11 @@ public class Config {
     }
 
     public static void setProbeNeeded(int probeNeeded) {
-        Configuration cfg = TheOneProbe.config;
+        // @todo 1.13
+//        Configuration cfg = TheOneProbe.config;
         Config.needsProbe = probeNeeded;
-        cfg.get(CATEGORY_THEONEPROBE, "needsProbe", probeNeeded).set(probeNeeded);
-        cfg.save();
+//        cfg.get(CATEGORY_THEONEPROBE, "needsProbe", probeNeeded).set(probeNeeded);
+//        cfg.save();
     }
 
 
@@ -217,73 +217,81 @@ public class Config {
     }
 
     public static void setTextStyle(TextStyleClass styleClass, String style) {
-        Configuration cfg = TheOneProbe.config;
+        // @todo 1.13
+//        Configuration cfg = TheOneProbe.config;
         Config.textStyleClasses.put(styleClass, style);
-        cfg.get(CATEGORY_CLIENT, "textStyle" + styleClass.getReadableName(), style).set(style);
-        cfg.save();
+//        cfg.get(CATEGORY_CLIENT, "textStyle" + styleClass.getReadableName(), style).set(style);
+//        cfg.save();
     }
 
     public static void setExtendedInMain(boolean extendedInMain) {
-        Configuration cfg = TheOneProbe.config;
+        // @todo 1.13
+//        Configuration cfg = TheOneProbe.config;
         Config.extendedInMain = extendedInMain;
-        cfg.get(CATEGORY_CLIENT, "extendedInMain", extendedInMain).set(extendedInMain);
-        cfg.save();
+//        cfg.get(CATEGORY_CLIENT, "extendedInMain", extendedInMain).set(extendedInMain);
+//        cfg.save();
     }
 
     public static void setLiquids(boolean liquids) {
-        Configuration cfg = TheOneProbe.config;
+        // @todo 1.13
+//        Configuration cfg = TheOneProbe.config;
         Config.showLiquids = liquids;
-        cfg.get(CATEGORY_CLIENT, "showLiquids", showLiquids).set(liquids);
-        cfg.save();
+//        cfg.get(CATEGORY_CLIENT, "showLiquids", showLiquids).set(liquids);
+//        cfg.save();
     }
 
     public static void setVisible(boolean visible) {
-        Configuration cfg = TheOneProbe.config;
+        // @todo 1.13
+//        Configuration cfg = TheOneProbe.config;
         Config.isVisible = visible;
-        cfg.get(CATEGORY_CLIENT, "isVisible", isVisible).set(visible);
-        cfg.save();
+//        cfg.get(CATEGORY_CLIENT, "isVisible", isVisible).set(visible);
+//        cfg.save();
     }
 
     public static void setCompactEqualStacks(boolean compact) {
-        Configuration cfg = TheOneProbe.config;
+        // @todo 1.13
+//        Configuration cfg = TheOneProbe.config;
         Config.compactEqualStacks = compact;
-        cfg.get(CATEGORY_CLIENT, "compactEqualStacks", compactEqualStacks).set(compact);
-        cfg.save();
+//        cfg.get(CATEGORY_CLIENT, "compactEqualStacks", compactEqualStacks).set(compact);
+//        cfg.save();
     }
 
     public static void setPos(int leftx, int topy, int rightx, int bottomy) {
-        Configuration cfg = TheOneProbe.config;
+        // @todo 1.13
+//        Configuration cfg = TheOneProbe.config;
         Config.leftX = leftx;
         Config.topY = topy;
         Config.rightX = rightx;
         Config.bottomY = bottomy;
-        cfg.get(CATEGORY_CLIENT, "boxLeftX", leftx).set(leftx);
-        cfg.get(CATEGORY_CLIENT, "boxRightX", rightx).set(rightx);
-        cfg.get(CATEGORY_CLIENT, "boxTopY", topy).set(topy);
-        cfg.get(CATEGORY_CLIENT, "boxBottomY", bottomy).set(bottomy);
-        cfg.save();
+//        cfg.get(CATEGORY_CLIENT, "boxLeftX", leftx).set(leftx);
+//        cfg.get(CATEGORY_CLIENT, "boxRightX", rightx).set(rightx);
+//        cfg.get(CATEGORY_CLIENT, "boxTopY", topy).set(topy);
+//        cfg.get(CATEGORY_CLIENT, "boxBottomY", bottomy).set(bottomy);
+//        cfg.save();
         updateDefaultOverlayStyle();
     }
 
     public static void setScale(float scale) {
-        Configuration cfg = TheOneProbe.config;
+        // @todo 1.13
+//        Configuration cfg = TheOneProbe.config;
         tooltipScale = scale;
-        cfg.get(CATEGORY_CLIENT, "tooltipScale", tooltipScale).set(tooltipScale);
-        cfg.save();
+//        cfg.get(CATEGORY_CLIENT, "tooltipScale", tooltipScale).set(tooltipScale);
+//        cfg.save();
         updateDefaultOverlayStyle();
     }
 
     public static void setBoxStyle(int thickness, int borderColor, int fillcolor, int offset) {
-        Configuration cfg = TheOneProbe.config;
+        // @todo 1.13
+//        Configuration cfg = TheOneProbe.config;
         boxThickness = thickness;
         boxBorderColor = borderColor;
         boxFillColor = fillcolor;
         boxOffset = offset;
-        cfg.get(CATEGORY_CLIENT, "boxThickness", thickness).set(thickness);
-        cfg.get(CATEGORY_CLIENT, "boxBorderColor", Integer.toHexString(borderColor)).set(Integer.toHexString(borderColor));
-        cfg.get(CATEGORY_CLIENT, "boxFillColor", Integer.toHexString(fillcolor)).set(Integer.toHexString(fillcolor));
-        cfg.get(CATEGORY_CLIENT, "boxOffset", offset).set(offset);
-        cfg.save();
+//        cfg.get(CATEGORY_CLIENT, "boxThickness", thickness).set(thickness);
+//        cfg.get(CATEGORY_CLIENT, "boxBorderColor", Integer.toHexString(borderColor)).set(Integer.toHexString(borderColor));
+//        cfg.get(CATEGORY_CLIENT, "boxFillColor", Integer.toHexString(fillcolor)).set(Integer.toHexString(fillcolor));
+//        cfg.get(CATEGORY_CLIENT, "boxOffset", offset).set(offset);
+//        cfg.save();
         updateDefaultOverlayStyle();
     }
 

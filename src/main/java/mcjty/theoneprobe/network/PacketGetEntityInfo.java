@@ -9,33 +9,33 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
-public class PacketGetEntityInfo implements IMessage {
+public class PacketGetEntityInfo {
 
     private int dim;
     private UUID uuid;
     private ProbeMode mode;
     private Vec3d hitVec;
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
+    public PacketGetEntityInfo(ByteBuf buf) {
         dim = buf.readInt();
         uuid = new UUID(buf.readLong(), buf.readLong());
         mode = ProbeMode.values()[buf.readByte()];
@@ -44,7 +44,6 @@ public class PacketGetEntityInfo implements IMessage {
         }
     }
 
-    @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(dim);
         buf.writeLong(uuid.getMostSignificantBits());
@@ -65,28 +64,26 @@ public class PacketGetEntityInfo implements IMessage {
 
     public PacketGetEntityInfo(int dim, ProbeMode mode, RayTraceResult mouseOver, Entity entity) {
         this.dim = dim;
-        this.uuid = entity.getPersistentID();
+        this.uuid = entity.getUniqueID();
         this.mode = mode;
         this.hitVec = mouseOver.hitVec;
     }
 
-    public static class Handler implements IMessageHandler<PacketGetEntityInfo, IMessage> {
-        @Override
-        public IMessage onMessage(PacketGetEntityInfo message, MessageContext ctx) {
-            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
-            return null;
-        }
-
-        private void handle(PacketGetEntityInfo message, MessageContext ctx) {
-            WorldServer world = DimensionManager.getWorld(message.dim);
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            MinecraftServer s;
+            DimensionType type = DimensionType.getById(dim);
+            WorldServer world = DimensionManager.getWorld(ctx.get().getSender().server, type, true, false);
             if (world != null) {
-                Entity entity = world.getEntityFromUuid(message.uuid);
+                Entity entity = world.getEntityFromUuid(uuid);
                 if (entity != null) {
-                    ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().player, message.mode, world, entity, message.hitVec);
-                    PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(message.uuid, probeInfo), ctx.getServerHandler().player);
+                    ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(), mode, world, entity, hitVec);
+                    PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(uuid, probeInfo),
+                            ctx.get().getSender().connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
                 }
             }
-        }
+        });
+        ctx.get().setPacketHandled(true);
     }
 
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {

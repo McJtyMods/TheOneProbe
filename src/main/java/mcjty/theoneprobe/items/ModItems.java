@@ -2,21 +2,14 @@ package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModItems {
     public static CreativeProbe creativeProbe;
@@ -34,12 +27,12 @@ public class ModItems {
         probe = new Probe();
         creativeProbe = new CreativeProbe();
 
-        ItemArmor.ArmorMaterial materialDiamondHelmet = EnumHelper.addArmorMaterial("diamond_helmet_probe", TheOneProbe.MODID + ":probe_diamond",
-                33, new int[]{3, 6, 8, 3}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F);
-        ItemArmor.ArmorMaterial materialGoldHelmet = EnumHelper.addArmorMaterial("gold_helmet_probe", TheOneProbe.MODID + ":probe_gold",
-                7, new int[]{1, 3, 5, 2}, 25, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 0.0F);
-        ItemArmor.ArmorMaterial materialIronHelmet = EnumHelper.addArmorMaterial("iron_helmet_probe", TheOneProbe.MODID + ":probe_iron",
-                15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F);
+        ArmorMaterial materialDiamondHelmet = ArmorMaterial.create("diamond_helmet_probe", TheOneProbe.MODID + ":probe_diamond",
+                33, new int[]{3, 6, 8, 3}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F, null);
+        ArmorMaterial materialGoldHelmet = ArmorMaterial.create("gold_helmet_probe", TheOneProbe.MODID + ":probe_gold",
+                7, new int[]{1, 3, 5, 2}, 25, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 0.0F, null);
+        ArmorMaterial materialIronHelmet = ArmorMaterial.create("iron_helmet_probe", TheOneProbe.MODID + ":probe_iron",
+                15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, null);
 
         diamondHelmetProbe = makeHelmet(materialDiamondHelmet, 3, "diamond_helmet_probe");
         goldHelmetProbe = makeHelmet(materialGoldHelmet, 4, "gold_helmet_probe");
@@ -52,43 +45,43 @@ public class ModItems {
         }
     }
 
-    private static Item makeHelmet(ItemArmor.ArmorMaterial material, int renderIndex, String name) {
-        Item item = new ItemArmor(material, renderIndex, EntityEquipmentSlot.HEAD) {
-            @Override
-            public boolean getHasSubtypes() {
-                return true;
-            }
+    private static Item makeHelmet(ArmorMaterial material, int renderIndex, String name) {
+        Item item = new ItemArmor(material, EntityEquipmentSlot.HEAD, new Item.Properties()
+            .group(TheOneProbe.tabProbe)) {
 
-            @Override
-            public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-                if (this.isInCreativeTab(tab)) {
-                    ItemStack stack = new ItemStack(this);
-                    NBTTagCompound tag = new NBTTagCompound();
-                    tag.setInteger(PROBETAG, 1);
-                    stack.setTagCompound(tag);
-                    subItems.add(stack);
-                }
-            }
+//            @Override
+//            public boolean getHasSubtypes() {
+//                return true;
+//            }
+//
+//            @Override
+//            public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+//                if (this.isInCreativeTab(tab)) {
+//                    ItemStack stack = new ItemStack(this);
+//                    NBTTagCompound tag = new NBTTagCompound();
+//                    tag.setInteger(PROBETAG, 1);
+//                    stack.setTagCompound(tag);
+//                    subItems.add(stack);
+//                }
+//            }
         };
-        item.setUnlocalizedName(TheOneProbe.MODID + "." + name);
         item.setRegistryName(name);
-        item.setCreativeTab(TheOneProbe.tabProbe);
         return item;
     }
 
-    @SideOnly(Side.CLIENT)
     public static void initClient() {
-        probe.initModel();
-        creativeProbe.initModel();
+        // @todo 1.13
+//        probe.initModel();
+//        creativeProbe.initModel();
 
-        ModelLoader.setCustomModelResourceLocation(diamondHelmetProbe, 0, new ModelResourceLocation(diamondHelmetProbe.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(goldHelmetProbe, 0, new ModelResourceLocation(goldHelmetProbe.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(ironHelmetProbe, 0, new ModelResourceLocation(ironHelmetProbe.getRegistryName(), "inventory"));
+//        ModelLoader.setCustomModelResourceLocation(diamondHelmetProbe, 0, new ModelResourceLocation(diamondHelmetProbe.getRegistryName(), "inventory"));
+//        ModelLoader.setCustomModelResourceLocation(goldHelmetProbe, 0, new ModelResourceLocation(goldHelmetProbe.getRegistryName(), "inventory"));
+//        ModelLoader.setCustomModelResourceLocation(ironHelmetProbe, 0, new ModelResourceLocation(ironHelmetProbe.getRegistryName(), "inventory"));
 
-        probeNote.initModel();
+//        probeNote.initModel();
 
         if (TheOneProbe.baubles) {
-            BaubleTools.initProbeModel(probeGoggles);
+//            BaubleTools.initProbeModel(probeGoggles);
         }
     }
 
@@ -99,20 +92,20 @@ public class ModItems {
         if (stack.getItem() == probe || stack.getItem() == creativeProbe) {
             return true;
         }
-        if (stack.getTagCompound() == null) {
+        if (stack.getTag() == null) {
             return false;
         }
-        return stack.getTagCompound().hasKey(PROBETAG_HAND);
+        return stack.getTag().hasKey(PROBETAG_HAND);
     }
 
     private static boolean isProbeHelmet(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
         }
-        if (stack.getTagCompound() == null) {
+        if (stack.getTag() == null) {
             return false;
         }
-        return stack.getTagCompound().hasKey(PROBETAG);
+        return stack.getTag().hasKey(PROBETAG);
     }
 
     public static boolean hasAProbeSomewhere(EntityPlayer player) {

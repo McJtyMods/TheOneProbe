@@ -16,6 +16,7 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class HarvestInfoTools {
     }
 
     static void showHarvestLevel(IProbeInfo probeInfo, IBlockState blockState, Block block) {
-        String harvestTool = block.getHarvestTool(blockState);
+        ToolType harvestTool = block.getHarvestTool(blockState);
         if (harvestTool != null) {
             int harvestLevel = block.getHarvestLevel(blockState);
             String harvestName;
@@ -64,7 +65,7 @@ public class HarvestInfoTools {
             return;
         }
 
-        boolean harvestable = block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
+        boolean harvestable = block.canHarvestBlock(world.getBlockState(pos), world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
         if (harvestable) {
             probeInfo.text(OK + "Harvestable");
         } else {
@@ -73,9 +74,9 @@ public class HarvestInfoTools {
     }
 
     static void showHarvestInfo(IProbeInfo probeInfo, World world, BlockPos pos, Block block, IBlockState blockState, EntityPlayer player) {
-        boolean harvestable = block.canHarvestBlock(world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
+        boolean harvestable = block.canHarvestBlock(world.getBlockState(pos), world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
 
-        String harvestTool = block.getHarvestTool(blockState);
+        ToolType harvestTool = block.getHarvestTool(blockState);
         String harvestName = null;
 
         if (harvestTool == null) {
@@ -88,12 +89,12 @@ public class HarvestInfoTools {
 
                     if (testTool != null && testTool.getItem() instanceof ItemTool) {
                         ItemTool toolItem = (ItemTool) testTool.getItem();
-                        // @todo
-                        if (testTool.getDestroySpeed(blockState) >= toolItem.toolMaterial.getEfficiency()) {
-                            // BINGO!
-                            harvestTool = testToolEntry.getKey();
-                            break;
-                        }
+                        // @todo 1.13
+//                        if (testTool.getDestroySpeed(blockState) >= toolItem.toolMaterial.getEfficiency()) {
+//                            // BINGO!
+//                            harvestTool = testToolEntry.getKey();
+//                            break;
+//                        }
                     }
                 }
             }
@@ -109,7 +110,8 @@ public class HarvestInfoTools {
             } else {
                 harvestName = harvestLevels[harvestLevel];
             }
-            harvestTool = StringUtils.capitalize(harvestTool);
+            // @todo 1.13
+//            harvestTool = StringUtils.capitalize(harvestTool);
         }
 
         boolean v = Config.harvestStyleVanilla;
@@ -121,14 +123,14 @@ public class HarvestInfoTools {
         IProbeInfo horizontal = probeInfo.horizontal(alignment);
         if (harvestable) {
             horizontal.icon(ICONS, 0, offs, dim, dim, iconStyle)
-                    .text(OK + ((harvestTool != null) ? harvestTool : "No tool"));
+                    .text(OK + ((harvestTool != null) ? harvestTool.getName() : "No tool"));
         } else {
             if (harvestName == null || harvestName.isEmpty()) {
                 horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
-                        .text(WARNING + ((harvestTool != null) ? harvestTool : "No tool"));
+                        .text(WARNING + ((harvestTool != null) ? harvestTool.getName() : "No tool"));
             } else {
                 horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
-                        .text(WARNING + ((harvestTool != null) ? harvestTool : "No tool") + " (level " + harvestName + ")");
+                        .text(WARNING + ((harvestTool != null) ? harvestTool.getName() : "No tool") + " (level " + harvestName + ")");
             }
         }
     }

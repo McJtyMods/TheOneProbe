@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.keys;
 
 import mcjty.theoneprobe.config.Config;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 
 public class KeyInputHandler {

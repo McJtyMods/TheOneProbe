@@ -24,24 +24,24 @@ public class RenderHelper {
 
     public static void renderEntity(Entity entity, int xPos, int yPos, float scale) {
         GlStateManager.pushMatrix();
-        GlStateManager.color(1f, 1f, 1f);
+        GlStateManager.color3f(1f, 1f, 1f);
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
-        GlStateManager.translate(xPos + 8, yPos + 24, 50F);
-        GlStateManager.scale(-scale, scale, scale);
-        GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
-        GlStateManager.rotate(135F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translatef(xPos + 8, yPos + 24, 50F);
+        GlStateManager.scalef(-scale, scale, scale);
+        GlStateManager.rotatef(180F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotatef(135F, 0.0F, 1.0F, 0.0F);
         net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
-        GlStateManager.rotate(-135F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(rot, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(0.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotatef(-135F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotatef(rot, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotatef(0.0F, 1.0F, 0.0F, 0.0F);
 //        entity.renderYawOffset = entity.rotationYaw = entity.prevRotationYaw = entity.prevRotationYawHead = entity.rotationYawHead = 0;//this.rotateTurret;
         entity.rotationPitch = 0.0F;
-        GlStateManager.translate(0.0F, (float) entity.getYOffset() + (entity instanceof EntityHanging ? 0.5F : 0.0F), 0.0F);
-        Minecraft.getMinecraft().getRenderManager().playerViewY = 180F;
+        GlStateManager.translatef(0.0F, (float) entity.getYOffset() + (entity instanceof EntityHanging ? 0.5F : 0.0F), 0.0F);
+        Minecraft.getInstance().getRenderManager().playerViewY = 180F;
         try {
-            Minecraft.getMinecraft().getRenderManager().renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+            Minecraft.getInstance().getRenderManager().renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
         } catch (Exception e) {
             TheOneProbe.logger.error("Error rendering entity!", e);
         }
@@ -49,14 +49,14 @@ public class RenderHelper {
         net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
         GlStateManager.disableRescaleNormal();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
         GlStateManager.popMatrix();
-        GlStateManager.enableDepth();
+        GlStateManager.enableDepthTest();
         GlStateManager.disableColorMaterial();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.activeTexture(OpenGlHelper.GL_TEXTURE1);
         GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        GlStateManager.activeTexture(OpenGlHelper.GL_TEXTURE0);
     }
 
     public static boolean renderObject(Minecraft mc, int x, int y, Object itm, boolean highlight) {
@@ -64,46 +64,46 @@ public class RenderHelper {
             renderEntity((Entity) itm, x, y, 10);
             return true;
         }
-        RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
+        ItemRenderer itemRender = Minecraft.getInstance().getItemRenderer();
         return renderObject(mc, itemRender, x, y, itm, highlight, 200);
     }
 
-    public static boolean renderObject(Minecraft mc, RenderItem itemRender, int x, int y, Object itm, boolean highlight, float lvl) {
+    public static boolean renderObject(Minecraft mc, ItemRenderer itemRender, int x, int y, Object itm, boolean highlight, float lvl) {
         itemRender.zLevel = lvl;
 
         if (itm == null) {
-            return renderItemStack(mc, itemRender, null, x, y, "", highlight);
+            return ItemRendererStack(mc, itemRender, null, x, y, "", highlight);
         }
         if (itm instanceof Item) {
-            return renderItemStack(mc, itemRender, new ItemStack((Item) itm, 1), x, y, "", highlight);
+            return ItemRendererStack(mc, itemRender, new ItemStack((Item) itm, 1), x, y, "", highlight);
         }
         if (itm instanceof Block) {
-            return renderItemStack(mc, itemRender, new ItemStack((Block) itm, 1), x, y, "", highlight);
+            return ItemRendererStack(mc, itemRender, new ItemStack((Block) itm, 1), x, y, "", highlight);
         }
         if (itm instanceof ItemStack) {
-            return renderItemStackWithCount(mc, itemRender, (ItemStack) itm, x, y, highlight);
+            return ItemRendererStackWithCount(mc, itemRender, (ItemStack) itm, x, y, highlight);
         }
         if (itm instanceof TextureAtlasSprite) {
             return renderIcon(mc, itemRender, (TextureAtlasSprite) itm, x, y, highlight);
         }
-        return renderItemStack(mc, itemRender, ItemStack.EMPTY, x, y, "", highlight);
+        return ItemRendererStack(mc, itemRender, ItemStack.EMPTY, x, y, "", highlight);
     }
 
-    public static boolean renderIcon(Minecraft mc, RenderItem itemRender, TextureAtlasSprite itm, int xo, int yo, boolean highlight) {
+    public static boolean renderIcon(Minecraft mc, ItemRenderer itemRender, TextureAtlasSprite itm, int xo, int yo, boolean highlight) {
         //itemRender.renderIcon(xo, yo, itm, 16, 16); //TODO: Make
         return true;
     }
 
-    public static boolean renderItemStackWithCount(Minecraft mc, RenderItem itemRender, ItemStack itm, int xo, int yo, boolean highlight) {
+    public static boolean ItemRendererStackWithCount(Minecraft mc, ItemRenderer itemRender, ItemStack itm, int xo, int yo, boolean highlight) {
         if (itm.getCount() <= 1) {
-            return renderItemStack(mc, itemRender, itm, xo, yo, "", highlight);
+            return ItemRendererStack(mc, itemRender, itm, xo, yo, "", highlight);
         } else {
-            return renderItemStack(mc, itemRender, itm, xo, yo, "" + itm.getCount(), highlight);
+            return ItemRendererStack(mc, itemRender, itm, xo, yo, "" + itm.getCount(), highlight);
         }
     }
 
-    public static boolean renderItemStack(Minecraft mc, RenderItem itemRender, ItemStack itm, int x, int y, String txt, boolean highlight) {
-        GlStateManager.color(1F, 1F, 1F);
+    public static boolean ItemRendererStack(Minecraft mc, ItemRenderer itemRender, ItemStack itm, int x, int y, String txt, boolean highlight) {
+        GlStateManager.color3f(1F, 1F, 1F);
 
         boolean rc = false;
         if (highlight) {
@@ -113,14 +113,14 @@ public class RenderHelper {
         if (!itm.isEmpty() && itm.getItem() != null) {
             rc = true;
             GlStateManager.pushMatrix();
-            GlStateManager.translate(0.0F, 0.0F, 32.0F);
-            GlStateManager.color(1F, 1F, 1F, 1F);
+            GlStateManager.translatef(0.0F, 0.0F, 32.0F);
+            GlStateManager.color4f(1F, 1F, 1F, 1F);
             GlStateManager.enableRescaleNormal();
             GlStateManager.enableLighting();
             short short1 = 240;
             short short2 = 240;
             net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, short1 / 1.0F, short2 / 1.0F);
+            OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             itemRender.renderItemAndEffectIntoGUI(itm, x, y);
             itemRender.renderItemOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt);
             GlStateManager.popMatrix();
@@ -149,8 +149,8 @@ public class RenderHelper {
         float f7 = (color2 & 255) / 255.0F;
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GlStateManager.disableAlphaTest();
+        OpenGlHelper.glBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -163,7 +163,7 @@ public class RenderHelper {
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
+        GlStateManager.enableAlphaTest();
         GlStateManager.enableTexture2D();
     }
 
@@ -185,8 +185,8 @@ public class RenderHelper {
         float f7 = (color2 & 255) / 255.0F;
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GlStateManager.disableAlphaTest();
+        OpenGlHelper.glBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -198,7 +198,7 @@ public class RenderHelper {
         tessellator.draw();
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
+        GlStateManager.enableAlphaTest();
         GlStateManager.enableTexture2D();
     }
 
@@ -379,7 +379,7 @@ public class RenderHelper {
 
         rotateToPlayer();
 
-        GlStateManager.rotate(rot, 0, 0, 1);
+        GlStateManager.rotatef(rot, 0, 0, 1);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -396,8 +396,8 @@ public class RenderHelper {
     }
 
     public static void rotateToPlayer() {
-        GlStateManager.rotate(-Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(Minecraft.getMinecraft().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotatef(-Minecraft.getInstance().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotatef(Minecraft.getInstance().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
     }
 
     /**
@@ -436,23 +436,23 @@ public class RenderHelper {
         buffer.pos(p4.getX(), p4.getY(), p4.getZ()).tex(0.0D, 1.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
     }
 
-    public static boolean renderItemStack(Minecraft mc, RenderItem itemRender, ItemStack itm, int x, int y, String txt) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F);
+    public static boolean ItemRendererStack(Minecraft mc, ItemRenderer itemRender, ItemStack itm, int x, int y, String txt) {
+        GlStateManager.color3f(1.0F, 1.0F, 1.0F);
 
         boolean rc = true;
         if (!itm.isEmpty() && itm.getItem() != null) {
             GlStateManager.pushMatrix();
-            GlStateManager.translate(0.0F, 0.0F, 32.0F);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.translatef(0.0F, 0.0F, 32.0F);
+            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableRescaleNormal();
             GlStateManager.enableLighting();
             short short1 = 240;
             short short2 = 240;
             net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, short1 / 1.0F, short2 / 1.0F);
+            OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             try {
                 itemRender.renderItemAndEffectIntoGUI(itm, x, y);
-                renderItemOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
+                ItemRendererOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
             } catch (Exception e) {
                 ThrowableIdentity.registerThrowable(e);
                 rc = false; // Report error
@@ -468,7 +468,7 @@ public class RenderHelper {
     /**
      * Renders the stack size and/or damage bar for the given ItemStack.
      */
-    public static void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
+    public static void ItemRendererOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
                                                 int scaled) {
         if (!stack.isEmpty()) {
             if (stack.getCount() != 1 || text != null) {
@@ -478,23 +478,23 @@ public class RenderHelper {
                 }
 
                 GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
+                GlStateManager.disableDepthTest();
                 GlStateManager.disableBlend();
                 if (scaled >= 2) {
                     GlStateManager.pushMatrix();
-                    GlStateManager.scale(.5f, .5f, .5f);
+                    GlStateManager.scalef(.5f, .5f, .5f);
                     fr.drawStringWithShadow(s, ((xPosition + 19 - 2) * 2 - 1 - fr.getStringWidth(s)), yPosition * 2 + 24, 16777215);
                     GlStateManager.popMatrix();
                 } else if (scaled == 1) {
                     GlStateManager.pushMatrix();
-                    GlStateManager.scale(.75f, .75f, .75f);
+                    GlStateManager.scalef(.75f, .75f, .75f);
                     fr.drawStringWithShadow(s, ((xPosition - 2) * 1.34f + 24 - fr.getStringWidth(s)), yPosition * 1.34f + 14, 16777215);
                     GlStateManager.popMatrix();
                 } else {
                     fr.drawStringWithShadow(s, (xPosition + 19 - 2 - fr.getStringWidth(s)), (yPosition + 6 + 3), 16777215);
                 }
                 GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
+                GlStateManager.enableDepthTest();
                 // Fixes opaque cooldown overlay a bit lower
                 // TODO: check if enabled blending still screws things up down the line.
                 GlStateManager.enableBlend();
@@ -505,9 +505,9 @@ public class RenderHelper {
                 int j = (int) Math.round(13.0D - health * 13.0D);
                 int i = (int) Math.round(255.0D - health * 255.0D);
                 GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
+                GlStateManager.disableDepthTest();
                 GlStateManager.disableTexture2D();
-                GlStateManager.disableAlpha();
+                GlStateManager.disableAlphaTest();
                 GlStateManager.disableBlend();
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder vertexbuffer = tessellator.getBuffer();
@@ -515,25 +515,25 @@ public class RenderHelper {
                 draw(vertexbuffer, xPosition + 2, yPosition + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
                 draw(vertexbuffer, xPosition + 2, yPosition + 13, j, 1, 255 - i, i, 0, 255);
                 GlStateManager.enableBlend();
-                GlStateManager.enableAlpha();
+                GlStateManager.enableAlphaTest();
                 GlStateManager.enableTexture2D();
                 GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
+                GlStateManager.enableDepthTest();
             }
 
-            EntityPlayerSP entityplayersp = Minecraft.getMinecraft().player;
-            float f = entityplayersp == null ? 0.0F : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
+            EntityPlayerSP entityplayersp = Minecraft.getInstance().player;
+            float f = entityplayersp == null ? 0.0F : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getInstance().getRenderPartialTicks());
 
             if (f > 0.0F) {
                 GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
+                GlStateManager.disableDepthTest();
                 GlStateManager.disableTexture2D();
                 Tessellator tessellator1 = Tessellator.getInstance();
                 BufferBuilder vertexbuffer1 = tessellator1.getBuffer();
                 draw(vertexbuffer1, xPosition, yPosition + (int)Math.floor(16.0F * (1.0F - f)), 16, (int)Math.ceil(16.0F * f), 255, 255, 255, 127);
                 GlStateManager.enableTexture2D();
                 GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
+                GlStateManager.enableDepthTest();
             }
         }
     }
@@ -552,22 +552,22 @@ public class RenderHelper {
 
 
     public static int renderText(Minecraft mc, int x, int y, String txt) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F);
+        GlStateManager.color3f(1.0F, 1.0F, 1.0F);
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(0.0F, 0.0F, 32.0F);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.translatef(0.0F, 0.0F, 32.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableLighting();
         net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
 
         GlStateManager.disableLighting();
-        GlStateManager.disableDepth();
+        GlStateManager.disableDepthTest();
         GlStateManager.disableBlend();
         int width = mc.fontRenderer.getStringWidth(txt);
         mc.fontRenderer.drawStringWithShadow(txt, x, y, 16777215);
         GlStateManager.enableLighting();
-        GlStateManager.enableDepth();
+        GlStateManager.enableDepthTest();
         // Fixes opaque cooldown overlay a bit lower
         // TODO: check if enabled blending still screws things up down the line.
         GlStateManager.enableBlend();

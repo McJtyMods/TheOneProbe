@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.network;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
@@ -11,27 +10,27 @@ import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
-public class PacketGetInfo implements IMessage {
+public class PacketGetInfo  {
 
     private int dim;
     private BlockPos pos;
@@ -40,8 +39,7 @@ public class PacketGetInfo implements IMessage {
     private Vec3d hitVec;
     private ItemStack pickBlock;
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
+    public PacketGetInfo(PacketBuffer buf) {
         dim = buf.readInt();
         pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
         mode = ProbeMode.values()[buf.readByte()];
@@ -54,11 +52,10 @@ public class PacketGetInfo implements IMessage {
         if (buf.readBoolean()) {
             hitVec = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
         }
-        pickBlock = ByteBufUtils.readItemStack(buf);
+        pickBlock = buf.readItemStack();
     }
 
-    @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(PacketBuffer buf) {
         buf.writeInt(dim);
         buf.writeInt(pos.getX());
         buf.writeInt(pos.getY());
@@ -74,13 +71,13 @@ public class PacketGetInfo implements IMessage {
             buf.writeDouble(hitVec.z);
         }
 
-        ByteBuf buffer = Unpooled.buffer();
-        ByteBufUtils.writeItemStack(buffer, pickBlock);
+        PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+        buffer.writeItemStack(pickBlock);
         if (buffer.writerIndex() <= Config.maxPacketToServer) {
             buf.writeBytes(buffer);
         } else {
-            ItemStack copy = new ItemStack(pickBlock.getItem(), pickBlock.getCount(), pickBlock.getMetadata());
-            ByteBufUtils.writeItemStack(buf, copy);
+            ItemStack copy = new ItemStack(pickBlock.getItem(), pickBlock.getCount());
+            buf.writeItemStack(copy);
         }
     }
 
@@ -96,21 +93,17 @@ public class PacketGetInfo implements IMessage {
         this.pickBlock = pickBlock;
     }
 
-    public static class Handler implements IMessageHandler<PacketGetInfo, IMessage> {
-        @Override
-        public IMessage onMessage(PacketGetInfo message, MessageContext ctx) {
-            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
-            return null;
-        }
-
-        private void handle(PacketGetInfo message, MessageContext ctx) {
-            WorldServer world = DimensionManager.getWorld(message.dim);
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            DimensionType type = DimensionType.getById(dim);
+            WorldServer world = DimensionManager.getWorld(ctx.get().getSender().server, type, true, false);
             if (world != null) {
-                ProbeInfo probeInfo = getProbeInfo(ctx.getServerHandler().player,
-                        message.mode, world, message.pos, message.sideHit, message.hitVec, message.pickBlock);
-                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(message.dim, message.pos, probeInfo), ctx.getServerHandler().player);
+                ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(),
+                        mode, world, pos, sideHit, hitVec, pickBlock);
+                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(dim, pos, probeInfo), ctx.get().getSender().connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
             }
-        }
+        });
+        ctx.get().setPacketHandled(true);
     }
 
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, BlockPos blockPos, EnumFacing sideHit, Vec3d hitVec, ItemStack pickBlock) {

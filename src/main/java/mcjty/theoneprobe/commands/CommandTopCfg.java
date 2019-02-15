@@ -1,28 +1,6 @@
 package mcjty.theoneprobe.commands;
 
-import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.proxy.ClientProxy;
-import mcjty.theoneprobe.proxy.GuiProxy;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
-public class CommandTopCfg implements ICommand {
+public class CommandTopCfg {}/*implements ICommand {
 
 
     @Override
@@ -84,7 +62,7 @@ public class CommandTopCfg implements ICommand {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         if (args.length < 1) {
             ClientProxy.ignoreNextGuiClose = true;
-            EntityPlayerSP player = Minecraft.getMinecraft().player;
+            EntityPlayerSP player = Minecraft.getInstance().player;
             player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
             return;
         }
@@ -118,3 +96,4 @@ public class CommandTopCfg implements ICommand {
         return getName().compareTo(o.getName());
     }
 }
+*/

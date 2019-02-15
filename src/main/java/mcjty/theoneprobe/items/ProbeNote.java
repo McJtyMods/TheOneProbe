@@ -1,20 +1,6 @@
 package mcjty.theoneprobe.items;
 
-import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.proxy.GuiProxy;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-public class ProbeNote extends Item {
+public class ProbeNote {} /*extends Item {
 
     public ProbeNote() {
         setUnlocalizedName(TheOneProbe.MODID + ".probenote");
@@ -42,3 +28,4 @@ public class ProbeNote extends Item {
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 }
+*/

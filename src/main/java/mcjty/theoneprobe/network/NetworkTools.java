@@ -6,19 +6,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 
-import java.io.IOException;
 import java.util.Collection;
 
 public class NetworkTools {
 
     public static NBTTagCompound readNBT(ByteBuf dataIn) {
         PacketBuffer buf = new PacketBuffer(dataIn);
-        try {
-            return buf.readCompoundTag();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return buf.readCompoundTag();
     }
 
     public static void writeNBT(ByteBuf dataOut, NBTTagCompound nbt) {
@@ -34,22 +28,17 @@ public class NetworkTools {
     /// This function supports itemstacks with more then 64 items.
     public static ItemStack readItemStack(ByteBuf dataIn) {
         PacketBuffer buf = new PacketBuffer(dataIn);
-        try {
-            NBTTagCompound nbt = buf.readCompoundTag();
-            ItemStack stack = new ItemStack(nbt);
-            stack.setCount(buf.readInt());
-            return stack;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return ItemStack.EMPTY;
+        NBTTagCompound nbt = buf.readCompoundTag();
+        ItemStack stack = ItemStack.read(nbt);
+        stack.setCount(buf.readInt());
+        return stack;
     }
 
     /// This function supports itemstacks with more then 64 items.
     public static void writeItemStack(ByteBuf dataOut, ItemStack itemStack) {
         PacketBuffer buf = new PacketBuffer(dataOut);
         NBTTagCompound nbt = new NBTTagCompound();
-        itemStack.writeToNBT(nbt);
+        itemStack.write(nbt);
         try {
             buf.writeCompoundTag(nbt);
             buf.writeInt(itemStack.getCount());

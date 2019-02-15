@@ -113,7 +113,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if(!stack.isEmpty()) {
                 probeInfo.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER))
                         .item(stack, new ItemStyle().width(16).height(16))
-                        .text(INFO + stack.getDisplayName());
+                        .text(INFO + stack.getDisplayName().getFormattedText());
                 if (mode == ProbeMode.EXTENDED) {
                     probeInfo.text(LABEL + "Rotation: " + INFO + itemFrame.getRotation());
                 }
@@ -147,8 +147,8 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 double jumpStrength = ((EntityHorse) entity).getHorseJumpStrength();
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
                 probeInfo.text(LABEL + "Jump height: " + INFO + dfCommas.format(jumpHeight));
-                IAttributeInstance iattributeinstance = ((EntityHorse) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-                probeInfo.text(LABEL + "Speed: " + INFO + dfCommas.format(iattributeinstance.getAttributeValue()));
+                IAttributeInstance iattributeinstance = ((EntityHorse) entity).getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+                probeInfo.text(LABEL + "Speed: " + INFO + dfCommas.format(iattributeinstance.getValue()));
             }
         }
 

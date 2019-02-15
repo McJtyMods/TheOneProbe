@@ -5,22 +5,28 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PropertiesDispatcher implements ICapabilityProvider, INBTSerializable<NBTTagCompound> {
 
     private PlayerGotNote playerGotNote = new PlayerGotNote();
 
+    @Nonnull
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == PlayerProperties.PLAYER_GOT_NOTE;
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
+        if (cap == PlayerProperties.PLAYER_GOT_NOTE) {
+            return LazyOptional.of(() -> (T) playerGotNote);
+        }
+        return LazyOptional.empty();
     }
 
+    @Nonnull
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == PlayerProperties.PLAYER_GOT_NOTE) {
-            return (T) playerGotNote;
-        }
-        return null;
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+        return getCapability(cap);
     }
 
     @Override

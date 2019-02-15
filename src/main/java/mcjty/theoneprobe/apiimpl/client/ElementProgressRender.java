@@ -37,17 +37,17 @@ public class ElementProgressRender {
         }
 
         if (style.isShowText()) {
-            RenderHelper.renderText(Minecraft.getMinecraft(), x + 3, y + 2, style.getPrefix() + ElementProgress.format(current, style.getNumberFormat(), style.getSuffix()));
+            RenderHelper.renderText(Minecraft.getInstance(), x + 3, y + 2, style.getPrefix() + ElementProgress.format(current, style.getNumberFormat(), style.getSuffix()));
         }
     }
 
     private static void renderLifeBar(long current, int x, int y, int w, int h) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(x, y, 52, 0, 9, 9);
-            RenderHelper.renderText(Minecraft.getMinecraft(), x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
+            RenderHelper.renderText(Minecraft.getInstance(), x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
                 RenderHelper.drawTexturedModalRect(x, y, 52, 0, 9, 9);
@@ -60,12 +60,12 @@ public class ElementProgressRender {
     }
 
     private static void renderArmorBar(long current, int x, int y, int w, int h) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(x, y, 43, 9, 9, 9);
-            RenderHelper.renderText(Minecraft.getMinecraft(), x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
+            RenderHelper.renderText(Minecraft.getInstance(), x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
                 RenderHelper.drawTexturedModalRect(x, y, 43, 9, 9, 9);

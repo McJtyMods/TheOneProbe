@@ -8,7 +8,6 @@ import mcjty.theoneprobe.apiimpl.client.ElementEntityRender;
 import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
 import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -35,7 +34,8 @@ public class ElementEntity implements IElement {
             entityNBT = entity.serializeNBT();
             playerID = null;
         }
-        this.entityName = EntityList.getEntityString(entity);
+        this.entityName = entity.getName().toString();
+//        this.entityName = EntityList.getEntityString(entity);
         this.style = style;
     }
 

@@ -1,12 +1,13 @@
 package mcjty.theoneprobe.network;
 
 
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
+import mcjty.theoneprobe.TheOneProbe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class PacketHandler {
-    public static SimpleNetworkWrapper INSTANCE;
+    public static SimpleChannel INSTANCE;
     private static int ID = 0;
 
     public static int nextID() {
@@ -14,14 +15,26 @@ public class PacketHandler {
     }
 
     public static void registerMessages(String channelName) {
-        INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(channelName);
+        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(TheOneProbe.MODID, channelName), () -> "1.0", s -> true, s -> true);
 
         // Server side
-        INSTANCE.registerMessage(PacketGetInfo.Handler.class, PacketGetInfo.class, nextID(), Side.SERVER);
-        INSTANCE.registerMessage(PacketGetEntityInfo.Handler.class, PacketGetEntityInfo.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(nextID(), PacketGetInfo.class,
+                (msg, buf) -> msg.toBytes(buf),
+                buf -> new PacketGetInfo(buf),
+                (msg, contextSupplier) -> msg.handle(contextSupplier));
+        INSTANCE.registerMessage(nextID(), PacketGetEntityInfo.class,
+                (msg, buf) -> msg.toBytes(buf),
+                buf -> new PacketGetEntityInfo(buf),
+                (msg, contextSupplier) -> msg.handle(contextSupplier));
 
         // Client side
-        INSTANCE.registerMessage(PacketReturnInfo.Handler.class, PacketReturnInfo.class, nextID(), Side.CLIENT);
-        INSTANCE.registerMessage(PacketReturnEntityInfo.Handler.class, PacketReturnEntityInfo.class, nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(nextID(), PacketReturnInfo.class,
+                (msg, buf) -> msg.toBytes(buf),
+                buf -> new PacketReturnInfo(buf),
+                (msg, contextSupplier) -> msg.handle(contextSupplier));
+        INSTANCE.registerMessage(nextID(), PacketReturnEntityInfo.class,
+                (msg, buf) -> msg.toBytes(buf),
+                buf -> new PacketReturnEntityInfo(buf),
+                (msg, contextSupplier) -> msg.handle(contextSupplier));
     }
 }

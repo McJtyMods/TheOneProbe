@@ -16,7 +16,7 @@ import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 public class ElementTextRender {
 
     public static void render(String text, int x, int y) {
-        RenderHelper.renderText(Minecraft.getMinecraft(), x, y, stylifyString(text));
+        RenderHelper.renderText(Minecraft.getInstance(), x, y, stylifyString(text));
     }
 
     private static String stylifyString(String text) {
@@ -61,6 +61,6 @@ public class ElementTextRender {
     }
 
     public static int getWidth(String text) {
-        return Minecraft.getMinecraft().fontRenderer.getStringWidth(stylifyString(text));
+        return Minecraft.getInstance().fontRenderer.getStringWidth(stylifyString(text));
     }
 }

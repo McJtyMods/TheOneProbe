@@ -4,17 +4,17 @@ import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.fixes.EntityId;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ElementEntityRender {
 
     public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, int x, int y) {
-        Entity entity = Minecraft.getMinecraft().world.getEntityByID(playerID);
+        Entity entity = Minecraft.getInstance().world.getEntityByID(playerID);
         if (entity != null) {
             renderEntity(style, x, y, entity);
         }
@@ -24,12 +24,17 @@ public class ElementEntityRender {
         if (entityName != null && !entityName.isEmpty()) {
             Entity entity = null;
             if (entityNBT != null) {
-                entity = EntityList.createEntityFromNBT(entityNBT, Minecraft.getMinecraft().world);
+                String fixed = fixEntityId(entityName);
+                EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
+                if (value != null) {
+                    entity = value.makeEntity(Minecraft.getInstance().world, entityNBT, null, null, new BlockPos(0, 0, 0), false, false);
+                }
+//                entity = EntityList.createEntityFromNBT(entityNBT, Minecraft.getInstance().world);
             } else {
                 String fixed = fixEntityId(entityName);
-                EntityEntry value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
+                EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
                 if (value != null) {
-                    entity = value.newInstance(Minecraft.getMinecraft().world);
+                    entity = value.create(Minecraft.getInstance().world);
                 }
             }
             if (entity != null) {
@@ -38,7 +43,8 @@ public class ElementEntityRender {
         }
     }
 
-    private static final EntityId FIXER = new EntityId();
+    // @todo 1.13
+//    private static final EntityId FIXER = new EntityId();
 
     /**
      * This method attempts to fix an old-style (1.10.2) entity Id and convert it to the
@@ -49,10 +55,12 @@ public class ElementEntityRender {
      * @return
      */
     public static String fixEntityId(String id) {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setString("id", id);
-        nbt = FIXER.fixTagCompound(nbt);
-        return nbt.getString("id");
+        // @todo 1.13
+//        NBTTagCompound nbt = new NBTTagCompound();
+//        nbt.setString("id", id);
+//        nbt = FIXER.fixTagCompound(nbt);
+//        return nbt.getString("id");
+        return id;
     }
 
 

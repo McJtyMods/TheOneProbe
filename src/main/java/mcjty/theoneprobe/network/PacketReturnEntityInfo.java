@@ -3,20 +3,17 @@ package mcjty.theoneprobe.network;
 import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
-public class PacketReturnEntityInfo implements IMessage {
+public class PacketReturnEntityInfo {
 
     private UUID uuid;
     private ProbeInfo probeInfo;
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
+    public PacketReturnEntityInfo(ByteBuf buf) {
         uuid = new UUID(buf.readLong(), buf.readLong());
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();
@@ -26,7 +23,6 @@ public class PacketReturnEntityInfo implements IMessage {
         }
     }
 
-    @Override
     public void toBytes(ByteBuf buf) {
         buf.writeLong(uuid.getMostSignificantBits());
         buf.writeLong(uuid.getLeastSignificantBits());
@@ -46,11 +42,11 @@ public class PacketReturnEntityInfo implements IMessage {
         this.probeInfo = probeInfo;
     }
 
-    public static class Handler implements IMessageHandler<PacketReturnEntityInfo, IMessage> {
-        @Override
-        public IMessage onMessage(PacketReturnEntityInfo message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(() -> OverlayRenderer.registerProbeInfo(message.uuid, message.probeInfo));
-            return null;
-        }
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            OverlayRenderer.registerProbeInfo(uuid, probeInfo);
+        });
+        ctx.get().setPacketHandled(true);
     }
+
 }
