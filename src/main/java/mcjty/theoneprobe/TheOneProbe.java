@@ -12,6 +12,7 @@ import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.proxy.ClientProxy;
 import mcjty.theoneprobe.proxy.IProxy;
 import mcjty.theoneprobe.proxy.ServerProxy;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
@@ -19,6 +20,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -39,6 +42,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Mod("theoneprobe")
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 //
 //@Mod(modid = TheOneProbe.MODID, name="TheOneProbe",
 //        dependencies =
@@ -147,6 +151,23 @@ public class TheOneProbe {
                 supplier.get().apply(theOneProbeImp);
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void registerItems(RegistryEvent.Register<Item> event) {
+        ModItems.init();
+
+        event.getRegistry().register(ModItems.probe);
+        event.getRegistry().register(ModItems.creativeProbe);
+//        event.getRegistry().register(ModItems.probeNote); // @todo 1.13
+
+        event.getRegistry().register(ModItems.diamondHelmetProbe);
+        event.getRegistry().register(ModItems.goldHelmetProbe);
+        event.getRegistry().register(ModItems.ironHelmetProbe);
+
+        if (TheOneProbe.baubles) {
+            event.getRegistry().register(ModItems.probeGoggles);
+        }
     }
 
 

@@ -20,23 +20,6 @@ public class ForgeEventHandlers {
 
 
     @SubscribeEvent
-    public void registerItems(RegistryEvent.Register<Item> event) {
-        ModItems.init();
-
-        event.getRegistry().register(ModItems.probe);
-        event.getRegistry().register(ModItems.creativeProbe);
-//        event.getRegistry().register(ModItems.probeNote); // @todo 1.13
-
-        event.getRegistry().register(ModItems.diamondHelmetProbe);
-        event.getRegistry().register(ModItems.goldHelmetProbe);
-        event.getRegistry().register(ModItems.ironHelmetProbe);
-
-        if (TheOneProbe.baubles) {
-            event.getRegistry().register(ModItems.probeGoggles);
-        }
-    }
-
-    @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         // @todo 1.13
 //        Config.setupStyleConfig(TheOneProbe.config);
