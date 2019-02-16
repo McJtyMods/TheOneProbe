@@ -34,7 +34,7 @@ public class ElementEntity implements IElement {
             entityNBT = entity.serializeNBT();
             playerID = null;
         }
-        this.entityName = entity.getName().toString();
+        this.entityName = entity.getName().getFormattedText();
 //        this.entityName = EntityList.getEntityString(entity);
         this.style = style;
     }

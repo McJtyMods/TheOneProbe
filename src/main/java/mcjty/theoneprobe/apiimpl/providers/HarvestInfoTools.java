@@ -17,7 +17,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,11 +34,11 @@ public class HarvestInfoTools {
             "cobalt"
     };
 
-    private static final HashMap<String, ItemStack> testTools = new HashMap<>();
+    private static final HashMap<ToolType, ItemStack> testTools = new HashMap<>();
     static {
-        testTools.put("shovel", new ItemStack(Items.WOODEN_SHOVEL));
-        testTools.put("axe", new ItemStack(Items.WOODEN_AXE));
-        testTools.put("pickaxe", new ItemStack(Items.WOODEN_PICKAXE));
+        testTools.put(ToolType.SHOVEL, new ItemStack(Items.WOODEN_SHOVEL));
+        testTools.put(ToolType.AXE, new ItemStack(Items.WOODEN_AXE));
+        testTools.put(ToolType.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE));
     }
 
     static void showHarvestLevel(IProbeInfo probeInfo, IBlockState blockState, Block block) {
@@ -83,18 +82,18 @@ public class HarvestInfoTools {
             // The block doesn't have an explicitly-set harvest tool, so we're going to test our wooden tools against the block.
             float blockHardness = blockState.getBlockHardness(world, pos);
             if (blockHardness > 0f) {
-                for (Map.Entry<String, ItemStack> testToolEntry : testTools.entrySet()) {
+                for (Map.Entry<ToolType, ItemStack> testToolEntry : testTools.entrySet()) {
                     // loop through our test tools until we find a winner.
                     ItemStack testTool = testToolEntry.getValue();
 
                     if (testTool != null && testTool.getItem() instanceof ItemTool) {
                         ItemTool toolItem = (ItemTool) testTool.getItem();
                         // @todo 1.13
-//                        if (testTool.getDestroySpeed(blockState) >= toolItem.toolMaterial.getEfficiency()) {
-//                            // BINGO!
-//                            harvestTool = testToolEntry.getKey();
-//                            break;
-//                        }
+                        if (testTool.getDestroySpeed(blockState) >= toolItem.getTier().getEfficiency()) {
+                            // BINGO!
+                            harvestTool = testToolEntry.getKey();
+                            break;
+                        }
                     }
                 }
             }

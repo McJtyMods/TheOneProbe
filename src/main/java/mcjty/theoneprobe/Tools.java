@@ -25,6 +25,9 @@ public class Tools {
 
     public static String getModName(Entity entity) {
         EntityType<?> type = entity.getType();
+        if (type.getRegistryName() == null) {
+            return "Minecraft";
+        }
         return WordUtils.capitalize(type.getRegistryName().getNamespace());
     }
 

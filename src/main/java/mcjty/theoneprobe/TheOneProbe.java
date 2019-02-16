@@ -2,6 +2,7 @@ package mcjty.theoneprobe;
 
 import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.config.Config;
@@ -20,7 +21,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -35,6 +35,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Mod("theoneprobe")
 //
@@ -141,19 +143,10 @@ public class TheOneProbe {
     private void processIMC(final InterModProcessEvent event) {
         event.getIMCStream().forEach(message -> {
             if ("getTheOneProbe".equalsIgnoreCase(message.getMethod())) {
-                // @todo ?
+                Supplier<Function<ITheOneProbe, Void>> supplier = message.getMessageSupplier();
+                supplier.get().apply(theOneProbeImp);
             }
         });
-//        for (FMLInterModComms.IMCMessage message : event.getMessages()) {
-//            if (message.key.equalsIgnoreCase("getTheOneProbe")) {
-//                Optional<Function<ITheOneProbe, Void>> value = message.getFunctionValue(ITheOneProbe.class, Void.class);
-//                if (value.isPresent()) {
-//                    value.get().apply(theOneProbeImp);
-//                } else {
-//                    logger.warn("Some mod didn't return a valid result with getTheOneProbe!");
-//                }
-//            }
-//        }
     }
 
 
