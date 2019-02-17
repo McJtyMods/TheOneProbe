@@ -137,7 +137,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
         int redstonePower;
         if (block instanceof RedstoneWireBlock) {
-            redstonePower = blockState.get(RedstoneWireBlock.field_11432);
+            redstonePower = blockState.get(RedstoneWireBlock.POWER);
         } else {
             redstonePower = world.getEmittedRedstonePower(data.getPos(), data.getSideHit().getOpposite());
         }
@@ -150,14 +150,14 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showLeverSetting(IProbeInfo probeInfo, World world, BlockState blockState, IProbeHitData data, Block block) {
         if (block instanceof LeverBlock) {
-            Boolean powered = blockState.get(LeverBlock.field_11265);
+            Boolean powered = blockState.get(LeverBlock.POWERED);
             probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
                     .text(LABEL + "State: " + INFO + (powered ? "On" : "Off"));
         } else if (block instanceof ComparatorBlock) {
             ComparatorMode mode = blockState.get(ComparatorBlock.field_10789);
             probeInfo.text(LABEL + "Mode: " + INFO + mode.name());
         } else if (block instanceof RepeaterBlock) {
-            Boolean locked = blockState.get(RepeaterBlock.field_11452);
+            Boolean locked = blockState.get(RepeaterBlock.LOCKED);
             Integer delay = blockState.get(RepeaterBlock.field_11451);
             probeInfo.text(LABEL + "Delay: " + INFO + delay + " ticks");
             if (locked) {
@@ -267,8 +267,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         ItemStack pickBlock = data.getPickBlock();
 
-        if (block instanceof StoneInfestedBlock && mode != ProbeMode.DEBUG && !Tools.show(mode,config.getShowSilverfish())) {
-            block = ((StoneInfestedBlock) block).method_10271();
+        if (block instanceof InfestedBlock && mode != ProbeMode.DEBUG && !Tools.show(mode,config.getShowSilverfish())) {
+            block = ((InfestedBlock) block).getRegularBlock();
             pickBlock = new ItemStack(block, 1);
         }
 

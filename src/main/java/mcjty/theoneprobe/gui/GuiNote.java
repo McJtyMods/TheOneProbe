@@ -4,7 +4,7 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.ContainerGui;
+import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.TextComponent;
@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 import static mcjty.theoneprobe.config.Config.*;
 import static net.minecraft.text.TextFormat.*;
 
-public class GuiNote extends ContainerGui {
+public class GuiNote extends ContainerScreen {
     private static final int WIDTH = 256;
     private static final int HEIGHT = 160;
 

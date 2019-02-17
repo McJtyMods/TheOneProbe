@@ -1,16 +1,15 @@
 package mcjty.theoneprobe.network;
 
 import io.netty.buffer.Unpooled;
-import mcjty.theoneprobe.TheOneProbe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.networking.CustomPayloadPacketRegistry;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.packet.CustomPayloadClientPacket;
+import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.network.packet.CustomPayloadServerPacket;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.util.PacketByteBuf;
 
 public class NetworkInit implements ModInitializer {
@@ -21,12 +20,12 @@ public class NetworkInit implements ModInitializer {
         System.out.println("############ Set up networking #############");
 
         // Server side
-        CustomPayloadPacketRegistry.SERVER.register(PacketGetInfo.GET_INFO, new PacketGetInfo.Handler());
-        CustomPayloadPacketRegistry.SERVER.register(PacketGetEntityInfo.GET_ENTITY_INFO, new PacketGetEntityInfo.Handler());
+        ServerSidePacketRegistry.INSTANCE.register(PacketGetInfo.GET_INFO, new PacketGetInfo.Handler());
+        ServerSidePacketRegistry.INSTANCE.register(PacketGetEntityInfo.GET_ENTITY_INFO, new PacketGetEntityInfo.Handler());
 
         // Client side
-        CustomPayloadPacketRegistry.CLIENT.register(PacketReturnInfo.RETURN_INFO, new PacketReturnInfo.Handler());
-        CustomPayloadPacketRegistry.CLIENT.register(PacketReturnEntityInfo.RETURN_ENTITY_INFO, new PacketReturnEntityInfo.Handler());
+        ClientSidePacketRegistry.INSTANCE.register(PacketReturnInfo.RETURN_INFO, new PacketReturnInfo.Handler());
+        ClientSidePacketRegistry.INSTANCE.register(PacketReturnEntityInfo.RETURN_ENTITY_INFO, new PacketReturnEntityInfo.Handler());
 
     }
 
@@ -34,14 +33,14 @@ public class NetworkInit implements ModInitializer {
     public static void sendToServer(IPacket packet) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         packet.toBytes(buf);
-        MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(packet.getId(), buf));
+        MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadC2SPacket(packet.getId(), buf));
 
     }
 
     public static void sendToClient(IPacket packet, ServerPlayerEntity player) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         packet.toBytes(buf);
-        player.networkHandler.sendPacket(new CustomPayloadClientPacket(packet.getId(), buf));
+        player.networkHandler.sendPacket(new CustomPayloadS2CPacket(packet.getId(), buf));
 
     }
 }

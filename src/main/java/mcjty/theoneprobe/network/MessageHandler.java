@@ -1,11 +1,10 @@
 package mcjty.theoneprobe.network;
 
-import net.fabricmc.fabric.networking.PacketContext;
+import net.fabricmc.fabric.api.network.PacketConsumer;
+import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.util.PacketByteBuf;
 
-import java.util.function.BiConsumer;
-
-public abstract class MessageHandler<T extends IPacket> implements BiConsumer<PacketContext, PacketByteBuf> {
+public abstract class MessageHandler<T extends IPacket> implements PacketConsumer {
 
     abstract protected T createPacket();
 

@@ -8,14 +8,16 @@ import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import net.fabricmc.fabric.networking.PacketContext;
+import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.HitResult;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -96,8 +98,8 @@ public class PacketGetInfo implements IPacket {
         this.dim = dim;
         this.pos = pos;
         this.mode = mode;
-        this.sideHit = mouseOver.side;
-        this.hitVec = mouseOver.pos;
+        this.sideHit = mouseOver.getType() == HitResult.Type.BLOCK ? ((BlockHitResult)mouseOver).getSide() : null;
+        this.hitVec = mouseOver.getPos();
         this.pickBlock = pickBlock;
     }
 

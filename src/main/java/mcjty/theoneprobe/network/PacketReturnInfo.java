@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
-import net.fabricmc.fabric.networking.PacketContext;
+import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 

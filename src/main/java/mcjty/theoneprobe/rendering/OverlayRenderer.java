@@ -21,14 +21,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TextFormat;
-import net.minecraft.util.HitResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.FluidRayTraceMode;
+import net.minecraft.world.RayTraceContext;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
@@ -75,7 +76,7 @@ public class OverlayRenderer {
 
         HitResult mouseOver = MinecraftClient.getInstance().hitResult;
         if (mouseOver != null) {
-            if (mouseOver.type == HitResult.Type.ENTITY) {
+            if (mouseOver.getType() == HitResult.Type.ENTITY) {
                 GlStateManager.pushMatrix();
 
                 double scale = Config.tooltipScale;
@@ -102,12 +103,12 @@ public class OverlayRenderer {
         Vec3d end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
 
 //        mouseOver = entity.getEntityWorld().rayTrace(start, end, Config.showLiquids);
-        mouseOver = entity.getEntityWorld().rayTrace(start, end, FluidRayTraceMode.ALWAYS);
+        mouseOver = entity.getEntityWorld().rayTrace(new RayTraceContext(start, end, RayTraceContext.ShapeType.COLLIDER, RayTraceContext.FluidHandling.ANY, entity));
         if (mouseOver == null) {
             return;
         }
 
-        if (mouseOver.type == HitResult.Type.BLOCK) {
+        if (mouseOver.getType() == HitResult.Type.BLOCK) {
             GlStateManager.pushMatrix();
 
             double scale = Config.tooltipScale;
@@ -145,7 +146,11 @@ public class OverlayRenderer {
     }
 
     private static void renderHUDEntity(ProbeMode mode, HitResult mouseOver, double sw, double sh) {
-        Entity entity = mouseOver.entity;
+        if (mouseOver.getType() != HitResult.Type.ENTITY) {
+            return;
+        }
+        EntityHitResult hitResult = (EntityHitResult) mouseOver;
+        Entity entity = hitResult.getEntity();
         if (entity == null) {
             return;
         }
@@ -177,7 +182,7 @@ public class OverlayRenderer {
             } else if (Config.waitingForServerTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout) {
                 // It has been a while. Show some info on client that we are
                 // waiting for server information
-                ProbeInfo info = getWaitingEntityInfo(mode, mouseOver, entity, player);
+                ProbeInfo info = getWaitingEntityInfo(mode, (EntityHitResult) mouseOver, entity, player);
                 registerProbeInfo(uuid, info);
                 lastPair = Pair.of(time, info);
                 lastPairTime = time;
@@ -205,7 +210,11 @@ public class OverlayRenderer {
     }
 
     private static void renderHUDBlock(ProbeMode mode, HitResult mouseOver, double sw, double sh) {
-        BlockPos blockPos = mouseOver.getBlockPos();
+        if (mouseOver.getType() != HitResult.Type.BLOCK) {
+            return;
+        }
+        BlockHitResult blockResult = (BlockHitResult) mouseOver;
+        BlockPos blockPos = blockResult.getBlockPos();
         if (blockPos == null) {
             return;
         }
@@ -255,7 +264,7 @@ public class OverlayRenderer {
             } else if (Config.waitingForServerTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout) {
                 // It has been a while. Show some info on client that we are
                 // waiting for server information
-                ProbeInfo info = getWaitingInfo(mode, mouseOver, blockPos, player);
+                ProbeInfo info = getWaitingInfo(mode, (BlockHitResult) mouseOver, blockPos, player);
                 registerProbeInfo(dimension, blockPos, info);
                 lastPair = Pair.of(time, info);
                 lastPairTime = time;
@@ -279,14 +288,14 @@ public class OverlayRenderer {
     }
 
     // Information for when the server is laggy
-    private static ProbeInfo getWaitingInfo(ProbeMode mode, HitResult mouseOver, BlockPos blockPos, ClientPlayerEntity player) {
+    private static ProbeInfo getWaitingInfo(ProbeMode mode, BlockHitResult mouseOver, BlockPos blockPos, ClientPlayerEntity player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
 
         World world = player.getEntityWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickStack(world, blockPos, blockState);
-        IProbeHitData data = new ProbeHitData(blockPos, mouseOver.pos, mouseOver.side, pickBlock);
+        IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getPos(), mouseOver.getSide(), pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
         try {
@@ -300,9 +309,9 @@ public class OverlayRenderer {
         return probeInfo;
     }
 
-    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, ClientPlayerEntity player) {
+    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, EntityHitResult mouseOver, Entity entity, ClientPlayerEntity player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
-        IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.pos);
+        IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.getPos());
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
         try {
@@ -423,7 +432,7 @@ public class OverlayRenderer {
             RenderHelper.drawThickBeveledBox(x+offset, y+offset, x + w-1-offset, y + h-1-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
-        if (!(MinecraftClient.getInstance().currentGui != null && MinecraftClient.getInstance().currentGui.isPauseScreen())) {
+        if (!(MinecraftClient.getInstance().currentScreen != null && MinecraftClient.getInstance().currentScreen.isPauseScreen())) {
             RenderHelper.rot += .5f;
         }
 

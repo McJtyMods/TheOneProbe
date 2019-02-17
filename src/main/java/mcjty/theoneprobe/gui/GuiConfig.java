@@ -11,7 +11,7 @@ import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TextFormat;
 import net.minecraft.util.Identifier;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 
-public class GuiConfig extends Gui {
+public class GuiConfig extends Screen {
     private static final int WIDTH = 230;
     private static final int HEIGHT = 230;
 
@@ -61,6 +61,7 @@ public class GuiConfig extends Gui {
     public boolean isPauseScreen() {
         return false;
     }
+
 
     @Override
     protected void onInitialized() {
@@ -252,7 +253,7 @@ public class GuiConfig extends Gui {
         }
 
         // @todo fabric
-        if (!(MinecraftClient.getInstance().currentGui != null && MinecraftClient.getInstance().currentGui.isPauseScreen())) {
+        if (!(MinecraftClient.getInstance().currentScreen != null && MinecraftClient.getInstance().currentScreen.isPauseScreen())) {
             RenderHelper.rot += .5f;
         }
 

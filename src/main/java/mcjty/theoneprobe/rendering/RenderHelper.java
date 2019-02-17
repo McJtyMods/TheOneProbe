@@ -6,9 +6,9 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.FontRenderer;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GuiLighting;
@@ -131,8 +131,8 @@ public class RenderHelper {
             short short2 = 240;
             GuiLighting.enableForItems();
             GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
-            itemRender.renderItemAndGlowInGui(itm, x, y);
-            itemRender.renderItemOverlaysInGUIWithText(mc.fontRenderer, itm, x, y, txt);
+            itemRender.renderGuiItemIcon(itm, x, y);
+            itemRender.renderGuiItemOverlay(mc.textRenderer, itm, x, y, txt);
             GlStateManager.popMatrix();
             GlStateManager.disableRescaleNormal();
             GlStateManager.disableLighting();
@@ -271,7 +271,7 @@ public class RenderHelper {
      */
     public static void drawBeveledBox(int x1, int y1, int x2, int y2, int topleftcolor, int botrightcolor, int fillcolor) {
         if (fillcolor != -1) {
-            Gui.drawRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
+            Screen.drawRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
         }
         drawHorizontalLine(x1, y1, x2 - 1, topleftcolor);
         drawVerticalLine(x1, y1, y2 - 1, topleftcolor);
@@ -284,12 +284,12 @@ public class RenderHelper {
      */
     public static void drawThickBeveledBox(int x1, int y1, int x2, int y2, int thickness, int topleftcolor, int botrightcolor, int fillcolor) {
         if (fillcolor != -1) {
-            Gui.drawRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
+            Screen.drawRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
         }
-        Gui.drawRect(x1, y1, x2 - 1, y1 + thickness, topleftcolor);
-        Gui.drawRect(x1, y1, x1 + thickness, y2 - 1, topleftcolor);
-        Gui.drawRect(x2 - thickness, y1, x2, y2 - 1, botrightcolor);
-        Gui.drawRect(x1, y2 - thickness, x2, y2, botrightcolor);
+        Screen.drawRect(x1, y1, x2 - 1, y1 + thickness, topleftcolor);
+        Screen.drawRect(x1, y1, x1 + thickness, y2 - 1, topleftcolor);
+        Screen.drawRect(x2 - thickness, y1, x2, y2 - 1, botrightcolor);
+        Screen.drawRect(x1, y2 - thickness, x2, y2, botrightcolor);
     }
 
     /**
@@ -458,8 +458,8 @@ public class RenderHelper {
             GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
 
             try {
-                itemRender.renderItemAndGlowInGui(itm, x, y);
-                itemRendererOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
+                itemRender.renderGuiItemIcon(itm, x, y);
+                itemRendererOverlayIntoGUI(mc.textRenderer, itm, x, y, txt, txt.length() - 2);
             } catch (Exception e) {
                 ThrowableIdentity.registerThrowable(e);
                 rc = false; // Report error
@@ -475,7 +475,7 @@ public class RenderHelper {
     /**
      * Renders the stack size and/or damage bar for the given ItemStack.
      */
-    public static void itemRendererOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
+    public static void itemRendererOverlayIntoGUI(TextRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
                                                   int scaled) {
         if (!stack.isEmpty()) {
             if (stack.getAmount() != 1 || text != null) {
@@ -531,7 +531,7 @@ public class RenderHelper {
             }
 
             ClientPlayerEntity PlayerEntitysp = MinecraftClient.getInstance().player;
-            float f = PlayerEntitysp == null ? 0.0F : PlayerEntitysp.getItemCooldownManager().method_7905(stack.getItem(), MinecraftClient.getInstance().getTickDelta());
+            float f = PlayerEntitysp == null ? 0.0F : PlayerEntitysp.getItemCooldownManager().getCooldownProgress(stack.getItem(), MinecraftClient.getInstance().getTickDelta());
 
             if (f > 0.0F) {
                 GlStateManager.disableLighting();
@@ -574,8 +574,8 @@ public class RenderHelper {
         GlStateManager.disableLighting();
         GlStateManager.disableDepthTest();
         GlStateManager.disableBlend();
-        int width = mc.fontRenderer.getStringWidth(txt);
-        mc.fontRenderer.drawWithShadow(txt, x, y, 16777215);
+        int width = mc.textRenderer.getStringWidth(txt);
+        mc.textRenderer.drawWithShadow(txt, x, y, 16777215);
         GlStateManager.enableLighting();
         GlStateManager.enableDepthTest();
         // Fixes opaque cooldown overlay a bit lower

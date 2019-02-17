@@ -32,7 +32,7 @@ public class ElementEntityRender {
     }
 
     private static void renderEntity(IEntityStyle style, int x, int y, Entity entity) {
-        float height = entity.height;
+        float height = entity.getHeight();
         height = (float) ((height - 1) * .7 + 1);
         float s = style.getScale() * ((style.getHeight() * 14.0f / 25) / height);
 

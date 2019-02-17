@@ -7,13 +7,13 @@ import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import net.fabricmc.fabric.networking.PacketContext;
+import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.HitResult;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
@@ -73,7 +73,7 @@ public class PacketGetEntityInfo implements IPacket {
         this.dim = dim;
         this.uuid = entity.getUuid();
         this.mode = mode;
-        this.hitVec = mouseOver.pos;
+        this.hitVec = mouseOver.getPos();
     }
 
     public static class Handler extends MessageHandler<PacketGetEntityInfo> {
@@ -87,7 +87,7 @@ public class PacketGetEntityInfo implements IPacket {
         void handle(PacketContext context, PacketGetEntityInfo message) {
             ServerWorld world = context.getPlayer().getEntityWorld().getServer().getWorld(DimensionType.byRawId(message.dim));
             if (world != null) {
-                Entity entity = world.getEntityByUuid(message.uuid);
+                Entity entity = world.getEntity(message.uuid);
                 if (entity != null) {
                     ProbeInfo probeInfo = getProbeInfo(context.getPlayer(), message.mode, world, entity, message.hitVec);
                     NetworkInit.sendToClient(new PacketReturnEntityInfo(message.uuid, probeInfo), (ServerPlayerEntity) context.getPlayer());
