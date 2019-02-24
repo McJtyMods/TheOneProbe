@@ -87,7 +87,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.13.2-25.0.10'
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.50'
 
     //deobfCompile "mezz.jei:jei_${jei_version}"
     //deobfCompile "cofh:RedstoneFlux:${redstoneflux_version}"

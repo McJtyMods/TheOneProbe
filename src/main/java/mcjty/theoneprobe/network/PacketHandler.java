@@ -19,22 +19,22 @@ public class PacketHandler {
 
         // Server side
         INSTANCE.registerMessage(nextID(), PacketGetInfo.class,
-                (msg, buf) -> msg.toBytes(buf),
-                buf -> new PacketGetInfo(buf),
-                (msg, contextSupplier) -> msg.handle(contextSupplier));
+                PacketGetInfo::toBytes,
+                PacketGetInfo::new,
+                PacketGetInfo::handle);
         INSTANCE.registerMessage(nextID(), PacketGetEntityInfo.class,
-                (msg, buf) -> msg.toBytes(buf),
-                buf -> new PacketGetEntityInfo(buf),
-                (msg, contextSupplier) -> msg.handle(contextSupplier));
+                PacketGetEntityInfo::toBytes,
+                PacketGetEntityInfo::new,
+                PacketGetEntityInfo::handle);
 
         // Client side
         INSTANCE.registerMessage(nextID(), PacketReturnInfo.class,
-                (msg, buf) -> msg.toBytes(buf),
-                buf -> new PacketReturnInfo(buf),
-                (msg, contextSupplier) -> msg.handle(contextSupplier));
+                PacketReturnInfo::toBytes,
+                PacketReturnInfo::new,
+                PacketReturnInfo::handle);
         INSTANCE.registerMessage(nextID(), PacketReturnEntityInfo.class,
-                (msg, buf) -> msg.toBytes(buf),
-                buf -> new PacketReturnEntityInfo(buf),
-                (msg, contextSupplier) -> msg.handle(contextSupplier));
+                PacketReturnEntityInfo::toBytes,
+                PacketReturnEntityInfo::new,
+                PacketReturnEntityInfo::handle);
     }
 }

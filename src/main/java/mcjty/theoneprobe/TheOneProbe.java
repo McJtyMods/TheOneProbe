@@ -17,6 +17,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -24,7 +25,9 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
@@ -189,8 +192,16 @@ public class TheOneProbe {
         });
     }
 
+    // Commands:
+    // CommandDispatcher.register
+
     private void readMainConfig() {
-//        Configuration cfg = TheOneProbe.config;
+        ForgeConfigSpec config = new ForgeConfigSpec.Builder()
+                .build();
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, config);
+
+        //        Configuration cfg = TheOneProbe.config;
 //        try {
 //            cfg.load();
 //            cfg.addCustomCategoryComment(Config.CATEGORY_THEONEPROBE, "The One Probe configuration");

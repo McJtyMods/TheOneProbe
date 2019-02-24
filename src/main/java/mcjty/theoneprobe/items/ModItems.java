@@ -27,12 +27,9 @@ public class ModItems {
         probe = new Probe();
         creativeProbe = new CreativeProbe();
 
-        ArmorMaterial materialDiamondHelmet = ArmorMaterial.create("diamond_helmet_probe", TheOneProbe.MODID + ":probe_diamond",
-                33, new int[]{3, 6, 8, 3}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F, null);
-        ArmorMaterial materialGoldHelmet = ArmorMaterial.create("gold_helmet_probe", TheOneProbe.MODID + ":probe_gold",
-                7, new int[]{1, 3, 5, 2}, 25, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 0.0F, null);
-        ArmorMaterial materialIronHelmet = ArmorMaterial.create("iron_helmet_probe", TheOneProbe.MODID + ":probe_iron",
-                15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, null);
+        TopArmorMaterial materialDiamondHelmet = new TopArmorMaterial("diamond_helmet_probe", 33, new int[]{3, 6, 8, 3}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F, null);
+        TopArmorMaterial materialGoldHelmet = new TopArmorMaterial("gold_helmet_probe", 7, new int[]{1, 3, 5, 2}, 25, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 0.0F, null);
+        TopArmorMaterial materialIronHelmet = new TopArmorMaterial("iron_helmet_probe", 15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, null);
 
         diamondHelmetProbe = makeHelmet(materialDiamondHelmet, 3, "diamond_helmet_probe");
         goldHelmetProbe = makeHelmet(materialGoldHelmet, 4, "gold_helmet_probe");
@@ -45,7 +42,7 @@ public class ModItems {
         }
     }
 
-    private static Item makeHelmet(ArmorMaterial material, int renderIndex, String name) {
+    private static Item makeHelmet(TopArmorMaterial material, int renderIndex, String name) {
         Item item = new ItemArmor(material, EntityEquipmentSlot.HEAD, new Item.Properties()
             .group(TheOneProbe.tabProbe)) {
 
