@@ -17,7 +17,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -32,6 +31,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -83,6 +83,10 @@ public class TheOneProbe {
 
 
     public TheOneProbe() {
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
+
+
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
 
@@ -97,12 +101,13 @@ public class TheOneProbe {
 
         // Register ourselves for server, registry and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("theoneprobe-client.toml"));
+        Config.loadConfig(Config.SERVER_CONFIG, FMLPaths.CONFIGDIR.get().resolve("theoneprobe-server.toml"));
+
     }
 
     private void init(final FMLCommonSetupEvent event) {
-//        mainConfigDir = e.getModConfigurationDirectory();
-//        modConfigDir = new File(mainConfigDir.getPath());
-//        config = new Configuration(new File(modConfigDir, "theoneprobe.cfg"));
 
         tesla = ModList.get().isLoaded("tesla");
         if (tesla) {
@@ -116,7 +121,7 @@ public class TheOneProbe {
 
         baubles = ModList.get().isLoaded("baubles");
         if (baubles) {
-            if (Config.supportBaubles) {
+            if (Config.supportBaubles.get()) {
                 logger.log(Level.INFO, "The One Probe Detected Baubles: enabling support");
             } else {
                 logger.log(Level.INFO, "The One Probe Detected Baubles but support disabled in config");
@@ -135,7 +140,6 @@ public class TheOneProbe {
         TheOneProbe.theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
         TheOneProbe.theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
 
-        readMainConfig();
         PacketHandler.registerMessages("theoneprobe");
 
         configureProviders();
@@ -196,11 +200,6 @@ public class TheOneProbe {
     // CommandDispatcher.register
 
     private void readMainConfig() {
-        ForgeConfigSpec config = new ForgeConfigSpec.Builder()
-                .build();
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, config);
-
         //        Configuration cfg = TheOneProbe.config;
 //        try {
 //            cfg.load();

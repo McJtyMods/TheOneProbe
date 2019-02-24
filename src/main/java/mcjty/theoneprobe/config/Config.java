@@ -1,6 +1,8 @@
 package mcjty.theoneprobe.config;
 
 
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.IProbeConfig;
@@ -10,16 +12,34 @@ import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.StringUtils;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
+import static net.minecraftforge.fml.Logging.CORE;
 
+@Mod.EventBusSubscriber
 public class Config {
+
+    private static final Builder SERVER_BUILDER = new Builder();
+    private static final Builder CLIENT_BUILDER = new Builder();
+
+    public static final ForgeConfigSpec SERVER_CONFIG;
+    public static final ForgeConfigSpec CLIENT_CONFIG;
+
+
     public static String CATEGORY_THEONEPROBE = "theoneprobe";
     public static String CATEGORY_PROVIDERS = "providers";
     public static String CATEGORY_CLIENT = "client";
@@ -28,24 +48,24 @@ public class Config {
     public static final int PROBE_NEEDED = 1;
     public static final int PROBE_NEEDEDHARD = 2;
     public static final int PROBE_NEEDEDFOREXTENDED = 3;
-    public static int needsProbe = PROBE_NEEDEDFOREXTENDED;
+    public static IntValue needsProbe;
 
-    public static boolean extendedInMain = false;
+    public static BooleanValue extendedInMain;
     public static NumberFormat rfFormat = NumberFormat.COMPACT;
     public static NumberFormat tankFormat = NumberFormat.COMPACT;
     public static int timeout = 300;
     public static int waitingForServerTimeout = 2000;
     public static int maxPacketToServer = 20000;
 
-    public static boolean supportBaubles = true;
-    public static boolean spawnNote = true;
+    public static BooleanValue supportBaubles;
+    public static BooleanValue spawnNote;
 
     // Chest related settings
     public static int showSmallChestContentsWithoutSneaking = 0;
     public static int showItemDetailThresshold = 4;
-    public static String[] showContentsWithoutSneaking = { "storagedrawers:basicDrawers", "storagedrawersextra:extra_drawers" };
+    public static String[] showContentsWithoutSneaking = {"storagedrawers:basicDrawers", "storagedrawersextra:extra_drawers"};
     public static String[] dontShowContentsUnlessSneaking = {};
-    public static String[] dontSendNBT = { };
+    public static String[] dontSendNBT = {};
     private static Set<ResourceLocation> inventoriesToShow = null;
     private static Set<ResourceLocation> inventoriesToNotShow = null;
     private static Set<ResourceLocation> dontSendNBTSet = null;
@@ -99,9 +119,9 @@ public class Config {
         textStyleClasses = new HashMap<>(defaultTextStyleClasses);
     }
 
-    public static int loggingThrowableTimeout = 20000;
+    public static IntValue loggingThrowableTimeout;
 
-    public static boolean showCollarColor = true;
+    public static BooleanValue showCollarColor;
 
     private static IOverlayStyle defaultOverlayStyle;
     private static ProbeConfig defaultConfig = new ProbeConfig();
@@ -119,41 +139,77 @@ public class Config {
         return realConfig;
     }
 
-    public static void init(Configuration cfg) {
-        loggingThrowableTimeout = cfg.getInt("loggingThrowableTimeout", CATEGORY_THEONEPROBE, loggingThrowableTimeout, 1, 10000000, "How much time (ms) to wait before reporting an exception again");
-        needsProbe = cfg.getInt("needsProbe", CATEGORY_THEONEPROBE, needsProbe, 0, 3, "Is the probe needed to show the tooltip? 0 = no, 1 = yes, 2 = yes and clients cannot override, 3 = probe needed for extended info only");
-        extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_THEONEPROBE, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
-        supportBaubles = cfg.getBoolean("supportBaubles", CATEGORY_THEONEPROBE, supportBaubles, "If true there will be a bauble version of the probe if baubles is present");
-        spawnNote = cfg.getBoolean("spawnNote", CATEGORY_THEONEPROBE, spawnNote, "If true there will be a readme note for first-time players");
-        showCollarColor = cfg.getBoolean("showCollarColor", CATEGORY_THEONEPROBE, showCollarColor, "If true show the color of the collar of a wolf");
-        defaultConfig.setRFMode(cfg.getInt("showRF", CATEGORY_THEONEPROBE, defaultConfig.getRFMode(), 0, 2, "How to display RF: 0 = do not show, 1 = show in a bar, 2 = show as text"));
-        defaultConfig.setTankMode(cfg.getInt("showTank", CATEGORY_THEONEPROBE, defaultConfig.getTankMode(), 0, 2, "How to display tank contents: 0 = do not show, 1 = show in a bar, 2 = show as text"));
-        int fmt = cfg.getInt("rfFormat", CATEGORY_THEONEPROBE, rfFormat.ordinal(), 0, 2, "Format for displaying RF: 0 = full, 1 = compact, 2 = comma separated");
-        rfFormat = NumberFormat.values()[fmt];
-        fmt = cfg.getInt("tankFormat", CATEGORY_THEONEPROBE, tankFormat.ordinal(), 0, 2, "Format for displaying tank contents: 0 = full, 1 = compact, 2 = comma separated");
-        tankFormat = NumberFormat.values()[fmt];
-        timeout = cfg.getInt("timeout", CATEGORY_THEONEPROBE, timeout, 10, 100000, "The amount of milliseconds to wait before updating probe information from the server (this is a client-side config)");
-        waitingForServerTimeout = cfg.getInt("waitingForServerTimeout", CATEGORY_THEONEPROBE, waitingForServerTimeout, -1, 100000, "The amount of milliseconds to wait before showing a 'fetch from server' info on the client (if the server is slow to respond) (-1 to disable this feature)");
-        maxPacketToServer = cfg.getInt("maxPacketToServer", CATEGORY_THEONEPROBE, maxPacketToServer, -1, 32768, "The maximum packet size to send an itemstack from client to server. Reduce this if you have issues with network lag caused by TOP");
-        probeDistance = cfg.getFloat("probeDistance", CATEGORY_THEONEPROBE, probeDistance, 0.1f, 200f, "Distance at which the probe works");
-        initDefaultConfig(cfg);
 
-        showDebugInfo = cfg.getBoolean("showDebugInfo", CATEGORY_THEONEPROBE, showDebugInfo, "If true show debug info with creative probe");
-        compactEqualStacks = cfg.getBoolean("compactEqualStacks", CATEGORY_THEONEPROBE, compactEqualStacks, "If true equal stacks will be compacted in the chest contents overlay");
-        rfbarFilledColor = parseColor(cfg.getString("rfbarFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(rfbarFilledColor), "Color for the RF bar"));
-        rfbarAlternateFilledColor = parseColor(cfg.getString("rfbarAlternateFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(rfbarAlternateFilledColor), "Alternate color for the RF bar"));
-        rfbarBorderColor = parseColor(cfg.getString("rfbarBorderColor", CATEGORY_THEONEPROBE, Integer.toHexString(rfbarBorderColor), "Color for the RF bar border"));
-        tankbarFilledColor = parseColor(cfg.getString("tankbarFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(tankbarFilledColor), "Color for the tank bar"));
-        tankbarAlternateFilledColor = parseColor(cfg.getString("tankbarAlternateFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(tankbarAlternateFilledColor), "Alternate color for the tank bar"));
-        tankbarBorderColor = parseColor(cfg.getString("tankbarBorderColor", CATEGORY_THEONEPROBE, Integer.toHexString(tankbarBorderColor), "Color for the tank bar border"));
+    public static void loadConfig(ForgeConfigSpec spec, Path path) {
+        TheOneProbe.logger.debug("Loading config file {}", path);
 
-        showItemDetailThresshold = cfg.getInt("showItemDetailThresshold", CATEGORY_THEONEPROBE, showItemDetailThresshold, 0, 20, "If the number of items in an inventory is lower or equal then this number then more info is shown");
-        showSmallChestContentsWithoutSneaking = cfg.getInt("showSmallChestContentsWithoutSneaking", CATEGORY_THEONEPROBE, showSmallChestContentsWithoutSneaking, 0, 1000, "The maximum amount of slots (empty or not) to show without sneaking");
-        showContentsWithoutSneaking = cfg.getStringList("showContentsWithoutSneaking", CATEGORY_THEONEPROBE, showContentsWithoutSneaking, "A list of blocks for which we automatically show chest contents even if not sneaking");
-        dontShowContentsUnlessSneaking = cfg.getStringList("dontShowContentsUnlessSneaking", CATEGORY_THEONEPROBE, dontShowContentsUnlessSneaking, "A list of blocks for which we don't show chest contents automatically except if sneaking");
-        dontSendNBT = cfg.getStringList("dontSendNBT", CATEGORY_THEONEPROBE, dontSendNBT, "A list of blocks for which we don't send NBT over the network. This is mostly useful for blocks that have HUGE NBT in their pickblock (itemstack)");
+        final CommentedFileConfig configData = CommentedFileConfig.builder(path)
+                .sync()
+                .autosave()
+                .writingMode(WritingMode.REPLACE)
+                .build();
 
-        setupStyleConfig(cfg);
+        TheOneProbe.logger.debug("Built TOML config for {}", path.toString());
+        configData.load();
+        TheOneProbe.logger.debug("Loaded TOML config file {}", path.toString());
+        spec.setConfig(configData);
+    }
+
+
+    static {
+        SERVER_BUILDER.comment("General configuration");
+        CLIENT_BUILDER.comment("General configuration");
+        loggingThrowableTimeout = SERVER_BUILDER
+                .comment("How much time (ms) to wait before reporting an exception again")
+                .defineInRange("loggingThrowableTimeout", 20000, 1, 10000000);
+
+        needsProbe = SERVER_BUILDER
+                .comment("Is the probe needed to show the tooltip? 0 = no, 1 = yes, 2 = yes and clients cannot override, 3 = probe needed for extended info only")
+                .defineInRange("needsProbe", PROBE_NEEDEDFOREXTENDED, 0, 3);
+
+        extendedInMain = SERVER_BUILDER
+                .comment("If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)")
+                .define("extendedInMain", false);
+        supportBaubles = SERVER_BUILDER
+                .comment("If true there will be a bauble version of the probe if baubles is present")
+                .define("supportBaubles", true);
+        spawnNote = SERVER_BUILDER
+                .comment("If true there will be a readme note for first-time players")
+                .define("spawnNote", true);
+        showCollarColor = SERVER_BUILDER
+                .comment("If true show the color of the collar of a wolf")
+                .define("showCollarColor", true);
+
+//        defaultConfig.setRFMode(cfg.getInt("showRF", CATEGORY_THEONEPROBE, defaultConfig.getRFMode(), 0, 2, "How to display RF: 0 = do not show, 1 = show in a bar, 2 = show as text"));
+//        defaultConfig.setTankMode(cfg.getInt("showTank", CATEGORY_THEONEPROBE, defaultConfig.getTankMode(), 0, 2, "How to display tank contents: 0 = do not show, 1 = show in a bar, 2 = show as text"));
+//        int fmt = cfg.getInt("rfFormat", CATEGORY_THEONEPROBE, rfFormat.ordinal(), 0, 2, "Format for displaying RF: 0 = full, 1 = compact, 2 = comma separated");
+//        rfFormat = NumberFormat.values()[fmt];
+//        fmt = cfg.getInt("tankFormat", CATEGORY_THEONEPROBE, tankFormat.ordinal(), 0, 2, "Format for displaying tank contents: 0 = full, 1 = compact, 2 = comma separated");
+//        tankFormat = NumberFormat.values()[fmt];
+//        timeout = cfg.getInt("timeout", CATEGORY_THEONEPROBE, timeout, 10, 100000, "The amount of milliseconds to wait before updating probe information from the server (this is a client-side config)");
+//        waitingForServerTimeout = cfg.getInt("waitingForServerTimeout", CATEGORY_THEONEPROBE, waitingForServerTimeout, -1, 100000, "The amount of milliseconds to wait before showing a 'fetch from server' info on the client (if the server is slow to respond) (-1 to disable this feature)");
+//        maxPacketToServer = cfg.getInt("maxPacketToServer", CATEGORY_THEONEPROBE, maxPacketToServer, -1, 32768, "The maximum packet size to send an itemstack from client to server. Reduce this if you have issues with network lag caused by TOP");
+//        probeDistance = cfg.getFloat("probeDistance", CATEGORY_THEONEPROBE, probeDistance, 0.1f, 200f, "Distance at which the probe works");
+//        initDefaultConfig(cfg);
+//
+//        showDebugInfo = cfg.getBoolean("showDebugInfo", CATEGORY_THEONEPROBE, showDebugInfo, "If true show debug info with creative probe");
+//        compactEqualStacks = cfg.getBoolean("compactEqualStacks", CATEGORY_THEONEPROBE, compactEqualStacks, "If true equal stacks will be compacted in the chest contents overlay");
+//        rfbarFilledColor = parseColor(cfg.getString("rfbarFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(rfbarFilledColor), "Color for the RF bar"));
+//        rfbarAlternateFilledColor = parseColor(cfg.getString("rfbarAlternateFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(rfbarAlternateFilledColor), "Alternate color for the RF bar"));
+//        rfbarBorderColor = parseColor(cfg.getString("rfbarBorderColor", CATEGORY_THEONEPROBE, Integer.toHexString(rfbarBorderColor), "Color for the RF bar border"));
+//        tankbarFilledColor = parseColor(cfg.getString("tankbarFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(tankbarFilledColor), "Color for the tank bar"));
+//        tankbarAlternateFilledColor = parseColor(cfg.getString("tankbarAlternateFilledColor", CATEGORY_THEONEPROBE, Integer.toHexString(tankbarAlternateFilledColor), "Alternate color for the tank bar"));
+//        tankbarBorderColor = parseColor(cfg.getString("tankbarBorderColor", CATEGORY_THEONEPROBE, Integer.toHexString(tankbarBorderColor), "Color for the tank bar border"));
+//
+//        showItemDetailThresshold = cfg.getInt("showItemDetailThresshold", CATEGORY_THEONEPROBE, showItemDetailThresshold, 0, 20, "If the number of items in an inventory is lower or equal then this number then more info is shown");
+//        showSmallChestContentsWithoutSneaking = cfg.getInt("showSmallChestContentsWithoutSneaking", CATEGORY_THEONEPROBE, showSmallChestContentsWithoutSneaking, 0, 1000, "The maximum amount of slots (empty or not) to show without sneaking");
+//        showContentsWithoutSneaking = cfg.getStringList("showContentsWithoutSneaking", CATEGORY_THEONEPROBE, showContentsWithoutSneaking, "A list of blocks for which we automatically show chest contents even if not sneaking");
+//        dontShowContentsUnlessSneaking = cfg.getStringList("dontShowContentsUnlessSneaking", CATEGORY_THEONEPROBE, dontShowContentsUnlessSneaking, "A list of blocks for which we don't show chest contents automatically except if sneaking");
+//        dontSendNBT = cfg.getStringList("dontSendNBT", CATEGORY_THEONEPROBE, dontSendNBT, "A list of blocks for which we don't send NBT over the network. This is mostly useful for blocks that have HUGE NBT in their pickblock (itemstack)");
+//
+//        setupStyleConfig(cfg);
+        SERVER_CONFIG = SERVER_BUILDER.build();
+        CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
 
     private static void initDefaultConfig(Configuration cfg) {
@@ -173,14 +229,14 @@ public class Config {
         defaultConfig.showMobSpawnerSetting(IProbeConfig.ConfigMode.values()[cfg.getInt("showMobSpawnerSetting", CATEGORY_THEONEPROBE, defaultConfig.getShowMobSpawnerSetting().ordinal(), 0, 2, "Show mob spawner setting (0 = not, 1 = always, 2 = sneak)")]);
         defaultConfig.showAnimalOwnerSetting(IProbeConfig.ConfigMode.values()[cfg.getInt("showAnimalOwnerSetting", CATEGORY_THEONEPROBE, defaultConfig.getAnimalOwnerSetting().ordinal(), 0, 2, "Show animal owner setting (0 = not, 1 = always, 2 = sneak)")]);
         defaultConfig.showHorseStatSetting(IProbeConfig.ConfigMode.values()[cfg.getInt("showHorseStatSetting", CATEGORY_THEONEPROBE, defaultConfig.getHorseStatSetting().ordinal(), 0, 2, "Show horse stats setting (0 = not, 1 = always, 2 = sneak)")]);
-        defaultConfig.showSilverfish(IProbeConfig.ConfigMode.values()[cfg.getInt("showSilverfish",CATEGORY_THEONEPROBE,defaultConfig.getShowSilverfish().ordinal(),0,2,"Reveal monster eggs (0 = not, 1 = always, 2 = sneak)")]);
+        defaultConfig.showSilverfish(IProbeConfig.ConfigMode.values()[cfg.getInt("showSilverfish", CATEGORY_THEONEPROBE, defaultConfig.getShowSilverfish().ordinal(), 0, 2, "Reveal monster eggs (0 = not, 1 = always, 2 = sneak)")]);
 
     }
 
     public static void setProbeNeeded(int probeNeeded) {
         // @todo 1.13
 //        Configuration cfg = TheOneProbe.config;
-        Config.needsProbe = probeNeeded;
+//        Config.needsProbe = probeNeeded;
 //        cfg.get(CATEGORY_THEONEPROBE, "needsProbe", probeNeeded).set(probeNeeded);
 //        cfg.save();
     }
@@ -213,7 +269,8 @@ public class Config {
         }
         textStyleClasses = newformat;
 
-        extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
+        // @todo 1.13
+//        extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
     }
 
     public static void setTextStyle(TextStyleClass styleClass, String style) {
@@ -227,7 +284,7 @@ public class Config {
     public static void setExtendedInMain(boolean extendedInMain) {
         // @todo 1.13
 //        Configuration cfg = TheOneProbe.config;
-        Config.extendedInMain = extendedInMain;
+//        Config.extendedInMain = extendedInMain;
 //        cfg.get(CATEGORY_CLIENT, "extendedInMain", extendedInMain).set(extendedInMain);
 //        cfg.save();
     }
@@ -372,4 +429,14 @@ public class Config {
         return dontSendNBTSet;
     }
 
+    @SubscribeEvent
+    public static void onLoad(final ModConfig.Loading configEvent) {
+//        BLACKLIST.parseBlacklists();
+        TheOneProbe.logger.debug("Loaded {} config file {}", TheOneProbe.MODID, configEvent.getConfig().getFileName());
+    }
+
+    @SubscribeEvent
+    public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
+        TheOneProbe.logger.fatal(CORE, "{} config just got changed on the file system!", TheOneProbe.MODID);
+    }
 }

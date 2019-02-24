@@ -108,7 +108,7 @@ public class ClientProxy implements IProxy {
         if (hasItemInEitherHand(ModItems.creativeProbe)) {
             OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getPartialTicks());
         } else {
-            switch (Config.needsProbe) {
+            switch (Config.needsProbe.get()) {
                 case PROBE_NOTNEEDED:
                 case PROBE_NEEDEDFOREXTENDED:
                     OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
@@ -125,7 +125,7 @@ public class ClientProxy implements IProxy {
 
     private ProbeMode getModeForPlayer() {
         EntityPlayerSP player = Minecraft.getInstance().player;
-        if (Config.extendedInMain) {
+        if (Config.extendedInMain.get()) {
             if (hasItemInMainHand(ModItems.probe)) {
                 return ProbeMode.EXTENDED;
             }

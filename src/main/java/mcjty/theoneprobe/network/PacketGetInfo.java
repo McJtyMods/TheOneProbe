@@ -107,7 +107,7 @@ public class PacketGetInfo  {
     }
 
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, BlockPos blockPos, EnumFacing sideHit, Vec3d hitVec, ItemStack pickBlock) {
-        if (Config.needsProbe == PROBE_NEEDEDFOREXTENDED) {
+        if (Config.needsProbe.get() == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
             if (!ModItems.hasAProbeSomewhere(player)) {
                 // No probe anywhere, switch EXTENDED to NORMAL
@@ -115,7 +115,7 @@ public class PacketGetInfo  {
                     mode = ProbeMode.NORMAL;
                 }
             }
-        } else if (Config.needsProbe == PROBE_NEEDEDHARD && !ModItems.hasAProbeSomewhere(player)) {
+        } else if (Config.needsProbe.get() == PROBE_NEEDEDHARD && !ModItems.hasAProbeSomewhere(player)) {
             // The server says we need a probe but we don't have one in our hands
             return null;
         }

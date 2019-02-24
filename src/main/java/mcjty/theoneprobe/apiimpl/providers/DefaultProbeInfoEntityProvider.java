@@ -152,7 +152,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             }
         }
 
-        if (entity instanceof EntityWolf && Config.showCollarColor) {
+        if (entity instanceof EntityWolf && Config.showCollarColor.get()) {
             if (((EntityWolf) entity).isTamed()) {
                 EnumDyeColor collarColor = ((EntityWolf) entity).getCollarColor();
                 probeInfo.text(LABEL + "Collar: " + INFO + collarColor.getName());

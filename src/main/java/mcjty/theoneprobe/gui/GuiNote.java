@@ -51,7 +51,7 @@ public class GuiNote extends GuiScreen {
         RenderHelper.renderText(Minecraft.getInstance(), x, y, BOLD + "when you look at a block or an entity"); y += 10;
 
         y += 10;
-        switch (Config.needsProbe) {
+        switch (Config.needsProbe.get()) {
             case PROBE_NEEDED:
                 RenderHelper.renderText(Minecraft.getInstance(), x, y, "In this pack the probe is configured to be"); y += 10;
                 RenderHelper.renderText(Minecraft.getInstance(), x, y, "required in order to see the tooltip"); y += 10;
