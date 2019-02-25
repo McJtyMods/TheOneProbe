@@ -11,6 +11,7 @@ import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
+import mcjty.theoneprobe.items.IEnumConfig;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -47,8 +48,8 @@ public class Config {
     public static IntValue needsProbe;
 
     public static BooleanValue extendedInMain;
-    public static ConfigValue<NumberFormat> rfFormat;
-    public static ConfigValue<NumberFormat> tankFormat;
+    public static IEnumConfig<NumberFormat> rfFormat;
+    public static IEnumConfig<NumberFormat> tankFormat;
     public static IntValue timeout;                 // Client-side
     public static IntValue waitingForServerTimeout; // Client-side
     public static IntValue maxPacketToServer;       // Client-side
@@ -112,23 +113,23 @@ public class Config {
     public static int tankbarBorderColor = 0xff555555;
 
 
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowModName;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowHarvestLevel;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowCanBeHarvested;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowCropPercentage;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowChestContents;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowChestContentsDetailed;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowRedstone;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowMobHealth;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowMobGrowth;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowMobPotionEffects;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowLeverSetting;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowTankSetting;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowBrewStandSetting;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowMobSpawnerSetting;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowAnimalOwnerSetting;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowHorseStatSetting;
-    private static ConfigValue<IProbeConfig.ConfigMode> cfgshowSilverfish;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowModName;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowHarvestLevel;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowCanBeHarvested;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowCropPercentage;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowChestContents;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowChestContentsDetailed;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowRedstone;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowMobHealth;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowMobGrowth;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowMobPotionEffects;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowLeverSetting;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowTankSetting;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowBrewStandSetting;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowMobSpawnerSetting;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowAnimalOwnerSetting;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowHorseStatSetting;
+    private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowSilverfish;
 
 
 
@@ -216,12 +217,10 @@ public class Config {
         defaultTankMode = SERVER_BUILDER
                 .comment("How to display tank contents: 0 = do not show, 1 = show in a bar, 2 = show as text")
                 .defineInRange("showTank", DEFAULT_CONFIG.getRFMode(), 0, 2);
-        rfFormat = SERVER_BUILDER
-                .comment("Format for displaying RF")
-                .defineEnum("rfFormat", NumberFormat.COMPACT, NumberFormat.COMMAS, NumberFormat.COMPACT, NumberFormat.FULL, NumberFormat.NONE);
-        tankFormat = SERVER_BUILDER
-                .comment("Format for displaying tank contents")
-                .defineEnum("tankFormat", NumberFormat.COMPACT, NumberFormat.COMMAS, NumberFormat.COMPACT, NumberFormat.FULL, NumberFormat.NONE);
+        rfFormat = addEnumConfig(SERVER_BUILDER, "rfFormat", "Format for displaying RF",
+                NumberFormat.COMPACT, NumberFormat.COMMAS, NumberFormat.COMPACT, NumberFormat.FULL, NumberFormat.NONE);
+        tankFormat = addEnumConfig(SERVER_BUILDER, "tankFormat", "Format for displaying tank contents",
+                NumberFormat.COMPACT, NumberFormat.COMMAS, NumberFormat.COMPACT, NumberFormat.FULL, NumberFormat.NONE);
 
         timeout = CLIENT_BUILDER
                 .comment("The amount of milliseconds to wait before updating probe information from the server")
@@ -271,7 +270,7 @@ public class Config {
                 .defineInRange("showSmallChestContentsWithoutSneaking", 0, 0, 1000);
         showContentsWithoutSneaking = SERVER_BUILDER
                 .comment("A list of blocks for which we automatically show chest contents even if not sneaking")
-                .define("showContentsWithoutSneaking", Lists.<String>asList("storagedrawers:basicDrawers", new String[] { "storagedrawersextra:extra_drawers" }));
+                .define("showContentsWithoutSneaking", Lists.<String>asList("storagedrawers:basicdrawers", new String[] { "storagedrawersextra:extra_drawers" }));
         dontShowContentsUnlessSneaking = SERVER_BUILDER
                 .comment("A list of blocks for which we don't show chest contents automatically except if sneaking")
                 .define("dontShowContentsUnlessSneaking", Collections.emptyList());
@@ -286,10 +285,29 @@ public class Config {
         CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
 
-    private static ConfigValue<IProbeConfig.ConfigMode> addModeConfig(String path, String comment, IProbeConfig.ConfigMode def) {
-        return CLIENT_BUILDER
-                .comment(comment)
-                .defineEnum(path, def, IProbeConfig.ConfigMode.NORMAL, IProbeConfig.ConfigMode.EXTENDED, IProbeConfig.ConfigMode.NOT);
+    // @todo 1.13: this version doesn't work yet due to forge/toml error
+//    private static <T extends Enum<T>> IEnumConfig<T> addEnumConfig(Builder builder, String path, String comment,
+//                                                                    T def, T... values) {
+//        ConfigValue<T> configValue = builder.comment(comment).defineEnum(path, def, values);
+//        return () -> configValue.get();
+//    }
+    // @todo 1.13: temporary workaround
+    private static <T extends Enum<T>> IEnumConfig<T> addEnumConfig(Builder builder, String path, String comment,
+                                                                    T def, T... values) {
+        ConfigValue<String> configValue = builder.comment(comment).define(path, def.name());
+        return () -> {
+            String s = configValue.get();
+            for (T value : values) {
+                if (value.name().equals(s)) {
+                    return value;
+                }
+            }
+            return null;
+        };
+    }
+
+    private static IEnumConfig<IProbeConfig.ConfigMode> addModeConfig(String path, String comment, IProbeConfig.ConfigMode def) {
+        return addEnumConfig(CLIENT_BUILDER, path, comment, def, IProbeConfig.ConfigMode.NORMAL, IProbeConfig.ConfigMode.EXTENDED, IProbeConfig.ConfigMode.NOT);
     }
 
     private static void initDefaultConfig() {

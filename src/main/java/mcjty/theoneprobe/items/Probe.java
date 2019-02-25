@@ -26,9 +26,7 @@ public class Probe extends Item {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
         if (world.isRemote) {
-            // @todo 1.13
-//            player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
-//            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+            ProbeClient.displayProbeGui();
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
