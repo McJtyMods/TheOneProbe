@@ -196,26 +196,6 @@ public class TheOneProbe {
         });
     }
 
-    // Commands:
-    // CommandDispatcher.register
-
-    private void readMainConfig() {
-        //        Configuration cfg = TheOneProbe.config;
-//        try {
-//            cfg.load();
-//            cfg.addCustomCategoryComment(Config.CATEGORY_THEONEPROBE, "The One Probe configuration");
-//            cfg.addCustomCategoryComment(Config.CATEGORY_PROVIDERS, "Provider configuration");
-//            cfg.addCustomCategoryComment(Config.CATEGORY_CLIENT, "Client-side settings");
-//            Config.init(cfg);
-//        } catch (Exception e1) {
-//            TheOneProbe.logger.log(Level.ERROR, "Problem loading config file!", e1);
-//        } finally {
-//            if (TheOneProbe.config.hasChanged()) {
-//                TheOneProbe.config.save();
-//            }
-//        }
-    }
-
     private void configureProviders() {
         List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
         String[] defaultValues = new String[providers.size()];
