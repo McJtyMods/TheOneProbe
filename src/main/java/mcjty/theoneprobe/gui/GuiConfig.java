@@ -203,7 +203,7 @@ public class GuiConfig extends GuiScreen {
     private void renderElements(ProbeInfo probeInfo, IOverlayStyle style) {
 
         GlStateManager.pushMatrix();
-        GlStateManager.scaled(1/Config.tooltipScale, 1/Config.tooltipScale, 1/Config.tooltipScale);
+        GlStateManager.scaled(1/Config.tooltipScale.get(), 1/Config.tooltipScale.get(), 1/Config.tooltipScale.get());
 
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
@@ -241,7 +241,7 @@ public class GuiConfig extends GuiScreen {
         x += guiLeft;
         y += guiTop;
 
-        double factor = (Config.tooltipScale - 1) * 1.4 + 1;
+        double factor = (Config.tooltipScale.get() - 1) * 1.4 + 1;
         x *= factor;
         y *= factor;
 

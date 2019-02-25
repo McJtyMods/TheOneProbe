@@ -73,7 +73,7 @@ public class PacketGetInfo  {
 
         PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
         buffer.writeItemStack(pickBlock);
-        if (buffer.writerIndex() <= Config.maxPacketToServer) {
+        if (buffer.writerIndex() <= Config.maxPacketToServer.get()) {
             buf.writeBytes(buffer);
         } else {
             ItemStack copy = new ItemStack(pickBlock.getItem(), pickBlock.getCount());

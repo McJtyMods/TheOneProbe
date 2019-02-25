@@ -95,12 +95,12 @@ public class ClientProxy implements IProxy {
             return;
         }
 
-        if (Config.holdKeyToMakeVisible) {
+        if (Config.holdKeyToMakeVisible.get()) {
             if (!KeyBindings.toggleVisible.isKeyDown()) {
                 return;
             }
         } else {
-            if (!Config.isVisible) {
+            if (!Config.isVisible.get()) {
                 return;
             }
         }

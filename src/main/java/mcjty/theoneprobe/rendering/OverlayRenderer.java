@@ -70,14 +70,14 @@ public class OverlayRenderer {
     }
 
     public static void renderHUD(ProbeMode mode, float partialTicks) {
-        float dist = Config.probeDistance;
+        double dist = Config.probeDistance.get();
 
         RayTraceResult mouseOver = Minecraft.getInstance().objectMouseOver;
         if (mouseOver != null) {
             if (mouseOver.type == RayTraceResult.Type.ENTITY) {
                 GlStateManager.pushMatrix();
 
-                double scale = Config.tooltipScale;
+                double scale = Config.tooltipScale.get();
 
                 double sw = Minecraft.getInstance().mainWindow.getScaledWidth();
                 double sh = Minecraft.getInstance().mainWindow.getScaledHeight();
@@ -97,7 +97,7 @@ public class OverlayRenderer {
         Vec3d vec31 = entity.getLook(partialTicks);
         Vec3d end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
 
-        mouseOver = entity.getEntityWorld().rayTraceBlocks(start, end, Config.showLiquids ? RayTraceFluidMode.ALWAYS : RayTraceFluidMode.NEVER);
+        mouseOver = entity.getEntityWorld().rayTraceBlocks(start, end, Config.showLiquids.get() ? RayTraceFluidMode.ALWAYS : RayTraceFluidMode.NEVER);
         if (mouseOver == null) {
             return;
         }
@@ -105,7 +105,7 @@ public class OverlayRenderer {
         if (mouseOver.type == RayTraceResult.Type.BLOCK) {
             GlStateManager.pushMatrix();
 
-            double scale = Config.tooltipScale;
+            double scale = Config.tooltipScale.get();
 
             double sw = Minecraft.getInstance().mainWindow.getScaledWidth();
             double sh = Minecraft.getInstance().mainWindow.getScaledHeight();
@@ -174,10 +174,10 @@ public class OverlayRenderer {
                 requestEntityInfo(mode, mouseOver, entity, player);
             }
 
-            if (lastPair != null && time < lastPairTime + Config.timeout) {
+            if (lastPair != null && time < lastPairTime + Config.timeout.get()) {
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
                 lastRenderedTime = time;
-            } else if (Config.waitingForServerTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout) {
+            } else if (Config.waitingForServerTimeout.get() > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout.get()) {
                 // It has been a while. Show some info on client that we are
                 // waiting for server information
                 ProbeInfo info = getWaitingEntityInfo(mode, mouseOver, entity, player);
@@ -188,7 +188,7 @@ public class OverlayRenderer {
                 lastRenderedTime = time;
             }
         } else {
-            if (time > cacheEntry.getLeft() + Config.timeout) {
+            if (time > cacheEntry.getLeft() + Config.timeout.get()) {
                 // This info is slightly old. Update it
 
                 // To make sure we don't ask it too many times before the server got a chance to send the answer
@@ -220,12 +220,12 @@ public class OverlayRenderer {
         long time = System.currentTimeMillis();
 
         IElement damageElement = null;
-        if (Config.showBreakProgress > 0) {
+        if (Config.showBreakProgress.get() > 0) {
             // @todo 1.13
 //            float damage = Minecraft.getInstance().playerController.curBlockDamageMP;
             float damage = 0;
             if (damage > 0) {
-                if (Config.showBreakProgress == 2) {
+                if (Config.showBreakProgress.get() == 2) {
                     damageElement = new ElementText("" + TextFormatting.RED + "Progress " + (int) (damage * 100) + "%");
                 } else {
                     damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
@@ -252,10 +252,10 @@ public class OverlayRenderer {
                 requestBlockInfo(mode, mouseOver, blockPos, player);
             }
 
-            if (lastPair != null && time < lastPairTime + Config.timeout) {
+            if (lastPair != null && time < lastPairTime + Config.timeout.get()) {
                 renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
                 lastRenderedTime = time;
-            } else if (Config.waitingForServerTimeout > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout) {
+            } else if (Config.waitingForServerTimeout.get() > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout.get()) {
                 // It has been a while. Show some info on client that we are
                 // waiting for server information
                 ProbeInfo info = getWaitingInfo(mode, mouseOver, blockPos, player);
@@ -266,7 +266,7 @@ public class OverlayRenderer {
                 lastRenderedTime = time;
             }
         } else {
-            if (time > cacheEntry.getLeft() + Config.timeout) {
+            if (time > cacheEntry.getLeft() + Config.timeout.get()) {
                 // This info is slightly old. Update it
 
                 // To make sure we don't ask it too many times before the server got a chance to send the answer
@@ -338,7 +338,7 @@ public class OverlayRenderer {
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo) {
         GlStateManager.pushMatrix();
 
-        double scale = Config.tooltipScale;
+        double scale = Config.tooltipScale.get();
 
         double sw = Minecraft.getInstance().mainWindow.getScaledWidth();
         double sh = Minecraft.getInstance().mainWindow.getScaledHeight();
@@ -354,7 +354,7 @@ public class OverlayRenderer {
         Map<Pair<Integer,BlockPos>, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
         for (Map.Entry<Pair<Integer, BlockPos>, Pair<Long, ProbeInfo>> entry : cachedInfo.entrySet()) {
             long t = entry.getValue().getLeft();
-            if (time < t + Config.timeout + 1000) {
+            if (time < t + Config.timeout.get() + 1000) {
                 newCachedInfo.put(entry.getKey(), entry.getValue());
             }
         }
@@ -366,7 +366,7 @@ public class OverlayRenderer {
         Map<UUID, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
         for (Map.Entry<UUID, Pair<Long, ProbeInfo>> entry : cachedEntityInfo.entrySet()) {
             long t = entry.getValue().getLeft();
-            if (time < t + Config.timeout + 1000) {
+            if (time < t + Config.timeout.get() + 1000) {
                 newCachedInfo.put(entry.getKey(), entry.getValue());
             }
         }

@@ -31,13 +31,13 @@ public class ChestInfoTools {
     static void showChestInfo(ProbeMode mode, IProbeInfo probeInfo, World world, BlockPos pos, IProbeConfig config) {
         List<ItemStack> stacks = null;
         IProbeConfig.ConfigMode chestMode = config.getShowChestContents();
-        if (chestMode == IProbeConfig.ConfigMode.EXTENDED && (Config.showSmallChestContentsWithoutSneaking > 0 || !Config.getInventoriesToShow().isEmpty())) {
+        if (chestMode == IProbeConfig.ConfigMode.EXTENDED && (Config.showSmallChestContentsWithoutSneaking.get() > 0 || !Config.getInventoriesToShow().isEmpty())) {
             if (Config.getInventoriesToShow().contains(world.getBlockState(pos).getBlock().getRegistryName())) {
                 chestMode = IProbeConfig.ConfigMode.NORMAL;
-            } else if (Config.showSmallChestContentsWithoutSneaking > 0) {
+            } else if (Config.showSmallChestContentsWithoutSneaking.get() > 0) {
                 stacks = new ArrayList<>();
                 int slots = getChestContents(world, pos, stacks);
-                if (slots <= Config.showSmallChestContentsWithoutSneaking) {
+                if (slots <= Config.showSmallChestContentsWithoutSneaking.get()) {
                     chestMode = IProbeConfig.ConfigMode.NORMAL;
                 }
             }
@@ -54,7 +54,7 @@ public class ChestInfoTools {
             }
 
             if (!stacks.isEmpty()) {
-                boolean showDetailed = Tools.show(mode, config.getShowChestContentsDetailed()) && stacks.size() <= Config.showItemDetailThresshold;
+                boolean showDetailed = Tools.show(mode, config.getShowChestContentsDetailed()) && stacks.size() <= Config.showItemDetailThresshold.get();
                 showChestContents(probeInfo, world, pos, stacks, showDetailed);
             }
         }
@@ -112,7 +112,7 @@ public class ChestInfoTools {
     private static int getChestContents(World world, BlockPos pos, List<ItemStack> stacks) {
         TileEntity te = world.getTileEntity(pos);
 
-        Set<Item> foundItems = Config.compactEqualStacks ? new HashSet<>() : null;
+        Set<Item> foundItems = Config.compactEqualStacks.get() ? new HashSet<>() : null;
         AtomicInteger maxSlots = new AtomicInteger();
         try {
             if (te != null && te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {

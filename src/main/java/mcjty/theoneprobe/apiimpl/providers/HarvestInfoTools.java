@@ -113,7 +113,7 @@ public class HarvestInfoTools {
 //            harvestTool = StringUtils.capitalize(harvestTool);
         }
 
-        boolean v = Config.harvestStyleVanilla;
+        boolean v = Config.harvestStyleVanilla.get();
         int offs = v ? 16 : 0;
         int dim = v ? 13 : 16;
 
