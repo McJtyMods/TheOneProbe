@@ -10,6 +10,8 @@ import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ElementEntity implements IElement {
 
@@ -34,7 +36,11 @@ public class ElementEntity implements IElement {
             entityNBT = entity.serializeNBT();
             playerID = null;
         }
-        this.entityName = entity.getName().getFormattedText();
+        ResourceLocation registryName = entity.getType().getRegistryName();
+        if (registryName == null) {
+            registryName = ForgeRegistries.ENTITIES.getKey(entity.getType());
+        }
+        this.entityName = registryName.toString();
 //        this.entityName = EntityList.getEntityString(entity);
         this.style = style;
     }
