@@ -120,66 +120,65 @@ jar {
 //    }
 //}
 
-//task apiJar(type: Jar) {
-//    classifier = "api"
-//    from(sourceSets.main.output) {
-//        include "mcjty/theoneprobe/api/**"
-//    }
-//}
+task apiJar(type: Jar) {
+    classifier = "api"
+    from(sourceSets.main.output) {
+        include "mcjty/theoneprobe/api/**"
+    }
+}
 
-//artifacts {
-//    archives apiJar
-//}
+artifacts {
+    archives apiJar
+}
 
-//publishing {
-//    tasks.publish.dependsOn 'build'
-//    publications {
-//        mavenJava(MavenPublication) {
-//            from components.java
-//            artifact apiJar
-//            artifact sourceJar
-//        }
-//    }
-//
-//    repositories {
-//        if (project.hasProperty('mavendir')) {
-//            maven { url mavendir }
-//        } else {
-//            mavenLocal()
-//        }
-//    }
-//}
-
-String getChangelogText() {
-    def changelogFile = file('changelog.txt')
-    String str = ''
-    int lineCount = 0
-    boolean done = false
-    changelogFile.eachLine {
-        if (done || it == null) {
-            return
-        }
-        if (it.size() > 1) {
-            def temp = it
-            if (lineCount == 0) {
-                temp = "${modname} ${version}"
-                temp = "<h2>$temp</h2>"
-            } else if (it.startsWith('-')) {
-                temp = "&nbsp;&nbsp;&nbsp;$temp"
-                temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>");
-                temp = temp.replaceAll("#([0-9]+)\\b(?!<\\/a>)", "<a href=\"https://github.com/$github_project/issues/\$1\">\$0</a>");
-            } else {
-                temp = "<h4>$temp</h4>"
-            }
-            str += "$temp<br/>"
-            lineCount++
-            return
-        } else {
-            done = true
+publishing {
+    tasks.publish.dependsOn 'build'
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact apiJar
         }
     }
-    return str
+
+    repositories {
+        if (project.hasProperty('mavendir')) {
+            maven { url mavendir }
+        } else {
+            mavenLocal()
+        }
+    }
 }
+
+//String getChangelogText() {
+//    def changelogFile = file('changelog.txt')
+//    String str = ''
+//    int lineCount = 0
+//    boolean done = false
+//    changelogFile.eachLine {
+//        if (done || it == null) {
+//            return
+//        }
+//        if (it.size() > 1) {
+//            def temp = it
+//            if (lineCount == 0) {
+//                temp = "${modname} ${version}"
+//                temp = "<h2>$temp</h2>"
+//            } else if (it.startsWith('-')) {
+//                temp = "&nbsp;&nbsp;&nbsp;$temp"
+//                temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>");
+//                temp = temp.replaceAll("#([0-9]+)\\b(?!<\\/a>)", "<a href=\"https://github.com/$github_project/issues/\$1\">\$0</a>");
+//            } else {
+//                temp = "<h4>$temp</h4>"
+//            }
+//            str += "$temp<br/>"
+//            lineCount++
+//            return
+//        } else {
+//            done = true
+//        }
+//    }
+//    return str
+//}
 
 //tasks.curseforge.enabled = project.hasProperty('curseforge_key')
 
