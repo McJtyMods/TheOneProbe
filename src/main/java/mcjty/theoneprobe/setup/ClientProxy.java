@@ -1,9 +1,10 @@
-package mcjty.theoneprobe.proxy;
+package mcjty.theoneprobe.setup;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.commands.CommandTopCfg;
 import mcjty.theoneprobe.commands.CommandTopNeed;
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import mcjty.theoneprobe.gui.GuiConfig;
 import mcjty.theoneprobe.gui.GuiNote;
 import mcjty.theoneprobe.items.ModItems;
@@ -13,9 +14,11 @@ import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -27,62 +30,33 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static mcjty.theoneprobe.config.Config.*;
+import java.util.concurrent.Callable;
 
-public class ClientProxy extends CommonProxy {
+import static mcjty.theoneprobe.config.ConfigSetup.*;
+
+public class ClientProxy implements IProxy {
 
     @Override
     public void preInit(FMLPreInitializationEvent e) {
-        super.preInit(e);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
     public void init(FMLInitializationEvent e) {
-        super.init(e);
         ClientCommandHandler.instance.registerCommand(new CommandTopCfg());
         ClientCommandHandler.instance.registerCommand(new CommandTopNeed());
         MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
         KeyBindings.init();
     }
 
+    @Override
+    public void postInit(FMLPostInitializationEvent e) {
+    }
+
     @SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {
         ModItems.initClient();
     }
-
-//    @SubscribeEvent
-//    public void testCustomRenderer(RenderGameOverlayEvent event) {
-//        if (event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
-//            return;
-//        }
-//        IOverlayRenderer renderer = TheOneProbe.instance.theOneProbeImp.getOverlayRenderer();
-//        IOverlayStyle style = renderer.createDefaultStyle()
-//                .location(-1, -1, -1, 20)
-//                .borderThickness(0)
-//                .boxColor(0x00000000);
-//        IProbeInfo probeInfo = renderer.createProbeInfo();
-//        IProbeInfo vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
-//        vertical
-//                .horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_BOTTOMRIGHT))
-//                .item(new ItemStack(Items.DIAMOND))
-//                .text("Extra!")
-//                .item(new ItemStack(Items.EMERALD));
-//        vertical
-//                .horizontal(probeInfo.defaultLayoutStyle().borderColor(0xffffffff))
-//                .entity(EntityList.getEntityStringFromClass(EntityCaveSpider.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityCow.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityWither.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityChicken.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityEnderman.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityHorse.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityWolf.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityDragon.class))
-//                ;
-//        vertical
-//                .progress(8, 10, probeInfo.defaultProgressStyle().lifeBar(true));
-//        renderer.render(style, probeInfo);
-//    }
 
     public static boolean ignoreNextGuiClose = false;
 
@@ -104,12 +78,12 @@ public class ClientProxy extends CommonProxy {
             return;
         }
 
-        if (Config.holdKeyToMakeVisible) {
+        if (ConfigSetup.holdKeyToMakeVisible) {
             if (!KeyBindings.toggleVisible.isKeyDown()) {
                 return;
             }
         } else {
-            if (!Config.isVisible) {
+            if (!ConfigSetup.isVisible) {
                 return;
             }
         }
@@ -117,7 +91,7 @@ public class ClientProxy extends CommonProxy {
         if (hasItemInEitherHand(ModItems.creativeProbe)) {
             OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getPartialTicks());
         } else {
-            switch (Config.needsProbe) {
+            switch (ConfigSetup.needsProbe) {
                 case PROBE_NOTNEEDED:
                 case PROBE_NEEDEDFOREXTENDED:
                     OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
@@ -134,7 +108,7 @@ public class ClientProxy extends CommonProxy {
 
     private ProbeMode getModeForPlayer() {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
-        if (Config.extendedInMain) {
+        if (ConfigSetup.extendedInMain) {
             if (hasItemInMainHand(ModItems.probe)) {
                 return ProbeMode.EXTENDED;
             }
@@ -155,9 +129,23 @@ public class ClientProxy extends CommonProxy {
         return mainHeldItem != null && mainHeldItem.getItem() == item;
     }
 
+    @Override
+    public World getClientWorld() {
+        return Minecraft.getMinecraft().world;
+    }
 
     @Override
-    public void postInit(FMLPostInitializationEvent e) {
-        super.postInit(e);
+    public EntityPlayer getClientPlayer() {
+        return Minecraft.getMinecraft().player;
+    }
+
+    @Override
+    public <V> ListenableFuture<V> addScheduledTaskClient(Callable<V> callableToSchedule) {
+        return Minecraft.getMinecraft().addScheduledTask(callableToSchedule);
+    }
+
+    @Override
+    public ListenableFuture<Object> addScheduledTaskClient(Runnable runnableToSchedule) {
+        return Minecraft.getMinecraft().addScheduledTask(runnableToSchedule);
     }
 }

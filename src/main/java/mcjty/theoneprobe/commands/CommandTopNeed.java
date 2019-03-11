@@ -1,8 +1,8 @@
 package mcjty.theoneprobe.commands;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.proxy.ClientProxy;
-import mcjty.theoneprobe.proxy.GuiProxy;
+import mcjty.theoneprobe.setup.ClientProxy;
+import mcjty.theoneprobe.setup.GuiProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.ICommand;

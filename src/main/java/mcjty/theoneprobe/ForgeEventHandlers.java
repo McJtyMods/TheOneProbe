@@ -1,10 +1,11 @@
 package mcjty.theoneprobe;
 
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.playerdata.PlayerProperties;
 import mcjty.theoneprobe.playerdata.PropertiesDispatcher;
+import mcjty.theoneprobe.setup.ModSetup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -31,18 +32,18 @@ public class ForgeEventHandlers {
         event.getRegistry().register(ModItems.goldHelmetProbe);
         event.getRegistry().register(ModItems.ironHelmetProbe);
 
-        if (TheOneProbe.baubles) {
+        if (ModSetup.baubles) {
             event.getRegistry().register(ModItems.probeGoggles);
         }
     }
 
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        Config.setupStyleConfig(TheOneProbe.config);
-        Config.updateDefaultOverlayStyle();
+        ConfigSetup.setupStyleConfig(ConfigSetup.mainConfig);
+        ConfigSetup.updateDefaultOverlayStyle();
 
-        if (TheOneProbe.config.hasChanged()) {
-            TheOneProbe.config.save();
+        if (ConfigSetup.mainConfig.hasChanged()) {
+            ConfigSetup.mainConfig.save();
         }
     }
 
@@ -69,7 +70,7 @@ public class ForgeEventHandlers {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
-        if (Config.spawnNote) {
+        if (ConfigSetup.spawnNote) {
             PlayerGotNote note = PlayerProperties.getPlayerGotNote(event.player);
             if (!note.isPlayerGotNote()) {
                 boolean success = event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.probeNote));

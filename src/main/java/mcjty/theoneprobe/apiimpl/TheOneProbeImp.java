@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl;
 
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.*;
@@ -173,7 +173,7 @@ public class TheOneProbeImp implements ITheOneProbe {
 
     @Override
     public IProbeConfig createProbeConfig() {
-        return Config.getDefaultConfig().lazyCopy();
+        return ConfigSetup.getDefaultConfig().lazyCopy();
     }
 
     @Override

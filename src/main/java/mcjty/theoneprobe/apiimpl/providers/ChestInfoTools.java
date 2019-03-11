@@ -7,7 +7,7 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,18 +31,18 @@ public class ChestInfoTools {
     static void showChestInfo(ProbeMode mode, IProbeInfo probeInfo, World world, BlockPos pos, IProbeConfig config) {
         List<ItemStack> stacks = null;
         IProbeConfig.ConfigMode chestMode = config.getShowChestContents();
-        if (chestMode == IProbeConfig.ConfigMode.EXTENDED && (Config.showSmallChestContentsWithoutSneaking > 0 || !Config.getInventoriesToShow().isEmpty())) {
-            if (Config.getInventoriesToShow().contains(world.getBlockState(pos).getBlock().getRegistryName())) {
+        if (chestMode == IProbeConfig.ConfigMode.EXTENDED && (ConfigSetup.showSmallChestContentsWithoutSneaking > 0 || !ConfigSetup.getInventoriesToShow().isEmpty())) {
+            if (ConfigSetup.getInventoriesToShow().contains(world.getBlockState(pos).getBlock().getRegistryName())) {
                 chestMode = IProbeConfig.ConfigMode.NORMAL;
-            } else if (Config.showSmallChestContentsWithoutSneaking > 0) {
+            } else if (ConfigSetup.showSmallChestContentsWithoutSneaking > 0) {
                 stacks = new ArrayList<>();
                 int slots = getChestContents(world, pos, stacks);
-                if (slots <= Config.showSmallChestContentsWithoutSneaking) {
+                if (slots <= ConfigSetup.showSmallChestContentsWithoutSneaking) {
                     chestMode = IProbeConfig.ConfigMode.NORMAL;
                 }
             }
-        } else if (chestMode == IProbeConfig.ConfigMode.NORMAL && !Config.getInventoriesToNotShow().isEmpty()) {
-            if (Config.getInventoriesToNotShow().contains(world.getBlockState(pos).getBlock().getRegistryName())) {
+        } else if (chestMode == IProbeConfig.ConfigMode.NORMAL && !ConfigSetup.getInventoriesToNotShow().isEmpty()) {
+            if (ConfigSetup.getInventoriesToNotShow().contains(world.getBlockState(pos).getBlock().getRegistryName())) {
                 chestMode = IProbeConfig.ConfigMode.EXTENDED;
             }
         }
@@ -54,7 +54,7 @@ public class ChestInfoTools {
             }
 
             if (!stacks.isEmpty()) {
-                boolean showDetailed = Tools.show(mode, config.getShowChestContentsDetailed()) && stacks.size() <= Config.showItemDetailThresshold;
+                boolean showDetailed = Tools.show(mode, config.getShowChestContentsDetailed()) && stacks.size() <= ConfigSetup.showItemDetailThresshold;
                 showChestContents(probeInfo, world, pos, stacks, showDetailed);
             }
         }
@@ -86,7 +86,7 @@ public class ChestInfoTools {
         int rows = 0;
         int idx = 0;
 
-        vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(Config.chestContentsBorderColor).spacing(0));
+        vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(ConfigSetup.chestContentsBorderColor).spacing(0));
 
         if (detailed) {
             for (ItemStack stackInSlot : stacks) {
@@ -112,7 +112,7 @@ public class ChestInfoTools {
     private static int getChestContents(World world, BlockPos pos, List<ItemStack> stacks) {
         TileEntity te = world.getTileEntity(pos);
 
-        Set<Item> foundItems = Config.compactEqualStacks ? new HashSet<>() : null;
+        Set<Item> foundItems = ConfigSetup.compactEqualStacks ? new HashSet<>() : null;
         int maxSlots = 0;
         try {
             if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {

@@ -6,7 +6,7 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,8 +28,8 @@ import java.util.List;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
-import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
-import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
+import static mcjty.theoneprobe.config.ConfigSetup.PROBE_NEEDEDFOREXTENDED;
+import static mcjty.theoneprobe.config.ConfigSetup.PROBE_NEEDEDHARD;
 
 public class PacketGetInfo implements IMessage {
 
@@ -76,7 +76,7 @@ public class PacketGetInfo implements IMessage {
 
         ByteBuf buffer = Unpooled.buffer();
         ByteBufUtils.writeItemStack(buffer, pickBlock);
-        if (buffer.writerIndex() <= Config.maxPacketToServer) {
+        if (buffer.writerIndex() <= ConfigSetup.maxPacketToServer) {
             buf.writeBytes(buffer);
         } else {
             ItemStack copy = new ItemStack(pickBlock.getItem(), pickBlock.getCount(), pickBlock.getMetadata());
@@ -114,7 +114,7 @@ public class PacketGetInfo implements IMessage {
     }
 
     private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, BlockPos blockPos, EnumFacing sideHit, Vec3d hitVec, ItemStack pickBlock) {
-        if (Config.needsProbe == PROBE_NEEDEDFOREXTENDED) {
+        if (ConfigSetup.needsProbe == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
             if (!ModItems.hasAProbeSomewhere(player)) {
                 // No probe anywhere, switch EXTENDED to NORMAL
@@ -122,7 +122,7 @@ public class PacketGetInfo implements IMessage {
                     mode = ProbeMode.NORMAL;
                 }
             }
-        } else if (Config.needsProbe == PROBE_NEEDEDHARD && !ModItems.hasAProbeSomewhere(player)) {
+        } else if (ConfigSetup.needsProbe == PROBE_NEEDEDHARD && !ModItems.hasAProbeSomewhere(player)) {
             // The server says we need a probe but we don't have one in our hands
             return null;
         }
@@ -136,7 +136,7 @@ public class PacketGetInfo implements IMessage {
         for (IProbeConfigProvider configProvider : configProviders) {
             configProvider.getProbeConfig(probeConfig, player, world, state, data);
         }
-        Config.setRealConfig(probeConfig);
+        ConfigSetup.setRealConfig(probeConfig);
 
         List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
         for (IProbeInfoProvider provider : providers) {

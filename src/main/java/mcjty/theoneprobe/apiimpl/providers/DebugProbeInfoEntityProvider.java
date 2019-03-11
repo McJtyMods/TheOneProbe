@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeHitEntityData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -25,7 +25,7 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
 
     @Override
     public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) {
-        if (mode == ProbeMode.DEBUG && Config.showDebugInfo) {
+        if (mode == ProbeMode.DEBUG && ConfigSetup.showDebugInfo) {
             IProbeInfo vertical = null;
             if (entity instanceof EntityLivingBase) {
                 vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2));

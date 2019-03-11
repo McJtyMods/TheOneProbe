@@ -8,11 +8,14 @@ import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
+import mcjty.theoneprobe.setup.ModSetup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,7 +23,10 @@ import java.util.Set;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 
-public class Config {
+public class ConfigSetup {
+
+    public static Configuration mainConfig;
+
     public static String CATEGORY_THEONEPROBE = "theoneprobe";
     public static String CATEGORY_PROVIDERS = "providers";
     public static String CATEGORY_CLIENT = "client";
@@ -47,6 +53,7 @@ public class Config {
     public static String[] showContentsWithoutSneaking = { "storagedrawers:basicDrawers", "storagedrawersextra:extra_drawers" };
     public static String[] dontShowContentsUnlessSneaking = {};
     public static String[] dontSendNBT = { };
+
     private static Set<ResourceLocation> inventoriesToShow = null;
     private static Set<ResourceLocation> inventoriesToNotShow = null;
     private static Set<ResourceLocation> dontSendNBTSet = null;
@@ -179,8 +186,8 @@ public class Config {
     }
 
     public static void setProbeNeeded(int probeNeeded) {
-        Configuration cfg = TheOneProbe.config;
-        Config.needsProbe = probeNeeded;
+        Configuration cfg = mainConfig;
+        ConfigSetup.needsProbe = probeNeeded;
         cfg.get(CATEGORY_THEONEPROBE, "needsProbe", probeNeeded).set(probeNeeded);
         cfg.save();
     }
@@ -217,46 +224,46 @@ public class Config {
     }
 
     public static void setTextStyle(TextStyleClass styleClass, String style) {
-        Configuration cfg = TheOneProbe.config;
-        Config.textStyleClasses.put(styleClass, style);
+        Configuration cfg = mainConfig;
+        ConfigSetup.textStyleClasses.put(styleClass, style);
         cfg.get(CATEGORY_CLIENT, "textStyle" + styleClass.getReadableName(), style).set(style);
         cfg.save();
     }
 
     public static void setExtendedInMain(boolean extendedInMain) {
-        Configuration cfg = TheOneProbe.config;
-        Config.extendedInMain = extendedInMain;
+        Configuration cfg = mainConfig;
+        ConfigSetup.extendedInMain = extendedInMain;
         cfg.get(CATEGORY_CLIENT, "extendedInMain", extendedInMain).set(extendedInMain);
         cfg.save();
     }
 
     public static void setLiquids(boolean liquids) {
-        Configuration cfg = TheOneProbe.config;
-        Config.showLiquids = liquids;
+        Configuration cfg = mainConfig;
+        ConfigSetup.showLiquids = liquids;
         cfg.get(CATEGORY_CLIENT, "showLiquids", showLiquids).set(liquids);
         cfg.save();
     }
 
     public static void setVisible(boolean visible) {
-        Configuration cfg = TheOneProbe.config;
-        Config.isVisible = visible;
+        Configuration cfg = mainConfig;
+        ConfigSetup.isVisible = visible;
         cfg.get(CATEGORY_CLIENT, "isVisible", isVisible).set(visible);
         cfg.save();
     }
 
     public static void setCompactEqualStacks(boolean compact) {
-        Configuration cfg = TheOneProbe.config;
-        Config.compactEqualStacks = compact;
+        Configuration cfg = mainConfig;
+        ConfigSetup.compactEqualStacks = compact;
         cfg.get(CATEGORY_CLIENT, "compactEqualStacks", compactEqualStacks).set(compact);
         cfg.save();
     }
 
     public static void setPos(int leftx, int topy, int rightx, int bottomy) {
-        Configuration cfg = TheOneProbe.config;
-        Config.leftX = leftx;
-        Config.topY = topy;
-        Config.rightX = rightx;
-        Config.bottomY = bottomy;
+        Configuration cfg = mainConfig;
+        ConfigSetup.leftX = leftx;
+        ConfigSetup.topY = topy;
+        ConfigSetup.rightX = rightx;
+        ConfigSetup.bottomY = bottomy;
         cfg.get(CATEGORY_CLIENT, "boxLeftX", leftx).set(leftx);
         cfg.get(CATEGORY_CLIENT, "boxRightX", rightx).set(rightx);
         cfg.get(CATEGORY_CLIENT, "boxTopY", topy).set(topy);
@@ -266,7 +273,7 @@ public class Config {
     }
 
     public static void setScale(float scale) {
-        Configuration cfg = TheOneProbe.config;
+        Configuration cfg = mainConfig;
         tooltipScale = scale;
         cfg.get(CATEGORY_CLIENT, "tooltipScale", tooltipScale).set(tooltipScale);
         cfg.save();
@@ -274,7 +281,7 @@ public class Config {
     }
 
     public static void setBoxStyle(int thickness, int borderColor, int fillcolor, int offset) {
-        Configuration cfg = TheOneProbe.config;
+        Configuration cfg = mainConfig;
         boxThickness = thickness;
         boxBorderColor = borderColor;
         boxFillColor = fillcolor;
@@ -364,4 +371,17 @@ public class Config {
         return dontSendNBTSet;
     }
 
+    public static void init() {
+        mainConfig = new Configuration(new File(ModSetup.modConfigDir.getPath(), "theoneprobe.cfg"));
+        Configuration cfg = mainConfig;
+        try {
+            cfg.load();
+            cfg.addCustomCategoryComment(CATEGORY_THEONEPROBE, "The One Probe configuration");
+            cfg.addCustomCategoryComment(CATEGORY_PROVIDERS, "Provider configuration");
+            cfg.addCustomCategoryComment(CATEGORY_CLIENT, "Client-side settings");
+            init(cfg);
+        } catch (Exception e1) {
+            TheOneProbe.setup.getLogger().log(Level.ERROR, "Problem loading config file!", e1);
+        }
+    }
 }

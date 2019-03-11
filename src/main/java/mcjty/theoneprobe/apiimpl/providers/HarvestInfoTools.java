@@ -5,7 +5,7 @@ import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IIconStyle;
 import mcjty.theoneprobe.api.ILayoutStyle;
 import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -112,7 +112,7 @@ public class HarvestInfoTools {
             harvestTool = StringUtils.capitalize(harvestTool);
         }
 
-        boolean v = Config.harvestStyleVanilla;
+        boolean v = ConfigSetup.harvestStyleVanilla;
         int offs = v ? 16 : 0;
         int dim = v ? 13 : 16;
 

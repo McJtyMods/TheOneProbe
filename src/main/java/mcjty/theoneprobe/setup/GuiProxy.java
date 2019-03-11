@@ -1,4 +1,4 @@
-package mcjty.theoneprobe.proxy;
+package mcjty.theoneprobe.setup;
 
 import mcjty.theoneprobe.gui.GuiConfig;
 import net.minecraft.entity.player.EntityPlayer;

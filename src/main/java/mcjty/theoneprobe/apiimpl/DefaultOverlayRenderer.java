@@ -5,14 +5,14 @@ import mcjty.theoneprobe.api.IOverlayRenderer;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 
 public class DefaultOverlayRenderer implements IOverlayRenderer {
 
     @Override
     public IOverlayStyle createDefaultStyle() {
-        return ((DefaultOverlayStyle)Config.getDefaultOverlayStyle()).copy();
+        return ((DefaultOverlayStyle) ConfigSetup.getDefaultOverlayStyle()).copy();
     }
 
     @Override

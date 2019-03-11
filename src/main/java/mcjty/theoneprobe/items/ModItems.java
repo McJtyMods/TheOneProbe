@@ -2,6 +2,7 @@ package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
+import mcjty.theoneprobe.setup.ModSetup;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +48,7 @@ public class ModItems {
 
         probeNote = new ProbeNote();
 
-        if (TheOneProbe.baubles) {
+        if (ModSetup.baubles) {
             probeGoggles = BaubleTools.initProbeGoggle();
         }
     }
@@ -87,7 +88,7 @@ public class ModItems {
 
         probeNote.initModel();
 
-        if (TheOneProbe.baubles) {
+        if (ModSetup.baubles) {
             BaubleTools.initProbeModel(probeGoggles);
         }
     }
@@ -132,7 +133,7 @@ public class ModItems {
     }
 
     private static boolean hasProbeInBauble(EntityPlayer player) {
-        if (TheOneProbe.baubles) {
+        if (ModSetup.baubles) {
             return BaubleTools.hasProbeGoggle(player);
         } else {
             return false;

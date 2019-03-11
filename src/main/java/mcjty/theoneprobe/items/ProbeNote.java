@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.proxy.GuiProxy;
+import mcjty.theoneprobe.setup.GuiProxy;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

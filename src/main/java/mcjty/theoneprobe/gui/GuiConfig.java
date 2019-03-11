@@ -5,7 +5,7 @@ import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -102,39 +102,39 @@ public class GuiConfig extends GuiScreen {
 
         RenderHelper.renderText(Minecraft.getMinecraft(), x, y, TextFormatting.GOLD + "Scale:");
         y += 12;
-        addButton(x+10, y, 30, 14, "--", () -> { Config.setScale(1.2f);}); x += 36;
-        addButton(x+10, y, 30, 14, "-", () -> { Config.setScale(1.1f);}); x += 36;
-        addButton(x+10, y, 30, 14, "0", () -> { Config.setScale(1f);}); x += 36;
-        addButton(x+10, y, 30, 14, "+", () -> { Config.setScale(0.9f);}); x += 36;
-        addButton(x+10, y, 30, 14, "++", () -> { Config.setScale(0.8f);}); x += 36;
+        addButton(x+10, y, 30, 14, "--", () -> { ConfigSetup.setScale(1.2f);}); x += 36;
+        addButton(x+10, y, 30, 14, "-", () -> { ConfigSetup.setScale(1.1f);}); x += 36;
+        addButton(x+10, y, 30, 14, "0", () -> { ConfigSetup.setScale(1f);}); x += 36;
+        addButton(x+10, y, 30, 14, "+", () -> { ConfigSetup.setScale(0.9f);}); x += 36;
+        addButton(x+10, y, 30, 14, "++", () -> { ConfigSetup.setScale(0.8f);}); x += 36;
 
         int margin = 90;
         hitboxes.add(new HitBox(0, 0, margin, margin, () -> {
-            Config.setPos(5, 5, -1, -1);
+            ConfigSetup.setPos(5, 5, -1, -1);
         }));
         hitboxes.add(new HitBox(margin, 0, WIDTH - margin, margin, () -> {
-            Config.setPos(-1, 5, -1, -1);
+            ConfigSetup.setPos(-1, 5, -1, -1);
         }));
         hitboxes.add(new HitBox(WIDTH - margin, 0, WIDTH, margin, () -> {
-            Config.setPos(-1, 5, 5, -1);
+            ConfigSetup.setPos(-1, 5, 5, -1);
         }));
         hitboxes.add(new HitBox(0, margin, margin, HEIGHT - margin, () -> {
-            Config.setPos(5, -1, -1, -1);
+            ConfigSetup.setPos(5, -1, -1, -1);
         }));
         hitboxes.add(new HitBox(margin, margin, WIDTH - margin, HEIGHT - margin, () -> {
-            Config.setPos(-1, -1, -1, -1);
+            ConfigSetup.setPos(-1, -1, -1, -1);
         }));
         hitboxes.add(new HitBox(WIDTH - margin, margin, WIDTH, HEIGHT - margin, () -> {
-            Config.setPos(-1, -1, 5, -1);
+            ConfigSetup.setPos(-1, -1, 5, -1);
         }));
         hitboxes.add(new HitBox(0, HEIGHT - margin, margin, HEIGHT, () -> {
-            Config.setPos(5, -1, -1, 5);
+            ConfigSetup.setPos(5, -1, -1, 5);
         }));
         hitboxes.add(new HitBox(margin, HEIGHT - margin, WIDTH - margin, HEIGHT, () -> {
-            Config.setPos(-1, -1, -1, 20);
+            ConfigSetup.setPos(-1, -1, -1, 20);
         }));
         hitboxes.add(new HitBox(WIDTH - margin, HEIGHT - margin, WIDTH, HEIGHT, () -> {
-            Config.setPos(-1, -1, 5, 5);
+            ConfigSetup.setPos(-1, -1, 5, 5);
         }));
     }
 
@@ -151,14 +151,14 @@ public class GuiConfig extends GuiScreen {
     }
 
     private void applyPreset(Preset preset) {
-        Config.setBoxStyle(preset.getBoxThickness(), preset.getBoxBorderColor(), preset.getBoxFillColor(), preset.getBoxOffset());
+        ConfigSetup.setBoxStyle(preset.getBoxThickness(), preset.getBoxBorderColor(), preset.getBoxFillColor(), preset.getBoxOffset());
 
-        for (Map.Entry<TextStyleClass, String> entry : Config.defaultTextStyleClasses.entrySet()) {
-            Config.setTextStyle(entry.getKey(), entry.getValue());
+        for (Map.Entry<TextStyleClass, String> entry : ConfigSetup.defaultTextStyleClasses.entrySet()) {
+            ConfigSetup.setTextStyle(entry.getKey(), entry.getValue());
         }
 
         for (Map.Entry<TextStyleClass, String> entry : preset.getTextStyleClasses().entrySet()) {
-            Config.setTextStyle(entry.getKey(), entry.getValue());
+            ConfigSetup.setTextStyle(entry.getKey(), entry.getValue());
         }
     }
 
@@ -191,13 +191,13 @@ public class GuiConfig extends GuiScreen {
         probeInfo.text(LABEL + "Fuel: " + INFO + "5 volts");
         probeInfo.text(LABEL + "Error: " + ERROR + "Oups!");
 
-        renderElements(probeInfo, Config.getDefaultOverlayStyle());
+        renderElements(probeInfo, ConfigSetup.getDefaultOverlayStyle());
     }
 
     private void renderElements(ProbeInfo probeInfo, IOverlayStyle style) {
 
         GlStateManager.pushMatrix();
-        GlStateManager.scale(1/Config.tooltipScale, 1/Config.tooltipScale, 1/Config.tooltipScale);
+        GlStateManager.scale(1/ ConfigSetup.tooltipScale, 1/ ConfigSetup.tooltipScale, 1/ ConfigSetup.tooltipScale);
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
@@ -235,7 +235,7 @@ public class GuiConfig extends GuiScreen {
         x += guiLeft;
         y += guiTop;
 
-        double factor = (Config.tooltipScale - 1) * 1.4 + 1;
+        double factor = (ConfigSetup.tooltipScale - 1) * 1.4 + 1;
         x *= factor;
         y *= factor;
 

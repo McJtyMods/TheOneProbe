@@ -1,9 +1,9 @@
 package mcjty.theoneprobe.commands;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.proxy.ClientProxy;
-import mcjty.theoneprobe.proxy.GuiProxy;
+import mcjty.theoneprobe.config.ConfigSetup;
+import mcjty.theoneprobe.setup.ClientProxy;
+import mcjty.theoneprobe.setup.GuiProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
@@ -39,25 +39,25 @@ public class CommandTopCfg implements ICommand {
     private static Map<String,Consumer<String[]>> SUBCOMMANDS = new HashMap<>();
 
     static {
-        SUBCOMMANDS.put("center", s -> Config.setPos(-1, -1, -1, -1));
-        SUBCOMMANDS.put("topleft", s -> Config.setPos(5, 5, -1, -1));
-        SUBCOMMANDS.put("topcenter", s -> Config.setPos(-1, 5, -1, -1));
-        SUBCOMMANDS.put("topright", s -> Config.setPos(-1, 5, 5, -1));
-        SUBCOMMANDS.put("bottomleft", s -> Config.setPos(5, -1, -1, 20));
-        SUBCOMMANDS.put("bottomcenter", s -> Config.setPos(-1, -1, -1, 20));
-        SUBCOMMANDS.put("bottomright", s -> Config.setPos(-1, -1, 5, 20));
-        SUBCOMMANDS.put("centerleft", s -> Config.setPos(5, -1, -1, -1));
-        SUBCOMMANDS.put("centerright", s -> Config.setPos(-1, -1, 5, -1));
-        SUBCOMMANDS.put("transparent", s -> Config.setBoxStyle(0, 0, 0, 0));
+        SUBCOMMANDS.put("center", s -> ConfigSetup.setPos(-1, -1, -1, -1));
+        SUBCOMMANDS.put("topleft", s -> ConfigSetup.setPos(5, 5, -1, -1));
+        SUBCOMMANDS.put("topcenter", s -> ConfigSetup.setPos(-1, 5, -1, -1));
+        SUBCOMMANDS.put("topright", s -> ConfigSetup.setPos(-1, 5, 5, -1));
+        SUBCOMMANDS.put("bottomleft", s -> ConfigSetup.setPos(5, -1, -1, 20));
+        SUBCOMMANDS.put("bottomcenter", s -> ConfigSetup.setPos(-1, -1, -1, 20));
+        SUBCOMMANDS.put("bottomright", s -> ConfigSetup.setPos(-1, -1, 5, 20));
+        SUBCOMMANDS.put("centerleft", s -> ConfigSetup.setPos(5, -1, -1, -1));
+        SUBCOMMANDS.put("centerright", s -> ConfigSetup.setPos(-1, -1, 5, -1));
+        SUBCOMMANDS.put("transparent", s -> ConfigSetup.setBoxStyle(0, 0, 0, 0));
         SUBCOMMANDS.put("setpos", CommandTopCfg::setPos);
-        SUBCOMMANDS.put("opaque", s -> Config.setBoxStyle(2, 0xff999999, 0xff003366, 0));
-        SUBCOMMANDS.put("default", s -> Config.setBoxStyle(2, 0xff999999, 0x55006699, 0));
-        SUBCOMMANDS.put("liquids", s -> Config.setLiquids(true));
-        SUBCOMMANDS.put("noliquids", s -> Config.setLiquids(false));
-        SUBCOMMANDS.put("compactequalstacks", s -> Config.setCompactEqualStacks(true));
-        SUBCOMMANDS.put("dontcompactequalstacks", s -> Config.setCompactEqualStacks(false));
-        SUBCOMMANDS.put("extendedinmain", s -> Config.setExtendedInMain(true));
-        SUBCOMMANDS.put("defaultinmain", s -> Config.setExtendedInMain(false));
+        SUBCOMMANDS.put("opaque", s -> ConfigSetup.setBoxStyle(2, 0xff999999, 0xff003366, 0));
+        SUBCOMMANDS.put("default", s -> ConfigSetup.setBoxStyle(2, 0xff999999, 0x55006699, 0));
+        SUBCOMMANDS.put("liquids", s -> ConfigSetup.setLiquids(true));
+        SUBCOMMANDS.put("noliquids", s -> ConfigSetup.setLiquids(false));
+        SUBCOMMANDS.put("compactequalstacks", s -> ConfigSetup.setCompactEqualStacks(true));
+        SUBCOMMANDS.put("dontcompactequalstacks", s -> ConfigSetup.setCompactEqualStacks(false));
+        SUBCOMMANDS.put("extendedinmain", s -> ConfigSetup.setExtendedInMain(true));
+        SUBCOMMANDS.put("defaultinmain", s -> ConfigSetup.setExtendedInMain(false));
     }
 
 
@@ -70,7 +70,7 @@ public class CommandTopCfg implements ICommand {
             int topy = Integer.parseInt(args[2]);
             int rightx = Integer.parseInt(args[3]);
             int bottomy = Integer.parseInt(args[4]);
-            Config.setPos(leftx, topy, rightx, bottomy);
+            ConfigSetup.setPos(leftx, topy, rightx, bottomy);
         } catch (NumberFormatException e) {
         }
     }

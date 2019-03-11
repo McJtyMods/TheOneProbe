@@ -1,4 +1,4 @@
-package mcjty.theoneprobe.proxy;
+package mcjty.theoneprobe.setup;
 
 import mcjty.theoneprobe.ForgeEventHandlers;
 import mcjty.theoneprobe.TheOneProbe;
@@ -6,7 +6,7 @@ import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import net.minecraft.nbt.NBTBase;
@@ -14,21 +14,32 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class CommonProxy {
+public class ModSetup {
+
+    private Logger logger;
+    public static File modConfigDir;
+
+    public static boolean baubles = false;
+    public static boolean tesla = false;
+    public static boolean redstoneflux = false;
 
     public void preInit(FMLPreInitializationEvent e) {
+        logger = e.getModLog();
+
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
 
         registerCapabilities();
@@ -40,8 +51,38 @@ public abstract class CommonProxy {
         TheOneProbe.theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
         TheOneProbe.theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
 
-        readMainConfig();
         PacketHandler.registerMessages("theoneprobe");
+
+        modConfigDir = e.getModConfigurationDirectory();
+        ConfigSetup.init();
+
+        setupModCompat();
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    private void setupModCompat() {
+        tesla = Loader.isModLoaded("tesla");
+        if (tesla) {
+            logger.log(Level.INFO, "The One Probe Detected TESLA: enabling support");
+        }
+
+        redstoneflux = Loader.isModLoaded("redstoneflux");
+        if (redstoneflux) {
+            logger.log(Level.INFO, "The One Probe Detected RedstoneFlux: enabling support");
+        }
+
+        baubles = Loader.isModLoaded("Baubles") || Loader.isModLoaded("baubles");
+        if (baubles) {
+            if (ConfigSetup.supportBaubles) {
+                logger.log(Level.INFO, "The One Probe Detected Baubles: enabling support");
+            } else {
+                logger.log(Level.INFO, "The One Probe Detected Baubles but support disabled in config");
+                baubles = false;
+            }
+        }
     }
 
     private static void registerCapabilities(){
@@ -63,23 +104,6 @@ public abstract class CommonProxy {
     }
 
 
-    private void readMainConfig() {
-        Configuration cfg = TheOneProbe.config;
-        try {
-            cfg.load();
-            cfg.addCustomCategoryComment(Config.CATEGORY_THEONEPROBE, "The One Probe configuration");
-            cfg.addCustomCategoryComment(Config.CATEGORY_PROVIDERS, "Provider configuration");
-            cfg.addCustomCategoryComment(Config.CATEGORY_CLIENT, "Client-side settings");
-            Config.init(cfg);
-        } catch (Exception e1) {
-            TheOneProbe.logger.log(Level.ERROR, "Problem loading config file!", e1);
-        } finally {
-            if (TheOneProbe.config.hasChanged()) {
-                TheOneProbe.config.save();
-            }
-        }
-    }
-
     public void init(FMLInitializationEvent e) {
         NetworkRegistry.INSTANCE.registerGuiHandler(TheOneProbe.instance, new GuiProxy());
     }
@@ -88,8 +112,8 @@ public abstract class CommonProxy {
         configureProviders();
         configureEntityProviders();
 
-        if (TheOneProbe.config.hasChanged()) {
-            TheOneProbe.config.save();
+        if (ConfigSetup.mainConfig.hasChanged()) {
+            ConfigSetup.mainConfig.save();
         }
     }
 
@@ -101,8 +125,8 @@ public abstract class CommonProxy {
             defaultValues[i++] = provider.getID();
         }
 
-        String[] sortedProviders = TheOneProbe.config.getStringList("sortedProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which providers should be used");
-        String[] excludedProviders = TheOneProbe.config.getStringList("excludedProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Providers that should be excluded");
+        String[] sortedProviders = ConfigSetup.mainConfig.getStringList("sortedProviders", ConfigSetup.CATEGORY_PROVIDERS, defaultValues, "Order in which providers should be used");
+        String[] excludedProviders = ConfigSetup.mainConfig.getStringList("excludedProviders", ConfigSetup.CATEGORY_PROVIDERS, new String[] {}, "Providers that should be excluded");
         Set<String> excluded = new HashSet<>();
         Collections.addAll(excluded, excludedProviders);
 
@@ -117,8 +141,8 @@ public abstract class CommonProxy {
             defaultValues[i++] = provider.getID();
         }
 
-        String[] sortedProviders = TheOneProbe.config.getStringList("sortedEntityProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which entity providers should be used");
-        String[] excludedProviders = TheOneProbe.config.getStringList("excludedEntityProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Entity providers that should be excluded");
+        String[] sortedProviders = ConfigSetup.mainConfig.getStringList("sortedEntityProviders", ConfigSetup.CATEGORY_PROVIDERS, defaultValues, "Order in which entity providers should be used");
+        String[] excludedProviders = ConfigSetup.mainConfig.getStringList("excludedEntityProviders", ConfigSetup.CATEGORY_PROVIDERS, new String[] {}, "Entity providers that should be excluded");
         Set<String> excluded = new HashSet<>();
         Collections.addAll(excluded, excludedProviders);
 

@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.gui;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.config.ConfigSetup;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -10,7 +10,7 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.io.IOException;
 
-import static mcjty.theoneprobe.config.Config.*;
+import static mcjty.theoneprobe.config.ConfigSetup.*;
 import static net.minecraft.util.text.TextFormatting.*;
 
 public class GuiNote extends GuiScreen {
@@ -52,7 +52,7 @@ public class GuiNote extends GuiScreen {
         RenderHelper.renderText(Minecraft.getMinecraft(), x, y, BOLD + "when you look at a block or an entity"); y += 10;
 
         y += 10;
-        switch (Config.needsProbe) {
+        switch (ConfigSetup.needsProbe) {
             case PROBE_NEEDED:
                 RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "In this pack the probe is configured to be"); y += 10;
                 RenderHelper.renderText(Minecraft.getMinecraft(), x, y, "required in order to see the tooltip"); y += 10;
@@ -96,11 +96,11 @@ public class GuiNote extends GuiScreen {
         mouseY += guiTop;
         if (mouseY >= hitY && mouseY < hitY + BUTTON_HEIGHT) {
             if (mouseX >= hitX && mouseX < hitX + BUTTON_WIDTH) {
-                Config.setProbeNeeded(PROBE_NEEDED);
+                ConfigSetup.setProbeNeeded(PROBE_NEEDED);
             } else if (mouseX >= hitX+BUTTON_MARGIN && mouseX < hitX + BUTTON_WIDTH+BUTTON_MARGIN) {
-                Config.setProbeNeeded(PROBE_NOTNEEDED);
+                ConfigSetup.setProbeNeeded(PROBE_NOTNEEDED);
             } else if (mouseX >= hitX+BUTTON_MARGIN*2 && mouseX < hitX + BUTTON_WIDTH+BUTTON_MARGIN*2) {
-                Config.setProbeNeeded(PROBE_NEEDEDFOREXTENDED);
+                ConfigSetup.setProbeNeeded(PROBE_NEEDEDFOREXTENDED);
             }
         }
     }
