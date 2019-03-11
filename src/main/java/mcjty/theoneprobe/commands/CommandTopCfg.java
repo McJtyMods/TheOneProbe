@@ -1,8 +1,8 @@
 package mcjty.theoneprobe.commands;
 
+import mcjty.theoneprobe.ClientForgeEventHandlers;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.ConfigSetup;
-import mcjty.theoneprobe.setup.ClientProxy;
 import mcjty.theoneprobe.setup.GuiProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -83,7 +83,7 @@ public class CommandTopCfg implements ICommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         if (args.length < 1) {
-            ClientProxy.ignoreNextGuiClose = true;
+            ClientForgeEventHandlers.ignoreNextGuiClose = true;
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             player.openGui(TheOneProbe.instance, GuiProxy.GUI_CONFIG, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
             return;
