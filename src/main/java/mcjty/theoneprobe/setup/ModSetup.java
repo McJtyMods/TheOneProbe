@@ -51,10 +51,10 @@ public class ModSetup {
         TheOneProbe.theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
         TheOneProbe.theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
 
-        PacketHandler.registerMessages("theoneprobe");
-
         modConfigDir = e.getModConfigurationDirectory();
         ConfigSetup.init();
+
+        PacketHandler.registerMessages("theoneprobe");
 
         setupModCompat();
     }
