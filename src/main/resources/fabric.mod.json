@@ -21,6 +21,9 @@
     "main": [
       "mcjty.theoneprobe.TheOneProbe",
       "mcjty.theoneprobe.network.NetworkInit"
+    ],
+    "client": [
+      "mcjty.theoneprobe.network.ClientNetworkInit"
     ]
   },
   "mixins": [
