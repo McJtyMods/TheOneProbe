@@ -17,16 +17,10 @@ public class NetworkInit implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        System.out.println("############ Set up networking #############");
+        System.out.println("############ Set up server-side networking #############");
 
-        // Server side
         ServerSidePacketRegistry.INSTANCE.register(PacketGetInfo.GET_INFO, new PacketGetInfo.Handler());
         ServerSidePacketRegistry.INSTANCE.register(PacketGetEntityInfo.GET_ENTITY_INFO, new PacketGetEntityInfo.Handler());
-
-        // Client side
-        ClientSidePacketRegistry.INSTANCE.register(PacketReturnInfo.RETURN_INFO, new PacketReturnInfo.Handler());
-        ClientSidePacketRegistry.INSTANCE.register(PacketReturnEntityInfo.RETURN_ENTITY_INFO, new PacketReturnEntityInfo.Handler());
-
     }
 
     @Environment(EnvType.CLIENT)
