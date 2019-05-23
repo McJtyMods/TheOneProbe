@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "theoneprobe",
-  "version": "1.4.29.alpha",
+  "version": "1.4.29.beta",
   "name": "The One Probe",
   "description": "A Probe to rule them all!",
   "authors": [
