@@ -20,9 +20,9 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.sortme.MobSpawnerLogic;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.MobSpawnerLogic;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -116,15 +116,14 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void showMobSpawnerInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
-        if (block instanceof MobSpawnerBlock) {
+        if (block instanceof SpawnerBlock) {
             BlockEntity te = world.getBlockEntity(data.getPos());
             if (te instanceof MobSpawnerBlockEntity) {
                 MobSpawnerLogic logic = ((MobSpawnerBlockEntity) te).getLogic();
-                // @todo fabric
-//                String mobName = logic.getCachedEntity().getName();
-//                probeInfo.horizontal(probeInfo.defaultLayoutStyle()
-//                    .alignment(ElementAlignment.ALIGN_CENTER))
-//                    .text(LABEL + "Mob: " + INFO + mobName);
+                String mobName = logic.getRenderedEntity().getName().getFormattedText();
+                probeInfo.horizontal(probeInfo.defaultLayoutStyle()
+                    .alignment(ElementAlignment.ALIGN_CENTER))
+                    .text(LABEL + "Mob: " + INFO + mobName);
             }
         }
     }
@@ -154,11 +153,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
                     .text(LABEL + "State: " + INFO + (powered ? "On" : "Off"));
         } else if (block instanceof ComparatorBlock) {
-            ComparatorMode mode = blockState.get(ComparatorBlock.field_10789);
+            ComparatorMode mode = blockState.get(ComparatorBlock.MODE);
             probeInfo.text(LABEL + "Mode: " + INFO + mode.name());
         } else if (block instanceof RepeaterBlock) {
             Boolean locked = blockState.get(RepeaterBlock.LOCKED);
-            Integer delay = blockState.get(RepeaterBlock.field_11451);
+            Integer delay = blockState.get(RepeaterBlock.DELAY);
             probeInfo.text(LABEL + "Delay: " + INFO + delay + " ticks");
             if (locked) {
                 probeInfo.text(INFO + "Locked");

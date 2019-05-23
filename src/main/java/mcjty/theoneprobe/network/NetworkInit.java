@@ -33,7 +33,7 @@ public class NetworkInit implements ModInitializer {
     public static void sendToServer(IPacket packet) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         packet.toBytes(buf);
-        MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadC2SPacket(packet.getId(), buf));
+        MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(packet.getId(), buf));
 
     }
 

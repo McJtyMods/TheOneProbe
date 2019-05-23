@@ -16,13 +16,13 @@ import mcjty.theoneprobe.network.NetworkInit;
 import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.ThrowableIdentity;
+import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.TextFormat;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -232,7 +232,7 @@ public class OverlayRenderer {
             float damage = 0;   // @todo fabric
             if (damage > 0) {
                 if (Config.showBreakProgress == 2) {
-                    damageElement = new ElementText("" + TextFormat.RED + "Progress " + (int) (damage * 100) + "%");
+                    damageElement = new ElementText("" + ChatFormat.RED + "Progress " + (int) (damage * 100) + "%");
                 } else {
                     damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
                             .prefix("Progress ")

@@ -23,9 +23,9 @@ public class ModItems {
 
     public static void init() {
         probe = new Probe();
-        Registry.ITEM.register(new Identifier(TheOneProbe.MODID, "probe"), probe);
+        Registry.register(Registry.ITEM, new Identifier(TheOneProbe.MODID, "probe"), probe);
         creativeProbe = new CreativeProbe();
-        Registry.ITEM.register(new Identifier(TheOneProbe.MODID, "creativeprobe"), creativeProbe);
+        Registry.register(Registry.ITEM, new Identifier(TheOneProbe.MODID, "creativeprobe"), creativeProbe);
 
         // @todo fabric
 //        ArmorItem.ArmorMaterial materialDiamondHelmet = EnumHelper.addArmorMaterial("diamond_helmet_probe", TheOneProbe.MODID + ":probe_diamond",
@@ -40,7 +40,7 @@ public class ModItems {
 //        ironHelmetProbe = makeHelmet(materialIronHelmet, 2, "iron_helmet_probe");
 
         probeNote = new ProbeNote();
-        Registry.ITEM.register(new Identifier(TheOneProbe.MODID, "probenote"), probeNote);
+        Registry.register(Registry.ITEM, new Identifier(TheOneProbe.MODID, "probenote"), probeNote);
 
         if (TheOneProbe.baubles) {
             probeGoggles = BaubleTools.initProbeGoggle();
@@ -96,7 +96,7 @@ public class ModItems {
     }
 
     public static boolean hasAProbeSomewhere(PlayerEntity player) {
-        return hasProbeInHand(player, Hand.MAIN) || hasProbeInHand(player, Hand.OFF) || hasProbeInHelmet(player)
+        return hasProbeInHand(player, Hand.MAIN_HAND) || hasProbeInHand(player, Hand.OFF_HAND) || hasProbeInHelmet(player)
                 || hasProbeInBauble(player);
     }
 

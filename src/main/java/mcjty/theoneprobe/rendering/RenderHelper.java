@@ -4,11 +4,11 @@ import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.network.ThrowableIdentity;
+import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GuiLighting;
@@ -20,7 +20,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.TextFormat;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -47,7 +46,7 @@ public class RenderHelper {
 
         GlStateManager.translatef(0.0F, (float) entity.getHeightOffset() + (entity instanceof AbstractDecorationEntity ? 0.5F : 0.0F), 0.0F);
 
-        MinecraftClient.getInstance().getEntityRenderManager().field_4679 = 180F;
+        MinecraftClient.getInstance().getEntityRenderManager().cameraYaw = 180F;
         try {
             MinecraftClient.getInstance().getEntityRenderManager().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
         } catch (Exception e) {
@@ -213,11 +212,11 @@ public class RenderHelper {
     }
 
     public static void drawHorizontalLine(int x1, int y1, int x2, int color) {
-        Drawable.drawRect(x1, y1, x2, y1 + 1, color);
+        Screen.fill(x1, y1, x2, y1 + 1, color);
     }
 
     public static void drawVerticalLine(int x1, int y1, int y2, int color) {
-        Drawable.drawRect(x1, y1, x1 + 1, y2, color);
+        Screen.fill(x1, y1, x1 + 1, y2, color);
     }
 
     // Draw a small triangle. x,y is the coordinate of the left point
@@ -271,7 +270,7 @@ public class RenderHelper {
      */
     public static void drawBeveledBox(int x1, int y1, int x2, int y2, int topleftcolor, int botrightcolor, int fillcolor) {
         if (fillcolor != -1) {
-            Screen.drawRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
+            Screen.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
         }
         drawHorizontalLine(x1, y1, x2 - 1, topleftcolor);
         drawVerticalLine(x1, y1, y2 - 1, topleftcolor);
@@ -284,12 +283,12 @@ public class RenderHelper {
      */
     public static void drawThickBeveledBox(int x1, int y1, int x2, int y2, int thickness, int topleftcolor, int botrightcolor, int fillcolor) {
         if (fillcolor != -1) {
-            Screen.drawRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
+            Screen.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
         }
-        Screen.drawRect(x1, y1, x2 - 1, y1 + thickness, topleftcolor);
-        Screen.drawRect(x1, y1, x1 + thickness, y2 - 1, topleftcolor);
-        Screen.drawRect(x2 - thickness, y1, x2, y2 - 1, botrightcolor);
-        Screen.drawRect(x1, y2 - thickness, x2, y2, botrightcolor);
+        Screen.fill(x1, y1, x2 - 1, y1 + thickness, topleftcolor);
+        Screen.fill(x1, y1, x1 + thickness, y2 - 1, topleftcolor);
+        Screen.fill(x2 - thickness, y1, x2, y2 - 1, botrightcolor);
+        Screen.fill(x1, y2 - thickness, x2, y2, botrightcolor);
     }
 
     /**
@@ -402,8 +401,8 @@ public class RenderHelper {
     }
 
     public static void rotateToPlayer() {
-        GlStateManager.rotatef(-MinecraftClient.getInstance().getEntityRenderManager().field_4679, 0.0F, 1.0F, 0.0F);   // playerViewY
-        GlStateManager.rotatef(MinecraftClient.getInstance().getEntityRenderManager().field_4677, 1.0F, 0.0F, 0.0F);    // playerViewX
+        GlStateManager.rotatef(-MinecraftClient.getInstance().getEntityRenderManager().cameraPitch, 0.0F, 1.0F, 0.0F);   // playerViewY
+        GlStateManager.rotatef(MinecraftClient.getInstance().getEntityRenderManager().cameraYaw, 1.0F, 0.0F, 0.0F);    // playerViewX
     }
 
     /**
@@ -481,7 +480,7 @@ public class RenderHelper {
             if (stack.getAmount() != 1 || text != null) {
                 String s = text == null ? String.valueOf(stack.getAmount()) : text;
                 if (text == null && stack.getAmount() < 1) {
-                    s = TextFormat.RED + String.valueOf(stack.getAmount());
+                    s = ChatFormat.RED + String.valueOf(stack.getAmount());
                 }
 
                 GlStateManager.disableLighting();

@@ -31,11 +31,11 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                 vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2));
 
                 LivingEntity entityLivingBase = (LivingEntity) entity;
-                int totalArmorValue = entityLivingBase.method_6096();   // @todo fabric: getTotalArmorValue
-                int age = entityLivingBase.getLastAttackedTime();   // @todo fabric: getIdleTime();
+                int totalArmorValue = entityLivingBase.getArmor();
+                int age = entityLivingBase.getLastAttackedTime();
                 float absorptionAmount = entityLivingBase.getAbsorptionAmount();
-                float aiMoveSpeed = entityLivingBase.method_6029(); // @todo fabric: entityLivingBase.getAIMoveSpeed();
-                int revengeTimer = entityLivingBase.getLastAttackedTime(); // @todo fabric: entityLivingBase.getRevengeTimer();
+                float aiMoveSpeed = entityLivingBase.getMovementSpeed();
+                int revengeTimer = entityLivingBase.getLastAttackedTime();
                 vertical
                         .text(LABEL + "Tot armor: " + INFO + totalArmorValue)
                         .text(LABEL + "Age: " + INFO + age)
