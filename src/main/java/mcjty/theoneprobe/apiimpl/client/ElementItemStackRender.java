@@ -2,10 +2,10 @@ package mcjty.theoneprobe.apiimpl.client;
 
 import mcjty.theoneprobe.api.IItemStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
+import net.minecraft.ChatFormat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.TextFormat;
 
 public class ElementItemStackRender {
 
@@ -28,7 +28,7 @@ public class ElementItemStackRender {
 
             if (!RenderHelper.renderItemStack(MinecraftClient.getInstance(), itemRender, itemStack, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount)) {
                 // There was a crash rendering this item
-                RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormat.RED + "ERROR: " + itemStack.getDisplayName());
+                RenderHelper.renderText(MinecraftClient.getInstance(), x, y, ChatFormat.RED + "ERROR: " + itemStack.getDisplayName());
             }
         }
     }

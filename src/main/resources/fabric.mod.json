@@ -1,14 +1,33 @@
 {
+  "schemaVersion": 1,
   "id": "theoneprobe",
+  "version": "1.4.29.alpha",
   "name": "The One Probe",
-  "version": "1.4.28.alpha",
-  "side": "universal",
-  "initializers": [
-    "mcjty.theoneprobe.TheOneProbe",
-    "mcjty.theoneprobe.network.NetworkInit"
+  "description": "A Probe to rule them all!",
+  "authors": [
+    "McJty"
   ],
-  "mixins": {
-    "client": "theoneprobe.client.json",
-    "common": "theoneprobe.common.json"
+  "contributors": [
+    "Shnupbups"
+  ],
+  "contact": {
+    "homepage": "https://minecraft.curseforge.com/projects/the-one-probe",
+    "sources": "https://github.com/McJtyMods/TheOneProbe/tree/fabric",
+    "issues": "https://github.com/McJtyMods/TheOneProbe/issues"
+  },
+  "license": "MIT License",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mcjty.theoneprobe.TheOneProbe",
+      "mcjty.theoneprobe.network.NetworkInit"
+    ]
+  },
+  "mixins": [
+    "theoneprobe.mixins.json"
+  ],
+  "requires": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
   }
 }

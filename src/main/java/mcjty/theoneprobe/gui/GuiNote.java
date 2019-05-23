@@ -4,16 +4,16 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Identifier;
 
 import static mcjty.theoneprobe.config.Config.*;
-import static net.minecraft.text.TextFormat.*;
+import static net.minecraft.ChatFormat.*;
 
-public class GuiNote extends ContainerScreen {
+public class GuiNote extends AbstractInventoryScreen {
     private static final int WIDTH = 256;
     private static final int HEIGHT = 160;
 
@@ -26,7 +26,7 @@ public class GuiNote extends ContainerScreen {
 
     private static final Identifier background = new Identifier(TheOneProbe.MODID, "textures/gui/note.png");
 
-    public GuiNote(Container container_1, PlayerInventory playerInventory_1, TextComponent textComponent_1) {
+    public GuiNote(Container container_1, PlayerInventory playerInventory_1, Component textComponent_1) {
         super(container_1, playerInventory_1, textComponent_1);
     }
 
@@ -37,8 +37,8 @@ public class GuiNote extends ContainerScreen {
 
 
     @Override
-    protected void onInitialized() {
-        super.onInitialized();
+    protected void init() {
+        super.init();
         guiLeft = (this.width - WIDTH) / 2;
         guiTop = (this.height - HEIGHT) / 2;
     }
@@ -51,10 +51,10 @@ public class GuiNote extends ContainerScreen {
 
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks) {
-        super.draw(mouseX, mouseY, partialTicks);
-        client.getTextureManager().bindTexture(background);
-        drawTexturedRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
+        minecraft.getTextureManager().bindTexture(background);
+        blit(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;
         RenderHelper.renderText(MinecraftClient.getInstance(), x, y, "Things you should know about" + GOLD + " The One Probe"); y += 10;
@@ -131,13 +131,13 @@ public class GuiNote extends ContainerScreen {
 
         hitY = y + guiTop;
         hitX = x + guiLeft;
-        drawRect(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
+        fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
         RenderHelper.renderText(MinecraftClient.getInstance(), x + 3, y + 4, "Needed"); x += BUTTON_MARGIN;
 
-        drawRect(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
+        fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
         RenderHelper.renderText(MinecraftClient.getInstance(), x + 3, y + 4, "Not needed"); x += BUTTON_MARGIN;
 
-        drawRect(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
+        fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
         RenderHelper.renderText(MinecraftClient.getInstance(), x + 3, y + 4, "Extended"); x += BUTTON_MARGIN;
 
         y += BUTTON_HEIGHT - 4;

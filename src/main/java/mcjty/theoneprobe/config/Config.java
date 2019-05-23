@@ -7,7 +7,7 @@ import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
-import net.minecraft.text.TextFormat;
+import net.minecraft.ChatFormat;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.StringUtils;
 
@@ -311,7 +311,7 @@ public class Config {
         StringBuilder builder = new StringBuilder();
         String[] splitted = StringUtils.split(input, ',');
         for (String s : splitted) {
-            TextFormat format = TextFormat.getFormatByName(s);
+            ChatFormat format = ChatFormat.getFormatByName(s);
             if (format != null) {
                 builder.append(format.toString());
             }

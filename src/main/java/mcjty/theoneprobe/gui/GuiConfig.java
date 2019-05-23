@@ -8,12 +8,14 @@ import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
+import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.TextFormat;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -37,6 +39,10 @@ public class GuiConfig extends Screen {
     private static final List<Preset> presets = new ArrayList<>();
 
     private List<HitBox> hitboxes = Collections.emptyList();
+
+    public GuiConfig() {
+        super(new TextComponent("TheOneProbe Config"));
+    }
 
     static {
         presets.add(new Preset("Default style", 0xff999999, 0x55006699, 2, 0));
@@ -64,25 +70,25 @@ public class GuiConfig extends Screen {
 
 
     @Override
-    protected void onInitialized() {
-        super.onInitialized();
+    protected void init() {
+        super.init();
         guiLeft = (this.width - WIDTH - WIDTH) / 2;
         guiTop = (this.height - HEIGHT) / 2;
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks) {
-        super.draw(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
         MinecraftClient.getInstance().getTextureManager().bindTexture(background);
-        drawTexturedRect(guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
+        blit(guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
         MinecraftClient.getInstance().getTextureManager().bindTexture(scene);
-        drawTexturedRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
+        blit(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
 
         renderProbe();
 
         int x = WIDTH + guiLeft + 10;
         int y = guiTop + 10;
-        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormat.GOLD + "Placement:");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, ChatFormat.GOLD + "Placement:");
         y += 12;
         RenderHelper.renderText(MinecraftClient.getInstance(), x+10, y, "Click on corner in screenshot");
         y += 10;
@@ -92,7 +98,7 @@ public class GuiConfig extends Screen {
         y += 20;
 
         hitboxes = new ArrayList<>();
-        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormat.GOLD + "Presets:");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, ChatFormat.GOLD + "Presets:");
         y += 12;
         for (Preset preset : presets) {
             y = addPreset(x, y, preset);
@@ -100,7 +106,7 @@ public class GuiConfig extends Screen {
 
         y += 20;
 
-        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, TextFormat.GOLD + "Scale:");
+        RenderHelper.renderText(MinecraftClient.getInstance(), x, y, ChatFormat.GOLD + "Scale:");
         y += 12;
         addButton(x+10, y, 30, 14, "--", () -> { Config.setScale(1.2f);}); x += 36;
         addButton(x+10, y, 30, 14, "-", () -> { Config.setScale(1.1f);}); x += 36;
@@ -167,7 +173,7 @@ public class GuiConfig extends Screen {
     }
 
     private int addPreset(int x, int y, Preset preset) {
-        drawRect(x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
+        fill(x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
         RenderHelper.renderText(MinecraftClient.getInstance(), x + 20, y, preset.getName());
         hitboxes.add(new HitBox(x + 10 - guiLeft, y - 1 - guiTop, x + 10 + WIDTH - 50 - guiLeft, y + 10 - guiTop, () -> {
             applyPreset(preset);
@@ -177,7 +183,7 @@ public class GuiConfig extends Screen {
     }
 
     private void addButton(int x, int y, int width, int height, String text, Runnable runnable) {
-        drawRect(x, y, x + width-1, y + height-1, 0xff000000);
+        fill(x, y, x + width-1, y + height-1, 0xff000000);
         RenderHelper.renderText(MinecraftClient.getInstance(), x + 3, y + 3, text);
         hitboxes.add(new HitBox(x - guiLeft, y - guiTop, x + width -1 - guiLeft, y + height -1 - guiTop, runnable));
     }

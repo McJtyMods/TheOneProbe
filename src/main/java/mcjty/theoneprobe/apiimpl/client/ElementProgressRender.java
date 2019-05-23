@@ -4,8 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.rendering.RenderHelper;
+import net.minecraft.ChatFormat;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.TextFormat;
 import net.minecraft.util.Identifier;
 
 public class ElementProgressRender {
@@ -47,7 +47,7 @@ public class ElementProgressRender {
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(x, y, 52, 0, 9, 9);
-            RenderHelper.renderText(MinecraftClient.getInstance(), x + 12, y, TextFormat.WHITE + String.valueOf((current / 2)));
+            RenderHelper.renderText(MinecraftClient.getInstance(), x + 12, y, ChatFormat.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
                 RenderHelper.drawTexturedModalRect(x, y, 52, 0, 9, 9);
@@ -65,7 +65,7 @@ public class ElementProgressRender {
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(x, y, 43, 9, 9, 9);
-            RenderHelper.renderText(MinecraftClient.getInstance(), x + 12, y, TextFormat.WHITE + String.valueOf((current / 2)));
+            RenderHelper.renderText(MinecraftClient.getInstance(), x + 12, y, ChatFormat.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
                 RenderHelper.drawTexturedModalRect(x, y, 43, 9, 9, 9);

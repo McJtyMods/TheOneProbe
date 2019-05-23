@@ -13,6 +13,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -58,7 +59,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if (Tools.show(mode, config.getShowMobHealth())) {
                 int health = (int) livingBase.getHealth();
                 int maxHealth = (int) livingBase.getHealthMaximum();
-                int armor = livingBase.method_6096();   // getTotalArmorValue()
+                int armor = livingBase.getArmor();
 
                 probeInfo.progress(health, maxHealth, probeInfo.defaultProgressStyle().lifeBar(true).showText(false).width(150).height(10));
 
@@ -79,7 +80,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             }
 
             if (Tools.show(mode, config.getShowMobPotionEffects())) {
-                Collection<StatusEffectInstance> effects = livingBase.getPotionEffects();
+                Collection<StatusEffectInstance> effects = livingBase.getStatusEffects();
                 if (!effects.isEmpty()) {
                     IProbeInfo vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(0xffffffff));
                     float durationFactor = 1.0f;
@@ -94,7 +95,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                             s1 = s1 + " (" + getPotionDurationString(effect, durationFactor) + ")";
                         }
 
-                        if (potion.isNegative()) {
+                        if (potion.getType().equals(StatusEffectType.HARMFUL)) {
                             vertical.text(ERROR + s1);
                         } else {
                             vertical.text(OK + s1);
@@ -119,8 +120,8 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
 
         if (Tools.show(mode, config.getAnimalOwnerSetting())) {
             UUID ownerId = null;
-            if (entity instanceof OwnableEntity) {
-                ownerId = ((OwnableEntity) entity).getOwnerUuid();
+            if (entity instanceof TameableEntity) {
+                ownerId = ((TameableEntity) entity).getOwnerUuid();
             } else if (entity instanceof HorseEntity) {
                 ownerId = ((HorseEntity) entity).getOwnerUuid();
             }
@@ -140,7 +141,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
 
         if (Tools.show(mode, config.getHorseStatSetting())) {
             if (entity instanceof HorseEntity) {
-                double jumpStrength = ((HorseEntity) entity).method_6771();
+                double jumpStrength = ((HorseEntity) entity).getJumpStrength();
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
                 probeInfo.text(LABEL + "Jump height: " + INFO + dfCommas.format(jumpHeight));
                 EntityAttributeInstance iattributeinstance = ((HorseEntity) entity).getAttributeInstance(EntityAttributes.MOVEMENT_SPEED);
@@ -151,7 +152,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
         if (entity instanceof WolfEntity && Config.showCollarColor) {
             WolfEntity wolf = (WolfEntity) entity;
             if (wolf.isTamed()) {
-                DyeColor collarColor = wolf.method_6713();
+                DyeColor collarColor = wolf.getCollarColor();
                 probeInfo.text(LABEL + "Collar: " + INFO + collarColor.getName());
             }
         }
