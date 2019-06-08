@@ -16,12 +16,12 @@ import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.PlayerEntitySP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceFluidMode;
@@ -92,7 +92,7 @@ public class OverlayRenderer {
             }
         }
 
-        EntityPlayerSP entity = Minecraft.getInstance().player;
+        PlayerEntitySP entity = Minecraft.getInstance().player;
         Vec3d start  = entity.getEyePosition(partialTicks);
         Vec3d vec31 = entity.getLook(partialTicks);
         Vec3d end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
@@ -154,14 +154,14 @@ public class OverlayRenderer {
 
 //        String entityString = EntityList.getEntityString(entity);
         String entityString = entity.getEntityString();
-        if (entityString == null && !(entity instanceof EntityPlayer)) {
+        if (entityString == null && !(entity instanceof PlayerEntity)) {
             // We can't show info for this entity
             return;
         }
 
         UUID uuid = entity.getUniqueID();
 
-        EntityPlayerSP player = Minecraft.getInstance().player;
+        PlayerEntitySP player = Minecraft.getInstance().player;
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
@@ -203,7 +203,7 @@ public class OverlayRenderer {
         }
     }
 
-    private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, EntityPlayerSP player) {
+    private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntitySP player) {
         PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().getDimension().getType().getId(), mode, mouseOver, entity));
     }
 
@@ -212,7 +212,7 @@ public class OverlayRenderer {
         if (blockPos == null) {
             return;
         }
-        EntityPlayerSP player = Minecraft.getInstance().player;
+        PlayerEntitySP player = Minecraft.getInstance().player;
         if (player.getEntityWorld().isAirBlock(blockPos)) {
             return;
         }
@@ -282,11 +282,11 @@ public class OverlayRenderer {
     }
 
     // Information for when the server is laggy
-    private static ProbeInfo getWaitingInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, EntityPlayerSP player) {
+    private static ProbeInfo getWaitingInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, PlayerEntitySP player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
 
         World world = player.getEntityWorld();
-        IBlockState blockState = world.getBlockState(blockPos);
+        BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
         IProbeHitData data = new ProbeHitData(blockPos, mouseOver.hitVec, mouseOver.sideHit, pickBlock);
@@ -303,7 +303,7 @@ public class OverlayRenderer {
         return probeInfo;
     }
 
-    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, EntityPlayerSP player) {
+    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntitySP player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.hitVec);
 
@@ -319,9 +319,9 @@ public class OverlayRenderer {
         return probeInfo;
     }
 
-    private static void requestBlockInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, EntityPlayerSP player) {
+    private static void requestBlockInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, PlayerEntitySP player) {
         World world = player.getEntityWorld();
-        IBlockState blockState = world.getBlockState(blockPos);
+        BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
         if (pickBlock == null || (!pickBlock.isEmpty() && pickBlock.getItem() == null)) {

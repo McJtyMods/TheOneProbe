@@ -2,7 +2,7 @@ package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ArmorMaterial;
@@ -105,23 +105,23 @@ public class ModItems {
         return stack.getTag().hasKey(PROBETAG);
     }
 
-    public static boolean hasAProbeSomewhere(EntityPlayer player) {
+    public static boolean hasAProbeSomewhere(PlayerEntity player) {
         return hasProbeInHand(player, EnumHand.MAIN_HAND) || hasProbeInHand(player, EnumHand.OFF_HAND) || hasProbeInHelmet(player)
                 || hasProbeInBauble(player);
     }
 
-    private static boolean hasProbeInHand(EntityPlayer player, EnumHand hand) {
+    private static boolean hasProbeInHand(PlayerEntity player, EnumHand hand) {
         ItemStack item = player.getHeldItem(hand);
         return isProbeInHand(item);
     }
 
-    private static boolean hasProbeInHelmet(EntityPlayer player) {
+    private static boolean hasProbeInHelmet(PlayerEntity player) {
         ItemStack helmet = player.inventory.getStackInSlot(36+3);
 //        ItemStack helmet = player.inventory.armorInventory.get(3);
         return isProbeHelmet(helmet);
     }
 
-    private static boolean hasProbeInBauble(EntityPlayer player) {
+    private static boolean hasProbeInBauble(PlayerEntity player) {
         if (TheOneProbe.baubles) {
             return BaubleTools.hasProbeGoggle(player);
         } else {

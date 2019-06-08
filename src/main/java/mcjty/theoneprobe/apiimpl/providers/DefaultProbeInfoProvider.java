@@ -8,24 +8,17 @@ import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
-import net.minecraft.block.*;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
-import net.minecraft.init.Items;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.properties.ComparatorMode;
-import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
@@ -43,7 +36,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     @Override
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data) {
         Block block = blockState.getBlock();
         BlockPos pos = data.getPos();
 
@@ -131,7 +124,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private void showRedstonePower(IProbeInfo probeInfo, World world, IBlockState blockState, IProbeHitData data, Block block,
+    private void showRedstonePower(IProbeInfo probeInfo, World world, BlockState blockState, IProbeHitData data, Block block,
                                    boolean showLever) {
         if (showLever && block instanceof BlockLever) {
             // We are showing the lever setting so we don't show redstone in that case
@@ -150,7 +143,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private void showLeverSetting(IProbeInfo probeInfo, World world, IBlockState blockState, IProbeHitData data, Block block) {
+    private void showLeverSetting(IProbeInfo probeInfo, World world, BlockState blockState, IProbeHitData data, Block block) {
         if (block instanceof BlockLever) {
             Boolean powered = blockState.get(BlockLever.POWERED);
             probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
@@ -237,7 +230,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private void showGrowthLevel(IProbeInfo probeInfo, IBlockState blockState) {
+    private void showGrowthLevel(IProbeInfo probeInfo, BlockState blockState) {
         for (IProperty<?> property : blockState.getProperties()) {
             if (!"age".equals(property.getName())) {
                 continue;
@@ -256,8 +249,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    public static void showStandardBlockInfo(IProbeConfig config, ProbeMode mode, IProbeInfo probeInfo, IBlockState blockState, Block block, World world,
-                                             BlockPos pos, EntityPlayer player, IProbeHitData data) {
+    public static void showStandardBlockInfo(IProbeConfig config, ProbeMode mode, IProbeInfo probeInfo, BlockState blockState, Block block, World world,
+                                             BlockPos pos, PlayerEntity player, IProbeHitData data) {
         String modid = Tools.getModName(block);
 
         ItemStack pickBlock = data.getPickBlock();

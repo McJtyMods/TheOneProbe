@@ -8,7 +8,7 @@ import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -86,7 +86,7 @@ public class PacketGetEntityInfo {
         ctx.get().setPacketHandled(true);
     }
 
-    private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {
+    private static ProbeInfo getProbeInfo(PlayerEntity player, ProbeMode mode, World world, Entity entity, Vec3d hitVec) {
         if (Config.needsProbe.get() == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
             if (!ModItems.hasAProbeSomewhere(player)) {

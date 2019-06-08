@@ -16,7 +16,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -43,7 +43,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
     private static DecimalFormat dfCommas = new DecimalFormat("##.#");
 
     @Override
-    public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) {
+    public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, Entity entity, IProbeHitEntityData data) {
         IProbeConfig config = Config.getRealConfig();
 
         boolean handled = false;

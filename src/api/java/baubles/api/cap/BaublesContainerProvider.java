@@ -1,7 +1,7 @@
 package baubles.api.cap;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -15,13 +15,13 @@ public class BaublesContainerProvider implements INBTSerializable<NBTTagCompound
 	}
 
 	@Override
-	public boolean hasCapability (Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability (Capability<?> capability, Direction facing) {
 		return capability == BaublesCapabilities.CAPABILITY_BAUBLES;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability (Capability<T> capability, Direction facing) {
 		if (capability == BaublesCapabilities.CAPABILITY_BAUBLES) return (T) this.container;
 		return null;
 	}

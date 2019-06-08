@@ -4,7 +4,6 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.proxy.ClientProxy;
 import mcjty.theoneprobe.proxy.GuiProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
@@ -32,7 +31,7 @@ public class CommandTopNeed {}/*implements ICommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         ClientProxy.ignoreNextGuiClose = true;
-        EntityPlayerSP player = Minecraft.getInstance().player;
+        PlayerEntitySP player = Minecraft.getInstance().player;
         player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
     }
 

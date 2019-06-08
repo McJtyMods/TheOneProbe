@@ -8,8 +8,8 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
@@ -41,7 +41,7 @@ public class HarvestInfoTools {
         testTools.put(ToolType.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE));
     }
 
-    static void showHarvestLevel(IProbeInfo probeInfo, IBlockState blockState, Block block) {
+    static void showHarvestLevel(IProbeInfo probeInfo, BlockState blockState, Block block) {
         ToolType harvestTool = block.getHarvestTool(blockState);
         if (harvestTool != null) {
             int harvestLevel = block.getHarvestLevel(blockState);
@@ -57,7 +57,7 @@ public class HarvestInfoTools {
         }
     }
 
-    static void showCanBeHarvested(IProbeInfo probeInfo, World world, BlockPos pos, Block block, EntityPlayer player) {
+    static void showCanBeHarvested(IProbeInfo probeInfo, World world, BlockPos pos, Block block, PlayerEntity player) {
         if (ModItems.isProbeInHand(player.getHeldItemMainhand())) {
             // If the player holds the probe there is no need to show harvestability information as the
             // probe cannot harvest anything. This is only supposed to work in off hand.
@@ -72,7 +72,7 @@ public class HarvestInfoTools {
         }
     }
 
-    static void showHarvestInfo(IProbeInfo probeInfo, World world, BlockPos pos, Block block, IBlockState blockState, EntityPlayer player) {
+    static void showHarvestInfo(IProbeInfo probeInfo, World world, BlockPos pos, Block block, BlockState blockState, PlayerEntity player) {
         boolean harvestable = block.canHarvestBlock(world.getBlockState(pos), world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
 
         ToolType harvestTool = block.getHarvestTool(blockState);

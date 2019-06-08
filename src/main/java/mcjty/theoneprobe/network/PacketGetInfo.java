@@ -7,11 +7,11 @@ import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -35,7 +35,7 @@ public class PacketGetInfo  {
     private int dim;
     private BlockPos pos;
     private ProbeMode mode;
-    private EnumFacing sideHit;
+    private Direction sideHit;
     private Vec3d hitVec;
     private ItemStack pickBlock;
 
@@ -47,7 +47,7 @@ public class PacketGetInfo  {
         if (sideByte == 127) {
             sideHit = null;
         } else {
-            sideHit = EnumFacing.values()[sideByte];
+            sideHit = Direction.values()[sideByte];
         }
         if (buf.readBoolean()) {
             hitVec = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
@@ -106,7 +106,7 @@ public class PacketGetInfo  {
         ctx.get().setPacketHandled(true);
     }
 
-    private static ProbeInfo getProbeInfo(EntityPlayer player, ProbeMode mode, World world, BlockPos blockPos, EnumFacing sideHit, Vec3d hitVec, ItemStack pickBlock) {
+    private static ProbeInfo getProbeInfo(PlayerEntity player, ProbeMode mode, World world, BlockPos blockPos, Direction sideHit, Vec3d hitVec, ItemStack pickBlock) {
         if (Config.needsProbe.get() == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
             if (!ModItems.hasAProbeSomewhere(player)) {
@@ -120,7 +120,7 @@ public class PacketGetInfo  {
             return null;
         }
 
-        IBlockState state = world.getBlockState(blockPos);
+        BlockState state = world.getBlockState(blockPos);
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         IProbeHitData data = new ProbeHitData(blockPos, hitVec, sideHit, pickBlock);
 

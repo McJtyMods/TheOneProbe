@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.api;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -16,7 +16,7 @@ public interface IProbeHitData {
 
     Vec3d getHitVec();
 
-    EnumFacing getSideHit();
+    Direction getSideHit();
 
     /**
      * Access the client-side result of getPickBlock() for the given block. That way

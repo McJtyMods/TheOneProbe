@@ -16,7 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -182,12 +182,12 @@ public class TheOneProbe {
         CapabilityManager.INSTANCE.register(PlayerGotNote.class, new Capability.IStorage<PlayerGotNote>() {
 
             @Override
-            public void readNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, EnumFacing side, INBTBase nbt) {
+            public void readNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side, INBTBase nbt) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public INBTBase writeNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, EnumFacing side) {
+            public INBTBase writeNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side) {
                 throw new UnsupportedOperationException();
             }
 

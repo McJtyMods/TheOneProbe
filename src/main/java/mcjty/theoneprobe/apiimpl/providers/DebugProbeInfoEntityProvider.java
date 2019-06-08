@@ -10,7 +10,7 @@ import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 import static mcjty.theoneprobe.api.TextStyleClass.INFO;
@@ -24,7 +24,7 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
     }
 
     @Override
-    public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) {
+    public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, Entity entity, IProbeHitEntityData data) {
         if (mode == ProbeMode.DEBUG && Config.showDebugInfo.get()) {
             IProbeInfo vertical = null;
             if (entity instanceof EntityLivingBase) {

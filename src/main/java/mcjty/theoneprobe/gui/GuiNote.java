@@ -4,15 +4,16 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
 import static mcjty.theoneprobe.config.Config.*;
+import static mcjty.theoneprobe.rendering.RenderHelper.drawTexturedModalRect;
 import static net.minecraft.util.text.TextFormatting.BOLD;
 import static net.minecraft.util.text.TextFormatting.GREEN;
 
-public class GuiNote extends GuiScreen {
+public class GuiNote extends Screen {
     private static final int WIDTH = 256;
     private static final int HEIGHT = 160;
 
@@ -26,13 +27,13 @@ public class GuiNote extends GuiScreen {
     private static final ResourceLocation background = new ResourceLocation(TheOneProbe.MODID, "textures/gui/note.png");
 
     @Override
-    public boolean doesGuiPauseGame() {
+    public boolean isPauseScreen() {
         return false;
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
         guiLeft = (this.width - WIDTH) / 2;
         guiTop = (this.height - HEIGHT) / 2;
     }
@@ -40,7 +41,7 @@ public class GuiNote extends GuiScreen {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);
-        mc.getTextureManager().bindTexture(background);
+        minecraft.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;

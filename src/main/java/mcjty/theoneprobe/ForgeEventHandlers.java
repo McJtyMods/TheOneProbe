@@ -1,17 +1,11 @@
 package mcjty.theoneprobe;
 
 import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.playerdata.PlayerProperties;
-import mcjty.theoneprobe.playerdata.PropertiesDispatcher;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -33,7 +27,7 @@ public class ForgeEventHandlers {
     @SubscribeEvent
     public void onEntityConstructing(AttachCapabilitiesEvent<Entity> event){
         // @todo 1.13
-//        if (event.getObject() instanceof EntityPlayer) {
+//        if (event.getObject() instanceof PlayerEntity) {
 //            if (!event.getObject().getCapability(PlayerProperties.PLAYER_GOT_NOTE).isPresent()) {
 //                event.addCapability(new ResourceLocation(TheOneProbe.MODID, "Properties"), new PropertiesDispatcher());
 //            }
@@ -46,7 +40,7 @@ public class ForgeEventHandlers {
             // We need to copyFrom the capabilities
             LazyOptional<PlayerGotNote> capability = event.getOriginal().getCapability(PlayerProperties.PLAYER_GOT_NOTE);
             capability.ifPresent(oldStore -> {
-                event.getEntityPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(newStore -> {
+                event.getPlayerEntity().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
             });

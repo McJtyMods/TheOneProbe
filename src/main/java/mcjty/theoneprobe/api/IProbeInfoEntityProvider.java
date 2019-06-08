@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.api;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 /**
@@ -23,5 +23,5 @@ public interface IProbeInfoEntityProvider {
      * The given probeInfo object represents a vertical layout. So adding elements to that
      * will cause them to be grouped vertically.
      */
-    void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data);
+    void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, Entity entity, IProbeHitEntityData data);
 }

@@ -9,11 +9,11 @@ import mcjty.theoneprobe.keys.KeyBindings;
 import mcjty.theoneprobe.keys.KeyInputHandler;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -80,7 +80,7 @@ public class ClientProxy implements IProxy {
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
         if (ignoreNextGuiClose) {
-            GuiScreen current = Minecraft.getInstance().currentScreen;
+            Screen current = Minecraft.getInstance().field_71462_r;
             if (event.getGui() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
                 ignoreNextGuiClose = false;
                 // We don't want our gui to be closed for a new 'null' guil
@@ -115,7 +115,7 @@ public class ClientProxy implements IProxy {
                     break;
                 case PROBE_NEEDED:
                 case PROBE_NEEDEDHARD:
-                    if (ModItems.hasAProbeSomewhere(Minecraft.getInstance().player)) {
+                    if (ModItems.hasAProbeSomewhere(Minecraft.getInstance().field_71439_g)) {
                         OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
                     }
                     break;
@@ -124,7 +124,7 @@ public class ClientProxy implements IProxy {
     }
 
     private ProbeMode getModeForPlayer() {
-        EntityPlayerSP player = Minecraft.getInstance().player;
+        PlayerEntity player = Minecraft.getInstance().field_71439_g;
         if (Config.extendedInMain.get()) {
             if (hasItemInMainHand(ModItems.probe)) {
                 return ProbeMode.EXTENDED;
@@ -134,8 +134,8 @@ public class ClientProxy implements IProxy {
     }
 
     private boolean hasItemInEitherHand(Item item) {
-        ItemStack mainHeldItem = Minecraft.getInstance().player.getHeldItem(EnumHand.MAIN_HAND);
-        ItemStack offHeldItem = Minecraft.getInstance().player.getHeldItem(EnumHand.OFF_HAND);
+        ItemStack mainHeldItem = Minecraft.getInstance().field_71439_g.getHeldItem(Hand.MAIN_HAND);
+        ItemStack offHeldItem = Minecraft.getInstance().field_71439_g.getHeldItem(Hand.OFF_HAND);
         return (mainHeldItem != null && mainHeldItem.getItem() == item) ||
                 (offHeldItem != null && offHeldItem.getItem() == item);
     }

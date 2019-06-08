@@ -1,17 +1,19 @@
 package mcjty.theoneprobe.rendering;
 
+import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityHanging;
+import net.minecraft.entity.item.HangingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -38,7 +40,7 @@ public class RenderHelper {
         GlStateManager.rotatef(0.0F, 1.0F, 0.0F, 0.0F);
 //        entity.renderYawOffset = entity.rotationYaw = entity.prevRotationYaw = entity.prevRotationYawHead = entity.rotationYawHead = 0;//this.rotateTurret;
         entity.rotationPitch = 0.0F;
-        GlStateManager.translatef(0.0F, (float) entity.getYOffset() + (entity instanceof EntityHanging ? 0.5F : 0.0F), 0.0F);
+        GlStateManager.translatef(0.0F, (float) entity.getYOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
         Minecraft.getInstance().getRenderManager().playerViewY = 180F;
         try {
             Minecraft.getInstance().getRenderManager().renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
@@ -54,9 +56,9 @@ public class RenderHelper {
         GlStateManager.popMatrix();
         GlStateManager.enableDepthTest();
         GlStateManager.disableColorMaterial();
-        GlStateManager.activeTexture(OpenGlHelper.GL_TEXTURE1);
-        GlStateManager.disableTexture2D();
-        GlStateManager.activeTexture(OpenGlHelper.GL_TEXTURE0);
+        GlStateManager.activeTexture(GLX.GL_TEXTURE1);
+        GlStateManager.disableTexture();
+        GlStateManager.activeTexture(GLX.GL_TEXTURE0);
     }
 
     public static boolean renderObject(Minecraft mc, int x, int y, Object itm, boolean highlight) {
@@ -120,7 +122,7 @@ public class RenderHelper {
             short short1 = 240;
             short short2 = 240;
             net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-            OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
+            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             itemRender.renderItemAndEffectIntoGUI(itm, x, y);
             itemRender.renderItemOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt);
             GlStateManager.popMatrix();
@@ -147,10 +149,10 @@ public class RenderHelper {
         float f5 = (color2 >> 16 & 255) / 255.0F;
         float f6 = (color2 >> 8 & 255) / 255.0F;
         float f7 = (color2 & 255) / 255.0F;
-        GlStateManager.disableTexture2D();
+        GlStateManager.disableTexture();
         GlStateManager.enableBlend();
         GlStateManager.disableAlphaTest();
-        OpenGlHelper.glBlendFuncSeparate(770, 771, 1, 0);
+        GLX.glBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -164,7 +166,7 @@ public class RenderHelper {
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
         GlStateManager.enableAlphaTest();
-        GlStateManager.enableTexture2D();
+        GlStateManager.enableTexture();
     }
 
     /**
@@ -183,10 +185,10 @@ public class RenderHelper {
         float f5 = (color2 >> 16 & 255) / 255.0F;
         float f6 = (color2 >> 8 & 255) / 255.0F;
         float f7 = (color2 & 255) / 255.0F;
-        GlStateManager.disableTexture2D();
+        GlStateManager.disableTexture();
         GlStateManager.enableBlend();
         GlStateManager.disableAlphaTest();
-        OpenGlHelper.glBlendFuncSeparate(770, 771, 1, 0);
+        GLX.glBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -199,7 +201,7 @@ public class RenderHelper {
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
         GlStateManager.enableAlphaTest();
-        GlStateManager.enableTexture2D();
+        GlStateManager.enableTexture();
     }
 
     public static void drawHorizontalLine(int x1, int y1, int x2, int color) {
@@ -449,7 +451,7 @@ public class RenderHelper {
             short short1 = 240;
             short short2 = 240;
             net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-            OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
+            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             try {
                 itemRender.renderItemAndEffectIntoGUI(itm, x, y);
                 ItemRendererOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
@@ -521,8 +523,8 @@ public class RenderHelper {
                 GlStateManager.enableDepthTest();
             }
 
-            EntityPlayerSP entityplayersp = Minecraft.getInstance().player;
-            float f = entityplayersp == null ? 0.0F : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getInstance().getRenderPartialTicks());
+            PlayerEntitySP PlayerEntitysp = Minecraft.getInstance().player;
+            float f = PlayerEntitysp == null ? 0.0F : PlayerEntitysp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getInstance().getRenderPartialTicks());
 
             if (f > 0.0F) {
                 GlStateManager.disableLighting();
