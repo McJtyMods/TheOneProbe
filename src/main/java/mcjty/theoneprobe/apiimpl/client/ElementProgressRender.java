@@ -1,10 +1,10 @@
 package mcjty.theoneprobe.apiimpl.client;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 

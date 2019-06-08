@@ -15,7 +15,7 @@ import mcjty.theoneprobe.proxy.ServerProxy;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.INBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -182,12 +182,12 @@ public class TheOneProbe {
         CapabilityManager.INSTANCE.register(PlayerGotNote.class, new Capability.IStorage<PlayerGotNote>() {
 
             @Override
-            public void readNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side, INBTBase nbt) {
+            public void readNBT(Capability<PlayerGotNote> capability, PlayerGotNote playerGotNote, Direction direction, INBT inbt) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public INBTBase writeNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side) {
+            public INBT writeNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side) {
                 throw new UnsupportedOperationException();
             }
 

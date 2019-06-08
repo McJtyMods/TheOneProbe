@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.gui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.IOverlayStyle;
@@ -8,10 +9,12 @@ import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -34,6 +37,10 @@ public class GuiConfig extends Screen {
     private static final ResourceLocation scene = new ResourceLocation(TheOneProbe.MODID, "textures/gui/scene.png");
 
     private static final List<Preset> presets = new ArrayList<>();
+
+    public GuiConfig() {
+        super(new StringTextComponent("config"));
+    }
 
     private List<HitBox> hitboxes = Collections.emptyList();
 
@@ -166,7 +173,7 @@ public class GuiConfig extends Screen {
     }
 
     private int addPreset(int x, int y, Preset preset) {
-        drawRect(x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
+        fill(x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), x + 20, y, preset.getName());
         hitboxes.add(new HitBox(x + 10 - guiLeft, y - 1 - guiTop, x + 10 + WIDTH - 50 - guiLeft, y + 10 - guiTop, () -> {
             applyPreset(preset);
@@ -176,7 +183,7 @@ public class GuiConfig extends Screen {
     }
 
     private void addButton(int x, int y, int width, int height, String text, Runnable runnable) {
-        drawRect(x, y, x + width-1, y + height-1, 0xff000000);
+        fill(x, y, x + width-1, y + height-1, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), x + 3, y + 3, text);
         hitboxes.add(new HitBox(x - guiLeft, y - guiTop, x + width -1 - guiLeft, y + height -1 - guiTop, runnable));
     }

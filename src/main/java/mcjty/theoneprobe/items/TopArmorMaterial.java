@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.items;
 
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.SoundEvent;
@@ -27,12 +27,12 @@ public class TopArmorMaterial implements IArmorMaterial {
     }
 
     @Override
-    public int getDurability(EntityEquipmentSlot entityEquipmentSlot) {
+    public int getDurability(EquipmentSlotType entityEquipmentSlot) {
         return durability;
     }
 
     @Override
-    public int getDamageReductionAmount(EntityEquipmentSlot entityEquipmentSlot) {
+    public int getDamageReductionAmount(EquipmentSlotType entityEquipmentSlot) {
         return damageReduction[entityEquipmentSlot.getIndex()];
     }
 

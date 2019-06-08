@@ -40,7 +40,7 @@ public class ForgeEventHandlers {
             // We need to copyFrom the capabilities
             LazyOptional<PlayerGotNote> capability = event.getOriginal().getCapability(PlayerProperties.PLAYER_GOT_NOTE);
             capability.ifPresent(oldStore -> {
-                event.getPlayerEntity().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(newStore -> {
+                event.getEntityPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
             });

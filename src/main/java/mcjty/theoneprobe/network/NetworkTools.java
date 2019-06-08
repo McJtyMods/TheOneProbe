@@ -2,7 +2,7 @@ package mcjty.theoneprobe.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 
@@ -10,12 +10,12 @@ import java.util.Collection;
 
 public class NetworkTools {
 
-    public static NBTTagCompound readNBT(ByteBuf dataIn) {
+    public static CompoundNBT readNBT(ByteBuf dataIn) {
         PacketBuffer buf = new PacketBuffer(dataIn);
         return buf.readCompoundTag();
     }
 
-    public static void writeNBT(ByteBuf dataOut, NBTTagCompound nbt) {
+    public static void writeNBT(ByteBuf dataOut, CompoundNBT nbt) {
         PacketBuffer buf = new PacketBuffer(dataOut);
         try {
             buf.writeCompoundTag(nbt);
@@ -28,7 +28,7 @@ public class NetworkTools {
     /// This function supports itemstacks with more then 64 items.
     public static ItemStack readItemStack(ByteBuf dataIn) {
         PacketBuffer buf = new PacketBuffer(dataIn);
-        NBTTagCompound nbt = buf.readCompoundTag();
+        CompoundNBT nbt = buf.readCompoundTag();
         ItemStack stack = ItemStack.read(nbt);
         stack.setCount(buf.readInt());
         return stack;
@@ -37,7 +37,7 @@ public class NetworkTools {
     /// This function supports itemstacks with more then 64 items.
     public static void writeItemStack(ByteBuf dataOut, ItemStack itemStack) {
         PacketBuffer buf = new PacketBuffer(dataOut);
-        NBTTagCompound nbt = new NBTTagCompound();
+        CompoundNBT nbt = new CompoundNBT();
         itemStack.write(nbt);
         try {
             buf.writeCompoundTag(nbt);

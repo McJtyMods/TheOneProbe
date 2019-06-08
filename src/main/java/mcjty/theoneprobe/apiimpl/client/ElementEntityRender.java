@@ -1,19 +1,15 @@
 package mcjty.theoneprobe.apiimpl.client;
 
 import com.google.common.collect.Maps;
-import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixUtils;
-import com.mojang.datafixers.DataFixer;
 import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.datafix.DataFixesManager;
-import net.minecraft.util.datafix.fixes.EntityId;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -22,27 +18,27 @@ import java.util.Map;
 public class ElementEntityRender {
 
     public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, int x, int y) {
-        Entity entity = Minecraft.getInstance().world.getEntityByID(playerID);
+        Entity entity = Minecraft.getInstance().field_71441_e.getEntityByID(playerID);
         if (entity != null) {
             renderEntity(style, x, y, entity);
         }
     }
 
-    public static void render(String entityName, NBTTagCompound entityNBT, IEntityStyle style, int x, int y) {
+    public static void render(String entityName, CompoundNBT entityNBT, IEntityStyle style, int x, int y) {
         if (entityName != null && !entityName.isEmpty()) {
             Entity entity = null;
             if (entityNBT != null) {
                 String fixed = fixEntityId(entityName);
                 EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
                 if (value != null) {
-                    entity = value.makeEntity(Minecraft.getInstance().world, entityNBT, null, null, new BlockPos(0, 0, 0), false, false);
+                    entity = value.func_220342_a(Minecraft.getInstance().field_71441_e, entityNBT, null, null, new BlockPos(0, 0, 0), SpawnReason.COMMAND, false, false);
                 }
 //                entity = EntityList.createEntityFromNBT(entityNBT, Minecraft.getInstance().world);
             } else {
                 String fixed = fixEntityId(entityName);
                 EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
                 if (value != null) {
-                    entity = value.create(Minecraft.getInstance().world);
+                    entity = value.create(Minecraft.getInstance().field_71441_e);
                 }
             }
             if (entity != null) {
@@ -155,7 +151,7 @@ public class ElementEntityRender {
 
 
     private static void renderEntity(IEntityStyle style, int x, int y, Entity entity) {
-        float height = entity.height;
+        float height = entity.getHeight();
         height = (float) ((height - 1) * .7 + 1);
         float s = style.getScale() * ((style.getHeight() * 14.0f / 25) / height);
 

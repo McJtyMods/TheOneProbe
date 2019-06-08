@@ -3,13 +3,12 @@ package mcjty.theoneprobe.items;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ArmorMaterial;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 
 public class ModItems {
     public static CreativeProbe creativeProbe;
@@ -43,7 +42,7 @@ public class ModItems {
     }
 
     private static Item makeHelmet(TopArmorMaterial material, int renderIndex, String name) {
-        Item item = new ItemArmor(material, EntityEquipmentSlot.HEAD, new Item.Properties()
+        Item item = new ArmorItem(material, EquipmentSlotType.HEAD, new Item.Properties()
             .group(TheOneProbe.tabProbe)) {
 
 //            @Override
@@ -92,7 +91,7 @@ public class ModItems {
         if (stack.getTag() == null) {
             return false;
         }
-        return stack.getTag().hasKey(PROBETAG_HAND);
+        return stack.getTag().contains(PROBETAG_HAND);
     }
 
     private static boolean isProbeHelmet(ItemStack stack) {
@@ -102,21 +101,21 @@ public class ModItems {
         if (stack.getTag() == null) {
             return false;
         }
-        return stack.getTag().hasKey(PROBETAG);
+        return stack.getTag().contains(PROBETAG);
     }
 
     public static boolean hasAProbeSomewhere(PlayerEntity player) {
-        return hasProbeInHand(player, EnumHand.MAIN_HAND) || hasProbeInHand(player, EnumHand.OFF_HAND) || hasProbeInHelmet(player)
+        return hasProbeInHand(player, Hand.MAIN_HAND) || hasProbeInHand(player, Hand.OFF_HAND) || hasProbeInHelmet(player)
                 || hasProbeInBauble(player);
     }
 
-    private static boolean hasProbeInHand(PlayerEntity player, EnumHand hand) {
+    private static boolean hasProbeInHand(PlayerEntity player, Hand hand) {
         ItemStack item = player.getHeldItem(hand);
         return isProbeInHand(item);
     }
 
     private static boolean hasProbeInHelmet(PlayerEntity player) {
-        ItemStack helmet = player.inventory.getStackInSlot(36+3);
+        ItemStack helmet = player.field_71071_by.getStackInSlot(36+3);
 //        ItemStack helmet = player.inventory.armorInventory.get(3);
         return isProbeHelmet(helmet);
     }

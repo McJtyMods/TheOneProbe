@@ -142,7 +142,7 @@ public class ClientProxy implements IProxy {
 
 
     private boolean hasItemInMainHand(Item item) {
-        ItemStack mainHeldItem = Minecraft.getInstance().player.getHeldItem(EnumHand.MAIN_HAND);
+        ItemStack mainHeldItem = Minecraft.getInstance().field_71439_g.getHeldItem(Hand.MAIN_HAND);
         return mainHeldItem != null && mainHeldItem.getItem() == item;
     }
 }

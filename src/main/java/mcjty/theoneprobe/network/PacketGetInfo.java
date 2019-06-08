@@ -7,16 +7,17 @@ import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.network.NetworkDirection;
@@ -88,15 +89,15 @@ public class PacketGetInfo  {
         this.dim = dim;
         this.pos = pos;
         this.mode = mode;
-        this.sideHit = mouseOver.sideHit;
-        this.hitVec = mouseOver.hitVec;
+        this.sideHit = ((BlockRayTraceResult)mouseOver).getFace();
+        this.hitVec = mouseOver.getHitVec();
         this.pickBlock = pickBlock;
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             DimensionType type = DimensionType.getById(dim);
-            WorldServer world = DimensionManager.getWorld(ctx.get().getSender().server, type, true, false);
+            ServerWorld world = DimensionManager.getWorld(ctx.get().getSender().server, type, true, false);
             if (world != null) {
                 ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(),
                         mode, world, pos, sideHit, hitVec, pickBlock);

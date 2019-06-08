@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.config;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraftforge.fml.client.IModGuiFactory;
 
 import java.util.Set;
@@ -19,7 +19,7 @@ public class TopModGuiFactory implements IModGuiFactory {
     }
 
     @Override
-    public GuiScreen createConfigGui(GuiScreen parentScreen) {
+    public Screen createConfigGui(Screen parentScreen) {
         return new TopModConfigGui(parentScreen);
     }
 

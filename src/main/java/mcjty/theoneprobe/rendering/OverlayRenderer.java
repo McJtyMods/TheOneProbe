@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.rendering;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -16,17 +17,12 @@ import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.PlayerEntitySP;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceFluidMode;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -74,7 +70,7 @@ public class OverlayRenderer {
 
         RayTraceResult mouseOver = Minecraft.getInstance().objectMouseOver;
         if (mouseOver != null) {
-            if (mouseOver.type == RayTraceResult.Type.ENTITY) {
+            if (mouseOver.getType() == RayTraceResult.Type.ENTITY) {
                 GlStateManager.pushMatrix();
 
                 double scale = Config.tooltipScale.get();
@@ -92,17 +88,18 @@ public class OverlayRenderer {
             }
         }
 
-        PlayerEntitySP entity = Minecraft.getInstance().player;
+        PlayerEntity entity = Minecraft.getInstance().field_71439_g;
         Vec3d start  = entity.getEyePosition(partialTicks);
         Vec3d vec31 = entity.getLook(partialTicks);
         Vec3d end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
 
-        mouseOver = entity.getEntityWorld().rayTraceBlocks(start, end, Config.showLiquids.get() ? RayTraceFluidMode.ALWAYS : RayTraceFluidMode.NEVER);
+        RayTraceContext context = new RayTraceContext(start, end, RayTraceContext.BlockMode.COLLIDER, Config.showLiquids.get() ? RayTraceContext.FluidMode.ANY : RayTraceContext.FluidMode.NONE, entity);
+        mouseOver = entity.getEntityWorld().func_217299_a(context);
         if (mouseOver == null) {
             return;
         }
 
-        if (mouseOver.type == RayTraceResult.Type.BLOCK) {
+        if (mouseOver.getType() == RayTraceResult.Type.BLOCK) {
             GlStateManager.pushMatrix();
 
             double scale = Config.tooltipScale.get();
@@ -121,7 +118,7 @@ public class OverlayRenderer {
     }
 
     public static void setupOverlayRendering(double sw, double sh) {
-        GlStateManager.clear(256);
+        GlStateManager.clear(256, true);
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
         GlStateManager.loadIdentity();
         GlStateManager.ortho(0.0D, sw, sh, 0.0D, 1000.0D, 3000.0D);
@@ -140,10 +137,10 @@ public class OverlayRenderer {
     }
 
     private static void renderHUDEntity(ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
-        Entity entity = mouseOver.entity;
-        if (entity == null) {
+        if (!(mouseOver instanceof EntityRayTraceResult)) {
             return;
         }
+        Entity entity = ((EntityRayTraceResult) mouseOver).getEntity();
 //@todo
 //        if (entity instanceof EntityDragonPart) {
 //            EntityDragonPart part = (EntityDragonPart) entity;
@@ -161,7 +158,7 @@ public class OverlayRenderer {
 
         UUID uuid = entity.getUniqueID();
 
-        PlayerEntitySP player = Minecraft.getInstance().player;
+        PlayerEntity player = Minecraft.getInstance().field_71439_g;
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
@@ -203,16 +200,19 @@ public class OverlayRenderer {
         }
     }
 
-    private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntitySP player) {
+    private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntity player) {
         PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().getDimension().getType().getId(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
-        BlockPos blockPos = mouseOver.getBlockPos();
+        if (!(mouseOver instanceof BlockRayTraceResult)) {
+            return;
+        }
+        BlockPos blockPos = ((BlockRayTraceResult) mouseOver).getPos();
         if (blockPos == null) {
             return;
         }
-        PlayerEntitySP player = Minecraft.getInstance().player;
+        PlayerEntity player = Minecraft.getInstance().field_71439_g;
         if (player.getEntityWorld().isAirBlock(blockPos)) {
             return;
         }
@@ -282,14 +282,14 @@ public class OverlayRenderer {
     }
 
     // Information for when the server is laggy
-    private static ProbeInfo getWaitingInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, PlayerEntitySP player) {
+    private static ProbeInfo getWaitingInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, PlayerEntity player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
 
         World world = player.getEntityWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
-        IProbeHitData data = new ProbeHitData(blockPos, mouseOver.hitVec, mouseOver.sideHit, pickBlock);
+        IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getHitVec(), ((BlockRayTraceResult)mouseOver).getFace(), pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
         try {
@@ -303,9 +303,9 @@ public class OverlayRenderer {
         return probeInfo;
     }
 
-    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntitySP player) {
+    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntity player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
-        IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.hitVec);
+        IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.getHitVec());
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
         try {
@@ -319,7 +319,7 @@ public class OverlayRenderer {
         return probeInfo;
     }
 
-    private static void requestBlockInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, PlayerEntitySP player) {
+    private static void requestBlockInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, PlayerEntity player) {
         World world = player.getEntityWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();

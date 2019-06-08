@@ -12,8 +12,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.network.NetworkDirection;
@@ -66,16 +66,16 @@ public class PacketGetEntityInfo {
         this.dim = dim;
         this.uuid = entity.getUniqueID();
         this.mode = mode;
-        this.hitVec = mouseOver.hitVec;
+        this.hitVec = mouseOver.getHitVec();
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             MinecraftServer s;
             DimensionType type = DimensionType.getById(dim);
-            WorldServer world = DimensionManager.getWorld(ctx.get().getSender().server, type, true, false);
+            ServerWorld world = DimensionManager.getWorld(ctx.get().getSender().server, type, true, false);
             if (world != null) {
-                Entity entity = world.getEntityFromUuid(uuid);
+                Entity entity = world.func_217461_a(uuid);
                 if (entity != null) {
                     ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(), mode, world, entity, hitVec);
                     PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(uuid, probeInfo),

@@ -7,6 +7,7 @@ import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.HangingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -205,11 +207,11 @@ public class RenderHelper {
     }
 
     public static void drawHorizontalLine(int x1, int y1, int x2, int color) {
-        Gui.drawRect(x1, y1, x2, y1 + 1, color);
+        Screen.fill(x1, y1, x2, y1 + 1, color);
     }
 
     public static void drawVerticalLine(int x1, int y1, int y2, int color) {
-        Gui.drawRect(x1, y1, x1 + 1, y2, color);
+        Screen.fill(x1, y1, x1 + 1, y2, color);
     }
 
     // Draw a small triangle. x,y is the coordinate of the left point
@@ -263,7 +265,7 @@ public class RenderHelper {
      */
     public static void drawBeveledBox(int x1, int y1, int x2, int y2, int topleftcolor, int botrightcolor, int fillcolor) {
         if (fillcolor != -1) {
-            Gui.drawRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
+            Screen.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
         }
         drawHorizontalLine(x1, y1, x2 - 1, topleftcolor);
         drawVerticalLine(x1, y1, y2 - 1, topleftcolor);
@@ -276,12 +278,12 @@ public class RenderHelper {
      */
     public static void drawThickBeveledBox(int x1, int y1, int x2, int y2, int thickness, int topleftcolor, int botrightcolor, int fillcolor) {
         if (fillcolor != -1) {
-            Gui.drawRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
+            Screen.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
         }
-        Gui.drawRect(x1, y1, x2 - 1, y1 + thickness, topleftcolor);
-        Gui.drawRect(x1, y1, x1 + thickness, y2 - 1, topleftcolor);
-        Gui.drawRect(x2 - thickness, y1, x2, y2 - 1, botrightcolor);
-        Gui.drawRect(x1, y2 - thickness, x2, y2, botrightcolor);
+        Screen.fill(x1, y1, x2 - 1, y1 + thickness, topleftcolor);
+        Screen.fill(x1, y1, x1 + thickness, y2 - 1, topleftcolor);
+        Screen.fill(x2 - thickness, y1, x2, y2 - 1, botrightcolor);
+        Screen.fill(x1, y2 - thickness, x2, y2, botrightcolor);
     }
 
     /**
@@ -508,7 +510,7 @@ public class RenderHelper {
                 int i = (int) Math.round(255.0D - health * 255.0D);
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepthTest();
-                GlStateManager.disableTexture2D();
+                GlStateManager.disableTexture();
                 GlStateManager.disableAlphaTest();
                 GlStateManager.disableBlend();
                 Tessellator tessellator = Tessellator.getInstance();
@@ -518,22 +520,22 @@ public class RenderHelper {
                 draw(vertexbuffer, xPosition + 2, yPosition + 13, j, 1, 255 - i, i, 0, 255);
                 GlStateManager.enableBlend();
                 GlStateManager.enableAlphaTest();
-                GlStateManager.enableTexture2D();
+                GlStateManager.enableTexture();
                 GlStateManager.enableLighting();
                 GlStateManager.enableDepthTest();
             }
 
-            PlayerEntitySP PlayerEntitysp = Minecraft.getInstance().player;
+            PlayerEntity PlayerEntitysp = Minecraft.getInstance().field_71439_g;
             float f = PlayerEntitysp == null ? 0.0F : PlayerEntitysp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getInstance().getRenderPartialTicks());
 
             if (f > 0.0F) {
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepthTest();
-                GlStateManager.disableTexture2D();
+                GlStateManager.disableTexture();
                 Tessellator tessellator1 = Tessellator.getInstance();
                 BufferBuilder vertexbuffer1 = tessellator1.getBuffer();
                 draw(vertexbuffer1, xPosition, yPosition + (int)Math.floor(16.0F * (1.0F - f)), 16, (int)Math.ceil(16.0F * f), 255, 255, 255, 127);
-                GlStateManager.enableTexture2D();
+                GlStateManager.enableTexture();
                 GlStateManager.enableLighting();
                 GlStateManager.enableDepthTest();
             }

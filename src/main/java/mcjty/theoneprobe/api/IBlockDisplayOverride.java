@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 

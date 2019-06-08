@@ -9,7 +9,7 @@ import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
 import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -17,7 +17,7 @@ public class ElementEntity implements IElement {
 
     private final String entityName;
     private final Integer playerID;
-    private final NBTTagCompound entityNBT;
+    private final CompoundNBT entityNBT;
     private final IEntityStyle style;
 
     public ElementEntity(String entityName, IEntityStyle style) {

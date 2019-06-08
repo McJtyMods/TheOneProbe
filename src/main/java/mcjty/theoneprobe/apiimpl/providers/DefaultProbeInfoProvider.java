@@ -8,15 +8,18 @@ import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.properties.ComparatorMode;
+import net.minecraft.tileentity.BrewingStandTileEntity;
+import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -95,11 +98,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void showBrewingStandInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
-        if (block instanceof BlockBrewingStand) {
+        if (block instanceof BrewingStandBlock) {
             TileEntity te = world.getTileEntity(data.getPos());
-            if (te instanceof TileEntityBrewingStand) {
-                int brewtime = ((TileEntityBrewingStand) te).getField(0);
-                int fuel = ((TileEntityBrewingStand) te).getField(1);
+            if (te instanceof BrewingStandTileEntity) {
+                int brewtime = 0; // @todo 1.14 ((BrewingStandTileEntity) te).getField(0);
+                int fuel = 0; // @todo 1.14 ((BrewingStandTileEntity) te).getField(1);
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
                         .text(LABEL + "Fuel: " + INFO + fuel);
@@ -112,10 +115,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void showMobSpawnerInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
-        if (block instanceof BlockMobSpawner) {
+        if (block instanceof SpawnerBlock) {
             TileEntity te = world.getTileEntity(data.getPos());
-            if (te instanceof TileEntityMobSpawner) {
-                MobSpawnerBaseLogic logic = ((TileEntityMobSpawner) te).getSpawnerBaseLogic();
+            if (te instanceof MobSpawnerTileEntity) {
+                AbstractSpawner logic = ((MobSpawnerTileEntity) te).getSpawnerBaseLogic();
                 String mobName = logic.getCachedEntity().getDisplayName().getFormattedText();
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                     .alignment(ElementAlignment.ALIGN_CENTER))
@@ -126,13 +129,13 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showRedstonePower(IProbeInfo probeInfo, World world, BlockState blockState, IProbeHitData data, Block block,
                                    boolean showLever) {
-        if (showLever && block instanceof BlockLever) {
+        if (showLever && block instanceof LeverBlock) {
             // We are showing the lever setting so we don't show redstone in that case
             return;
         }
         int redstonePower;
-        if (block instanceof BlockRedstoneWire) {
-            redstonePower = blockState.get(BlockRedstoneWire.POWER);
+        if (block instanceof RedstoneWireBlock) {
+            redstonePower = blockState.get(RedstoneWireBlock.POWER);
         } else {
             redstonePower = world.getRedstonePower(data.getPos(), data.getSideHit().getOpposite());
         }
@@ -144,16 +147,16 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void showLeverSetting(IProbeInfo probeInfo, World world, BlockState blockState, IProbeHitData data, Block block) {
-        if (block instanceof BlockLever) {
-            Boolean powered = blockState.get(BlockLever.POWERED);
+        if (block instanceof LeverBlock) {
+            Boolean powered = blockState.get(LeverBlock.POWERED);
             probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
                     .text(LABEL + "State: " + INFO + (powered ? "On" : "Off"));
-        } else if (block instanceof BlockRedstoneComparator) {
-            ComparatorMode mode = blockState.get(BlockRedstoneComparator.MODE);
+        } else if (block instanceof ComparatorBlock) {
+            ComparatorMode mode = blockState.get(ComparatorBlock.MODE);
             probeInfo.text(LABEL + "Mode: " + INFO + mode.getName());
-        } else if (block instanceof BlockRedstoneRepeater) {
-            Boolean locked = blockState.get(BlockRedstoneRepeater.LOCKED);
-            Integer delay = blockState.get(BlockRedstoneRepeater.DELAY);
+        } else if (block instanceof RepeaterBlock) {
+            Boolean locked = blockState.get(RepeaterBlock.LOCKED);
+            Integer delay = blockState.get(RepeaterBlock.DELAY);
             probeInfo.text(LABEL + "Delay: " + INFO + delay + " ticks");
             if (locked) {
                 probeInfo.text(INFO + "Locked");
@@ -255,8 +258,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         ItemStack pickBlock = data.getPickBlock();
 
-        if (block instanceof BlockSilverfish && mode != ProbeMode.DEBUG && !Tools.show(mode,config.getShowSilverfish())) {
-            block = ((BlockSilverfish) block).getMimickedBlock();
+        if (block instanceof SilverfishBlock && mode != ProbeMode.DEBUG && !Tools.show(mode,config.getShowSilverfish())) {
+            block = ((SilverfishBlock) block).getMimickedBlock();
             pickBlock = new ItemStack(block, 1);
         }
 

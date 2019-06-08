@@ -6,6 +6,7 @@ import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import static mcjty.theoneprobe.config.Config.*;
@@ -25,6 +26,10 @@ public class GuiNote extends Screen {
     private int guiTop;
 
     private static final ResourceLocation background = new ResourceLocation(TheOneProbe.MODID, "textures/gui/note.png");
+
+    public GuiNote() {
+        super(new StringTextComponent("note"));
+    }
 
     @Override
     public boolean isPauseScreen() {
@@ -116,13 +121,13 @@ public class GuiNote extends Screen {
 
         hitY = y + guiTop;
         hitX = x + guiLeft;
-        drawRect(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
+        fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), x + 3, y + 4, "Needed"); x += BUTTON_MARGIN;
 
-        drawRect(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
+        fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), x + 3, y + 4, "Not needed"); x += BUTTON_MARGIN;
 
-        drawRect(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
+        fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), x + 3, y + 4, "Extended"); x += BUTTON_MARGIN;
 
         y += BUTTON_HEIGHT - 4;

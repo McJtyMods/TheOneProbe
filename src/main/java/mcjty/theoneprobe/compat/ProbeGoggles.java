@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.compat;
 
 import mcjty.theoneprobe.TheOneProbe;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;

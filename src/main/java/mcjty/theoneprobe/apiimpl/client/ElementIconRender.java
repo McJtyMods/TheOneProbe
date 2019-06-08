@@ -1,10 +1,10 @@
 package mcjty.theoneprobe.apiimpl.client;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 
 public class ElementIconRender {
@@ -21,7 +21,7 @@ public class ElementIconRender {
             if (sprite == null) {
                 return;
             }
-            Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
             RenderHelper.drawTexturedModalRect(x, y, sprite, w, h);
         } else {
             Minecraft.getInstance().getTextureManager().bindTexture(icon);

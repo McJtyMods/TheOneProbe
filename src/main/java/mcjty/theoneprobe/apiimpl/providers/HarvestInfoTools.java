@@ -8,11 +8,11 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
+import net.minecraft.item.Items;
+import net.minecraft.item.ToolItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -86,8 +86,8 @@ public class HarvestInfoTools {
                     // loop through our test tools until we find a winner.
                     ItemStack testTool = testToolEntry.getValue();
 
-                    if (testTool != null && testTool.getItem() instanceof ItemTool) {
-                        ItemTool toolItem = (ItemTool) testTool.getItem();
+                    if (testTool != null && testTool.getItem() instanceof ToolItem) {
+                        ToolItem toolItem = (ToolItem) testTool.getItem();
                         // @todo 1.13
                         if (testTool.getDestroySpeed(blockState) >= toolItem.getTier().getEfficiency()) {
                             // BINGO!
