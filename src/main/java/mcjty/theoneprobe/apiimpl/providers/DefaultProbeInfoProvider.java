@@ -10,6 +10,8 @@ import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.IProperty;
@@ -22,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
@@ -263,12 +266,12 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             pickBlock = new ItemStack(block, 1);
         }
 
-        // @todo 1.13
-//        if (block instanceof BlockFlowingFluid) {
+//         @todo 1.13
+//        if (block instanceof FlowingFluidBlock) {
 //            IFluidState fluidState = block.getFluidState(blockState);
 //            Fluid fluid = fluidState.getFluid();
 //            if (fluid != null) {
-//                FluidStack fluidStack = new FluidStack(fluid, net.minecraftforge.fluids.Fluid.BUCKET_VOLUME);
+//                FluidStack fluidStack = new FluidStack(fluid.getFluid(), net.minecraftforge.fluids.Fluid.BUCKET_VOLUME);
 //                ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
 //
 //                IProbeInfo horizontal = probeInfo.horizontal();
@@ -284,7 +287,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 //                return;
 //            }
 //        }
-
+//
         if (!pickBlock.isEmpty()) {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.horizontal()

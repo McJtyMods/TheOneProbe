@@ -88,7 +88,7 @@ public class OverlayRenderer {
             }
         }
 
-        PlayerEntity entity = Minecraft.getInstance().field_71439_g;
+        PlayerEntity entity = Minecraft.getInstance().player;
         Vec3d start  = entity.getEyePosition(partialTicks);
         Vec3d vec31 = entity.getLook(partialTicks);
         Vec3d end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
@@ -158,7 +158,7 @@ public class OverlayRenderer {
 
         UUID uuid = entity.getUniqueID();
 
-        PlayerEntity player = Minecraft.getInstance().field_71439_g;
+        PlayerEntity player = Minecraft.getInstance().player;
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
@@ -212,7 +212,7 @@ public class OverlayRenderer {
         if (blockPos == null) {
             return;
         }
-        PlayerEntity player = Minecraft.getInstance().field_71439_g;
+        PlayerEntity player = Minecraft.getInstance().player;
         if (player.getEntityWorld().isAirBlock(blockPos)) {
             return;
         }

@@ -18,7 +18,7 @@ import java.util.Map;
 public class ElementEntityRender {
 
     public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, int x, int y) {
-        Entity entity = Minecraft.getInstance().field_71441_e.getEntityByID(playerID);
+        Entity entity = Minecraft.getInstance().world.getEntityByID(playerID);
         if (entity != null) {
             renderEntity(style, x, y, entity);
         }
@@ -31,14 +31,14 @@ public class ElementEntityRender {
                 String fixed = fixEntityId(entityName);
                 EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
                 if (value != null) {
-                    entity = value.func_220342_a(Minecraft.getInstance().field_71441_e, entityNBT, null, null, new BlockPos(0, 0, 0), SpawnReason.COMMAND, false, false);
+                    entity = value.func_220342_a(Minecraft.getInstance().world, entityNBT, null, null, new BlockPos(0, 0, 0), SpawnReason.COMMAND, false, false);
                 }
 //                entity = EntityList.createEntityFromNBT(entityNBT, Minecraft.getInstance().world);
             } else {
                 String fixed = fixEntityId(entityName);
                 EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
                 if (value != null) {
-                    entity = value.create(Minecraft.getInstance().field_71441_e);
+                    entity = value.create(Minecraft.getInstance().world);
                 }
             }
             if (entity != null) {

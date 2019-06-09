@@ -115,7 +115,7 @@ public class ClientProxy implements IProxy {
                     break;
                 case PROBE_NEEDED:
                 case PROBE_NEEDEDHARD:
-                    if (ModItems.hasAProbeSomewhere(Minecraft.getInstance().field_71439_g)) {
+                    if (ModItems.hasAProbeSomewhere(Minecraft.getInstance().player)) {
                         OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
                     }
                     break;
@@ -124,7 +124,7 @@ public class ClientProxy implements IProxy {
     }
 
     private ProbeMode getModeForPlayer() {
-        PlayerEntity player = Minecraft.getInstance().field_71439_g;
+        PlayerEntity player = Minecraft.getInstance().player;
         if (Config.extendedInMain.get()) {
             if (hasItemInMainHand(ModItems.probe)) {
                 return ProbeMode.EXTENDED;
@@ -134,15 +134,15 @@ public class ClientProxy implements IProxy {
     }
 
     private boolean hasItemInEitherHand(Item item) {
-        ItemStack mainHeldItem = Minecraft.getInstance().field_71439_g.getHeldItem(Hand.MAIN_HAND);
-        ItemStack offHeldItem = Minecraft.getInstance().field_71439_g.getHeldItem(Hand.OFF_HAND);
+        ItemStack mainHeldItem = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
+        ItemStack offHeldItem = Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND);
         return (mainHeldItem != null && mainHeldItem.getItem() == item) ||
                 (offHeldItem != null && offHeldItem.getItem() == item);
     }
 
 
     private boolean hasItemInMainHand(Item item) {
-        ItemStack mainHeldItem = Minecraft.getInstance().field_71439_g.getHeldItem(Hand.MAIN_HAND);
+        ItemStack mainHeldItem = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
         return mainHeldItem != null && mainHeldItem.getItem() == item;
     }
 }

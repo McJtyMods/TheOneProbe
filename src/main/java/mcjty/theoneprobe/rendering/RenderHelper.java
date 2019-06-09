@@ -525,7 +525,7 @@ public class RenderHelper {
                 GlStateManager.enableDepthTest();
             }
 
-            PlayerEntity PlayerEntitysp = Minecraft.getInstance().field_71439_g;
+            PlayerEntity PlayerEntitysp = Minecraft.getInstance().player;
             float f = PlayerEntitysp == null ? 0.0F : PlayerEntitysp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getInstance().getRenderPartialTicks());
 
             if (f > 0.0F) {
