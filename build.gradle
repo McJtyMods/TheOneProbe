@@ -62,7 +62,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190608-1.14.2'
+    mappings channel: 'snapshot', version: '20190609-1.14.2'
     accessTransformer = file('top_at.cfg')
 
     //runDir = "run"
@@ -87,7 +87,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.2-26.0.8'
+    minecraft 'net.minecraftforge:forge:1.14.2-26.0.14'
 
     //deobfCompile "mezz.jei:jei_${jei_version}"
     //deobfCompile "cofh:RedstoneFlux:${redstoneflux_version}"

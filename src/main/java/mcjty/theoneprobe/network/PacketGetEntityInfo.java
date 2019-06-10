@@ -75,7 +75,7 @@ public class PacketGetEntityInfo {
             DimensionType type = DimensionType.getById(dim);
             ServerWorld world = DimensionManager.getWorld(ctx.get().getSender().server, type, true, false);
             if (world != null) {
-                Entity entity = world.func_217461_a(uuid);
+                Entity entity = world.getEntityByUuid(uuid);
                 if (entity != null) {
                     ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(), mode, world, entity, hitVec);
                     PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(uuid, probeInfo),

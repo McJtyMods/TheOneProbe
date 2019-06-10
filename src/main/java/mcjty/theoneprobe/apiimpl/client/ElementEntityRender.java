@@ -31,7 +31,7 @@ public class ElementEntityRender {
                 String fixed = fixEntityId(entityName);
                 EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
                 if (value != null) {
-                    entity = value.func_220342_a(Minecraft.getInstance().world, entityNBT, null, null, new BlockPos(0, 0, 0), SpawnReason.COMMAND, false, false);
+                    entity = value.create(Minecraft.getInstance().world, entityNBT, null, null, new BlockPos(0, 0, 0), SpawnReason.COMMAND, false, false);
                 }
 //                entity = EntityList.createEntityFromNBT(entityNBT, Minecraft.getInstance().world);
             } else {
