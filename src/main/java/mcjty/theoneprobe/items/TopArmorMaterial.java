@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.items;
 
+import mcjty.theoneprobe.TheOneProbe;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.crafting.Ingredient;
@@ -53,7 +54,7 @@ public class TopArmorMaterial implements IArmorMaterial {
 
     @Override
     public String getName() {
-        return name;
+        return TheOneProbe.MODID + ":" + name;
     }
 
     @Override
