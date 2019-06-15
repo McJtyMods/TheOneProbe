@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "theoneprobe:items/creativeprobe"
+    "layer0": "theoneprobe:item/creativeprobe"
   }
 }

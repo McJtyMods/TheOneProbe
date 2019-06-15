@@ -27,7 +27,6 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -36,7 +35,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -46,14 +44,6 @@ import java.util.function.Supplier;
 
 @Mod("theoneprobe")
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-//
-//@Mod(modid = TheOneProbe.MODID, name="TheOneProbe",
-//        dependencies =
-//                "after:forge@[" + TheOneProbe.MIN_FORGE11_VER + ",);" +
-//                "after:tesla",
-//        version = TheOneProbe.VERSION,
-//        acceptedMinecraftVersions = "[1.12,1.13)",
-//        guiFactory = "mcjty.theoneprobe.config.TopModGuiFactory")
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
     public static final String VERSION = "1.4.30";
@@ -61,12 +51,6 @@ public class TheOneProbe {
 
     public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
     public static final Logger logger = LogManager.getLogger();
-
-//    public static TheOneProbe instance;
-
-    public static File mainConfigDir;
-    public static File modConfigDir;
-//    public static Configuration config;
 
     public static TheOneProbeImp theOneProbeImp = new TheOneProbeImp();
 
@@ -90,14 +74,8 @@ public class TheOneProbe {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
 
-        // Register the enqueueIMC method for modloading
-//        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-
         // Register the processIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-
-        // Register the doClientStuff method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::initClient);
 
         // Register ourselves for server, registry and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -146,9 +124,6 @@ public class TheOneProbe {
         configureEntityProviders();
 
         proxy.setup(event);
-    }
-
-    private void initClient(final FMLClientSetupEvent event) {
     }
 
     private void processIMC(final InterModProcessEvent event) {

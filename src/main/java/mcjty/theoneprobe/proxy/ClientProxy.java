@@ -80,7 +80,7 @@ public class ClientProxy implements IProxy {
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
         if (ignoreNextGuiClose) {
-            Screen current = Minecraft.getInstance().field_71462_r;
+            Screen current = Minecraft.getInstance().currentScreen;
             if (event.getGui() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
                 ignoreNextGuiClose = false;
                 // We don't want our gui to be closed for a new 'null' guil
@@ -136,13 +136,12 @@ public class ClientProxy implements IProxy {
     private boolean hasItemInEitherHand(Item item) {
         ItemStack mainHeldItem = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
         ItemStack offHeldItem = Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND);
-        return (mainHeldItem != null && mainHeldItem.getItem() == item) ||
-                (offHeldItem != null && offHeldItem.getItem() == item);
+        return mainHeldItem.getItem() == item || offHeldItem.getItem() == item;
     }
 
 
     private boolean hasItemInMainHand(Item item) {
         ItemStack mainHeldItem = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
-        return mainHeldItem != null && mainHeldItem.getItem() == item;
+        return mainHeldItem.getItem() == item;
     }
 }

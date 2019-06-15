@@ -2,6 +2,6 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "item/diamond_helmet",
-    "layer1": "theoneprobe:items/helmet_probe"
+    "layer1": "theoneprobe:item/helmet_probe"
   }
 }

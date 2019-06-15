@@ -53,7 +53,7 @@ public class TopArmorMaterial implements IArmorMaterial {
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override

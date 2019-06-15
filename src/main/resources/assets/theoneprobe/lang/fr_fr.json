@@ -1,0 +1,14 @@
+{
+    "key.toggleLiquids": "Afficher les liquides",
+    "key.toggleVisible": "Afficher",
+    "key.categories.theoneprobe": "La Sonde",
+    "item.theoneprobe.probe": "La Sonde",
+    "item.theoneprobe.probe_goggles": "La Sonde (Bauble)",
+    "item.theoneprobe.diamond_helmet_probe": "Casque en diamant avec Sonde",
+    "item.theoneprobe.gold_helmet_probe": "Casque en or avec Sonde",
+    "item.theoneprobe.iron_helmet_probe": "Casque en fer avec Sonde",
+    "item.theoneprobe.creativeprobe": "La Sonde créative",
+    "item.theoneprobe.probenote": "The One Probe: à lire",
+
+    "itemGroup.Probe": "La Sonde"
+}

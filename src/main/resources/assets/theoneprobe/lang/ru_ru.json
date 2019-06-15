@@ -1,0 +1,12 @@
+{
+    "key.toggleLiquids": "Переключить просмотр жидкостей",
+    "key.toggleVisible": "Переключить видимость",
+    "key.categories.theoneprobe": "The One Probe",
+    "item.theoneprobe.probe": "Датчик",
+    "item.theoneprobe.diamond_helmet_probe": "Алмазный шлем с датчиком",
+    "item.theoneprobe.gold_helmet_probe": "Золотой шлем с датчиком",
+    "item.theoneprobe.iron_helmet_probe": "Железный шлем с датчиком",
+    "item.theoneprobe.creativeprobe": "Творческий датчик",
+
+    "itemGroup.Probe": "The One Probe"
+}
