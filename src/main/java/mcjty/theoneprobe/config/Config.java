@@ -30,10 +30,10 @@ import static net.minecraftforge.fml.Logging.CORE;
 @Mod.EventBusSubscriber
 public class Config {
 
-    private static final Builder SERVER_BUILDER = new Builder();
+    private static final Builder COMMON_BUILDER = new Builder();
     private static final Builder CLIENT_BUILDER = new Builder();
 
-    public static final ForgeConfigSpec SERVER_CONFIG;
+    public static final ForgeConfigSpec COMMON_CONFIG;
     public static final ForgeConfigSpec CLIENT_CONFIG;
 
 
@@ -188,38 +188,38 @@ public class Config {
 
         DEFAULT_CONFIG = new ProbeConfig();
 
-        SERVER_BUILDER.comment("General configuration");
+        COMMON_BUILDER.comment("General configuration");
         CLIENT_BUILDER.comment("General configuration");
-        loggingThrowableTimeout = SERVER_BUILDER
+        loggingThrowableTimeout = COMMON_BUILDER
                 .comment("How much time (ms) to wait before reporting an exception again")
                 .defineInRange("loggingThrowableTimeout", 20000, 1, 10000000);
 
-        needsProbe = SERVER_BUILDER
+        needsProbe = COMMON_BUILDER
                 .comment("Is the probe needed to show the tooltip? 0 = no, 1 = yes, 2 = yes and clients cannot override, 3 = probe needed for extended info only")
                 .defineInRange("needsProbe", PROBE_NEEDEDFOREXTENDED, 0, 3);
 
-        extendedInMain = SERVER_BUILDER
+        extendedInMain = COMMON_BUILDER
                 .comment("If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)")
                 .define("extendedInMain", false);
-        supportBaubles = SERVER_BUILDER
+        supportBaubles = COMMON_BUILDER
                 .comment("If true there will be a bauble version of the probe if baubles is present")
                 .define("supportBaubles", true);
-        spawnNote = SERVER_BUILDER
+        spawnNote = COMMON_BUILDER
                 .comment("If true there will be a readme note for first-time players")
                 .define("spawnNote", true);
-        showCollarColor = SERVER_BUILDER
+        showCollarColor = COMMON_BUILDER
                 .comment("If true show the color of the collar of a wolf")
                 .define("showCollarColor", true);
 
-        defaultRFMode = SERVER_BUILDER
+        defaultRFMode = COMMON_BUILDER
                 .comment("How to display RF: 0 = do not show, 1 = show in a bar, 2 = show as text")
                 .defineInRange("showRF", DEFAULT_CONFIG.getRFMode(), 0, 2);
-        defaultTankMode = SERVER_BUILDER
+        defaultTankMode = COMMON_BUILDER
                 .comment("How to display tank contents: 0 = do not show, 1 = show in a bar, 2 = show as text")
                 .defineInRange("showTank", DEFAULT_CONFIG.getRFMode(), 0, 2);
-        rfFormat = addEnumConfig(SERVER_BUILDER, "rfFormat", "Format for displaying RF",
+        rfFormat = addEnumConfig(COMMON_BUILDER, "rfFormat", "Format for displaying RF",
                 NumberFormat.COMPACT, NumberFormat.COMMAS, NumberFormat.COMPACT, NumberFormat.FULL, NumberFormat.NONE);
-        tankFormat = addEnumConfig(SERVER_BUILDER, "tankFormat", "Format for displaying tank contents",
+        tankFormat = addEnumConfig(COMMON_BUILDER, "tankFormat", "Format for displaying tank contents",
                 NumberFormat.COMPACT, NumberFormat.COMMAS, NumberFormat.COMPACT, NumberFormat.FULL, NumberFormat.NONE);
 
         timeout = CLIENT_BUILDER
@@ -236,52 +236,52 @@ public class Config {
                 .defineInRange("probeDistance", 6.0, 0.1, 200);
         initDefaultConfig();
 
-        showDebugInfo = SERVER_BUILDER
+        showDebugInfo = COMMON_BUILDER
                 .comment("If true show debug info with creative probe")
                 .define("showDebugInfo", true);
-        compactEqualStacks = SERVER_BUILDER
+        compactEqualStacks = COMMON_BUILDER
                 .comment("If true equal stacks will be compacted in the chest contents overlay")
                 .define("compactEqualStacks", true);
 
-        cfgRfbarFilledColor = SERVER_BUILDER
+        cfgRfbarFilledColor = COMMON_BUILDER
                 .comment("Color for the RF bar")
                 .define("rfbarFilledColor", Integer.toHexString(rfbarFilledColor));
-        cfgRfbarAlternateFilledColor = SERVER_BUILDER
+        cfgRfbarAlternateFilledColor = COMMON_BUILDER
                 .comment("Alternate color for the RF bar")
                 .define("rfbarAlternateFilledColor", Integer.toHexString(rfbarAlternateFilledColor));
-        cfgRfbarBorderColor = SERVER_BUILDER
+        cfgRfbarBorderColor = COMMON_BUILDER
                 .comment("Color for the RF bar border")
                 .define("rfbarBorderColor", Integer.toHexString(rfbarBorderColor));
-        cfgTankbarFilledColor = SERVER_BUILDER
+        cfgTankbarFilledColor = COMMON_BUILDER
                 .comment("Color for the tank bar")
                 .define("tankbarFilledColor", Integer.toHexString(tankbarFilledColor));
-        cfgTankbarAlternateFilledColor = SERVER_BUILDER
+        cfgTankbarAlternateFilledColor = COMMON_BUILDER
                 .comment("Alternate color for the tank bar")
                 .define("tankbarAlternateFilledColor", Integer.toHexString(tankbarAlternateFilledColor));
-        cfgTankbarBorderColor = SERVER_BUILDER
+        cfgTankbarBorderColor = COMMON_BUILDER
                 .comment("Color for the tank bar border")
                 .define("tankbarBorderColor", Integer.toHexString(tankbarBorderColor));
 
-        showItemDetailThresshold = SERVER_BUILDER
+        showItemDetailThresshold = COMMON_BUILDER
             .comment("If the number of items in an inventory is lower or equal then this number then more info is shown")
             .defineInRange("showItemDetailThresshold", 4, 0, 20);
-        showSmallChestContentsWithoutSneaking = SERVER_BUILDER
+        showSmallChestContentsWithoutSneaking = COMMON_BUILDER
                 .comment("The maximum amount of slots (empty or not) to show without sneaking")
                 .defineInRange("showSmallChestContentsWithoutSneaking", 0, 0, 1000);
-        showContentsWithoutSneaking = SERVER_BUILDER
+        showContentsWithoutSneaking = COMMON_BUILDER
                 .comment("A list of blocks for which we automatically show chest contents even if not sneaking")
                 .define("showContentsWithoutSneaking", Lists.<String>asList("storagedrawers:basicdrawers", new String[] { "storagedrawersextra:extra_drawers" }));
-        dontShowContentsUnlessSneaking = SERVER_BUILDER
+        dontShowContentsUnlessSneaking = COMMON_BUILDER
                 .comment("A list of blocks for which we don't show chest contents automatically except if sneaking")
                 .define("dontShowContentsUnlessSneaking", Collections.emptyList());
 
-        dontSendNBT = SERVER_BUILDER
+        dontSendNBT = COMMON_BUILDER
                 .comment("A list of blocks for which we don't send NBT over the network. This is mostly useful for blocks that have HUGE NBT in their pickblock (itemstack)")
                 .define("dontSendNBT", Collections.emptyList());
 
         setupStyleConfig();
 
-        SERVER_CONFIG = SERVER_BUILDER.build();
+        COMMON_CONFIG = COMMON_BUILDER.build();
         CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
 
