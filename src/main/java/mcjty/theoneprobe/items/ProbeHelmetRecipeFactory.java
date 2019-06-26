@@ -18,7 +18,7 @@ public class ProbeHelmetRecipeFactory {}/*implements IRecipeFactory {
         @Override
         public ItemStack getCraftingResult(@Nonnull InventoryCrafting inventory) {
             ItemStack result = super.getCraftingResult(inventory);
-            NBTTagCompound tc = new NBTTagCompound();
+            CompoundNBT tc = new CompoundNBT();
             tc.setInteger(ModItems.PROBETAG, 1);
             result.setTagCompound(tc);
             return result;

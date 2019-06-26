@@ -138,7 +138,7 @@ public class ElementEntityRender {
      * @return
      */
     public static String fixEntityId(String id) {
-//        NBTTagCompound nbt = new NBTTagCompound();
+//        CompoundNBT nbt = new CompoundNBT();
 //        nbt.setString("id", id);
 //        nbt = FIXER.fixTagCompound(nbt);
 //        return nbt.getString("id");

@@ -54,7 +54,7 @@ public class ModItems {
 //            public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
 //                if (this.isInCreativeTab(tab)) {
 //                    ItemStack stack = new ItemStack(this);
-//                    NBTTagCompound tag = new NBTTagCompound();
+//                    CompoundNBT tag = new CompoundNBT();
 //                    tag.setInteger(PROBETAG, 1);
 //                    stack.setTagCompound(tag);
 //                    subItems.add(stack);
