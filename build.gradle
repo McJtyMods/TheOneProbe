@@ -62,8 +62,8 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190615-1.14.2'
-    accessTransformer = file('top_at.cfg')
+    mappings channel: 'snapshot', version: "${mcp_mappings}"
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     //runDir = "run"
     runs {
@@ -87,7 +87,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.2-26.0.25'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     //deobfCompile "mezz.jei:jei_${jei_version}"
     //deobfCompile "cofh:RedstoneFlux:${redstoneflux_version}"
@@ -96,7 +96,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'FMLAT': 'top_at.cfg'
+        attributes 'FMLAT': 'accesstransformer.cfg'
     }
 }
 
