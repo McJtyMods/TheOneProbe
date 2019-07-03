@@ -1,15 +1,18 @@
 {
   "result": {
-    "item": "theoneprobe:diamond_helmet_probe",
-    "data": 0
+    "item": "theoneprobe:diamond_helmet_probe"
   },
-  "ingredients": [
-    {
+  "pattern": [
+    "ab",
+    "  "
+  ],
+  "key": {
+    "b": {
       "item": "theoneprobe:probe"
     },
-    {
+    "a": {
       "item": "minecraft:diamond_helmet"
     }
-  ],
+  },
   "type": "theoneprobe:probe_helmet"
 }

@@ -6,6 +6,7 @@ import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.items.AddProbeTagRecipeSerializer;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
@@ -15,8 +16,10 @@ import mcjty.theoneprobe.proxy.ServerProxy;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -133,6 +136,11 @@ public class TheOneProbe {
                 supplier.get().apply(theOneProbeImp);
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void registerRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> e) {
+        e.getRegistry().register(new AddProbeTagRecipeSerializer().setRegistryName(new ResourceLocation(TheOneProbe.MODID, "probe_helmet")));
     }
 
     @SubscribeEvent

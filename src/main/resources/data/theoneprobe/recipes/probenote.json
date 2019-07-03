@@ -7,14 +7,13 @@
     " p ",
     "  r"
   ],
-  "type": "forge:ore_shaped",
+  "type": "minecraft:crafting_shaped",
   "key": {
     "p": {
       "item": "minecraft:paper"
     },
     "r": {
-      "type": "forge:ore_dict",
-      "ore" : "dustRedstone"
+      "item": "minecraft:redstone"
     }
   }
 }

@@ -7,18 +7,16 @@
     " n ",
     "  r"
   ],
-  "type": "forge:ore_shaped",
+  "type": "minecraft:crafting_shaped",
   "key": {
     "r": {
-      "type": "forge:ore_dict",
-      "ore" : "dustRedstone"
+      "item": "minecraft:redstone"
     },
     "C": {
       "item": "minecraft:comparator"
     },
     "n": {
-      "type": "forge:ore_dict",
-      "ore": "nuggetGold"
+      "item": "minecraft:gold_nugget"
     }
   }
 }
