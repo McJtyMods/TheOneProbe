@@ -49,8 +49,6 @@ import java.util.function.Supplier;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
-    public static final String VERSION = "1.4.30";
-    public static final String MIN_FORGE11_VER = "13.19.0.2176";
 
     public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
     public static final Logger logger = LogManager.getLogger();

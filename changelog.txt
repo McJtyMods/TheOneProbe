@@ -1,3 +1,6 @@
+1.4.32:
+- Update to 1.14.4
+
 1.4.28:
 - Small api method to allow getting the default config
 
