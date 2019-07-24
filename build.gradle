@@ -31,9 +31,6 @@ repositories {
     maven { // CompatLayer
         url "http://maven.k-4u.nl"
     }
-    maven { //Tesla
-        url "http://maven.epoxide.xyz"
-    }
     maven {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/repositories/snapshots/"
