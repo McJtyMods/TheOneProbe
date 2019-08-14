@@ -1,3 +1,6 @@
+Upcoming:
+- Worked around a vanilla bug with foxes. This bug affects rendering of the fox client-side and also affects the vanilla mob spawner (https://bugs.mojang.com/browse/MC-148893). Worked around it by catching the crash and simply not rendering the fox in the tooltip
+
 1.4.33:
 - Update to latest Forge
 

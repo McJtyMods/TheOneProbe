@@ -31,14 +31,21 @@ public class ElementEntityRender {
                 String fixed = fixEntityId(entityName);
                 EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
                 if (value != null) {
-                    entity = value.create(Minecraft.getInstance().world, entityNBT, null, null, new BlockPos(0, 0, 0), SpawnReason.COMMAND, false, false);
+                    try {
+                        entity = value.create(Minecraft.getInstance().world, entityNBT, null, null, new BlockPos(0, 0, 0), SpawnReason.COMMAND, false, false);
+                    } catch (Exception ignore) {
+                        // This can crash due to a vanilla bug with foxes. Workaround here
+                    }
                 }
-//                entity = EntityList.createEntityFromNBT(entityNBT, Minecraft.getInstance().world);
             } else {
                 String fixed = fixEntityId(entityName);
                 EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
                 if (value != null) {
-                    entity = value.create(Minecraft.getInstance().world);
+                    try {
+                        entity = value.create(Minecraft.getInstance().world);
+                    } catch (Exception ignore) {
+                        // This can crash due to a vanilla bug with foxes. Workaround here
+                    }
                 }
             }
             if (entity != null) {
