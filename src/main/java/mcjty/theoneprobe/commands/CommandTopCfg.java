@@ -69,7 +69,7 @@ public class CommandTopCfg {}/*implements ICommand {
         String cmd = args[0];
         Consumer<String[]> consumer = SUBCOMMANDS.get(cmd);
         if (consumer == null) {
-            ((PlayerEntity)sender).sendStatusMessage(new TextComponentString(TextFormatting.RED + "Unknown style option!"), false);
+            ((PlayerEntity)sender).sendStatusMessage(new StringTextComponent(TextFormatting.RED + "Unknown style option!"), false);
         } else {
             consumer.accept(args);
         }
