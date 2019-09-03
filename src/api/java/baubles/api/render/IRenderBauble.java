@@ -51,7 +51,7 @@ public interface IRenderBauble {
 		 * Use for renders under {@link RenderType#BODY}.
 		 */
 		public static void applySneakingRotation() {
-			GlStateManager.translate(0F, 0.2F, 0F);
+			GlStateManager.translatef(0F, 0.2F, 0F);
 			GlStateManager.rotate(90F / (float) Math.PI, 1.0F, 0.0F, 0.0F);
 		}
 
@@ -60,9 +60,9 @@ public interface IRenderBauble {
 		 * Use for renders under {@link RenderType#HEAD}.
 		 */
 		public static void translateToHeadLevel(PlayerEntity player) {
-			GlStateManager.translate(0, -player.getDefaultEyeHeight(), 0);
+			GlStateManager.translatef(0, -player.getDefaultEyeHeight(), 0);
 			if (player.isSneaking())
-				GlStateManager.translate(0.25F * MathHelper.sin(player.rotationPitch * (float) Math.PI / 180), 0.25F * MathHelper.cos(player.rotationPitch * (float) Math.PI / 180), 0F);
+				GlStateManager.translatef(0.25F * MathHelper.sin(player.rotationPitch * (float) Math.PI / 180), 0.25F * MathHelper.cos(player.rotationPitch * (float) Math.PI / 180), 0F);
 		}
 
 		/**
@@ -72,7 +72,7 @@ public interface IRenderBauble {
 		public static void translateToFace() {
 			GlStateManager.rotate(90F, 0F, 1F, 0F);
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
-			GlStateManager.translate(0f, -4.35f, -1.27f);
+			GlStateManager.translatef(0f, -4.35f, -1.27f);
 		}
 
 		/**
@@ -80,7 +80,7 @@ public interface IRenderBauble {
 		 * Use for any render.
 		 */
 		public static void defaultTransforms() {
-			GlStateManager.translate(0.0, 3.0, 1.0);
+			GlStateManager.translatef(0.0, 3.0, 1.0);
 			GlStateManager.scale(0.55, 0.55, 0.55);
 		}
 
@@ -90,7 +90,7 @@ public interface IRenderBauble {
 		 */
 		public static void translateToChest() {
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
-			GlStateManager.translate(0F, -3.2F, -0.85F);
+			GlStateManager.translatef(0F, -3.2F, -0.85F);
 		}
 	}
 
