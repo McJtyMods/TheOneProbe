@@ -10,8 +10,6 @@ import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.IProperty;
@@ -24,9 +22,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import java.util.Collections;
 
@@ -172,14 +168,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         TileEntity te = world.getTileEntity(pos);
         if (te != null && te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).isPresent()) {
             te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
-                IFluidTankProperties[] properties = handler.getTankProperties();
-                if (properties != null) {
-                    for (IFluidTankProperties property : properties) {
-                        if (property != null) {
-                            FluidStack fluidStack = property.getContents();
-                            int maxContents = property.getCapacity();
-                            addFluidInfo(probeInfo, config, fluidStack, maxContents);
-                        }
+                for (int i = 0 ; i < handler.getTanks() ; i++) {
+                    FluidStack fluidStack = handler.getFluidInTank(i);
+                    int maxContents = handler.getTankCapacity(i);
+                    if (fluidStack != null) {
+                        addFluidInfo(probeInfo, config, fluidStack, maxContents);
                     }
                 }
             });
@@ -187,9 +180,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
-        int contents = fluidStack == null ? 0 : fluidStack.amount;
+        int contents = fluidStack == null ? 0 : fluidStack.getAmount();
         if (fluidStack != null) {
-            probeInfo.text(NAME + "Liquid: " + fluidStack.getLocalizedName());
+            probeInfo.text(NAME + "Liquid: " + fluidStack.getDisplayName().getFormattedText()); // @todo 1.14 use proper lang support
         }
         if (config.getTankMode() == 1) {
             probeInfo.progress(contents, maxContents,
