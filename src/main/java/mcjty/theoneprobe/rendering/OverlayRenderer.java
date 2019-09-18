@@ -25,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -37,7 +38,7 @@ import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 
 public class OverlayRenderer {
 
-    private static Map<Pair<Integer,BlockPos>, Pair<Long, ProbeInfo>> cachedInfo = new HashMap<>();
+    private static Map<Pair<DimensionType,BlockPos>, Pair<Long, ProbeInfo>> cachedInfo = new HashMap<>();
     private static Map<UUID, Pair<Long, ProbeInfo>> cachedEntityInfo = new HashMap<>();
     private static long lastCleanupTime = 0;
 
@@ -49,7 +50,7 @@ public class OverlayRenderer {
     // When the server delays too long we also show some preliminary information already
     private static long lastRenderedTime = -1;
 
-    public static void registerProbeInfo(int dim, BlockPos pos, ProbeInfo probeInfo) {
+    public static void registerProbeInfo(DimensionType dim, BlockPos pos, ProbeInfo probeInfo) {
         if (probeInfo == null) {
             return;
         }
@@ -240,8 +241,8 @@ public class OverlayRenderer {
             }
         }
 
-        int dimension = player.getEntityWorld().getDimension().getType().getId();   // @todo avoid id?
-        Pair<Integer, BlockPos> key = Pair.of(dimension, blockPos);
+        DimensionType dimension = player.getEntityWorld().getDimension().getType();
+        Pair<DimensionType, BlockPos> key = Pair.of(dimension, blockPos);
         Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(key);
         if (cacheEntry == null || cacheEntry.getValue() == null) {
 
@@ -332,7 +333,7 @@ public class OverlayRenderer {
             pickBlock = pickBlock.copy();
             pickBlock.setTag(null);
         }
-        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.getDimension().getType().getId(), blockPos, mode, mouseOver, pickBlock));
+        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.getDimension().getType(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo) {
@@ -351,8 +352,8 @@ public class OverlayRenderer {
 
     private static void cleanupCachedBlocks(long time) {
         // It has been a while. Time to clean up unused cached pairs.
-        Map<Pair<Integer,BlockPos>, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
-        for (Map.Entry<Pair<Integer, BlockPos>, Pair<Long, ProbeInfo>> entry : cachedInfo.entrySet()) {
+        Map<Pair<DimensionType,BlockPos>, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
+        for (Map.Entry<Pair<DimensionType, BlockPos>, Pair<Long, ProbeInfo>> entry : cachedInfo.entrySet()) {
             long t = entry.getValue().getLeft();
             if (time < t + Config.timeout.get() + 1000) {
                 newCachedInfo.put(entry.getKey(), entry.getValue());

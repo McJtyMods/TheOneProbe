@@ -4,18 +4,19 @@ import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketReturnInfo {
 
-    private int dim;
+    private DimensionType dim;
     private BlockPos pos;
     private ProbeInfo probeInfo;
 
     public PacketReturnInfo(ByteBuf buf) {
-        dim = buf.readInt();
+        dim = DimensionType.getById(buf.readInt());
         pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();
@@ -26,7 +27,7 @@ public class PacketReturnInfo {
     }
 
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(dim);
+        buf.writeInt(dim.getId());
         buf.writeInt(pos.getX());
         buf.writeInt(pos.getY());
         buf.writeInt(pos.getZ());
@@ -41,7 +42,7 @@ public class PacketReturnInfo {
     public PacketReturnInfo() {
     }
 
-    public PacketReturnInfo(int dim, BlockPos pos, ProbeInfo probeInfo) {
+    public PacketReturnInfo(DimensionType dim, BlockPos pos, ProbeInfo probeInfo) {
         this.dim = dim;
         this.pos = pos;
         this.probeInfo = probeInfo;

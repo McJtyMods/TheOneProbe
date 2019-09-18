@@ -33,7 +33,7 @@ import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
 public class PacketGetInfo  {
 
-    private int dim;
+    private DimensionType dim;
     private BlockPos pos;
     private ProbeMode mode;
     private Direction sideHit;
@@ -41,7 +41,7 @@ public class PacketGetInfo  {
     private ItemStack pickBlock;
 
     public PacketGetInfo(PacketBuffer buf) {
-        dim = buf.readInt();
+        dim = DimensionType.getById(buf.readInt());
         pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
         mode = ProbeMode.values()[buf.readByte()];
         byte sideByte = buf.readByte();
@@ -57,7 +57,7 @@ public class PacketGetInfo  {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeInt(dim);
+        buf.writeInt(dim.getId());
         buf.writeInt(pos.getX());
         buf.writeInt(pos.getY());
         buf.writeInt(pos.getZ());
@@ -85,7 +85,7 @@ public class PacketGetInfo  {
     public PacketGetInfo() {
     }
 
-    public PacketGetInfo(int dim, BlockPos pos, ProbeMode mode, RayTraceResult mouseOver, ItemStack pickBlock) {
+    public PacketGetInfo(DimensionType dim, BlockPos pos, ProbeMode mode, RayTraceResult mouseOver, ItemStack pickBlock) {
         this.dim = dim;
         this.pos = pos;
         this.mode = mode;
@@ -96,8 +96,7 @@ public class PacketGetInfo  {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            DimensionType type = DimensionType.getById(dim);
-            ServerWorld world = DimensionManager.getWorld(ctx.get().getSender().server, type, true, false);
+            ServerWorld world = DimensionManager.getWorld(ctx.get().getSender().server, dim, true, false);
             if (world != null) {
                 ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(),
                         mode, world, pos, sideHit, hitVec, pickBlock);
