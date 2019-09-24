@@ -14,9 +14,7 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void init(FMLClientSetupEvent e) {
-        ScreenManager.IScreenFactory<DummyConfigContainer, GuiConfig> factory = (container, inventory, title) -> {
-            return new GuiConfig(container, inventory);
-        };
+        ScreenManager.IScreenFactory<DummyConfigContainer, GuiConfig> factory = (container, inventory, title) -> new GuiConfig(container, inventory);
         ScreenManager.registerFactory(Registration.CONTAINER_CONFIG, factory);
     }
 }

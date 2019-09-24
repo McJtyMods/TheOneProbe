@@ -16,6 +16,6 @@ public class DummyConfigContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return false;
+        return true;
     }
 }
