@@ -20,7 +20,9 @@ public class TopModGuiFactory implements IModGuiFactory {
 
     @Override
     public Screen createConfigGui(Screen parentScreen) {
-        return new TopModConfigGui(parentScreen);
+//        return new TopModConfigGui(parentScreen);
+        // @todo 1.14
+        return null;
     }
 
     @Override

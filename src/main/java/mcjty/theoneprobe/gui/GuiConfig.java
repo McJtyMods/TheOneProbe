@@ -11,7 +11,8 @@ import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
@@ -26,7 +27,7 @@ import java.util.Map;
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 import static mcjty.theoneprobe.rendering.RenderHelper.drawTexturedModalRect;
 
-public class GuiConfig extends Screen {
+public class GuiConfig extends ContainerScreen<DummyConfigContainer> {
     private static final int WIDTH = 230;
     private static final int HEIGHT = 230;
 
@@ -38,8 +39,8 @@ public class GuiConfig extends Screen {
 
     private static final List<Preset> presets = new ArrayList<>();
 
-    public GuiConfig() {
-        super(new StringTextComponent("config"));
+    public GuiConfig(DummyConfigContainer screenContainer, PlayerInventory inv) {
+        super(screenContainer, inv, new StringTextComponent("TOP Config"));
     }
 
     private List<HitBox> hitboxes = Collections.emptyList();
@@ -74,6 +75,10 @@ public class GuiConfig extends Screen {
         guiTop = (this.height - HEIGHT) / 2;
     }
 
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+
+    }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {

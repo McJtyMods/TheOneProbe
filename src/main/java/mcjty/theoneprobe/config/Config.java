@@ -446,12 +446,13 @@ public class Config {
     }
 
     public static void setPos(int leftx, int topy, int rightx, int bottomy) {
+//        sendCommandToClient(player, "setpos", String.valueOf(leftx), String.valueOf(topy), String.valueOf(rightx), String.valueOf(bottomy));
         // @todo 1.13
 //        Configuration cfg = TheOneProbe.config;
-//        Config.leftX = leftx;
-//        Config.topY = topy;
-//        Config.rightX = rightx;
-//        Config.bottomY = bottomy;
+        Config.leftX.set(leftx);
+        Config.topY.set(topy);
+        Config.rightX.set(rightx);
+        Config.bottomY.set(bottomy);
 //        cfg.get(CATEGORY_CLIENT, "boxLeftX", leftx).set(leftx);
 //        cfg.get(CATEGORY_CLIENT, "boxRightX", rightx).set(rightx);
 //        cfg.get(CATEGORY_CLIENT, "boxTopY", topy).set(topy);

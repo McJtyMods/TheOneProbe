@@ -1,5 +1,6 @@
 package mcjty.theoneprobe;
 
+import mcjty.theoneprobe.commands.ModCommands;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.playerdata.PlayerProperties;
@@ -9,8 +10,14 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 public class ForgeEventHandlers {
+
+    @SubscribeEvent
+    public void serverLoad(FMLServerStartingEvent event) {
+        ModCommands.register(event.getCommandDispatcher());
+    }
 
 
     @SubscribeEvent
