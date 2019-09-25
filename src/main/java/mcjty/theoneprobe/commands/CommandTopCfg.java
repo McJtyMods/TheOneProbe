@@ -5,19 +5,12 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import mcjty.theoneprobe.gui.DummyConfigContainer;
+import mcjty.theoneprobe.network.PacketOpenGui;
+import mcjty.theoneprobe.network.PacketHandler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.network.NetworkHooks;
-
-import javax.annotation.Nullable;
+import net.minecraftforge.fml.network.NetworkDirection;
 
 public class CommandTopCfg implements Command<CommandSource> {
 
@@ -34,18 +27,19 @@ public class CommandTopCfg implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().asPlayer();
-        NetworkHooks.openGui(player, new INamedContainerProvider() {
-            @Override
-            public ITextComponent getDisplayName() {
-                return new StringTextComponent("TOP Config");
-            }
-
-            @Nullable
-            @Override
-            public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player) {
-                return new DummyConfigContainer(id);
-            }
-        }, player.getPosition());
+        PacketHandler.INSTANCE.sendTo(new PacketOpenGui(), player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+//        NetworkHooks.openGui(player, new INamedContainerProvider() {
+//            @Override
+//            public ITextComponent getDisplayName() {
+//                return new StringTextComponent("TOP Config");
+//            }
+//
+//            @Nullable
+//            @Override
+//            public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player) {
+//                return new DummyConfigContainer(id);
+//            }
+//        }, player.getPosition());
 
         return 0;
     }

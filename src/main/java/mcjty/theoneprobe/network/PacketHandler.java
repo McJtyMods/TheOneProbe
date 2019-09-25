@@ -36,5 +36,9 @@ public class PacketHandler {
                 PacketReturnEntityInfo::toBytes,
                 PacketReturnEntityInfo::new,
                 PacketReturnEntityInfo::handle);
+        INSTANCE.registerMessage(nextID(), PacketOpenGui.class,
+                PacketOpenGui::toBytes,
+                PacketOpenGui::new,
+                PacketOpenGui::handle);
     }
 }
