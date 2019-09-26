@@ -388,14 +388,18 @@ public class Config {
                 .comment("true means shows harvestability with vanilla style icons")
                 .define("harvestStyleVanilla", true);
 
+        CLIENT_BUILDER.push("style");
+
         Map<TextStyleClass, ConfigValue<String>> newformat = new HashMap<>();
         for (TextStyleClass styleClass : textStyleClasses.keySet()) {
             ConfigValue<String> configValue = CLIENT_BUILDER
                     .comment("Text style. Use a comma delimited list with colors like: 'red', 'green', 'blue', ... or style codes like 'underline', 'bold', 'italic', 'strikethrough', ...\"")
-                    .define("textStye" + styleClass.getReadableName(), textStyleClasses.get(styleClass));
+                    .define(styleClass.getReadableName(), textStyleClasses.get(styleClass));
             newformat.put(styleClass, configValue);
         }
         cfgtextStyleClasses = newformat;
+
+        CLIENT_BUILDER.pop();
 
         // @todo 1.13
 //        extendedInMain = cfg.getBoolean("extendedInMain", CATEGORY_CLIENT, extendedInMain, "If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)");
@@ -403,7 +407,7 @@ public class Config {
 
     public static void setTextStyle(TextStyleClass styleClass, String style) {
         Config.textStyleClasses.put(styleClass, style);
-        cfgtextStyleClasses.get(styleClass).set(textStyleClasses.get(styleClass));
+        cfgtextStyleClasses.get(styleClass).set(style);
     }
 
     public static void setExtendedInMain(boolean extendedInMain) {

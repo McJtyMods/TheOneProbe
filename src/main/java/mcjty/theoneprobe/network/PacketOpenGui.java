@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.network;
 
 import mcjty.theoneprobe.gui.GuiConfig;
+import mcjty.theoneprobe.gui.GuiNote;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -8,17 +9,29 @@ import java.util.function.Supplier;
 
 public class PacketOpenGui {
 
+    public static int GUI_CONFIG = 0;
+    public static int GUI_NOTE = 1;
+
+    private int gui;
+
     public PacketOpenGui(PacketBuffer buf) {
+        gui = buf.readInt();
     }
 
     public void toBytes(PacketBuffer buf) {
+        buf.writeInt(gui);
     }
 
-    public PacketOpenGui() {
+    public PacketOpenGui(int gui) {
+        this.gui = gui;
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(GuiConfig::open);
+        if (gui == GUI_CONFIG) {
+            ctx.get().enqueueWork(GuiConfig::open);
+        } else {
+            ctx.get().enqueueWork(GuiNote::open);
+        }
         ctx.get().setPacketHandled(true);
     }
 }

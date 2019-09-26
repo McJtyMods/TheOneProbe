@@ -134,4 +134,7 @@ public class GuiNote extends Screen {
         return y;
     }
 
+    public static void open() {
+        Minecraft.getInstance().displayGuiScreen(new GuiNote());
+    }
 }
