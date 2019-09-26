@@ -331,11 +331,7 @@ public class Config {
     }
 
     public static void setProbeNeeded(int probeNeeded) {
-        // @todo 1.13
-//        Configuration cfg = TheOneProbe.config;
-//        Config.needsProbe = probeNeeded;
-//        cfg.get(CATEGORY_THEONEPROBE, "needsProbe", probeNeeded).set(probeNeeded);
-//        cfg.save();
+        Config.needsProbe.set(probeNeeded);
     }
 
 
@@ -406,82 +402,46 @@ public class Config {
     }
 
     public static void setTextStyle(TextStyleClass styleClass, String style) {
-        // @todo 1.13
-//        Configuration cfg = TheOneProbe.config;
         Config.textStyleClasses.put(styleClass, style);
-//        cfg.get(CATEGORY_CLIENT, "textStyle" + styleClass.getReadableName(), style).set(style);
-//        cfg.save();
+        cfgtextStyleClasses.get(styleClass).set(textStyleClasses.get(styleClass));
     }
 
     public static void setExtendedInMain(boolean extendedInMain) {
-        // @todo 1.13
-//        Configuration cfg = TheOneProbe.config;
-//        Config.extendedInMain = extendedInMain;
-//        cfg.get(CATEGORY_CLIENT, "extendedInMain", extendedInMain).set(extendedInMain);
-//        cfg.save();
+        Config.extendedInMain.set(extendedInMain);
     }
 
     public static void setLiquids(boolean liquids) {
-        // @todo 1.13
-//        Configuration cfg = TheOneProbe.config;
-//        Config.showLiquids = liquids;
-//        cfg.get(CATEGORY_CLIENT, "showLiquids", showLiquids).set(liquids);
-//        cfg.save();
+        Config.showLiquids.set(liquids);
     }
 
     public static void setVisible(boolean visible) {
-        // @todo 1.13
-//        Configuration cfg = TheOneProbe.config;
-//        Config.isVisible = visible;
-//        cfg.get(CATEGORY_CLIENT, "isVisible", isVisible).set(visible);
-//        cfg.save();
+        Config.isVisible.set(visible);
     }
 
     public static void setCompactEqualStacks(boolean compact) {
-        // @todo 1.13
-//        Configuration cfg = TheOneProbe.config;
-//        Config.compactEqualStacks = compact;
-//        cfg.get(CATEGORY_CLIENT, "compactEqualStacks", compactEqualStacks).set(compact);
-//        cfg.save();
+        Config.compactEqualStacks.set(compact);
     }
 
     public static void setPos(int leftx, int topy, int rightx, int bottomy) {
-//        sendCommandToClient(player, "setpos", String.valueOf(leftx), String.valueOf(topy), String.valueOf(rightx), String.valueOf(bottomy));
-        // @todo 1.13
-//        Configuration cfg = TheOneProbe.config;
         Config.leftX.set(leftx);
         Config.topY.set(topy);
         Config.rightX.set(rightx);
         Config.bottomY.set(bottomy);
-//        cfg.get(CATEGORY_CLIENT, "boxLeftX", leftx).set(leftx);
-//        cfg.get(CATEGORY_CLIENT, "boxRightX", rightx).set(rightx);
-//        cfg.get(CATEGORY_CLIENT, "boxTopY", topy).set(topy);
-//        cfg.get(CATEGORY_CLIENT, "boxBottomY", bottomy).set(bottomy);
-//        cfg.save();
         updateDefaultOverlayStyle();
     }
 
     public static void setScale(float scale) {
-        // @todo 1.13
-//        Configuration cfg = TheOneProbe.config;
-//        tooltipScale = scale;
-//        cfg.get(CATEGORY_CLIENT, "tooltipScale", tooltipScale).set(tooltipScale);
-//        cfg.save();
+        tooltipScale.set((double) scale);
         updateDefaultOverlayStyle();
     }
 
     public static void setBoxStyle(int thickness, int borderColor, int fillcolor, int offset) {
-        // @todo 1.13
-//        Configuration cfg = TheOneProbe.config;
-//        boxThickness = thickness;
-//        boxBorderColor = borderColor;
-//        boxFillColor = fillcolor;
-//        boxOffset = offset;
-//        cfg.get(CATEGORY_CLIENT, "boxThickness", thickness).set(thickness);
-//        cfg.get(CATEGORY_CLIENT, "boxBorderColor", Integer.toHexString(borderColor)).set(Integer.toHexString(borderColor));
-//        cfg.get(CATEGORY_CLIENT, "boxFillColor", Integer.toHexString(fillcolor)).set(Integer.toHexString(fillcolor));
-//        cfg.get(CATEGORY_CLIENT, "boxOffset", offset).set(offset);
-//        cfg.save();
+        boxThickness.set(thickness);
+        boxBorderColor = borderColor;
+        boxFillColor = fillcolor;
+        cfgboxBorderColor.set(Integer.toHexString(boxBorderColor));
+        cfgboxFillColor.set(Integer.toHexString(boxFillColor));
+        boxOffset.set(offset);
         updateDefaultOverlayStyle();
     }
 

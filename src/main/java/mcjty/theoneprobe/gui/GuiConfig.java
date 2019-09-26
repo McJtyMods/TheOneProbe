@@ -38,10 +38,6 @@ public class GuiConfig extends Screen {
 
     private static final List<Preset> presets = new ArrayList<>();
 
-//    public GuiConfig(DummyConfigContainer screenContainer, PlayerInventory inv) {
-//        super(screenContainer, inv, new StringTextComponent("TOP Config"));
-//    }
-
     public GuiConfig() {
         super(new StringTextComponent("TOP Config"));
     }
@@ -219,6 +215,7 @@ public class GuiConfig extends Screen {
 
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
+        GlStateManager.translatef(0, 0, 1);
 
         int w = probeInfo.getWidth();
         int h = probeInfo.getHeight();

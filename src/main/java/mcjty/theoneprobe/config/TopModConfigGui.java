@@ -1,8 +1,6 @@
 package mcjty.theoneprobe.config;
 
-import mcjty.theoneprobe.gui.DummyConfigContainer;
 import mcjty.theoneprobe.gui.GuiConfig;
-import net.minecraft.entity.player.PlayerInventory;
 
 public class TopModConfigGui extends GuiConfig {
 
