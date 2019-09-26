@@ -1,3 +1,7 @@
+1.4.36:
+- Re-implemented /top config command (previously /topcfg)
+- Re-implemented /top need command (previously /topneed)
+
 1.4.34:
 - Worked around a vanilla bug with foxes. This bug affects rendering of the fox client-side and also affects the vanilla mob spawner (https://bugs.mojang.com/browse/MC-148893). Worked around it by catching the crash and simply not rendering the fox in the tooltip
 
