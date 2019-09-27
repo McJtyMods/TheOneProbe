@@ -147,7 +147,7 @@ public class TheOneProbe {
 
         event.getRegistry().register(ModItems.probe);
         event.getRegistry().register(ModItems.creativeProbe);
-//        event.getRegistry().register(ModItems.probeNote); // @todo 1.13
+        event.getRegistry().register(ModItems.probeNote);
 
         event.getRegistry().register(ModItems.diamondHelmetProbe);
         event.getRegistry().register(ModItems.goldHelmetProbe);

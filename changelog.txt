@@ -5,6 +5,7 @@
 - Right clicking the probe will show the config gui again
 - The keybindings work again
 - Block breaking progress shows again
+- The probe note item is back!
 
 1.4.36:
 - Re-implemented /top config command (previously /topcfg)
