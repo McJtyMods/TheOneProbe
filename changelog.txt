@@ -1,3 +1,7 @@
+1.4.37:
+- Show localized names for fluids
+- Fixed tracing so that non-opaque blocks are visible in TOP too (like grass, ferns, flowers, ...)
+
 1.4.36:
 - Re-implemented /top config command (previously /topcfg)
 - Re-implemented /top need command (previously /topneed)

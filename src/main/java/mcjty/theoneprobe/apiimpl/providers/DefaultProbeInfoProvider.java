@@ -182,7 +182,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
         int contents = fluidStack == null ? 0 : fluidStack.getAmount();
         if (fluidStack != null) {
-            probeInfo.text(NAME + "Liquid: " + fluidStack.getDisplayName().getFormattedText()); // @todo 1.14 use proper lang support
+            probeInfo.text(NAME + "Liquid:" + STARTLOC + fluidStack.getTranslationKey() + ENDLOC);
         }
         if (config.getTankMode() == 1) {
             probeInfo.progress(contents, maxContents,

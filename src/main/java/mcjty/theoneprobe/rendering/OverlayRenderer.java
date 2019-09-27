@@ -94,7 +94,7 @@ public class OverlayRenderer {
         Vec3d vec31 = entity.getLook(partialTicks);
         Vec3d end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
 
-        RayTraceContext context = new RayTraceContext(start, end, RayTraceContext.BlockMode.COLLIDER, Config.showLiquids.get() ? RayTraceContext.FluidMode.ANY : RayTraceContext.FluidMode.NONE, entity);
+        RayTraceContext context = new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, Config.showLiquids.get() ? RayTraceContext.FluidMode.ANY : RayTraceContext.FluidMode.NONE, entity);
         mouseOver = entity.getEntityWorld().rayTraceBlocks(context);
         if (mouseOver == null) {
             return;
