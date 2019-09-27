@@ -12,7 +12,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.matthewprenger.cursegradle' version '1.1.0'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -44,8 +44,6 @@ repositories {
         url = "https://maven.mcmoddev.com"
     }
 }
-
-//version = '1.12-1.4.28'
 
 group= "mcjty.theoneprobe" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "theoneprobe"
@@ -184,11 +182,13 @@ String getChangelogText() {
     return str
 }
 
-tasks.curseforge.enabled = project.hasProperty('curseforge_key')
+tasks.curseforge.enabled = project.hasProperty('curseforge_top_key')
+
+tasks['curseforge'].outputs.upToDateWhen {false}
 
 curseforge {
-    if (project.hasProperty('curseforge_key')) {
-        apiKey = project.curseforge_key
+    if (project.hasProperty('curseforge_top_key')) {
+        apiKey = project.curseforge_top_key
     }
 
     project {
