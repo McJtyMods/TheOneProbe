@@ -65,22 +65,6 @@ public class ModItems {
         return item;
     }
 
-    public static void initClient() {
-        // @todo 1.13
-//        probe.initModel();
-//        creativeProbe.initModel();
-
-//        ModelLoader.setCustomModelResourceLocation(diamondHelmetProbe, 0, new ModelResourceLocation(diamondHelmetProbe.getRegistryName(), "inventory"));
-//        ModelLoader.setCustomModelResourceLocation(goldHelmetProbe, 0, new ModelResourceLocation(goldHelmetProbe.getRegistryName(), "inventory"));
-//        ModelLoader.setCustomModelResourceLocation(ironHelmetProbe, 0, new ModelResourceLocation(ironHelmetProbe.getRegistryName(), "inventory"));
-
-//        probeNote.initModel();
-
-        if (TheOneProbe.baubles) {
-//            BaubleTools.initProbeModel(probeGoggles);
-        }
-    }
-
     public static boolean isProbeInHand(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;

@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.gui.GuiConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,7 +27,7 @@ public class Probe extends Item {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
         if (world.isRemote) {
-            ProbeClient.displayProbeGui();
+            GuiConfig.open();
         }
         return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }

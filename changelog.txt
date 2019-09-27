@@ -1,6 +1,8 @@
 1.4.37:
 - Show localized names for fluids
 - Fixed tracing so that non-opaque blocks are visible in TOP too (like grass, ferns, flowers, ...)
+- Liquids now show correctly
+- Right clicking the probe will show the config gui again
 
 1.4.36:
 - Re-implemented /top config command (previously /topcfg)

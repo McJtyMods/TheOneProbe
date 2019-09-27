@@ -39,7 +39,6 @@ public class ClientProxy implements IProxy {
 
     @SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {
-        ModItems.initClient();
     }
 
 //    @SubscribeEvent
