@@ -30,9 +30,6 @@ public class ClientProxy implements IProxy {
     public void setup(FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
 
-        // @todo 1.13
-//        ClientCommandHandler.instance.registerCommand(new CommandTopCfg());
-//        ClientCommandHandler.instance.registerCommand(new CommandTopNeed());
         MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
         KeyBindings.init();
     }

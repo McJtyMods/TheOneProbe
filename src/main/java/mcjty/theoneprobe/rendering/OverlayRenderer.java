@@ -222,9 +222,7 @@ public class OverlayRenderer {
 
         IElement damageElement = null;
         if (Config.showBreakProgress.get() > 0) {
-            // @todo 1.13
-//            float damage = Minecraft.getInstance().playerController.curBlockDamageMP;
-            float damage = 0;
+            float damage = Minecraft.getInstance().playerController.curBlockDamageMP;
             if (damage > 0) {
                 if (Config.showBreakProgress.get() == 2) {
                     damageElement = new ElementText("" + TextFormatting.RED + "Progress " + (int) (damage * 100) + "%");
