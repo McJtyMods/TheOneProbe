@@ -10,6 +10,8 @@ import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.IProperty;
@@ -22,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import java.util.Collections;
@@ -29,6 +32,7 @@ import java.util.Collections;
 import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
 import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 import static mcjty.theoneprobe.api.TextStyleClass.*;
+import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -259,28 +263,29 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             pickBlock = new ItemStack(block, 1);
         }
 
-//         @todo 1.13
-//        if (block instanceof FlowingFluidBlock) {
-//            IFluidState fluidState = block.getFluidState(blockState);
-//            Fluid fluid = fluidState.getFluid();
-//            if (fluid != null) {
-//                FluidStack fluidStack = new FluidStack(fluid.getFluid(), net.minecraftforge.fluids.Fluid.BUCKET_VOLUME);
-//                ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
-//
-//                IProbeInfo horizontal = probeInfo.horizontal();
-//                if (fluidStack.isFluidEqual(FluidUtil.getFluidContained(bucketStack))) {
-//                    horizontal.item(bucketStack);
-//                } else {
-//                    horizontal.icon(fluid.getStill(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20));
-//                }
-//
-//                horizontal.vertical()
-//                        .text(NAME + fluidStack.getLocalizedName())
-//                        .text(MODNAME + modid);
-//                return;
-//            }
-//        }
-//
+        if (block instanceof FlowingFluidBlock) {
+            IFluidState fluidState = block.getFluidState(blockState);
+            Fluid fluid = fluidState.getFluid();
+            if (fluid != null) {
+                FluidStack fluidStack = new FluidStack(fluid.getFluid(), BUCKET_VOLUME);
+                ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
+
+                IProbeInfo horizontal = probeInfo.horizontal();
+                FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {
+                    if (fluidStack.isFluidEqual(fc)) {
+                        horizontal.item(bucketStack);
+                    } else {
+                        horizontal.icon(fluid.getAttributes().getStillTexture(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20));
+                    }
+                });
+
+                horizontal.vertical()
+                        .text(NAME + STARTLOC + fluidStack.getTranslationKey() + ENDLOC)
+                        .text(MODNAME + modid);
+                return;
+            }
+        }
+
         if (!pickBlock.isEmpty()) {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.horizontal()
