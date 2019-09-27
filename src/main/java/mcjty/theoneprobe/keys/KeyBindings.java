@@ -1,6 +1,9 @@
 package mcjty.theoneprobe.keys;
 
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class KeyBindings {
 
@@ -8,9 +11,9 @@ public class KeyBindings {
     public static KeyBinding toggleVisible;
 
     public static void init() {
-//        toggleLiquids = new KeyBinding("key.toggleLiquids", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_L), "key.categories.theoneprobe");
-//        toggleVisible = new KeyBinding("key.toggleVisible", KeyConflictContext.IN_GAME, null, "key.categories.theoneprobe");
-//        ClientRegistry.registerKeyBinding(toggleLiquids);
-//        ClientRegistry.registerKeyBinding(toggleVisible);
+        toggleLiquids = new KeyBinding("key.toggleLiquids", KeyConflictContext.IN_GAME, InputMappings.INPUT_INVALID, "key.categories.theoneprobe");
+        toggleVisible = new KeyBinding("key.toggleVisible", KeyConflictContext.IN_GAME, InputMappings.INPUT_INVALID, "key.categories.theoneprobe");
+        ClientRegistry.registerKeyBinding(toggleLiquids);
+        ClientRegistry.registerKeyBinding(toggleVisible);
     }
 }
