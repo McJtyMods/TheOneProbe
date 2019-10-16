@@ -98,7 +98,14 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'FMLAT': 'accesstransformer.cfg'
+        attributes 'FMLAT': 'accesstransformer.cfg',
+        "Specification-Title": "theoneprobe",
+        "Specification-Vendor": "McJty",
+        "Specification-Version": "1",
+        "Implementation-Title": project.name,
+        "Implementation-Version": "${version}",
+        "Implementation-Vendor" :"McJty",
+        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
     }
 }
 
