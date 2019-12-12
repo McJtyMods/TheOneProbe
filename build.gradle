@@ -28,6 +28,9 @@ repositories {
     maven { // JEI
         url "http://dvs1.progwml6.com/files/maven"
     }
+    maven { // Patchouli
+        url "https://maven.blamejared.com"
+    }
     maven { // CompatLayer
         url "http://maven.k-4u.nl"
     }
