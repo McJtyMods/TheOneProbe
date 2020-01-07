@@ -149,6 +149,11 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
             artifact apiJar
+            pom.withXml {
+                def node = asNode()
+                if(node.dependencies.size() > 0)
+                    node.remove(node.dependencies) // Remove deps, as they are all mappings-dependent and/or forge
+            }
         }
     }
 
@@ -218,39 +223,3 @@ curseforge {
     }
 }
 
-task("uploadJars", dependsOn: "reobf") {
-    description = "uploads JARs"
-    if (System.getenv("local_maven") != null) {
-        apply plugin: 'maven'
-        uploadArchives {
-            repositories {
-                mavenDeployer {
-                    repository(url: "file://" + System.getenv("local_maven"))
-                    pom {
-                        groupId = project.group
-                        version = project.version
-                        artifactId = project.archivesBaseName
-                        project {
-                            name project.archivesBaseName
-                            packaging 'jar'
-                            description project.archivesBaseName
-                            issueManagement {
-                                system 'github'
-                                url 'https://github.com/McJtyMods/TheOneProbe/issues'
-                            }
-                            developers {
-                                developer {
-                                    id 'McJty'
-                                    name 'McJty'
-                                    roles {
-                                        role 'developer'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
