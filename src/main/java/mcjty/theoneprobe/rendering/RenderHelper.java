@@ -1,8 +1,6 @@
 package mcjty.theoneprobe.rendering;
 
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -28,7 +26,7 @@ public class RenderHelper {
 
     public static void renderEntity(Entity entity, int xPos, int yPos, float scale) {
         GlStateManager.pushMatrix();
-        GlStateManager.color3f(1f, 1f, 1f);
+        GlStateManager.color4f(1f, 1f, 1f, 1f);
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
@@ -36,19 +34,20 @@ public class RenderHelper {
         GlStateManager.scalef(-scale, scale, scale);
         GlStateManager.rotatef(180F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotatef(135F, 0.0F, 1.0F, 0.0F);
-        net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+        net.minecraft.client.renderer.RenderHelper.func_227780_a_();
         GlStateManager.rotatef(-135F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotatef(rot, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotatef(0.0F, 1.0F, 0.0F, 0.0F);
 //        entity.renderYawOffset = entity.rotationYaw = entity.prevRotationYaw = entity.prevRotationYawHead = entity.rotationYawHead = 0;//this.rotateTurret;
         entity.rotationPitch = 0.0F;
         GlStateManager.translatef(0.0F, (float) entity.getYOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
-        Minecraft.getInstance().getRenderManager().playerViewY = 180F;
-        try {
-            Minecraft.getInstance().getRenderManager().renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-        } catch (Exception e) {
-            TheOneProbe.logger.error("Error rendering entity!", e);
-        }
+// @todo 1.15
+        //        Minecraft.getInstance().getRenderManager().playerViewY = 180F;
+//        try {
+//            Minecraft.getInstance().getRenderManager().renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+//        } catch (Exception e) {
+//            TheOneProbe.logger.error("Error rendering entity!", e);
+//        }
         GlStateManager.popMatrix();
         net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
@@ -58,9 +57,10 @@ public class RenderHelper {
         GlStateManager.popMatrix();
         GlStateManager.enableDepthTest();
         GlStateManager.disableColorMaterial();
-        GlStateManager.activeTexture(GLX.GL_TEXTURE1);
-        GlStateManager.disableTexture();
-        GlStateManager.activeTexture(GLX.GL_TEXTURE0);
+// @todo 1.15
+        //        GlStateManager.activeTexture(GLX.GL_TEXTURE1);
+//        GlStateManager.disableTexture();
+//        GlStateManager.activeTexture(GLX.GL_TEXTURE0);
     }
 
     public static boolean renderObject(Minecraft mc, int x, int y, Object itm, boolean highlight) {
@@ -107,7 +107,7 @@ public class RenderHelper {
     }
 
     public static boolean ItemRendererStack(Minecraft mc, ItemRenderer itemRender, ItemStack itm, int x, int y, String txt, boolean highlight) {
-        GlStateManager.color3f(1F, 1F, 1F);
+        GlStateManager.color4f(1F, 1F, 1F, 1f);
 
         boolean rc = false;
         if (highlight) {
@@ -123,8 +123,9 @@ public class RenderHelper {
             GlStateManager.enableLighting();
             short short1 = 240;
             short short2 = 240;
-            net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
+            net.minecraft.client.renderer.RenderHelper.setupGui3DDiffuseLighting();
+            // @todo 1.15
+//            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             itemRender.renderItemAndEffectIntoGUI(itm, x, y);
             itemRender.renderItemOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt);
             GlStateManager.popMatrix();
@@ -154,7 +155,7 @@ public class RenderHelper {
         GlStateManager.disableTexture();
         GlStateManager.enableBlend();
         GlStateManager.disableAlphaTest();
-        GLX.glBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.blendFuncSeparate(770, 771, 1, 0);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -190,7 +191,7 @@ public class RenderHelper {
         GlStateManager.disableTexture();
         GlStateManager.enableBlend();
         GlStateManager.disableAlphaTest();
-        GLX.glBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.blendFuncSeparate(770, 771, 1, 0);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -350,11 +351,11 @@ public class RenderHelper {
         RenderHelper.rotateToPlayer();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
-        buffer.pos(-scale, -scale, 0.0D).tex(0.0D, 0.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
-        buffer.pos(-scale, scale, 0.0D).tex(0.0D, 1.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
-        buffer.pos(scale, scale, 0.0D).tex(1.0D, 1.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
-        buffer.pos(scale, -scale, 0.0D).tex(1.0D, 0.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
+        buffer.begin(7, DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP);
+        buffer.pos(-scale, -scale, 0.0D).tex(0.0f, 0.0f).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
+        buffer.pos(-scale, scale, 0.0D).tex(0.0f, 1.0f).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
+        buffer.pos(scale, scale, 0.0D).tex(1.0f, 1.0f).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
+        buffer.pos(scale, -scale, 0.0D).tex(1.0f, 0.0f).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
         tessellator.draw();
         GlStateManager.popMatrix();
     }
@@ -400,8 +401,9 @@ public class RenderHelper {
     }
 
     public static void rotateToPlayer() {
-        GlStateManager.rotatef(-Minecraft.getInstance().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotatef(Minecraft.getInstance().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
+        // @todo 1.15
+//        GlStateManager.rotatef(-Minecraft.getInstance().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
+//        GlStateManager.rotatef(Minecraft.getInstance().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
     }
 
     /**
@@ -434,14 +436,14 @@ public class RenderHelper {
         int b2 = brightness & 65535;
 
         BufferBuilder buffer = tessellator.getBuffer();
-        buffer.pos(p1.getX(), p1.getY(), p1.getZ()).tex(0.0D, 0.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
-        buffer.pos(p2.getX(), p2.getY(), p2.getZ()).tex(1.0D, 0.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
-        buffer.pos(p3.getX(), p3.getY(), p3.getZ()).tex(1.0D, 1.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
-        buffer.pos(p4.getX(), p4.getY(), p4.getZ()).tex(0.0D, 1.0D).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
+        buffer.pos(p1.getX(), p1.getY(), p1.getZ()).tex(0.0f, 0.0f).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
+        buffer.pos(p2.getX(), p2.getY(), p2.getZ()).tex(1.0f, 0.0f).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
+        buffer.pos(p3.getX(), p3.getY(), p3.getZ()).tex(1.0f, 1.0f).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
+        buffer.pos(p4.getX(), p4.getY(), p4.getZ()).tex(0.0f, 1.0f).lightmap(b1, b2).color(255, 255, 255, 128).endVertex();
     }
 
     public static boolean ItemRendererStack(Minecraft mc, ItemRenderer itemRender, ItemStack itm, int x, int y, String txt) {
-        GlStateManager.color3f(1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0f);
 
         boolean rc = true;
         if (!itm.isEmpty() && itm.getItem() != null) {
@@ -452,8 +454,9 @@ public class RenderHelper {
             GlStateManager.enableLighting();
             short short1 = 240;
             short short2 = 240;
-            net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
+            net.minecraft.client.renderer.RenderHelper.setupGui3DDiffuseLighting();
+            // @todo 1.15
+//            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             try {
                 itemRender.renderItemAndEffectIntoGUI(itm, x, y);
                 ItemRendererOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
@@ -556,14 +559,14 @@ public class RenderHelper {
 
 
     public static int renderText(Minecraft mc, int x, int y, String txt) {
-        GlStateManager.color3f(1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0f);
 
         GlStateManager.pushMatrix();
         GlStateManager.translatef(0.0F, 0.0F, 32.0F);
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableLighting();
-        net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+        net.minecraft.client.renderer.RenderHelper.setupGui3DDiffuseLighting();
 
         GlStateManager.disableLighting();
         GlStateManager.disableDepthTest();

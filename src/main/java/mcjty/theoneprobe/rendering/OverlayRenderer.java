@@ -76,8 +76,8 @@ public class OverlayRenderer {
 
                 double scale = Config.tooltipScale.get();
 
-                double sw = Minecraft.getInstance().mainWindow.getScaledWidth();
-                double sh = Minecraft.getInstance().mainWindow.getScaledHeight();
+                double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
+                double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
 
                 setupOverlayRendering(sw * scale, sh * scale);
                 renderHUDEntity(mode, mouseOver, sw * scale, sh * scale);
@@ -105,8 +105,8 @@ public class OverlayRenderer {
 
             double scale = Config.tooltipScale.get();
 
-            double sw = Minecraft.getInstance().mainWindow.getScaledWidth();
-            double sh = Minecraft.getInstance().mainWindow.getScaledHeight();
+            double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
+            double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
 
             setupOverlayRendering(sw * scale, sh * scale);
             renderHUDBlock(mode, mouseOver, sw * scale, sh * scale);
@@ -339,8 +339,8 @@ public class OverlayRenderer {
 
         double scale = Config.tooltipScale.get();
 
-        double sw = Minecraft.getInstance().mainWindow.getScaledWidth();
-        double sh = Minecraft.getInstance().mainWindow.getScaledHeight();
+        double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
+        double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
 
         setupOverlayRendering(sw * scale, sh * scale);
         renderElements((ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);

@@ -17,7 +17,7 @@ public class ElementIconRender {
         }
 
         if (u == -1) {
-            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureMap().getAtlasSprite(icon.toString());
+            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(icon);
             if (sprite == null) {
                 return;
             }

@@ -126,7 +126,7 @@ public class ClientProxy implements IProxy {
                 return ProbeMode.EXTENDED;
             }
         }
-        return player.isSneaking() ? ProbeMode.EXTENDED : ProbeMode.NORMAL;
+        return player.func_225608_bj_() ? ProbeMode.EXTENDED : ProbeMode.NORMAL;    // isSneaking
     }
 
     private boolean hasItemInEitherHand(Item item) {

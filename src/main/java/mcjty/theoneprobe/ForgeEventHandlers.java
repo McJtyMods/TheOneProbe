@@ -14,7 +14,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 public class ForgeEventHandlers {
@@ -25,11 +24,12 @@ public class ForgeEventHandlers {
     }
 
 
-    @SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        Config.setupStyleConfig();
-        Config.updateDefaultOverlayStyle();
-    }
+    // @todo 1.15
+//    @SubscribeEvent
+//    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+//        Config.setupStyleConfig();
+//        Config.updateDefaultOverlayStyle();
+//    }
 
     @SubscribeEvent
     public void onEntityConstructing(AttachCapabilitiesEvent<Entity> event){
@@ -46,7 +46,7 @@ public class ForgeEventHandlers {
             // We need to copyFrom the capabilities
             LazyOptional<PlayerGotNote> capability = event.getOriginal().getCapability(PlayerProperties.PLAYER_GOT_NOTE);
             capability.ifPresent(oldStore -> {
-                event.getEntityPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(newStore -> {
+                event.getPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
             });
