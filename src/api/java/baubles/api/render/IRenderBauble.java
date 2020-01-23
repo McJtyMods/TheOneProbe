@@ -42,7 +42,7 @@ public interface IRenderBauble {
 		 * Use for renders under {@link RenderType#BODY}.
 		 */
 		public static void rotateIfSneaking(PlayerEntity player) {
-			if(player.isSneaking())
+			if(player.func_225608_bj_ /*isSneaking*/())
 				applySneakingRotation();
 		}
 
@@ -61,7 +61,7 @@ public interface IRenderBauble {
 		 */
 		public static void translateToHeadLevel(PlayerEntity player) {
 			GlStateManager.translatef(0, -player.getDefaultEyeHeight(), 0);
-			if (player.isSneaking())
+			if (player.func_225608_bj_ /*isSneaking*/())
 				GlStateManager.translatef(0.25F * MathHelper.sin(player.rotationPitch * (float) Math.PI / 180), 0.25F * MathHelper.cos(player.rotationPitch * (float) Math.PI / 180), 0F);
 		}
 
