@@ -53,7 +53,7 @@ public class CommandTopNeed implements Command<CommandSource> {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         ClientProxy.ignoreNextGuiClose = true;
         PlayerEntitySP player = Minecraft.getInstance().player;
-        player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
+        player.openGui(TheOneProbe.instance, GuiProxy.GUI_NOTE, player.getEntityWorld(), (int) player.getPosX(), (int) player.getPosY(), (int) player.getPosZ());
     }
 
     @Override
