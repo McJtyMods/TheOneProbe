@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
@@ -50,6 +51,7 @@ public class GuiNote extends Screen {
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;
+        MatrixStack matrixStack = new MatrixStack();
         RenderHelper.renderText(Minecraft.getInstance(), x, y, "Things you should know about" + TextFormatting.GOLD + " The One Probe"); y += 10;
         y += 10;
 
@@ -116,6 +118,7 @@ public class GuiNote extends Screen {
     }
 
     private int setInConfig(int x, int y) {
+        MatrixStack matrixStack = new MatrixStack();
         RenderHelper.renderText(Minecraft.getInstance(), x, y, BOLD + "" + GREEN + "You can change this here:");
         y += 10;
 

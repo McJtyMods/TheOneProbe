@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 public class ElementIconRender {
 
     public static void render(ResourceLocation icon, int x, int y, int w, int h, int u, int v, int txtw, int txth) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         if (icon == null) {
             return;

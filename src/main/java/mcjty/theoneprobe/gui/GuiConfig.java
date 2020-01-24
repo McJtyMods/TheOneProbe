@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.IOverlayStyle;
@@ -88,6 +89,8 @@ public class GuiConfig extends Screen {
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
 
         renderProbe();
+
+        MatrixStack matrixStack = new MatrixStack();
 
         int x = WIDTH + guiLeft + 10;
         int y = guiTop + 10;
@@ -210,12 +213,12 @@ public class GuiConfig extends Screen {
 
     private void renderElements(ProbeInfo probeInfo, IOverlayStyle style) {
 
-        GlStateManager.pushMatrix();
-        GlStateManager.scaled(1/Config.tooltipScale.get(), 1/Config.tooltipScale.get(), 1/Config.tooltipScale.get());
-
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableLighting();
-        GlStateManager.translatef(0, 0, 1);
+//        MatrixStack matrixStack = new MatrixStack();
+        RenderSystem.pushMatrix();
+        RenderSystem.scaled((1f/Config.tooltipScale.get()), (1f/Config.tooltipScale.get()), (1f/Config.tooltipScale.get()));
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.disableLighting();
+        RenderSystem.translatef(0, 0, 1);
 
         int w = probeInfo.getWidth();
         int h = probeInfo.getHeight();
@@ -269,7 +272,7 @@ public class GuiConfig extends Screen {
 
         probeInfo.render(x + margin, y + margin);
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 
     public static void open() {

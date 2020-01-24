@@ -1,12 +1,12 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
-import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProbeHitEntityData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
+import mcjty.theoneprobe.config.Config;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;

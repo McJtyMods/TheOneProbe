@@ -155,8 +155,6 @@ public class ElementEntityRender {
         return id;
     }
 
-
-
     private static void renderEntity(IEntityStyle style, int x, int y, Entity entity) {
         float height = entity.getHeight();
         height = (float) ((height - 1) * .7 + 1);

@@ -26,7 +26,7 @@ public class ElementItemStackRender {
                 amount = String.valueOf(size / 1000000000) + "g";
             }
 
-            if (!RenderHelper.ItemRendererStack(Minecraft.getInstance(), itemRender, itemStack, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount)) {
+            if (!RenderHelper.renderItemStack(Minecraft.getInstance(), itemRender, itemStack, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount)) {
                 // There was a crash rendering this item
                 RenderHelper.renderText(Minecraft.getInstance(), x, y, TextFormatting.RED + "ERROR: " + itemStack.getDisplayName());
             }

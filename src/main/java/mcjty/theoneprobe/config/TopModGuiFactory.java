@@ -1,10 +1,5 @@
 package mcjty.theoneprobe.config;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-
-import java.util.Set;
-
 public class TopModGuiFactory {} /* @todo 1.15 implements IModGuiFactory {
 
     @Override

@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.rendering;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -67,22 +68,25 @@ public class OverlayRenderer {
     }
 
     public static void renderHUD(ProbeMode mode, float partialTicks) {
+
+
         double dist = Config.probeDistance.get();
 
         RayTraceResult mouseOver = Minecraft.getInstance().objectMouseOver;
         if (mouseOver != null) {
             if (mouseOver.getType() == RayTraceResult.Type.ENTITY) {
-                GlStateManager.pushMatrix();
+                RenderSystem.pushMatrix();
+                MatrixStack matrixStack = new MatrixStack();
 
                 double scale = Config.tooltipScale.get();
 
                 double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
                 double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
 
-                setupOverlayRendering(sw * scale, sh * scale);
-                renderHUDEntity(mode, mouseOver, sw * scale, sh * scale);
-                setupOverlayRendering(sw, sh);
-                GlStateManager.popMatrix();
+                setupOverlayRendering(matrixStack, sw * scale, sh * scale);
+                renderHUDEntity(matrixStack, mode, mouseOver, sw * scale, sh * scale);
+                setupOverlayRendering(matrixStack, sw, sh);
+                RenderSystem.popMatrix();
 
                 checkCleanup();
                 return;
@@ -101,31 +105,33 @@ public class OverlayRenderer {
         }
 
         if (mouseOver.getType() == RayTraceResult.Type.BLOCK) {
-            GlStateManager.pushMatrix();
+            RenderSystem.pushMatrix();
+            MatrixStack matrixStack = new MatrixStack();
 
             double scale = Config.tooltipScale.get();
 
             double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
             double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
 
-            setupOverlayRendering(sw * scale, sh * scale);
-            renderHUDBlock(mode, mouseOver, sw * scale, sh * scale);
-            setupOverlayRendering(sw, sh);
+            setupOverlayRendering(matrixStack, sw * scale, sh * scale);
+            renderHUDBlock(matrixStack, mode, mouseOver, sw * scale, sh * scale);
+            setupOverlayRendering(matrixStack, sw, sh);
 
-            GlStateManager.popMatrix();
+            RenderSystem.popMatrix();
         }
 
         checkCleanup();
     }
 
-    public static void setupOverlayRendering(double sw, double sh) {
-        GlStateManager.clear(256, true);
-        GlStateManager.matrixMode(GL11.GL_PROJECTION);
-        GlStateManager.loadIdentity();
-        GlStateManager.ortho(0.0D, sw, sh, 0.0D, 1000.0D, 3000.0D);
-        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-        GlStateManager.loadIdentity();
-        GlStateManager.translatef(0.0F, 0.0F, -2000.0F);
+    private static void setupOverlayRendering(MatrixStack matrixStack, double sw, double sh) {
+        RenderSystem.clear(256, true);
+        RenderSystem.matrixMode(GL11.GL_PROJECTION);
+        RenderSystem.loadIdentity();
+        RenderSystem.ortho(0.0D, sw, sh, 0.0D, 1000.0D, 3000.0D);
+        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
+        RenderSystem.loadIdentity();
+        RenderSystem.translatef(0.0F, 0.0F, -2000.0F);
+//        matrixStack.translate(0, 0, -2000);
     }
 
     private static void checkCleanup() {
@@ -137,7 +143,7 @@ public class OverlayRenderer {
         }
     }
 
-    private static void renderHUDEntity(ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
+    private static void renderHUDEntity(MatrixStack matrixStack, ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
         if (!(mouseOver instanceof EntityRayTraceResult)) {
             return;
         }
@@ -173,7 +179,7 @@ public class OverlayRenderer {
             }
 
             if (lastPair != null && time < lastPairTime + Config.timeout.get()) {
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
+                renderElements(matrixStack, lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
                 lastRenderedTime = time;
             } else if (Config.waitingForServerTimeout.get() > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout.get()) {
                 // It has been a while. Show some info on client that we are
@@ -182,7 +188,7 @@ public class OverlayRenderer {
                 registerProbeInfo(uuid, info);
                 lastPair = Pair.of(time, info);
                 lastPairTime = time;
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
+                renderElements(matrixStack, lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
                 lastRenderedTime = time;
             }
         } else {
@@ -194,7 +200,7 @@ public class OverlayRenderer {
                 cachedEntityInfo.put(uuid, Pair.of(time + 500, cacheEntry.getRight()));
                 requestEntityInfo(mode, mouseOver, entity, player);
             }
-            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
+            renderElements(matrixStack, cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh, null);
             lastRenderedTime = time;
             lastPair = cacheEntry;
             lastPairTime = time;
@@ -205,7 +211,7 @@ public class OverlayRenderer {
         PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().getDimension().getType().getId(), mode, mouseOver, entity));
     }
 
-    private static void renderHUDBlock(ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
+    private static void renderHUDBlock(MatrixStack matrixStack, ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
         if (!(mouseOver instanceof BlockRayTraceResult)) {
             return;
         }
@@ -252,7 +258,7 @@ public class OverlayRenderer {
             }
 
             if (lastPair != null && time < lastPairTime + Config.timeout.get()) {
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
+                renderElements(matrixStack, lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
                 lastRenderedTime = time;
             } else if (Config.waitingForServerTimeout.get() > 0 && lastRenderedTime != -1 && time > lastRenderedTime + Config.waitingForServerTimeout.get()) {
                 // It has been a while. Show some info on client that we are
@@ -261,7 +267,7 @@ public class OverlayRenderer {
                 registerProbeInfo(dimension, blockPos, info);
                 lastPair = Pair.of(time, info);
                 lastPairTime = time;
-                renderElements(lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
+                renderElements(matrixStack, lastPair.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
                 lastRenderedTime = time;
             }
         } else {
@@ -273,7 +279,7 @@ public class OverlayRenderer {
                 cachedInfo.put(key, Pair.of(time + 500, cacheEntry.getRight()));
                 requestBlockInfo(mode, mouseOver, blockPos, player);
             }
-            renderElements(cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
+            renderElements(matrixStack, cacheEntry.getRight(), Config.getDefaultOverlayStyle(), sw, sh, damageElement);
             lastRenderedTime = time;
             lastPair = cacheEntry;
             lastPairTime = time;
@@ -335,17 +341,18 @@ public class OverlayRenderer {
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo) {
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
+        MatrixStack matrixStack = new MatrixStack();
 
         double scale = Config.tooltipScale.get();
 
         double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
         double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
 
-        setupOverlayRendering(sw * scale, sh * scale);
-        renderElements((ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
-        setupOverlayRendering(sw, sh);
-        GlStateManager.popMatrix();
+        setupOverlayRendering(matrixStack, sw * scale, sh * scale);
+        renderElements(matrixStack, (ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
+        setupOverlayRendering(matrixStack, sw, sh);
+        RenderSystem.popMatrix();
     }
 
     private static void cleanupCachedBlocks(long time) {
@@ -372,14 +379,14 @@ public class OverlayRenderer {
         cachedEntityInfo = newCachedInfo;
     }
 
-    public static void renderElements(ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh,
-                                       @Nullable IElement extra) {
+    public static void renderElements(MatrixStack matrixStack, ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh,
+                                      @Nullable IElement extra) {
         if (extra != null) {
             probeInfo.element(extra);
         }
 
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableLighting();
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.disableLighting();
 
 //        final ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getInstance());
 //        final int scaledWidth = scaledresolution.getScaledWidth();

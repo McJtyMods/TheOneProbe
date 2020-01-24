@@ -1,9 +1,9 @@
 package mcjty.theoneprobe.apiimpl;
 
-import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.*;
+import mcjty.theoneprobe.config.Config;
 
 import java.util.*;
 

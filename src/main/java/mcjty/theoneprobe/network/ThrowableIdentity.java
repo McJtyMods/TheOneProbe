@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.network;
 
-import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.config.Config;
 
 import java.util.HashMap;
 import java.util.Map;

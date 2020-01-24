@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.rendering.RenderHelper;
@@ -42,7 +42,7 @@ public class ElementProgressRender {
     }
 
     private static void renderLifeBar(long current, int x, int y, int w, int h) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
         if (current * 4 >= w) {
             // Shortened view
@@ -60,7 +60,7 @@ public class ElementProgressRender {
     }
 
     private static void renderArmorBar(long current, int x, int y, int w, int h) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
         if (current * 4 >= w) {
             // Shortened view
