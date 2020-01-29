@@ -7,11 +7,14 @@ import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.HangingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -25,7 +28,6 @@ public class RenderHelper {
     public static float rot = 0.0f;
 
     public static void renderEntity(Entity entity, int xPos, int yPos, float scale) {
-//        scale *= 0.0625;    // @todo 1.15 how to do this scale?
         RenderSystem.pushMatrix();
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         RenderSystem.enableRescaleNormal();
@@ -36,7 +38,7 @@ public class RenderHelper {
         RenderSystem.rotatef(135F, 0.0F, 1.0F, 0.0F);
         net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
         RenderSystem.rotatef(-135F, 0.0F, 1.0F, 0.0F);
-//        RenderSystem.rotatef(rot, 0.0F, 1.0F, 0.0F);
+        RenderSystem.rotatef(rot, 0.0F, 1.0F, 0.0F);
         RenderSystem.rotatef(0.0F, 1.0F, 0.0F, 0.0F);
 
         entity.rotationPitch = 0.0F;
@@ -44,18 +46,21 @@ public class RenderHelper {
         entity.rotationYaw = 0.0f;
         entity.prevRotationYaw = 0.0f;
 
+        if (entity instanceof LivingEntity) {
+            LivingEntity livingEntity = (LivingEntity) entity;
+            livingEntity.prevRenderYawOffset = 0.0f;
+            livingEntity.renderYawOffset = 0.0f;
+
+            livingEntity.rotationYawHead = 0.0f;
+            livingEntity.prevRotationYawHead = 0.0f;
+        }
 
         RenderSystem.translatef(0.0F, (float) entity.getYOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
 
-        // @todo 1.15
-//        Minecraft.getInstance().getRenderManager().playerViewY = 180F;
         try {
             IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-            MatrixStack s = new MatrixStack();
-//            s.scale(0.0625f, 0.0625f, 0.0625f);
-            Minecraft.getInstance().getRenderManager().renderEntityStatic(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, s, buffer, 15728880);
+            Minecraft.getInstance().getRenderManager().renderEntityStatic(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, new MatrixStack(), buffer, 15728880);
             buffer.finish();
-//            Minecraft.getInstance().getRenderManager().renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
         } catch (Exception e) {
             TheOneProbe.logger.error("Error rendering entity!", e);
         }
