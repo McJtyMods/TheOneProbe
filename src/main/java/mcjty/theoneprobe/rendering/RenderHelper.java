@@ -7,10 +7,8 @@ import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -38,16 +36,25 @@ public class RenderHelper {
         RenderSystem.rotatef(135F, 0.0F, 1.0F, 0.0F);
         net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
         RenderSystem.rotatef(-135F, 0.0F, 1.0F, 0.0F);
-        RenderSystem.rotatef(rot, 0.0F, 1.0F, 0.0F);
+//        RenderSystem.rotatef(rot, 0.0F, 1.0F, 0.0F);
         RenderSystem.rotatef(0.0F, 1.0F, 0.0F, 0.0F);
+
         entity.rotationPitch = 0.0F;
+        entity.prevRotationPitch = 0.0F;
+        entity.rotationYaw = 0.0f;
+        entity.prevRotationYaw = 0.0f;
+
+
         RenderSystem.translatef(0.0F, (float) entity.getYOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
 
         // @todo 1.15
 //        Minecraft.getInstance().getRenderManager().playerViewY = 180F;
         try {
             IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-            Minecraft.getInstance().getRenderManager().renderEntityStatic(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, new MatrixStack(), buffer, 15728880);
+            MatrixStack s = new MatrixStack();
+//            s.scale(0.0625f, 0.0625f, 0.0625f);
+            Minecraft.getInstance().getRenderManager().renderEntityStatic(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, s, buffer, 15728880);
+            buffer.finish();
 //            Minecraft.getInstance().getRenderManager().renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
         } catch (Exception e) {
             TheOneProbe.logger.error("Error rendering entity!", e);
