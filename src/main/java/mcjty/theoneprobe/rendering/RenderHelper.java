@@ -194,6 +194,8 @@ public class RenderHelper {
                     s = TextFormatting.RED + String.valueOf(stack.getCount());
                 }
 
+                RenderSystem.translated(0.0D, 0.0D, (Minecraft.getInstance().getItemRenderer().zLevel + 200.0F));
+
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableBlend();

@@ -1,3 +1,6 @@
+Upcoming:
+- Fixed a problem with the itemstack amounts of inventory contents not rendering properly
+
 1.4.37:
 - Show localized names for fluids
 - Fixed tracing so that non-opaque blocks are visible in TOP too (like grass, ferns, flowers, ...)
