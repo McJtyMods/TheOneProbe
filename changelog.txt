@@ -1,4 +1,4 @@
-Upcoming:
+2.0.1:
 - Fixed a problem with the itemstack amounts of inventory contents not rendering properly
 
 1.4.37:
