@@ -9,6 +9,7 @@ import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -29,6 +30,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import java.util.Collections;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
 import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
@@ -123,10 +125,13 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             TileEntity te = world.getTileEntity(data.getPos());
             if (te instanceof MobSpawnerTileEntity) {
                 AbstractSpawner logic = ((MobSpawnerTileEntity) te).getSpawnerBaseLogic();
-                String mobName = logic.getCachedEntity().getDisplayName().getFormattedText();
-                probeInfo.horizontal(probeInfo.defaultLayoutStyle()
-                    .alignment(ElementAlignment.ALIGN_CENTER))
-                    .text(LABEL + "Mob: " + INFO + mobName);
+                EntityType<?> type = ForgeRegistries.ENTITIES.getValue(logic.getEntityId());
+                if (type != null) {
+                    String mobName = type.getName().getFormattedText();
+                    probeInfo.horizontal(probeInfo.defaultLayoutStyle()
+                          .alignment(ElementAlignment.ALIGN_CENTER))
+                          .text(LABEL + "Mob: " + INFO + mobName);
+                }
             }
         }
     }
