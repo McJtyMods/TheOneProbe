@@ -3,7 +3,6 @@ package mcjty.theoneprobe.config;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
-import com.google.common.collect.Lists;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.IProbeConfig;
@@ -270,14 +269,14 @@ public class Config {
                 .defineInRange("showSmallChestContentsWithoutSneaking", 0, 0, 1000);
         showContentsWithoutSneaking = COMMON_BUILDER
                 .comment("A list of blocks for which we automatically show chest contents even if not sneaking")
-                .define("showContentsWithoutSneaking", Lists.<String>asList("storagedrawers:basicdrawers", new String[] { "storagedrawersextra:extra_drawers" }));
+                .define("showContentsWithoutSneaking", new ArrayList<>(Arrays.asList("storagedrawers:basicdrawers", "storagedrawersextra:extra_drawers")));
         dontShowContentsUnlessSneaking = COMMON_BUILDER
                 .comment("A list of blocks for which we don't show chest contents automatically except if sneaking")
-                .define("dontShowContentsUnlessSneaking", Collections.emptyList());
+                .define("dontShowContentsUnlessSneaking", new ArrayList<>());
 
         dontSendNBT = COMMON_BUILDER
                 .comment("A list of blocks for which we don't send NBT over the network. This is mostly useful for blocks that have HUGE NBT in their pickblock (itemstack)")
-                .define("dontSendNBT", Collections.emptyList());
+                .define("dontSendNBT", new ArrayList<>());
 
         setupStyleConfig();
 
