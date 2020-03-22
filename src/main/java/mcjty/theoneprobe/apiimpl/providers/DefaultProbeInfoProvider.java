@@ -107,8 +107,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (block instanceof BrewingStandBlock) {
             TileEntity te = world.getTileEntity(data.getPos());
             if (te instanceof BrewingStandTileEntity) {
-                int brewtime = 0; // @todo 1.14 ((BrewingStandTileEntity) te).getField(0);
-                int fuel = 0; // @todo 1.14 ((BrewingStandTileEntity) te).getField(1);
+                int brewtime = ((BrewingStandTileEntity) te).brewTime;
+                int fuel = ((BrewingStandTileEntity) te).fuel;
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
                         .text(LABEL + "Fuel: " + INFO + fuel);
