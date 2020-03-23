@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IElementNew;
 import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementEntityRender;
@@ -13,7 +13,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ElementEntity implements IElement {
+public class ElementEntity implements IElementNew {
 
     private final String entityName;
     private final Integer playerID;

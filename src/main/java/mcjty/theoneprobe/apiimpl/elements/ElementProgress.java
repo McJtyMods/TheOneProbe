@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IElementNew;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
@@ -11,7 +11,7 @@ import mcjty.theoneprobe.network.NetworkTools;
 import java.text.DecimalFormat;
 import net.minecraft.network.PacketBuffer;
 
-public class ElementProgress implements IElement {
+public class ElementProgress implements IElementNew {
 
     private final long current;
     private final long max;

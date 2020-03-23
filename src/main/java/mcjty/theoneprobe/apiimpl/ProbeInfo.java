@@ -5,6 +5,7 @@ import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IElementFactory;
 import mcjty.theoneprobe.api.IElementFactoryNew;
+import mcjty.theoneprobe.api.IElementNew;
 import mcjty.theoneprobe.apiimpl.elements.ElementVertical;
 
 import java.util.ArrayList;
@@ -44,7 +45,11 @@ public class ProbeInfo extends ElementVertical {
         buf.writeVarInt(elements.size());
         for (IElement element : elements) {
             buf.writeVarInt(element.getID());
-            element.toBytes(buf);
+            if (element instanceof IElementNew) {
+                ((IElementNew) element).toBytes(buf);
+            } else {
+                element.toBytes(buf);
+            }
         }
     }
 

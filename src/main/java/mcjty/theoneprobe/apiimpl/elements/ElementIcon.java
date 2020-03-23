@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IElementNew;
 import mcjty.theoneprobe.api.IIconStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementIconRender;
@@ -8,7 +8,7 @@ import mcjty.theoneprobe.apiimpl.styles.IconStyle;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
-public class ElementIcon implements IElement {
+public class ElementIcon implements IElementNew {
 
     private final ResourceLocation icon;
     private final int u;

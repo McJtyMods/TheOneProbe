@@ -15,10 +15,12 @@ public interface IElementFactoryNew extends IElementFactory {
     IElement createElement(PacketBuffer buf);
 
     @Override
+    @Deprecated
     default IElement createElement(ByteBuf buf) {
         if (buf instanceof PacketBuffer) {
             return createElement((PacketBuffer) buf);
+        } else {
+            return createElement(new PacketBuffer(buf));
         }
-        return null;
     }
 }

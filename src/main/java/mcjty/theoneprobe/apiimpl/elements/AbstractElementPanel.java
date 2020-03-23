@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractElementPanel implements IElement, IProbeInfo {
+public abstract class AbstractElementPanel implements IElementNew, IProbeInfo {
 
     protected List<IElement> children = new ArrayList<>();
     protected Integer borderColor;

@@ -27,22 +27,10 @@ public interface IElement {
      * Persist this element to the given network buffer. This should be symmetrical to
      * what IElementFactory.createElement() expects.
      *
-     * @deprecated To be removed in 1.16, prefer implementing and using {@link #toBytes(PacketBuffer)}
-     *
-     * @implNote NO-OPing this method is fine as long as {@link #toBytes(PacketBuffer)} is properly implemented
+     * @deprecated To be removed in 1.16, prefer implementing and using {@link IElementNew#toBytes(PacketBuffer)}
      */
     @Deprecated
-    default void toBytes(ByteBuf buf) {
-        //TODO: 1.16 remove this method, it is being left for binary compatibility for now
-    }
-
-    /**
-     * Persist this element to the given network buffer. This should be symmetrical to
-     * what IElementFactory.createElement() expects.
-     */
-    default void toBytes(PacketBuffer buf) {
-        toBytes((ByteBuf) buf);
-    }
+    void toBytes(ByteBuf buf);
 
     /**
      * Get the identifier for this element (as returned by ITheOneProbe.registerElementFactory()

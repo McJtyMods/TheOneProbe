@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IElementNew;
 import mcjty.theoneprobe.api.IItemStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementItemStackRender;
@@ -9,7 +9,7 @@ import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 
-public class ElementItemStack implements IElement {
+public class ElementItemStack implements IElementNew {
 
     private final ItemStack itemStack;
     private final IItemStyle style;
