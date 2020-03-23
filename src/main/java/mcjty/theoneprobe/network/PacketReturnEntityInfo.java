@@ -1,8 +1,8 @@
 package mcjty.theoneprobe.network;
 
-import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
@@ -13,8 +13,8 @@ public class PacketReturnEntityInfo {
     private UUID uuid;
     private ProbeInfo probeInfo;
 
-    public PacketReturnEntityInfo(ByteBuf buf) {
-        uuid = new UUID(buf.readLong(), buf.readLong());
+    public PacketReturnEntityInfo(PacketBuffer buf) {
+        uuid = buf.readUniqueId();
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();
             probeInfo.fromBytes(buf);
@@ -23,9 +23,8 @@ public class PacketReturnEntityInfo {
         }
     }
 
-    public void toBytes(ByteBuf buf) {
-        buf.writeLong(uuid.getMostSignificantBits());
-        buf.writeLong(uuid.getLeastSignificantBits());
+    public void toBytes(PacketBuffer buf) {
+        buf.writeUniqueId(uuid);
         if (probeInfo != null) {
             buf.writeBoolean(true);
             probeInfo.toBytes(buf);

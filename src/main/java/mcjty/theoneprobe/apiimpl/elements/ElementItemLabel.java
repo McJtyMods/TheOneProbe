@@ -1,11 +1,11 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 
 public class ElementItemLabel implements IElement {
 
@@ -15,7 +15,7 @@ public class ElementItemLabel implements IElement {
         this.itemStack = itemStack;
     }
 
-    public ElementItemLabel(ByteBuf buf) {
+    public ElementItemLabel(PacketBuffer buf) {
         if (buf.readBoolean()) {
             itemStack = NetworkTools.readItemStack(buf);
         } else {
@@ -47,7 +47,7 @@ public class ElementItemLabel implements IElement {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(PacketBuffer buf) {
         if (!itemStack.isEmpty()) {
             buf.writeBoolean(true);
             NetworkTools.writeItemStack(buf, itemStack);

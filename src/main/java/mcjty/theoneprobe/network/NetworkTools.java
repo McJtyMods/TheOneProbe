@@ -1,42 +1,26 @@
 package mcjty.theoneprobe.network;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.Collection;
 
 public class NetworkTools {
 
-    public static CompoundNBT readNBT(ByteBuf dataIn) {
-        PacketBuffer buf = new PacketBuffer(dataIn);
-        return buf.readCompoundTag();
-    }
-
-    public static void writeNBT(ByteBuf dataOut, CompoundNBT nbt) {
-        PacketBuffer buf = new PacketBuffer(dataOut);
-        try {
-            buf.writeCompoundTag(nbt);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     /// This function supports itemstacks with more then 64 items.
-    public static ItemStack readItemStack(ByteBuf dataIn) {
-        PacketBuffer buf = new PacketBuffer(dataIn);
+    public static ItemStack readItemStack(PacketBuffer buf) {
         CompoundNBT nbt = buf.readCompoundTag();
+        if (nbt == null) {
+            return ItemStack.EMPTY;
+        }
         ItemStack stack = ItemStack.read(nbt);
         stack.setCount(buf.readInt());
         return stack;
     }
 
     /// This function supports itemstacks with more then 64 items.
-    public static void writeItemStack(ByteBuf dataOut, ItemStack itemStack) {
-        PacketBuffer buf = new PacketBuffer(dataOut);
+    public static void writeItemStack(PacketBuffer buf, ItemStack itemStack) {
         CompoundNBT nbt = new CompoundNBT();
         itemStack.write(nbt);
         try {
@@ -47,7 +31,7 @@ public class NetworkTools {
         }
     }
 
-    public static String readString(ByteBuf dataIn) {
+    public static String readString(PacketBuffer dataIn) {
         int s = dataIn.readInt();
         if (s == -1) {
             return null;
@@ -60,7 +44,7 @@ public class NetworkTools {
         return new String(dst);
     }
 
-    public static void writeString(ByteBuf dataOut, String str) {
+    public static void writeString(PacketBuffer dataOut, String str) {
         if (str == null) {
             dataOut.writeInt(-1);
             return;
@@ -72,7 +56,7 @@ public class NetworkTools {
         }
     }
 
-    public static String readStringUTF8(ByteBuf dataIn) {
+    public static String readStringUTF8(PacketBuffer dataIn) {
         int s = dataIn.readInt();
         if (s == -1) {
             return null;
@@ -85,7 +69,7 @@ public class NetworkTools {
         return new String(dst, java.nio.charset.StandardCharsets.UTF_8);
     }
 
-    public static void writeStringUTF8(ByteBuf dataOut, String str) {
+    public static void writeStringUTF8(PacketBuffer dataOut, String str) {
         if (str == null) {
             dataOut.writeInt(-1);
             return;
@@ -97,44 +81,22 @@ public class NetworkTools {
         }
     }
 
-    public static BlockPos readPos(ByteBuf dataIn) {
-        return new BlockPos(dataIn.readInt(), dataIn.readInt(), dataIn.readInt());
-    }
-
-    public static void writePos(ByteBuf dataOut, BlockPos pos) {
-        dataOut.writeInt(pos.getX());
-        dataOut.writeInt(pos.getY());
-        dataOut.writeInt(pos.getZ());
-    }
-
-    public static <T extends Enum<T>> void writeEnum(ByteBuf buf, T value, T nullValue) {
-        if (value == null) {
-            buf.writeInt(nullValue.ordinal());
-        } else {
-            buf.writeInt(value.ordinal());
-        }
-    }
-
-    public static <T extends Enum<T>> T readEnum(ByteBuf buf, T[] values) {
-        return values[buf.readInt()];
-    }
-
-    public static <T extends Enum<T>> void writeEnumCollection(ByteBuf buf, Collection<T> collection) {
-        buf.writeInt(collection.size());
+    public static <T extends Enum<T>> void writeEnumCollection(PacketBuffer buf, Collection<T> collection) {
+        buf.writeVarInt(collection.size());
         for (T type : collection) {
-            buf.writeInt(type.ordinal());
+            buf.writeEnumValue(type);
         }
     }
 
-    public static <T extends Enum<T>> void readEnumCollection(ByteBuf buf, Collection<T> collection, T[] values) {
+    public static <T extends Enum<T>> void readEnumCollection(PacketBuffer buf, Collection<T> collection, Class<T> enumClass) {
         collection.clear();
-        int size = buf.readInt();
+        int size = buf.readVarInt();
         for (int i = 0 ; i < size ; i++) {
-            collection.add(values[buf.readInt()]);
+            collection.add(buf.readEnumValue(enumClass));
         }
     }
 
-    public static void writeFloat(ByteBuf buf, Float f) {
+    public static void writeFloat(PacketBuffer buf, Float f) {
         if (f != null) {
             buf.writeBoolean(true);
             buf.writeFloat(f);
@@ -143,7 +105,7 @@ public class NetworkTools {
         }
     }
 
-    public static Float readFloat(ByteBuf buf) {
+    public static Float readFloat(PacketBuffer buf) {
         if (buf.readBoolean()) {
             return buf.readFloat();
         } else {

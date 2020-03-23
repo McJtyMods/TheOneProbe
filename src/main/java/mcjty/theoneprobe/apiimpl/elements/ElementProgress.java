@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.NumberFormat;
@@ -10,6 +9,7 @@ import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcjty.theoneprobe.network.NetworkTools;
 
 import java.text.DecimalFormat;
+import net.minecraft.network.PacketBuffer;
 
 public class ElementProgress implements IElement {
 
@@ -23,7 +23,7 @@ public class ElementProgress implements IElement {
         this.style = style;
     }
 
-    public ElementProgress(ByteBuf buf) {
+    public ElementProgress(PacketBuffer buf) {
         current = buf.readLong();
         max = buf.readLong();
         style = new ProgressStyle()
@@ -101,7 +101,7 @@ public class ElementProgress implements IElement {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(PacketBuffer buf) {
         buf.writeLong(current);
         buf.writeLong(max);
         buf.writeInt(style.getWidth());

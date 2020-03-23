@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.network;
 
-import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
@@ -9,6 +8,7 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -35,19 +35,18 @@ public class PacketGetEntityInfo {
     private ProbeMode mode;
     private Vec3d hitVec;
 
-    public PacketGetEntityInfo(ByteBuf buf) {
+    public PacketGetEntityInfo(PacketBuffer buf) {
         dim = buf.readInt();
-        uuid = new UUID(buf.readLong(), buf.readLong());
+        uuid = buf.readUniqueId();
         mode = ProbeMode.values()[buf.readByte()];
         if (buf.readBoolean()) {
             hitVec = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
         }
     }
 
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(PacketBuffer buf) {
         buf.writeInt(dim);
-        buf.writeLong(uuid.getMostSignificantBits());
-        buf.writeLong(uuid.getLeastSignificantBits());
+        buf.writeUniqueId(uuid);
         buf.writeByte(mode.ordinal());
         if (hitVec == null) {
             buf.writeBoolean(false);
