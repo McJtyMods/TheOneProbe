@@ -9,7 +9,6 @@ import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -30,13 +29,13 @@ import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
 public class PacketGetEntityInfo {
 
-    private int dim;
+    private DimensionType dim;
     private UUID uuid;
     private ProbeMode mode;
     private Vec3d hitVec;
 
     public PacketGetEntityInfo(PacketBuffer buf) {
-        dim = buf.readInt();
+        dim = DimensionType.byName(buf.readResourceLocation());
         uuid = buf.readUniqueId();
         mode = ProbeMode.values()[buf.readByte()];
         if (buf.readBoolean()) {
@@ -45,7 +44,7 @@ public class PacketGetEntityInfo {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeInt(dim);
+        buf.writeResourceLocation(dim.getRegistryName());
         buf.writeUniqueId(uuid);
         buf.writeByte(mode.ordinal());
         if (hitVec == null) {
@@ -61,7 +60,7 @@ public class PacketGetEntityInfo {
     public PacketGetEntityInfo() {
     }
 
-    public PacketGetEntityInfo(int dim, ProbeMode mode, RayTraceResult mouseOver, Entity entity) {
+    public PacketGetEntityInfo(DimensionType dim, ProbeMode mode, RayTraceResult mouseOver, Entity entity) {
         this.dim = dim;
         this.uuid = entity.getUniqueID();
         this.mode = mode;
@@ -70,9 +69,7 @@ public class PacketGetEntityInfo {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            MinecraftServer s;
-            DimensionType type = DimensionType.getById(dim);
-            ServerWorld world = DimensionManager.getWorld(ctx.get().getSender().server, type, true, false);
+            ServerWorld world = DimensionManager.getWorld(ctx.get().getSender().server, dim, true, false);
             if (world != null) {
                 Entity entity = world.getEntityByUuid(uuid);
                 if (entity != null) {

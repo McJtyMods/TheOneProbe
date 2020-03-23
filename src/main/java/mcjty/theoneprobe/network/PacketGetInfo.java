@@ -41,8 +41,8 @@ public class PacketGetInfo  {
     private ItemStack pickBlock;
 
     public PacketGetInfo(PacketBuffer buf) {
-        dim = DimensionType.getById(buf.readInt());
-        pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        dim = DimensionType.byName(buf.readResourceLocation());
+        pos = buf.readBlockPos();
         mode = ProbeMode.values()[buf.readByte()];
         byte sideByte = buf.readByte();
         if (sideByte == 127) {
@@ -57,10 +57,8 @@ public class PacketGetInfo  {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeInt(dim.getId());
-        buf.writeInt(pos.getX());
-        buf.writeInt(pos.getY());
-        buf.writeInt(pos.getZ());
+        buf.writeResourceLocation(dim.getRegistryName());
+        buf.writeBlockPos(pos);
         buf.writeByte(mode.ordinal());
         buf.writeByte(sideHit == null ? 127 : sideHit.ordinal());
         if (hitVec == null) {

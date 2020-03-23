@@ -208,7 +208,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntity player) {
-        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().getDimension().getType().getId(), mode, mouseOver, entity));
+        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().getDimension().getType(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(MatrixStack matrixStack, ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {

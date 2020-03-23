@@ -16,7 +16,7 @@ public class PacketReturnInfo {
     private ProbeInfo probeInfo;
 
     public PacketReturnInfo(PacketBuffer buf) {
-        dim = DimensionType.getById(buf.readInt());
+        dim = DimensionType.byName(buf.readResourceLocation());
         pos = buf.readBlockPos();
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();
@@ -27,7 +27,7 @@ public class PacketReturnInfo {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeInt(dim.getId());
+        buf.writeResourceLocation(dim.getRegistryName());
         buf.writeBlockPos(pos);
         if (probeInfo != null) {
             buf.writeBoolean(true);
