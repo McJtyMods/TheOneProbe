@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.api;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.PacketBuffer;
 
 /**
  * An element in the probe gui.
@@ -25,7 +26,10 @@ public interface IElement {
     /**
      * Persist this element to the given network buffer. This should be symmetrical to
      * what IElementFactory.createElement() expects.
+     *
+     * @deprecated To be removed in 1.16, prefer implementing and using {@link IElementNew#toBytes(PacketBuffer)}
      */
+    @Deprecated
     void toBytes(ByteBuf buf);
 
     /**

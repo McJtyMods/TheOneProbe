@@ -9,8 +9,10 @@ import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.*;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -28,6 +30,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import java.util.Collections;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
 import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
@@ -104,8 +107,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (block instanceof BrewingStandBlock) {
             TileEntity te = world.getTileEntity(data.getPos());
             if (te instanceof BrewingStandTileEntity) {
-                int brewtime = 0; // @todo 1.14 ((BrewingStandTileEntity) te).getField(0);
-                int fuel = 0; // @todo 1.14 ((BrewingStandTileEntity) te).getField(1);
+                int brewtime = ((BrewingStandTileEntity) te).brewTime;
+                int fuel = ((BrewingStandTileEntity) te).fuel;
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
                         .text(LABEL + "Fuel: " + INFO + fuel);
@@ -122,10 +125,13 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             TileEntity te = world.getTileEntity(data.getPos());
             if (te instanceof MobSpawnerTileEntity) {
                 AbstractSpawner logic = ((MobSpawnerTileEntity) te).getSpawnerBaseLogic();
-                String mobName = logic.getCachedEntity().getDisplayName().getFormattedText();
-                probeInfo.horizontal(probeInfo.defaultLayoutStyle()
-                    .alignment(ElementAlignment.ALIGN_CENTER))
-                    .text(LABEL + "Mob: " + INFO + mobName);
+                EntityType<?> type = ForgeRegistries.ENTITIES.getValue(logic.getEntityId());
+                if (type != null) {
+                    String mobName = type.getName().getFormattedText();
+                    probeInfo.horizontal(probeInfo.defaultLayoutStyle()
+                          .alignment(ElementAlignment.ALIGN_CENTER))
+                          .text(LABEL + "Mob: " + INFO + mobName);
+                }
             }
         }
     }
@@ -175,7 +181,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 for (int i = 0 ; i < handler.getTanks() ; i++) {
                     FluidStack fluidStack = handler.getFluidInTank(i);
                     int maxContents = handler.getTankCapacity(i);
-                    if (fluidStack != null) {
+                    if (!fluidStack.isEmpty()) {
                         addFluidInfo(probeInfo, config, fluidStack, maxContents);
                     }
                 }
@@ -184,8 +190,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
-        int contents = fluidStack == null ? 0 : fluidStack.getAmount();
-        if (fluidStack != null) {
+        int contents = fluidStack.getAmount();
+        if (!fluidStack.isEmpty()) {
             probeInfo.text(NAME + "Liquid:" + STARTLOC + fluidStack.getTranslationKey() + ENDLOC);
         }
         if (config.getTankMode() == 1) {
@@ -266,7 +272,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (block instanceof FlowingFluidBlock) {
             IFluidState fluidState = block.getFluidState(blockState);
             Fluid fluid = fluidState.getFluid();
-            if (fluid != null) {
+            if (fluid != Fluids.EMPTY) {
                 FluidStack fluidStack = new FluidStack(fluid.getFluid(), BUCKET_VOLUME);
                 ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
 

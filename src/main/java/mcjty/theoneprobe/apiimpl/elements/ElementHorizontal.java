@@ -1,9 +1,9 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
+import net.minecraft.network.PacketBuffer;
 
 public class ElementHorizontal extends AbstractElementPanel {
 
@@ -13,7 +13,7 @@ public class ElementHorizontal extends AbstractElementPanel {
         super(borderColor, spacing, alignment);
     }
 
-    public ElementHorizontal(ByteBuf buf) {
+    public ElementHorizontal(PacketBuffer buf) {
         super(buf);
     }
 

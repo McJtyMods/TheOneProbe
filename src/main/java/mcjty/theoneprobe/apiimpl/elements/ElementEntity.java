@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IElementNew;
 import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementEntityRender;
@@ -10,10 +9,11 @@ import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ElementEntity implements IElement {
+public class ElementEntity implements IElementNew {
 
     private final String entityName;
     private final Integer playerID;
@@ -45,17 +45,13 @@ public class ElementEntity implements IElement {
         this.style = style;
     }
 
-    public ElementEntity(ByteBuf buf) {
+    public ElementEntity(PacketBuffer buf) {
         entityName = NetworkTools.readString(buf);
         style = new EntityStyle()
                 .width(buf.readInt())
                 .height(buf.readInt())
                 .scale(buf.readFloat());
-        if (buf.readBoolean()) {
-            entityNBT = NetworkTools.readNBT(buf);
-        } else {
-            entityNBT = null;
-        }
+        entityNBT = buf.readCompoundTag();
         if (buf.readBoolean()) {
             playerID = buf.readInt();
         } else {
@@ -83,17 +79,12 @@ public class ElementEntity implements IElement {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(PacketBuffer buf) {
         NetworkTools.writeString(buf, entityName);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
         buf.writeFloat(style.getScale());
-        if (entityNBT != null) {
-            buf.writeBoolean(true);
-            NetworkTools.writeNBT(buf, entityNBT);
-        } else {
-            buf.writeBoolean(false);
-        }
+        buf.writeCompoundTag(entityNBT);
         if (playerID != null) {
             buf.writeBoolean(true);
             buf.writeInt(playerID);

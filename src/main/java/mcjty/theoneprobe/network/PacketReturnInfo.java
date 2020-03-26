@@ -1,8 +1,8 @@
 package mcjty.theoneprobe.network;
 
-import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -15,9 +15,9 @@ public class PacketReturnInfo {
     private BlockPos pos;
     private ProbeInfo probeInfo;
 
-    public PacketReturnInfo(ByteBuf buf) {
-        dim = DimensionType.getById(buf.readInt());
-        pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+    public PacketReturnInfo(PacketBuffer buf) {
+        dim = DimensionType.byName(buf.readResourceLocation());
+        pos = buf.readBlockPos();
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();
             probeInfo.fromBytes(buf);
@@ -26,11 +26,9 @@ public class PacketReturnInfo {
         }
     }
 
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(dim.getId());
-        buf.writeInt(pos.getX());
-        buf.writeInt(pos.getY());
-        buf.writeInt(pos.getZ());
+    public void toBytes(PacketBuffer buf) {
+        buf.writeResourceLocation(dim.getRegistryName());
+        buf.writeBlockPos(pos);
         if (probeInfo != null) {
             buf.writeBoolean(true);
             probeInfo.toBytes(buf);

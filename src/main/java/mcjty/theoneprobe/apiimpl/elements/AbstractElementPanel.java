@@ -1,18 +1,18 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.apiimpl.styles.*;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractElementPanel implements IElement, IProbeInfo {
+public abstract class AbstractElementPanel implements IElementNew, IProbeInfo {
 
     protected List<IElement> children = new ArrayList<>();
     protected Integer borderColor;
@@ -38,7 +38,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         this.alignment = alignment;
     }
 
-    public AbstractElementPanel(ByteBuf buf) {
+    public AbstractElementPanel(PacketBuffer buf) {
         children = ProbeInfo.createElements(buf);
         if (buf.readBoolean()) {
             borderColor = buf.readInt();
@@ -48,7 +48,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(PacketBuffer buf) {
         ProbeInfo.writeElements(children, buf);
         if (borderColor != null) {
             buf.writeBoolean(true);

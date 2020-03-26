@@ -1,15 +1,14 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IElementNew;
 import mcjty.theoneprobe.api.IIconStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementIconRender;
 import mcjty.theoneprobe.apiimpl.styles.IconStyle;
-import mcjty.theoneprobe.network.NetworkTools;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
-public class ElementIcon implements IElement {
+public class ElementIcon implements IElementNew {
 
     private final ResourceLocation icon;
     private final int u;
@@ -27,8 +26,8 @@ public class ElementIcon implements IElement {
         this.style = style;
     }
 
-    public ElementIcon(ByteBuf buf) {
-        icon = new ResourceLocation(NetworkTools.readString(buf), NetworkTools.readString(buf));
+    public ElementIcon(PacketBuffer buf) {
+        icon = buf.readResourceLocation();
         u = buf.readInt();
         v = buf.readInt();
         w = buf.readInt();
@@ -56,9 +55,8 @@ public class ElementIcon implements IElement {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        NetworkTools.writeString(buf, icon.getNamespace());
-        NetworkTools.writeString(buf, icon.getPath());
+    public void toBytes(PacketBuffer buf) {
+        buf.writeResourceLocation(icon);
         buf.writeInt(u);
         buf.writeInt(v);
         buf.writeInt(w);
