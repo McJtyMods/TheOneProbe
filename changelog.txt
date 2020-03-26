@@ -1,3 +1,12 @@
+2.0.2:
+- pupnewfster did various fixes on The One Probe:
+    - Fixed checking for empty liquids
+    - Fix mob spawner's showing an error for the entity type when on servers
+    - Fix viewing brewing information of brewing stands
+    - Fix a few config options always being reset due to being "invalid". The config system does not fully support non ArrayList defaults, unless you provide a custom element validator
+    - Switch from using ByteBuf to PacketBuffer, it is a bit of a mess in the API and has a couple TODOs of things that should be done in 1.16, but in order to keep backwards compat it was needed
+    - Send dimension type by registry name rather than int id to ensure that they match on both the client and server
+
 2.0.1:
 - Fixed a problem with the itemstack amounts of inventory contents not rendering properly
 
