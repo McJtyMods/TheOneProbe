@@ -5,6 +5,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -22,8 +23,8 @@ public interface IProbeHitData {
      * Access the client-side result of getPickBlock() for the given block. That way
      * you don't have to call this server side because that can sometimes be
      * problematic
-     * @return the picked block or null
+     * @return the picked block or ItemStack.EMPTY
      */
-    @Nullable
+    @Nonnull
     ItemStack getPickBlock();
 }

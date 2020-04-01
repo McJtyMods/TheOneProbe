@@ -6,6 +6,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ProbeHitData implements IProbeHitData {
@@ -15,7 +16,7 @@ public class ProbeHitData implements IProbeHitData {
     private final Direction side;
     private final ItemStack pickBlock;
 
-    public ProbeHitData(BlockPos pos, Vec3d hitVec, Direction side, ItemStack pickBlock) {
+    public ProbeHitData(BlockPos pos, Vec3d hitVec, Direction side, @Nonnull ItemStack pickBlock) {
         this.pos = pos;
         this.hitVec = hitVec;
         this.side = side;
@@ -37,7 +38,7 @@ public class ProbeHitData implements IProbeHitData {
         return side;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public ItemStack getPickBlock() {
         return pickBlock;

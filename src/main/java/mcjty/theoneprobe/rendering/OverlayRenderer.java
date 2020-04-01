@@ -329,11 +329,11 @@ public class OverlayRenderer {
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
-        if (pickBlock == null || (!pickBlock.isEmpty() && pickBlock.getItem() == null)) {
-            // Protection for some invalid items.
+        if (pickBlock == null) {
+            // Should not be needed but you never know... (bad mods)
             pickBlock = ItemStack.EMPTY;
         }
-        if (pickBlock != null && (!pickBlock.isEmpty()) && Config.getDontSendNBTSet().contains(pickBlock.getItem().getRegistryName())) {
+        if (!pickBlock.isEmpty() && Config.getDontSendNBTSet().contains(pickBlock.getItem().getRegistryName())) {
             pickBlock = pickBlock.copy();
             pickBlock.setTag(null);
         }

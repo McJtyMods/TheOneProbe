@@ -23,6 +23,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -38,7 +39,7 @@ public class PacketGetInfo  {
     private ProbeMode mode;
     private Direction sideHit;
     private Vec3d hitVec;
-    private ItemStack pickBlock;
+    @Nonnull private ItemStack pickBlock;
 
     public PacketGetInfo(PacketBuffer buf) {
         dim = DimensionType.byName(buf.readResourceLocation());
@@ -83,7 +84,7 @@ public class PacketGetInfo  {
     public PacketGetInfo() {
     }
 
-    public PacketGetInfo(DimensionType dim, BlockPos pos, ProbeMode mode, RayTraceResult mouseOver, ItemStack pickBlock) {
+    public PacketGetInfo(DimensionType dim, BlockPos pos, ProbeMode mode, RayTraceResult mouseOver, @Nonnull ItemStack pickBlock) {
         this.dim = dim;
         this.pos = pos;
         this.mode = mode;
@@ -104,7 +105,7 @@ public class PacketGetInfo  {
         ctx.get().setPacketHandled(true);
     }
 
-    private static ProbeInfo getProbeInfo(PlayerEntity player, ProbeMode mode, World world, BlockPos blockPos, Direction sideHit, Vec3d hitVec, ItemStack pickBlock) {
+    private static ProbeInfo getProbeInfo(PlayerEntity player, ProbeMode mode, World world, BlockPos blockPos, Direction sideHit, Vec3d hitVec, @Nonnull ItemStack pickBlock) {
         if (Config.needsProbe.get() == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
             if (!ModItems.hasAProbeSomewhere(player)) {
