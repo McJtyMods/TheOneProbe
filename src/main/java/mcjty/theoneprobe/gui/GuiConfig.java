@@ -211,7 +211,7 @@ public class GuiConfig extends Screen {
     private void renderElements(ProbeInfo probeInfo, IOverlayStyle style) {
 
         GlStateManager.pushMatrix();
-        GlStateManager.scaled(1/Config.tooltipScale.get(), 1/Config.tooltipScale.get(), 1/Config.tooltipScale.get());
+        GlStateManager.scaled((1f/Config.tooltipScale.get()), (1f/Config.tooltipScale.get()), (1f/Config.tooltipScale.get()));
 
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();

@@ -1,12 +1,6 @@
 package mcjty.theoneprobe.config;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraftforge.fml.client.IModGuiFactory;
-
-import java.util.Set;
-
-public class TopModGuiFactory implements IModGuiFactory {
+public class TopModGuiFactory {} /* @todo 1.15 implements IModGuiFactory {
 
     @Override
     public void initialize(Minecraft minecraftInstance) {
@@ -30,3 +24,4 @@ public class TopModGuiFactory implements IModGuiFactory {
         return null;
     }
 }
+*/

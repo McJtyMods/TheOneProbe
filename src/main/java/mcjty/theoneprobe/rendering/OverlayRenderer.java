@@ -118,14 +118,14 @@ public class OverlayRenderer {
         checkCleanup();
     }
 
-    public static void setupOverlayRendering(double sw, double sh) {
-        GlStateManager.clear(256, true);
-        GlStateManager.matrixMode(GL11.GL_PROJECTION);
-        GlStateManager.loadIdentity();
-        GlStateManager.ortho(0.0D, sw, sh, 0.0D, 1000.0D, 3000.0D);
-        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-        GlStateManager.loadIdentity();
-        GlStateManager.translatef(0.0F, 0.0F, -2000.0F);
+    private static void setupOverlayRendering(double sw, double sh) {
+    	GlStateManager.clear(256, true);
+    	GlStateManager.matrixMode(GL11.GL_PROJECTION);
+    	GlStateManager.loadIdentity();
+    	GlStateManager.ortho(0.0D, sw, sh, 0.0D, 1000.0D, 3000.0D);
+    	GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+    	GlStateManager.loadIdentity();
+    	GlStateManager.translatef(0.0F, 0.0F, -2000.0F);
     }
 
     private static void checkCleanup() {
@@ -202,7 +202,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntity player) {
-        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().getDimension().getType().getId(), mode, mouseOver, entity));
+        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().getDimension().getType(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
@@ -323,11 +323,11 @@ public class OverlayRenderer {
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
-        if (pickBlock == null || (!pickBlock.isEmpty() && pickBlock.getItem() == null)) {
-            // Protection for some invalid items.
+        if (pickBlock == null) {
+            // Should not be needed but you never know... (bad mods)
             pickBlock = ItemStack.EMPTY;
         }
-        if (pickBlock != null && (!pickBlock.isEmpty()) && Config.getDontSendNBTSet().contains(pickBlock.getItem().getRegistryName())) {
+        if (!pickBlock.isEmpty() && Config.getDontSendNBTSet().contains(pickBlock.getItem().getRegistryName())) {
             pickBlock = pickBlock.copy();
             pickBlock.setTag(null);
         }
@@ -372,8 +372,7 @@ public class OverlayRenderer {
         cachedEntityInfo = newCachedInfo;
     }
 
-    public static void renderElements(ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh,
-                                       @Nullable IElement extra) {
+    public static void renderElements(ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh, @Nullable IElement extra) {
         if (extra != null) {
             probeInfo.element(extra);
         }

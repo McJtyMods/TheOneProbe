@@ -6,9 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.text.WordUtils;
 
-import java.util.Locale;
+import org.apache.commons.lang3.StringUtils;
 
 import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.EXTENDED;
 import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.NORMAL;
@@ -18,8 +17,7 @@ public class Tools {
     public static String getModName(Block block) {
         ResourceLocation itemResourceLocation = block.getRegistryName();
         String modId = itemResourceLocation.getNamespace();
-        String lowercaseModId = modId.toLowerCase(Locale.ENGLISH);
-        String modName = WordUtils.capitalize(modId);
+        String modName = StringUtils.capitalize(modId);
         return modName;
     }
 
@@ -28,7 +26,7 @@ public class Tools {
         if (type.getRegistryName() == null) {
             return "Minecraft";
         }
-        return WordUtils.capitalize(type.getRegistryName().getNamespace());
+        return StringUtils.capitalize(type.getRegistryName().getNamespace());
     }
 
     public static boolean show(ProbeMode mode, IProbeConfig.ConfigMode cfg) {
