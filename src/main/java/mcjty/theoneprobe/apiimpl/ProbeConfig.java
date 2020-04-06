@@ -2,9 +2,7 @@ package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.api.IProbeConfig;
 
-import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.EXTENDED;
-import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.NORMAL;
-import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.NOT;
+import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.*;
 
 public class ProbeConfig implements IProbeConfig {
 

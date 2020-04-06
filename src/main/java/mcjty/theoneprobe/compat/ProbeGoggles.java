@@ -1,10 +1,5 @@
 package mcjty.theoneprobe.compat;
 
-import mcjty.theoneprobe.TheOneProbe;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
-
 public class ProbeGoggles {}/*extends Item implements IBauble {
 
     public ProbeGoggles() {

@@ -23,6 +23,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -38,11 +39,11 @@ public class PacketGetInfo  {
     private ProbeMode mode;
     private Direction sideHit;
     private Vec3d hitVec;
-    private ItemStack pickBlock;
+    @Nonnull private ItemStack pickBlock;
 
     public PacketGetInfo(PacketBuffer buf) {
-        dim = DimensionType.getById(buf.readInt());
-        pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        dim = DimensionType.byName(buf.readResourceLocation());
+        pos = buf.readBlockPos();
         mode = ProbeMode.values()[buf.readByte()];
         byte sideByte = buf.readByte();
         if (sideByte == 127) {
@@ -57,10 +58,8 @@ public class PacketGetInfo  {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeInt(dim.getId());
-        buf.writeInt(pos.getX());
-        buf.writeInt(pos.getY());
-        buf.writeInt(pos.getZ());
+        buf.writeResourceLocation(dim.getRegistryName());
+        buf.writeBlockPos(pos);
         buf.writeByte(mode.ordinal());
         buf.writeByte(sideHit == null ? 127 : sideHit.ordinal());
         if (hitVec == null) {
@@ -85,7 +84,7 @@ public class PacketGetInfo  {
     public PacketGetInfo() {
     }
 
-    public PacketGetInfo(DimensionType dim, BlockPos pos, ProbeMode mode, RayTraceResult mouseOver, ItemStack pickBlock) {
+    public PacketGetInfo(DimensionType dim, BlockPos pos, ProbeMode mode, RayTraceResult mouseOver, @Nonnull ItemStack pickBlock) {
         this.dim = dim;
         this.pos = pos;
         this.mode = mode;
@@ -106,7 +105,7 @@ public class PacketGetInfo  {
         ctx.get().setPacketHandled(true);
     }
 
-    private static ProbeInfo getProbeInfo(PlayerEntity player, ProbeMode mode, World world, BlockPos blockPos, Direction sideHit, Vec3d hitVec, ItemStack pickBlock) {
+    private static ProbeInfo getProbeInfo(PlayerEntity player, ProbeMode mode, World world, BlockPos blockPos, Direction sideHit, Vec3d hitVec, @Nonnull ItemStack pickBlock) {
         if (Config.needsProbe.get() == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
             if (!ModItems.hasAProbeSomewhere(player)) {
