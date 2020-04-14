@@ -7,9 +7,9 @@ import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementProgressRender;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcjty.theoneprobe.network.NetworkTools;
+import net.minecraft.network.PacketBuffer;
 
 import java.text.DecimalFormat;
-import net.minecraft.network.PacketBuffer;
 
 public class ElementProgress implements IElementNew {
 

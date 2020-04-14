@@ -1,16 +1,12 @@
 package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.ElementAlignment;
-import mcjty.theoneprobe.api.IElement;
-import mcjty.theoneprobe.api.IElementFactory;
-import mcjty.theoneprobe.api.IElementFactoryNew;
-import mcjty.theoneprobe.api.IElementNew;
+import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.ElementVertical;
+import net.minecraft.network.PacketBuffer;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.network.PacketBuffer;
 
 public class ProbeInfo extends ElementVertical {
 
