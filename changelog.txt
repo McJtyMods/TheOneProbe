@@ -1,3 +1,6 @@
+Upcoming:
+- Fixed a problem when looking at certain entities (like paintings). There would be massive console spam
+
 2.0.2:
 - pupnewfster did various fixes on The One Probe:
     - Fixed checking for empty liquids

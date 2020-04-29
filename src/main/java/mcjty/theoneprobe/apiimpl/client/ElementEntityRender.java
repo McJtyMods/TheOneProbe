@@ -33,6 +33,7 @@ public class ElementEntityRender {
                 if (value != null) {
                     try {
                         entity = value.create(Minecraft.getInstance().world, entityNBT, null, null, new BlockPos(0, 0, 0), SpawnReason.COMMAND, false, false);
+                        entity.read(entityNBT);
                     } catch (Exception ignore) {
                         // This can crash due to a vanilla bug with foxes. Workaround here
                     }
