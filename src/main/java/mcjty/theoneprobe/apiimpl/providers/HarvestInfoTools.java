@@ -34,11 +34,11 @@ public class HarvestInfoTools {
             "cobalt"
     };
 
-    private static final HashMap<ToolType, ItemStack> testTools = new HashMap<>();
+    private static final Map<ToolType, ItemStack> TEST_TOOLS = new HashMap<>();
     static {
-        testTools.put(ToolType.SHOVEL, new ItemStack(Items.WOODEN_SHOVEL));
-        testTools.put(ToolType.AXE, new ItemStack(Items.WOODEN_AXE));
-        testTools.put(ToolType.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE));
+        TEST_TOOLS.put(ToolType.SHOVEL, new ItemStack(Items.WOODEN_SHOVEL));
+        TEST_TOOLS.put(ToolType.AXE, new ItemStack(Items.WOODEN_AXE));
+        TEST_TOOLS.put(ToolType.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE));
     }
 
     static void showHarvestLevel(IProbeInfo probeInfo, BlockState blockState, Block block) {
@@ -82,7 +82,7 @@ public class HarvestInfoTools {
             // The block doesn't have an explicitly-set harvest tool, so we're going to test our wooden tools against the block.
             float blockHardness = blockState.getBlockHardness(world, pos);
             if (blockHardness > 0f) {
-                for (Map.Entry<ToolType, ItemStack> testToolEntry : testTools.entrySet()) {
+                for (Map.Entry<ToolType, ItemStack> testToolEntry : TEST_TOOLS.entrySet()) {
                     // loop through our test tools until we find a winner.
                     ItemStack testTool = testToolEntry.getValue();
 

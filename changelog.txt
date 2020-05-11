@@ -1,5 +1,6 @@
 Upcoming:
 - Fixed a problem when looking at certain entities (like paintings). There would be massive console spam
+- Fixed a small problem with IProbeHitEntityData not doing what it promised
 
 2.0.2:
 - pupnewfster did various fixes on The One Probe:

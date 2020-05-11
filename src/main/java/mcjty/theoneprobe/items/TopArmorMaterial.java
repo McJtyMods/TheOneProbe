@@ -10,7 +10,6 @@ public class TopArmorMaterial implements IArmorMaterial {
 
     private final String name;
     private final int durability;
-    private final float toughness;
     private final int[] damageReduction;
     private final int enchantability;
     private final SoundEvent soundEvent;
@@ -20,7 +19,6 @@ public class TopArmorMaterial implements IArmorMaterial {
     public TopArmorMaterial(String name, int durability, int[] damageReduction, int enchantability, SoundEvent soundEvent, float toughness, Ingredient repairMaterial) {
         this.name = name;
         this.durability = durability;
-        this.toughness = toughness;
         this.damageReduction = damageReduction;
         this.enchantability = enchantability;
         this.soundEvent = soundEvent;

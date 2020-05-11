@@ -13,6 +13,6 @@ public class ProbeHitEntityData implements IProbeHitEntityData {
 
     @Override
     public Vec3d getHitVec() {
-        return null;
+        return hitVec;
     }
 }

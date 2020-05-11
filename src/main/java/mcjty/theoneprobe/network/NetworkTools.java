@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.network;
 
+import mcjty.theoneprobe.TheOneProbe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -27,7 +28,7 @@ public class NetworkTools {
             buf.writeCompoundTag(nbt);
             buf.writeInt(itemStack.getCount());
         } catch (Exception e) {
-            e.printStackTrace();
+            TheOneProbe.logger.error(e);
         }
     }
 
