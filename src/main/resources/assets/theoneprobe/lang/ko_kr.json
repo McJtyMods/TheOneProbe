@@ -1,0 +1,14 @@
+{
+    "key.toggleLiquids": "토글 액체 뷰",
+    "key.toggleVisible": "가시성 토글",
+    "key.categories.theoneprobe": "하나의 탐사선",
+    "item.theoneprobe.probe": "하나의 탐사선",
+    "item.theoneprobe.probe_goggles": "하나의 탐사선 (바우블)",
+    "item.theoneprobe.diamond_helmet_probe": "다이아몬드 탐사선 투구",
+    "item.theoneprobe.gold_helmet_probe": "금 탐사선 투구",
+    "item.theoneprobe.iron_helmet_probe": "철 탐사선 투구",
+    "item.theoneprobe.creativeprobe": "크리에이티브 탐사선",
+    "item.theoneprobe.probenote": "하나의 탐사선 가이드",
+
+    "itemGroup.Probe": "하나의 탐사선"
+}
