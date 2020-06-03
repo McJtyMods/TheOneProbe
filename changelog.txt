@@ -1,4 +1,4 @@
-Upcoming:
+2.0.3:
 - Fixed a problem when looking at certain entities (like paintings). There would be massive console spam
 - Fixed a small problem with IProbeHitEntityData not doing what it promised
 
