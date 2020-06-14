@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,18 @@ public abstract class AbstractElementPanel implements IElementNew, IProbeInfo {
 
     @Override
     public IProbeInfo text(String text, ITextStyle style) {
+        children.add(new ElementText(text));
+        return this;
+    }
+
+    @Override
+    public IProbeInfo text(ITextComponent text) {
+        children.add(new ElementText(text));
+        return this;
+    }
+
+    @Override
+    public IProbeInfo text(ITextComponent text, ITextStyle style) {
         children.add(new ElementText(text));
         return this;
     }

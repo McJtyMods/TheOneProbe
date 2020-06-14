@@ -5,6 +5,7 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.EnumSet;
@@ -17,6 +18,14 @@ public class ElementTextRender {
 
     public static void render(String text, int x, int y) {
         RenderHelper.renderText(Minecraft.getInstance(), x, y, stylifyString(text));
+    }
+
+    public static void render(ITextComponent text, int x, int y) {
+        RenderHelper.renderText(Minecraft.getInstance(), x, y, stylifyString(text));
+    }
+
+    private static String stylifyString(ITextComponent text) {
+        return stylifyString(text.getFormattedText());
     }
 
     private static String stylifyString(String text) {
