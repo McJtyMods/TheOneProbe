@@ -24,7 +24,7 @@ public class ProbeNote extends Item {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
         if (world.isRemote) {
-            if (player.isShiftKeyDown()) { // isSneaking
+            if (player.isSneaking()) {
                 GuiConfig.open();
             } else {
                 GuiNote.open();

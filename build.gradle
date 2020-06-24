@@ -21,10 +21,6 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 repositories {
-    maven { // The repo from which to get waila
-        name "Mobius Repo"
-        url "https://tehnut.info/maven"
-    }
     maven { // JEI
         url "https://dvs1.progwml6.com/files/maven"
     }
