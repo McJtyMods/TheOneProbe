@@ -112,7 +112,7 @@ public class PacketGetEntityInfo {
                 provider.addProbeEntityInfo(mode, probeInfo, player, world, entity, data);
             } catch (Throwable e) {
                 ThrowableIdentity.registerThrowable(e);
-                probeInfo.text(LABEL + "Error: " + ERROR + provider.getID());
+                probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text(provider.getID()).get());
             }
         }
         return probeInfo;

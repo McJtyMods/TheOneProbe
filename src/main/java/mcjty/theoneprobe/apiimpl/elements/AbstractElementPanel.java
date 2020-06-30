@@ -74,18 +74,6 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo text(String text) {
-        children.add(new ElementText(text));
-        return this;
-    }
-
-    @Override
-    public IProbeInfo text(String text, ITextStyle style) {
-        children.add(new ElementText(text));
-        return this;
-    }
-
-    @Override
     public IProbeInfo text(ITextComponent text) {
         children.add(new ElementText(text));
         return this;

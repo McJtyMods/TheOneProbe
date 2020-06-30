@@ -71,18 +71,6 @@ public interface IProbeInfo {
     IProbeInfo entity(Entity entity);
 
     /**
-     * Note that you can include TextStyleClass info in the given text which
-     * will be translated to the right style client-side. You can also
-     * include STARTLOC/ENDLOC tags to force translation to localized
-     * data on the client. Note that these versions are deprecated. It's
-     * better to use the new ITextComponent based API
-     */
-    @Deprecated
-    IProbeInfo text(String text, ITextStyle style);
-    @Deprecated
-    IProbeInfo text(String text);
-
-    /**
      * Send (possibly formatted) text to the client. Note that you can use
      * CompoundText as a conveniance and giving you the option to use TextStyleClass
      * for your text

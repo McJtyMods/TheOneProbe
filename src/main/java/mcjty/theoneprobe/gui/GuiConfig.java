@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import javax.annotation.Nonnull;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
+import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
@@ -202,10 +203,10 @@ public class GuiConfig extends Screen {
         probeInfo.horizontal()
                 .item(pickBlock)
                 .vertical()
-                .text(NAME + pickBlock.getDisplayName().getString())
-                .text(MODNAME + modid);
-        probeInfo.text(LABEL + "Fuel: " + INFO + "5 volts");
-        probeInfo.text(LABEL + "Error: " + ERROR + "Oups!");
+                .text(CompoundText.create().name(pickBlock.getDisplayName()).get())
+                .text(CompoundText.create().style(MODNAME).text(modid).get());
+        probeInfo.text(CompoundText.create().style(LABEL).text("Fuel: ").style(INFO).text("5 volts").get());
+        probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text("Oups!").get());
 
         renderElements(probeInfo, Config.getDefaultOverlayStyle(), matrixStack);
     }

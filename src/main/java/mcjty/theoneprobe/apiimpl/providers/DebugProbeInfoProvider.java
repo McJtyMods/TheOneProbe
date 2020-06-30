@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
@@ -37,16 +38,16 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
         Block block = blockState.getBlock();
         String simpleName = block.getClass().getSimpleName();
         IProbeInfo vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2))
-                .text(LABEL + "Reg Name: " + INFO + block.getRegistryName().toString())
-                .text(LABEL + "Unlocname: " + INFO + block.getTranslationKey())
-                .text(LABEL + "Class: " + INFO + simpleName)
-                .text(LABEL + "Hardness: " + INFO + blockState.getBlockHardness(world, pos))
-                .text(LABEL + "Power W: " + INFO + blockState.getWeakPower(world, pos, side.getOpposite())
-                        + LABEL + ", S: " + INFO + blockState.getStrongPower(world, pos, side.getOpposite()))
-                .text(LABEL + "Light: " + INFO + blockState.getLightValue(world, pos));
+                .text(CompoundText.create().style(LABEL).text("Reg Name: ").style(INFO).text(block.getRegistryName().toString()).get())
+                .text(CompoundText.create().style(LABEL).text("Unlocname: ").style(INFO).text(block.getTranslationKey()).get())
+                .text(CompoundText.create().style(LABEL).text("Class: ").style(INFO).text(simpleName).get())
+                .text(CompoundText.create().style(LABEL).text("Hardness: ").style(INFO).text(String.valueOf(blockState.getBlockHardness(world, pos))).get())
+                .text(CompoundText.create().style(LABEL).text("Power W: ").style(INFO).text(String.valueOf(blockState.getWeakPower(world, pos, side.getOpposite())))
+                      .style(LABEL).text(", S: ").style(INFO).text(String.valueOf(blockState.getStrongPower(world, pos, side.getOpposite()))).get())
+                .text(CompoundText.create().style(LABEL).text("Light: ").style(INFO).text(String.valueOf(blockState.getLightValue(world, pos))).get());
         TileEntity te = world.getTileEntity(pos);
         if (te != null) {
-            vertical.text(LABEL + "TE: " + INFO + te.getClass().getSimpleName());
+            vertical.text(CompoundText.create().style(LABEL).text("TE: ").style(INFO).text(te.getClass().getSimpleName()).get());
         }
     }
 }

@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.IProbeHitEntityData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
@@ -37,11 +38,11 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                 float aiMoveSpeed = entityLivingBase.getAIMoveSpeed();
                 int revengeTimer = entityLivingBase.getRevengeTimer();
                 vertical
-                        .text(LABEL + "Tot armor: " + INFO + totalArmorValue)
-                        .text(LABEL + "Age: " + INFO + age)
-                        .text(LABEL + "Absorption: " + INFO + absorptionAmount)
-                        .text(LABEL + "AI Move Speed: " + INFO + aiMoveSpeed)
-                        .text(LABEL + "Revenge Timer: " + INFO + revengeTimer);
+                        .text(CompoundText.create().style(LABEL).text("Tot armor: ").style(INFO).text(String.valueOf(totalArmorValue)).get())
+                        .text(CompoundText.create().style(LABEL).text("Age: ").style(INFO).text(String.valueOf(age)).get())
+                        .text(CompoundText.create().style(LABEL).text("Absorption: ").style(INFO).text(String.valueOf(absorptionAmount)).get())
+                        .text(CompoundText.create().style(LABEL).text("AI Move Speed: ").style(INFO).text(String.valueOf(aiMoveSpeed)).get())
+                        .text(CompoundText.create().style(LABEL).text("Revenge Timer: ").style(INFO).text(String.valueOf(revengeTimer)).get());
             }
             if (entity instanceof AgeableEntity) {
                 if (vertical == null) {
@@ -51,7 +52,7 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                 AgeableEntity entityAgeable = (AgeableEntity) entity;
                 int growingAge = entityAgeable.getGrowingAge();
                 vertical
-                        .text(LABEL + "Growing Age: " + INFO + growingAge);
+                        .text(CompoundText.create().style(LABEL).text("Growing Age: ").style(INFO).text(String.valueOf(growingAge)).get());
             }
         }
     }
