@@ -7,6 +7,7 @@ import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.TextFormatting;
 
 public class ElementProgressRender {
@@ -45,17 +46,18 @@ public class ElementProgressRender {
     private static void renderLifeBar(long current, MatrixStack matrixStack, int x, int y, int w, int h) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
+        Matrix4f matrix = matrixStack.getLast().getMatrix();
         if (current * 4 >= w) {
             // Shortened view
-            RenderHelper.drawTexturedModalRect(x, y, 52, 0, 9, 9);
+            RenderHelper.drawTexturedModalRect(matrix, x, y, 52, 0, 9, 9);
             RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
-                RenderHelper.drawTexturedModalRect(x, y, 52, 0, 9, 9);
+                RenderHelper.drawTexturedModalRect(matrix, x, y, 52, 0, 9, 9);
                 x += 8;
             }
             if (current % 2 != 0) {
-                RenderHelper.drawTexturedModalRect(x, y, 61, 0, 9, 9);
+                RenderHelper.drawTexturedModalRect(matrix, x, y, 61, 0, 9, 9);
             }
         }
     }
@@ -63,17 +65,18 @@ public class ElementProgressRender {
     private static void renderArmorBar(long current, MatrixStack matrixStack, int x, int y, int w, int h) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
+        Matrix4f matrix = matrixStack.getLast().getMatrix();
         if (current * 4 >= w) {
             // Shortened view
-            RenderHelper.drawTexturedModalRect(x, y, 43, 9, 9, 9);
+            RenderHelper.drawTexturedModalRect(matrix, x, y, 43, 9, 9, 9);
             RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
-                RenderHelper.drawTexturedModalRect(x, y, 43, 9, 9, 9);
+                RenderHelper.drawTexturedModalRect(matrix, x, y, 43, 9, 9, 9);
                 x += 8;
             }
             if (current % 2 != 0) {
-                RenderHelper.drawTexturedModalRect(x, y, 25, 9, 9, 9);
+                RenderHelper.drawTexturedModalRect(matrix, x, y, 25, 9, 9, 9);
             }
         }
     }

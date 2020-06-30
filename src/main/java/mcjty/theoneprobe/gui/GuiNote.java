@@ -49,7 +49,7 @@ public class GuiNote extends Screen {
     public void func_230430_a_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
         field_230706_i_.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
+        drawTexturedModalRect(matrixStack.getLast().getMatrix(), guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "Things you should know about" + TextFormatting.GOLD + " The One Probe"); y += 10;

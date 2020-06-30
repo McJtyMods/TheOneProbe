@@ -42,7 +42,7 @@ public class ElementIcon implements IElement {
 
     @Override
     public void render(MatrixStack matrixStack, int x, int y) {
-        ElementIconRender.render(icon, x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight());
+        ElementIconRender.render(icon, matrixStack, x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight());
     }
 
     @Override

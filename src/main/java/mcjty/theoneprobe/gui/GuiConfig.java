@@ -17,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Pair;
@@ -86,9 +87,10 @@ public class GuiConfig extends Screen {
     public void func_230430_a_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
         field_230706_i_.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
+        Matrix4f matrix = matrixStack.getLast().getMatrix();
+        drawTexturedModalRect(matrix, guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
         field_230706_i_.getTextureManager().bindTexture(scene);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
+        drawTexturedModalRect(matrix, guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
 
         renderProbe(matrixStack);
 

@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -9,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ElementIconRender {
 
-    public static void render(ResourceLocation icon, int x, int y, int w, int h, int u, int v, int txtw, int txth) {
+    public static void render(ResourceLocation icon, MatrixStack matrixStack, int x, int y, int w, int h, int u, int v, int txtw, int txth) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         if (icon == null) {
@@ -22,10 +23,10 @@ public class ElementIconRender {
                 return;
             }
             Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-            RenderHelper.drawTexturedModalRect(x, y, sprite, w, h);
+            RenderHelper.drawTexturedModalRect(matrixStack.getLast().getMatrix(), x, y, sprite, w, h);
         } else {
             Minecraft.getInstance().getTextureManager().bindTexture(icon);
-            RenderHelper.drawTexturedModalRect(x, y, u, v, w, h, txtw, txth);
+            RenderHelper.drawTexturedModalRect(matrixStack.getLast().getMatrix(), x, y, u, v, w, h, txtw, txth);
         }
     }
 }
