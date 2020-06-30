@@ -92,7 +92,7 @@ public class ChestInfoTools {
             for (ItemStack stackInSlot : stacks) {
                 horizontal = vertical.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER));
                 horizontal.item(stackInSlot, new ItemStyle().width(16).height(16))
-                        .text(INFO + stackInSlot.getDisplayName().getFormattedText());
+                        .text(INFO + stackInSlot.getDisplayName().getString());
             }
         } else {
             for (ItemStack stackInSlot : stacks) {

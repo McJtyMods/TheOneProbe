@@ -24,7 +24,7 @@ public class TheOneProbeImp implements ITheOneProbe {
     private List<IProbeInfoEntityProvider> entityProviders = new ArrayList<>();
     private List<IBlockDisplayOverride> blockOverrides = new ArrayList<>();
     private List<IEntityDisplayOverride> entityOverrides = new ArrayList<>();
-    private Map<Integer,IElementFactory> factories = new HashMap<>();
+    private Map<Integer, IElementFactory> factories = new HashMap<>();
     private int lastId = 0;
 
     public TheOneProbeImp() {

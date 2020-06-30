@@ -4,7 +4,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponent;
 
 /**
  * Information to return to the probe. Most methods here return the same probe info

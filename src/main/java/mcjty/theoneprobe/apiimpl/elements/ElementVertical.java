@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
@@ -18,8 +19,8 @@ public class ElementVertical extends AbstractElementPanel {
     }
 
     @Override
-    public void render(int x, int y) {
-        super.render(x, y);
+    public void render(MatrixStack matrixStack, int x, int y) {
+        super.render(matrixStack, x, y);
         if (borderColor != null) {
             x += 3;
             y += 3;
@@ -38,7 +39,7 @@ public class ElementVertical extends AbstractElementPanel {
                     cx = x + totWidth - w;
                     break;
             }
-            element.render(cx, y);
+            element.render(matrixStack, cx, y);
             y += element.getHeight() + spacing;
         }
     }

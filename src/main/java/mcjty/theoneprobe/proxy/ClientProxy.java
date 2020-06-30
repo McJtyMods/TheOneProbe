@@ -102,17 +102,17 @@ public class ClientProxy implements IProxy {
         }
 
         if (hasItemInEitherHand(ModItems.creativeProbe)) {
-            OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getPartialTicks());
+            OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getMatrixStack(), event.getPartialTicks());
         } else {
             switch (Config.needsProbe.get()) {
                 case PROBE_NOTNEEDED:
                 case PROBE_NEEDEDFOREXTENDED:
-                    OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
+                    OverlayRenderer.renderHUD(getModeForPlayer(), event.getMatrixStack(), event.getPartialTicks());
                     break;
                 case PROBE_NEEDED:
                 case PROBE_NEEDEDHARD:
                     if (ModItems.hasAProbeSomewhere(Minecraft.getInstance().player)) {
-                        OverlayRenderer.renderHUD(getModeForPlayer(), event.getPartialTicks());
+                        OverlayRenderer.renderHUD(getModeForPlayer(), event.getMatrixStack(), event.getPartialTicks());
                     }
                     break;
             }

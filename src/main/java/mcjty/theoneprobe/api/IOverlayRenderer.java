@@ -1,5 +1,7 @@
 package mcjty.theoneprobe.api;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 /**
  * Using this interface (that you can get from ITheOneProbe) you can
  * do custom overlay rendering from within your mod.
@@ -33,5 +35,5 @@ public interface IOverlayRenderer {
      * Note that calling this does not prevent the normal overlay from
      * rendering.
      */
-    void render(IOverlayStyle style, IProbeInfo probeInfo);
+    void render(IOverlayStyle style, IProbeInfo probeInfo, MatrixStack matrixStack);
 }

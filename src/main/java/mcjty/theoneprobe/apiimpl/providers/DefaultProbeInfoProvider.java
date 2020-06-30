@@ -12,11 +12,11 @@ import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.properties.ComparatorMode;
 import net.minecraft.tileentity.BrewingStandTileEntity;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
@@ -127,7 +127,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 AbstractSpawner logic = ((MobSpawnerTileEntity) te).getSpawnerBaseLogic();
                 EntityType<?> type = ForgeRegistries.ENTITIES.getValue(logic.getEntityId());
                 if (type != null) {
-                    String mobName = type.getName().getFormattedText();
+                    String mobName = type.getName().getString();
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                           .alignment(ElementAlignment.ALIGN_CENTER))
                           .text(LABEL + "Mob: " + INFO + mobName);
@@ -162,7 +162,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                     .text(LABEL + "State: " + INFO + (powered ? "On" : "Off"));
         } else if (block instanceof ComparatorBlock) {
             ComparatorMode mode = blockState.get(ComparatorBlock.MODE);
-            probeInfo.text(LABEL + "Mode: " + INFO + mode.getName());
+            probeInfo.text(LABEL + "Mode: " + INFO + mode.func_176610_l());
         } else if (block instanceof RepeaterBlock) {
             Boolean locked = blockState.get(RepeaterBlock.LOCKED);
             Integer delay = blockState.get(RepeaterBlock.DELAY);
@@ -240,12 +240,12 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void showGrowthLevel(IProbeInfo probeInfo, BlockState blockState) {
-        for (IProperty<?> property : blockState.getProperties()) {
+        for (Property<?> property : blockState.func_235904_r_()) {
             if (!"age".equals(property.getName())) {
                 continue;
             }
             if(property.getValueClass() == Integer.class) {
-                IProperty<Integer> integerProperty = (IProperty<Integer>)property;
+                Property<Integer> integerProperty = (Property<Integer>)property;
                 int age = blockState.get(integerProperty);
                 int maxAge = Collections.max(integerProperty.getAllowedValues());
                 if (age == maxAge) {
@@ -270,7 +270,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
 
         if (block instanceof FlowingFluidBlock) {
-            IFluidState fluidState = block.getFluidState(blockState);
+            FluidState fluidState = block.getFluidState(blockState);
             Fluid fluid = fluidState.getFluid();
             if (fluid != Fluids.EMPTY) {
                 FluidStack fluidStack = new FluidStack(fluid.getFluid(), BUCKET_VOLUME);

@@ -1,13 +1,14 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import mcjty.theoneprobe.api.IElementNew;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 
-public class ElementItemLabel implements IElementNew {
+public class ElementItemLabel implements IElement {
 
     private final ItemStack itemStack;
 
@@ -24,17 +25,17 @@ public class ElementItemLabel implements IElementNew {
     }
 
     @Override
-    public void render(int x, int y) {
+    public void render(MatrixStack matrixStack, int x, int y) {
         if (!itemStack.isEmpty()) {
-            String text = itemStack.getDisplayName().getFormattedText();
-            ElementTextRender.render(text, x, y);
+            String text = itemStack.getDisplayName().getString();
+            ElementTextRender.render(text, matrixStack, x, y);
         }
     }
 
     @Override
     public int getWidth() {
         if (!itemStack.isEmpty()) {
-            String text = itemStack.getDisplayName().getFormattedText();
+            String text = itemStack.getDisplayName().getString();
             return ElementTextRender.getWidth(text);
         } else {
             return 10;

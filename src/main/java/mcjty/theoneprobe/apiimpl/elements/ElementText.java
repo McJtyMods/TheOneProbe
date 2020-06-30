@@ -1,13 +1,14 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import mcjty.theoneprobe.api.IElementNew;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 
-public class ElementText implements IElementNew {
+public class ElementText implements IElement {
 
     private final String text;
     private final ITextComponent textComponent;
@@ -32,11 +33,11 @@ public class ElementText implements IElementNew {
     }
 
     @Override
-    public void render(int x, int y) {
+    public void render(MatrixStack matrixStack, int x, int y) {
         if (textComponent != null) {
-            ElementTextRender.render(textComponent, x, y);
+            ElementTextRender.render(textComponent, matrixStack, x, y);
         } else {
-            ElementTextRender.render(text, x, y);
+            ElementTextRender.render(text, matrixStack, x, y);
         }
     }
 

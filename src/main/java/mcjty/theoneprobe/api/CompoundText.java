@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.api;
 
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -71,8 +72,10 @@ public class CompoundText {
     private CompoundText newComponent(ITextComponent cmp) {
         if (component == null) {
             component = cmp;
+        } else if (component instanceof IFormattableTextComponent) {
+            ((IFormattableTextComponent) component).func_230529_a_(cmp);
         } else {
-            component.appendSibling(cmp);
+            component = component.func_230532_e_().func_230529_a_(cmp);
         }
         return this;
     }
