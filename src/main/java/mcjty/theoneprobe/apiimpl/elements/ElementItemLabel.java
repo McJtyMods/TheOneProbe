@@ -27,16 +27,14 @@ public class ElementItemLabel implements IElement {
     @Override
     public void render(MatrixStack matrixStack, int x, int y) {
         if (!itemStack.isEmpty()) {
-            String text = itemStack.getDisplayName().getString();
-            ElementTextRender.render(text, matrixStack, x, y);
+            ElementTextRender.render(itemStack.getDisplayName(), matrixStack, x, y);
         }
     }
 
     @Override
     public int getWidth() {
         if (!itemStack.isEmpty()) {
-            String text = itemStack.getDisplayName().getString();
-            return ElementTextRender.getWidth(text);
+            return ElementTextRender.getWidth(itemStack.getDisplayName());
         } else {
             return 10;
         }
