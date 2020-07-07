@@ -170,7 +170,12 @@ public class RenderHelper {
             // @todo 1.15
 //            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             try {
+                //Note: As ItemRenderer#renderItemAndEffectIntoGui still is entirely based on GL states instead of matrix stacks
+                // we need to massage the matrix stack into it
+                RenderSystem.pushMatrix();
+                RenderSystem.multMatrix(matrixStack.getLast().getMatrix());
                 itemRender.renderItemAndEffectIntoGUI(itm, x, y);
+                RenderSystem.popMatrix();
                 renderItemStackOverlay(matrixStack, mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
             } catch (Exception e) {
                 ThrowableIdentity.registerThrowable(e);

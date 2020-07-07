@@ -76,17 +76,17 @@ public class OverlayRenderer {
         RayTraceResult mouseOver = Minecraft.getInstance().objectMouseOver;
         if (mouseOver != null) {
             if (mouseOver.getType() == RayTraceResult.Type.ENTITY) {
-                matrixStack.push();
+                RenderSystem.pushMatrix();
 
                 double scale = Config.tooltipScale.get();
 
                 double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
                 double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
 
-                setupOverlayRendering(matrixStack, sw * scale, sh * scale);
+                setupOverlayRendering(sw * scale, sh * scale);
                 renderHUDEntity(matrixStack, mode, mouseOver, sw * scale, sh * scale);
-                setupOverlayRendering(matrixStack, sw, sh);
-                matrixStack.pop();
+                setupOverlayRendering(sw, sh);
+                RenderSystem.popMatrix();
 
                 checkCleanup();
                 return;
@@ -105,26 +105,24 @@ public class OverlayRenderer {
         }
 
         if (mouseOver.getType() == RayTraceResult.Type.BLOCK) {
-            matrixStack.push();
+            RenderSystem.pushMatrix();
 
             double scale = Config.tooltipScale.get();
 
             double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
             double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
 
-            setupOverlayRendering(matrixStack, sw * scale, sh * scale);
+            setupOverlayRendering(sw * scale, sh * scale);
             renderHUDBlock(matrixStack, mode, mouseOver, sw * scale, sh * scale);
-            setupOverlayRendering(matrixStack, sw, sh);
+            setupOverlayRendering(sw, sh);
 
-            matrixStack.pop();
+            RenderSystem.popMatrix();
         }
 
         checkCleanup();
     }
 
-    private static void setupOverlayRendering(MatrixStack matrixStack, double sw, double sh) {
-        //TODO - 1.16: Figure this out
-        RenderSystem.pushMatrix();//TODO: Remove push here after switching to matrixStack, this method is surrounded by push/pop for matrix stacks
+    private static void setupOverlayRendering(double sw, double sh) {
         RenderSystem.clear(256, true);
         RenderSystem.matrixMode(GL11.GL_PROJECTION);
         RenderSystem.loadIdentity();
@@ -132,7 +130,6 @@ public class OverlayRenderer {
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
         RenderSystem.loadIdentity();
         RenderSystem.translatef(0.0F, 0.0F, -2000.0F);
-        RenderSystem.popMatrix();//TODO: Remove pop here after switching to matrixStack, this method is surrounded by push/pop for matrix stacks
     }
 
     private static void checkCleanup() {
@@ -342,17 +339,17 @@ public class OverlayRenderer {
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, MatrixStack matrixStack) {
-        matrixStack.push();
+        RenderSystem.pushMatrix();
 
         double scale = Config.tooltipScale.get();
 
         double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
         double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
 
-        setupOverlayRendering(matrixStack, sw * scale, sh * scale);
+        setupOverlayRendering(sw * scale, sh * scale);
         renderElements(matrixStack, (ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
-        setupOverlayRendering(matrixStack, sw, sh);
-        matrixStack.pop();
+        setupOverlayRendering(sw, sh);
+        RenderSystem.popMatrix();
     }
 
     private static void cleanupCachedBlocks(long time) {
