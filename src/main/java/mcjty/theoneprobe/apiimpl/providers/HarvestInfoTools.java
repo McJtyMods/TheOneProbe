@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IIconStyle;
 import mcjty.theoneprobe.api.ILayoutStyle;
@@ -53,7 +54,7 @@ public class HarvestInfoTools {
             } else {
                 harvestName = harvestLevels[harvestLevel];
             }
-            probeInfo.text(LABEL + "Tool: " + INFO + harvestTool + " (level " + harvestName + ")");
+            probeInfo.text(CompoundText.create().style(LABEL).text("Tool: ").style(INFO).text(harvestTool + " (level " + harvestName + ")").get());
         }
     }
 
@@ -66,9 +67,9 @@ public class HarvestInfoTools {
 
         boolean harvestable = block.canHarvestBlock(world.getBlockState(pos), world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
         if (harvestable) {
-            probeInfo.text(OK + "Harvestable");
+            probeInfo.text(CompoundText.create().style(OK).text("Harvestable").get());
         } else {
-            probeInfo.text(WARNING + "Not harvestable");
+            probeInfo.text(CompoundText.create().style(WARNING).text("Not harvestable").get());
         }
     }
 
@@ -120,14 +121,14 @@ public class HarvestInfoTools {
         IProbeInfo horizontal = probeInfo.horizontal(alignment);
         if (harvestable) {
             horizontal.icon(ICONS, 0, offs, dim, dim, iconStyle)
-                    .text(OK + ((harvestTool != null) ? harvestTool.getName() : "No tool"));
+                    .text(CompoundText.create().style(OK).text((harvestTool != null) ? harvestTool.getName() : "No tool").get());
         } else {
             if (harvestName == null || harvestName.isEmpty()) {
                 horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
-                        .text(WARNING + ((harvestTool != null) ? harvestTool.getName() : "No tool"));
+                        .text(CompoundText.create().style(WARNING).text((harvestTool != null) ? harvestTool.getName() : "No tool").get());
             } else {
                 horizontal.icon(ICONS, 16, offs, dim, dim, iconStyle)
-                        .text(WARNING + ((harvestTool != null) ? harvestTool.getName() : "No tool") + " (level " + harvestName + ")");
+                        .text(CompoundText.create().style(WARNING).text(((harvestTool != null) ? harvestTool.getName() : "No tool") + " (level " + harvestName + ")").get());
             }
         }
     }

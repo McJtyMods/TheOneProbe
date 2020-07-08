@@ -49,19 +49,8 @@ public interface ITheOneProbe {
     /**
      * Register an element factory.
      * @return an id to use when defining elements using this factory
-     *
-     * @deprecated To be removed in 1.16, prefer implementing and using {@link #registerElementFactory(IElementFactoryNew)}
      */
-    @Deprecated
     int registerElementFactory(IElementFactory factory);
-
-    /**
-     * Register an element factory.
-     * @return an id to use when defining elements using this factory
-     */
-    default int registerElementFactory(IElementFactoryNew factory) {
-        return registerElementFactory((IElementFactory) factory);
-    }
 
     /**
      * Get the element factory for a given ID.

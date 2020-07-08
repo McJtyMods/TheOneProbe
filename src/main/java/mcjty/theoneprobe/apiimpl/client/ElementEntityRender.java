@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.apiimpl.client;
 
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.DataFixUtils;
 import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
@@ -17,14 +18,14 @@ import java.util.Map;
 
 public class ElementEntityRender {
 
-    public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, int x, int y) {
+    public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, MatrixStack matrixStack, int x, int y) {
         Entity entity = Minecraft.getInstance().world.getEntityByID(playerID);
         if (entity != null) {
-            renderEntity(style, x, y, entity);
+            renderEntity(style, matrixStack, x, y, entity);
         }
     }
 
-    public static void render(String entityName, CompoundNBT entityNBT, IEntityStyle style, int x, int y) {
+    public static void render(String entityName, CompoundNBT entityNBT, IEntityStyle style, MatrixStack matrixStack, int x, int y) {
         if (entityName != null && !entityName.isEmpty()) {
             Entity entity = null;
             if (entityNBT != null) {
@@ -50,7 +51,7 @@ public class ElementEntityRender {
                 }
             }
             if (entity != null) {
-                renderEntity(style, x, y, entity);
+                renderEntity(style, matrixStack, x, y, entity);
             }
         }
     }
@@ -156,12 +157,12 @@ public class ElementEntityRender {
         return id;
     }
 
-    private static void renderEntity(IEntityStyle style, int x, int y, Entity entity) {
+    private static void renderEntity(IEntityStyle style, MatrixStack matrixStack, int x, int y, Entity entity) {
         float height = entity.getHeight();
         height = (float) ((height - 1) * .7 + 1);
         float s = style.getScale() * ((style.getHeight() * 14.0f / 25) / height);
 
-        RenderHelper.renderEntity(entity, x, y, s);
+        RenderHelper.renderEntity(entity, matrixStack, x, y, s);
     }
 
 }

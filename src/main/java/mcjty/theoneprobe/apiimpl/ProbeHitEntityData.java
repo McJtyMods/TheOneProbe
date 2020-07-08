@@ -1,18 +1,18 @@
 package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.api.IProbeHitEntityData;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ProbeHitEntityData implements IProbeHitEntityData {
 
-    private final Vec3d hitVec;
+    private final Vector3d hitVec;
 
-    public ProbeHitEntityData(Vec3d hitVec) {
+    public ProbeHitEntityData(Vector3d hitVec) {
         this.hitVec = hitVec;
     }
 
     @Override
-    public Vec3d getHitVec() {
+    public Vector3d getHitVec() {
         return hitVec;
     }
 }

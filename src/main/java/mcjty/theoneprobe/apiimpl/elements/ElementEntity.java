@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import mcjty.theoneprobe.api.IElementNew;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementEntityRender;
@@ -13,7 +14,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ElementEntity implements IElementNew {
+public class ElementEntity implements IElement {
 
     private final String entityName;
     private final Integer playerID;
@@ -60,11 +61,11 @@ public class ElementEntity implements IElementNew {
     }
 
     @Override
-    public void render(int x, int y) {
+    public void render(MatrixStack matrixStack, int x, int y) {
         if (playerID != null) {
-            ElementEntityRender.renderPlayer(entityName, playerID, style, x, y);
+            ElementEntityRender.renderPlayer(entityName, playerID, style, matrixStack, x, y);
         } else {
-            ElementEntityRender.render(entityName, entityNBT, style, x, y);
+            ElementEntityRender.render(entityName, entityNBT, style, matrixStack, x, y);
         }
     }
 

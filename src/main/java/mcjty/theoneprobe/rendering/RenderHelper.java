@@ -18,6 +18,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.HangingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
@@ -27,19 +29,19 @@ public class RenderHelper {
 
     public static float rot = 0.0f;
 
-    public static void renderEntity(Entity entity, int xPos, int yPos, float scale) {
-        RenderSystem.pushMatrix();
+    public static void renderEntity(Entity entity, MatrixStack matrixStack, int xPos, int yPos, float scale) {
+        matrixStack.push();
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         RenderSystem.enableRescaleNormal();
         RenderSystem.enableColorMaterial();
-        RenderSystem.translatef(xPos + 8, yPos + 24, 50F);
-        RenderSystem.scalef(-scale, scale, scale);
-        RenderSystem.rotatef(180F, 0.0F, 0.0F, 1.0F);
-        RenderSystem.rotatef(135F, 0.0F, 1.0F, 0.0F);
+        matrixStack.translate(xPos + 8, yPos + 24, 50F);
+        matrixStack.scale(-scale, scale, scale);
+        matrixStack.rotate(Vector3f.ZP.rotationDegrees(180));
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(135));
         net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
-        RenderSystem.rotatef(-135F, 0.0F, 1.0F, 0.0F);
-        RenderSystem.rotatef(rot, 0.0F, 1.0F, 0.0F);
-        RenderSystem.rotatef(0.0F, 1.0F, 0.0F, 0.0F);
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(-135));
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(rot));
+        matrixStack.rotate(Vector3f.XP.rotationDegrees(0));
 
         entity.rotationPitch = 0.0F;
         entity.prevRotationPitch = 0.0F;
@@ -55,11 +57,11 @@ public class RenderHelper {
             livingEntity.prevRotationYawHead = 0.0f;
         }
 
-        RenderSystem.translatef(0.0F, (float) entity.getYOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
+        matrixStack.translate(0.0F, (float) entity.getYOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
 
         try {
             IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-            Minecraft.getInstance().getRenderManager().renderEntityStatic(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, new MatrixStack(), buffer, 15728880);
+            Minecraft.getInstance().getRenderManager().renderEntityStatic(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, buffer, 15728880);
             buffer.finish();
         } catch (Exception e) {
             TheOneProbe.logger.error("Error rendering entity!", e);
@@ -72,34 +74,34 @@ public class RenderHelper {
         RenderSystem.enableDepthTest();
         RenderSystem.disableColorMaterial();
         Minecraft.getInstance().gameRenderer.getLightTexture().disableLightmap();
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
-    public static void drawHorizontalLine(int x1, int y1, int x2, int color) {
-        AbstractGui.fill(x1, y1, x2, y1 + 1, color);
+    public static void drawHorizontalLine(MatrixStack matrixStack, int x1, int y1, int x2, int color) {
+        AbstractGui.func_238467_a_(matrixStack, x1, y1, x2, y1 + 1, color);
     }
 
-    public static void drawVerticalLine(int x1, int y1, int y2, int color) {
-        AbstractGui.fill(x1, y1, x1 + 1, y2, color);
+    public static void drawVerticalLine(MatrixStack matrixStack, int x1, int y1, int y2, int color) {
+        AbstractGui.func_238467_a_(matrixStack, x1, y1, x1 + 1, y2, color);
     }
 
     /**
      * Draw a thick beveled box. x2 and y2 are not included.
      */
-    public static void drawThickBeveledBox(int x1, int y1, int x2, int y2, int thickness, int topleftcolor, int botrightcolor, int fillcolor) {
+    public static void drawThickBeveledBox(MatrixStack matrixStack, int x1, int y1, int x2, int y2, int thickness, int topleftcolor, int botrightcolor, int fillcolor) {
         if (fillcolor != -1) {
-            AbstractGui.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
+            AbstractGui.func_238467_a_(matrixStack, x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
         }
-        AbstractGui.fill(x1, y1, x2 - 1, y1 + thickness, topleftcolor);
-        AbstractGui.fill(x1, y1, x1 + thickness, y2 - 1, topleftcolor);
-        AbstractGui.fill(x2 - thickness, y1, x2, y2 - 1, botrightcolor);
-        AbstractGui.fill(x1, y2 - thickness, x2, y2, botrightcolor);
+        AbstractGui.func_238467_a_(matrixStack, x1, y1, x2 - 1, y1 + thickness, topleftcolor);
+        AbstractGui.func_238467_a_(matrixStack, x1, y1, x1 + thickness, y2 - 1, topleftcolor);
+        AbstractGui.func_238467_a_(matrixStack, x2 - thickness, y1, x2, y2 - 1, botrightcolor);
+        AbstractGui.func_238467_a_(matrixStack, x1, y2 - thickness, x2, y2, botrightcolor);
     }
 
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
      */
-    public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height, int twidth, int theight) {
+    public static void drawTexturedModalRect(Matrix4f matrix, int x, int y, int u, int v, int width, int height, int twidth, int theight) {
         float zLevel = 0.01f;
         float f = (1.0f / twidth);
         float f1 = (1.0f / theight);
@@ -107,17 +109,17 @@ public class RenderHelper {
         BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-        buffer.pos((x + 0), (y + height), zLevel).tex(((u + 0) * f), ((v + height) * f1)).endVertex();
-        buffer.pos((x + width), (y + height), zLevel).tex(((u + width) * f), ((v + height) * f1)).endVertex();
-        buffer.pos((x + width), (y + 0), zLevel).tex(((u + width) * f), ((v + 0) * f1)).endVertex();
-        buffer.pos((x + 0), (y + 0), zLevel).tex(((u + 0) * f), ((v + 0) * f1)).endVertex();
+        buffer.pos(matrix, (x + 0), (y + height), zLevel).tex(((u + 0) * f), ((v + height) * f1)).endVertex();
+        buffer.pos(matrix, (x + width), (y + height), zLevel).tex(((u + width) * f), ((v + height) * f1)).endVertex();
+        buffer.pos(matrix, (x + width), (y + 0), zLevel).tex(((u + width) * f), ((v + 0) * f1)).endVertex();
+        buffer.pos(matrix, (x + 0), (y + 0), zLevel).tex(((u + 0) * f), ((v + 0) * f1)).endVertex();
         tessellator.draw();
     }
 
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
      */
-    public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height) {
+    public static void drawTexturedModalRect(Matrix4f matrix, int x, int y, int u, int v, int width, int height) {
         float zLevel = 0.01f;
         float f = (1 / 256.0f);
         float f1 = (1 / 256.0f);
@@ -125,14 +127,14 @@ public class RenderHelper {
         BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-        buffer.pos((x + 0), (y + height), zLevel).tex(((u + 0) * f), ((v + height) * f1)).endVertex();
-        buffer.pos((x + width), (y + height), zLevel).tex(((u + width) * f), ((v + height) * f1)).endVertex();
-        buffer.pos((x + width), (y + 0), zLevel).tex(((u + width) * f), ((v + 0) * f1)).endVertex();
-        buffer.pos((x + 0), (y + 0), zLevel).tex(((u + 0) * f), ((v + 0) * f1)).endVertex();
+        buffer.pos(matrix, (x + 0), (y + height), zLevel).tex(((u + 0) * f), ((v + height) * f1)).endVertex();
+        buffer.pos(matrix, (x + width), (y + height), zLevel).tex(((u + width) * f), ((v + height) * f1)).endVertex();
+        buffer.pos(matrix, (x + width), (y + 0), zLevel).tex(((u + width) * f), ((v + 0) * f1)).endVertex();
+        buffer.pos(matrix, (x + 0), (y + 0), zLevel).tex(((u + 0) * f), ((v + 0) * f1)).endVertex();
         tessellator.draw();
     }
 
-    public static void drawTexturedModalRect(int x, int y, TextureAtlasSprite sprite, int width, int height) {
+    public static void drawTexturedModalRect(Matrix4f matrix, int x, int y, TextureAtlasSprite sprite, int width, int height) {
         float zLevel = 0.01f;
         float f = (1 / 256.0f);
         float f1 = (1 / 256.0f);
@@ -145,20 +147,20 @@ public class RenderHelper {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        buffer.pos((x + 0), (y + height), zLevel).tex(u1, v1).endVertex();
-        buffer.pos((x + width), (y + height), zLevel).tex(u1, v2).endVertex();
-        buffer.pos((x + width), (y + 0), zLevel).tex(u2, v2).endVertex();
-        buffer.pos((x + 0), (y + 0), zLevel).tex(u2, v1).endVertex();
+        buffer.pos(matrix, (x + 0), (y + height), zLevel).tex(u1, v1).endVertex();
+        buffer.pos(matrix, (x + width), (y + height), zLevel).tex(u1, v2).endVertex();
+        buffer.pos(matrix, (x + width), (y + 0), zLevel).tex(u2, v2).endVertex();
+        buffer.pos(matrix, (x + 0), (y + 0), zLevel).tex(u2, v1).endVertex();
         tessellator.draw();
     }
 
-    public static boolean renderItemStack(Minecraft mc, ItemRenderer itemRender, ItemStack itm, int x, int y, String txt) {
+    public static boolean renderItemStack(Minecraft mc, ItemRenderer itemRender, ItemStack itm, MatrixStack matrixStack, int x, int y, String txt) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0f);
 
         boolean rc = true;
         if (!itm.isEmpty() && itm.getItem() != null) {
-            RenderSystem.pushMatrix();
-            RenderSystem.translatef(0.0F, 0.0F, 32.0F);
+            matrixStack.push();
+            matrixStack.translate(0.0F, 0.0F, 32.0F);
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.enableRescaleNormal();
             RenderSystem.enableLighting();
@@ -168,13 +170,18 @@ public class RenderHelper {
             // @todo 1.15
 //            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             try {
+                //Note: As ItemRenderer#renderItemAndEffectIntoGui still is entirely based on GL states instead of matrix stacks
+                // we need to massage the matrix stack into it
+                RenderSystem.pushMatrix();
+                RenderSystem.multMatrix(matrixStack.getLast().getMatrix());
                 itemRender.renderItemAndEffectIntoGUI(itm, x, y);
-                renderItemStackOverlay(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
+                RenderSystem.popMatrix();
+                renderItemStackOverlay(matrixStack, mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
             } catch (Exception e) {
                 ThrowableIdentity.registerThrowable(e);
                 rc = false; // Report error
             }
-            RenderSystem.popMatrix();
+            matrixStack.pop();
             RenderSystem.disableRescaleNormal();
             RenderSystem.disableLighting();
         }
@@ -185,7 +192,7 @@ public class RenderHelper {
     /**
      * Renders the stack size and/or damage bar for the given ItemStack.
      */
-    public static void renderItemStackOverlay(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
+    public static void renderItemStackOverlay(MatrixStack matrixStack, FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
                                               int scaled) {
         if (!stack.isEmpty()) {
             if (stack.getCount() != 1 || text != null) {
@@ -194,23 +201,23 @@ public class RenderHelper {
                     s = TextFormatting.RED + String.valueOf(stack.getCount());
                 }
 
-                RenderSystem.translated(0.0D, 0.0D, (Minecraft.getInstance().getItemRenderer().zLevel + 200.0F));
+                matrixStack.translate(0.0D, 0.0D, (Minecraft.getInstance().getItemRenderer().zLevel + 200.0F));
 
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableBlend();
                 if (scaled >= 2) {
-                    RenderSystem.pushMatrix();
-                    RenderSystem.scalef(.5f, .5f, .5f);
-                    fr.drawStringWithShadow(s, ((xPosition + 19 - 2) * 2 - 1 - fr.getStringWidth(s)), yPosition * 2 + 24, 16777215);
-                    RenderSystem.popMatrix();
+                    matrixStack.push();
+                    matrixStack.scale(.5f, .5f, .5f);
+                    fr.func_238405_a_(matrixStack, s, ((xPosition + 19 - 2) * 2 - 1 - fr.getStringWidth(s)), yPosition * 2 + 24, 16777215);
+                    matrixStack.pop();
                 } else if (scaled == 1) {
-                    RenderSystem.pushMatrix();
-                    RenderSystem.scalef(.75f, .75f, .75f);
-                    fr.drawStringWithShadow(s, ((xPosition - 2) * 1.34f + 24 - fr.getStringWidth(s)), yPosition * 1.34f + 14, 16777215);
-                    RenderSystem.popMatrix();
+                    matrixStack.push();
+                    matrixStack.scale(.75f, .75f, .75f);
+                    fr.func_238405_a_(matrixStack, s, ((xPosition - 2) * 1.34f + 24 - fr.getStringWidth(s)), yPosition * 1.34f + 14, 16777215);
+                    matrixStack.pop();
                 } else {
-                    fr.drawStringWithShadow(s, (xPosition + 19 - 2 - fr.getStringWidth(s)), (yPosition + 6 + 3), 16777215);
+                    fr.func_238405_a_(matrixStack, s, (xPosition + 19 - 2 - fr.getStringWidth(s)), (yPosition + 6 + 3), 16777215);
                 }
                 RenderSystem.enableLighting();
                 RenderSystem.enableDepthTest();
@@ -230,9 +237,10 @@ public class RenderHelper {
                 RenderSystem.disableBlend();
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder vertexbuffer = tessellator.getBuffer();
-                draw(vertexbuffer, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
-                draw(vertexbuffer, xPosition + 2, yPosition + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
-                draw(vertexbuffer, xPosition + 2, yPosition + 13, j, 1, 255 - i, i, 0, 255);
+                Matrix4f matrix = matrixStack.getLast().getMatrix();
+                draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
+                draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
+                draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, j, 1, 255 - i, i, 0, 255);
                 RenderSystem.enableBlend();
                 RenderSystem.enableAlphaTest();
                 RenderSystem.enableTexture();
@@ -249,7 +257,7 @@ public class RenderHelper {
                 RenderSystem.disableTexture();
                 Tessellator tessellator1 = Tessellator.getInstance();
                 BufferBuilder vertexbuffer1 = tessellator1.getBuffer();
-                draw(vertexbuffer1, xPosition, yPosition + (int) Math.floor(16.0F * (1.0F - f)), 16, (int) Math.ceil(16.0F * f), 255, 255, 255, 127);
+                draw(vertexbuffer1, matrixStack.getLast().getMatrix(), xPosition, yPosition + (int) Math.floor(16.0F * (1.0F - f)), 16, (int) Math.ceil(16.0F * f), 255, 255, 255, 127);
                 RenderSystem.enableTexture();
                 RenderSystem.enableLighting();
                 RenderSystem.enableDepthTest();
@@ -260,21 +268,21 @@ public class RenderHelper {
     /**
      * Draw with the WorldRenderer
      */
-    private static void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
+    private static void draw(BufferBuilder renderer, Matrix4f matrix, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
         renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        renderer.pos((x + 0), (y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
-        renderer.pos((x + 0), (y + height), 0.0D).color(red, green, blue, alpha).endVertex();
-        renderer.pos((x + width), (y + height), 0.0D).color(red, green, blue, alpha).endVertex();
-        renderer.pos((x + width), (y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
+        renderer.pos(matrix, (x + 0), (y + 0), 0).color(red, green, blue, alpha).endVertex();
+        renderer.pos(matrix, (x + 0), (y + height), 0).color(red, green, blue, alpha).endVertex();
+        renderer.pos(matrix, (x + width), (y + height), 0).color(red, green, blue, alpha).endVertex();
+        renderer.pos(matrix, (x + width), (y + 0), 0).color(red, green, blue, alpha).endVertex();
         Tessellator.getInstance().draw();
     }
 
 
-    public static int renderText(Minecraft mc, int x, int y, String txt) {
+    public static int renderText(Minecraft mc, MatrixStack matrixStack, int x, int y, String txt) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0f);
 
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(0.0F, 0.0F, 32.0F);
+        matrixStack.push();
+        matrixStack.translate(0.0F, 0.0F, 32.0F);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableRescaleNormal();
         RenderSystem.enableLighting();
@@ -284,7 +292,7 @@ public class RenderHelper {
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
         int width = mc.fontRenderer.getStringWidth(txt);
-        mc.fontRenderer.drawStringWithShadow(txt, x, y, 16777215);
+        mc.fontRenderer.func_238405_a_(matrixStack, txt, x, y, 16777215);
         RenderSystem.enableLighting();
         RenderSystem.enableDepthTest();
         // Fixes opaque cooldown overlay a bit lower
@@ -292,7 +300,7 @@ public class RenderHelper {
         RenderSystem.enableBlend();
 
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
         RenderSystem.disableRescaleNormal();
         RenderSystem.disableLighting();
 

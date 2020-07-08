@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.api;
 
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -30,49 +31,91 @@ public class CompoundText {
 
     /// Shorthand for style(TextStyleClass.INFO).text(new TranslationTextComponent(translationKey):
     public CompoundText info(String translationKey) {
-        return style(TextStyleClass.INFO).text(new TranslationTextComponent(translationKey));
+        return info(new TranslationTextComponent(translationKey));
+    }
+
+    /// Shorthand for style(TextStyleClass.INFO).text(cmp):
+    public CompoundText info(ITextComponent cmp) {
+        return style(TextStyleClass.INFO).text(cmp);
     }
 
     /// Shorthand for style(TextStyleClass.INFOIMP).text(new TranslationTextComponent(translationKey):
     public CompoundText important(String translationKey) {
-        return style(TextStyleClass.INFOIMP).text(new TranslationTextComponent(translationKey));
+        return important(new TranslationTextComponent(translationKey));
+    }
+
+    /// Shorthand for style(TextStyleClass.INFOIMP).text(cmp):
+    public CompoundText important(ITextComponent cmp) {
+        return style(TextStyleClass.INFOIMP).text(cmp);
     }
 
     /// Shorthand for style(TextStyleClass.WARNING).text(new TranslationTextComponent(translationKey):
     public CompoundText warning(String translationKey) {
-        return style(TextStyleClass.WARNING).text(new TranslationTextComponent(translationKey));
+        return warning(new TranslationTextComponent(translationKey));
+    }
+
+    /// Shorthand for style(TextStyleClass.WARNING).text(cmp):
+    public CompoundText warning(ITextComponent cmp) {
+        return style(TextStyleClass.WARNING).text(cmp);
     }
 
     /// Shorthand for style(TextStyleClass.ERROR).text(new TranslationTextComponent(translationKey):
     public CompoundText error(String translationKey) {
-        return style(TextStyleClass.ERROR).text(new TranslationTextComponent(translationKey));
+        return error(new TranslationTextComponent(translationKey));
+    }
+
+    /// Shorthand for style(TextStyleClass.ERROR).text(cmp):
+    public CompoundText error(ITextComponent cmp) {
+        return style(TextStyleClass.ERROR).text(cmp);
     }
 
     /// Shorthand for style(TextStyleClass.LABEL).text(new TranslationTextComponent(translationKey):
     public CompoundText label(String translationKey) {
-        return style(TextStyleClass.LABEL).text(new TranslationTextComponent(translationKey));
+        return label(new TranslationTextComponent(translationKey));
+    }
+
+    /// Shorthand for style(TextStyleClass.LABEL).text(cmp):
+    public CompoundText label(ITextComponent cmp) {
+        return style(TextStyleClass.LABEL).text(cmp);
     }
 
     /// Shorthand for style(TextStyleClass.OK).text(new TranslationTextComponent(translationKey):
     public CompoundText ok(String translationKey) {
-        return style(TextStyleClass.OK).text(new TranslationTextComponent(translationKey));
+        return ok(new TranslationTextComponent(translationKey));
+    }
+
+    /// Shorthand for style(TextStyleClass.OK).text(cmp):
+    public CompoundText ok(ITextComponent cmp) {
+        return style(TextStyleClass.OK).text(cmp);
     }
 
     /// Shorthand for style(TextStyleClass.NAME).text(new TranslationTextComponent(translationKey):
     public CompoundText name(String translationKey) {
-        return style(TextStyleClass.NAME).text(new TranslationTextComponent(translationKey));
+        return name(new TranslationTextComponent(translationKey));
+    }
+
+    /// Shorthand for style(TextStyleClass.NAME).text(cmp):
+    public CompoundText name(ITextComponent cmp) {
+        return style(TextStyleClass.NAME).text(cmp);
     }
 
     /// Shorthand for style(TextStyleClass.PROGRESS).text(new TranslationTextComponent(translationKey):
     public CompoundText progress(String translationKey) {
-        return style(TextStyleClass.PROGRESS).text(new TranslationTextComponent(translationKey));
+        return progress(new TranslationTextComponent(translationKey));
+    }
+
+    /// Shorthand for style(TextStyleClass.PROGRESS).text(cmp):
+    public CompoundText progress(ITextComponent cmp) {
+        return style(TextStyleClass.PROGRESS).text(cmp);
     }
 
     private CompoundText newComponent(ITextComponent cmp) {
         if (component == null) {
             component = cmp;
+        } else if (component instanceof IFormattableTextComponent) {
+            ((IFormattableTextComponent) component).func_230529_a_(cmp);
         } else {
-            component.appendSibling(cmp);
+            component = component.func_230532_e_().func_230529_a_(cmp);
         }
         return this;
     }

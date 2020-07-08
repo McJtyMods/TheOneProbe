@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import mcjty.theoneprobe.api.IElementNew;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
@@ -11,7 +12,7 @@ import net.minecraft.network.PacketBuffer;
 
 import java.text.DecimalFormat;
 
-public class ElementProgress implements IElementNew {
+public class ElementProgress implements IElement {
 
     private final long current;
     private final long max;
@@ -79,8 +80,8 @@ public class ElementProgress implements IElementNew {
     }
 
     @Override
-    public void render(int x, int y) {
-        ElementProgressRender.render(style, current, max, x, y, getWidth(), getHeight());
+    public void render(MatrixStack matrixStack, int x, int y) {
+        ElementProgressRender.render(style, current, max, matrixStack, x, y, getWidth(), getHeight());
     }
 
     @Override

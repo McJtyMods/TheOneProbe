@@ -2,8 +2,10 @@ package mcjty.theoneprobe.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import javax.annotation.Nonnull;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
+import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
@@ -15,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Pair;
@@ -64,15 +67,15 @@ public class GuiConfig extends Screen {
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean func_231177_au__() {
         return false;
     }
 
     @Override
-    protected void init() {
-        super.init();
-        guiLeft = (this.width - WIDTH - WIDTH) / 2;
-        guiTop = (this.height - HEIGHT) / 2;
+    protected void func_231160_c_() {
+        super.func_231160_c_();
+        guiLeft = (this.field_230708_k_ - WIDTH - WIDTH) / 2;
+        guiTop = (this.field_230709_l_ - HEIGHT) / 2;
     }
 
 //    @Override
@@ -81,44 +84,43 @@ public class GuiConfig extends Screen {
 //    }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
-        minecraft.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
-        minecraft.getTextureManager().bindTexture(scene);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
+    public void func_230430_a_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
+        field_230706_i_.getTextureManager().bindTexture(background);
+        Matrix4f matrix = matrixStack.getLast().getMatrix();
+        drawTexturedModalRect(matrix, guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
+        field_230706_i_.getTextureManager().bindTexture(scene);
+        drawTexturedModalRect(matrix, guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
 
-        renderProbe();
-
-        MatrixStack matrixStack = new MatrixStack();
+        renderProbe(matrixStack);
 
         int x = WIDTH + guiLeft + 10;
         int y = guiTop + 10;
-        RenderHelper.renderText(Minecraft.getInstance(), x, y, TextFormatting.GOLD + "Placement:");
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, TextFormatting.GOLD + "Placement:");
         y += 12;
-        RenderHelper.renderText(Minecraft.getInstance(), x+10, y, "Click on corner in screenshot");
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x+10, y, "Click on corner in screenshot");
         y += 10;
-        RenderHelper.renderText(Minecraft.getInstance(), x+10, y, "to move tooltip there");
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x+10, y, "to move tooltip there");
         y += 10;
 
         y += 20;
 
         hitboxes = new ArrayList<>();
-        RenderHelper.renderText(Minecraft.getInstance(), x, y, TextFormatting.GOLD + "Presets:");
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, TextFormatting.GOLD + "Presets:");
         y += 12;
         for (Preset preset : presets) {
-            y = addPreset(x, y, preset);
+            y = addPreset(matrixStack, x, y, preset);
         }
 
         y += 20;
 
-        RenderHelper.renderText(Minecraft.getInstance(), x, y, TextFormatting.GOLD + "Scale:");
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, TextFormatting.GOLD + "Scale:");
         y += 12;
-        addButton(x+10, y, 30, 14, "--", () -> { Config.setScale(1.2f);}); x += 36;
-        addButton(x+10, y, 30, 14, "-", () -> { Config.setScale(1.1f);}); x += 36;
-        addButton(x+10, y, 30, 14, "0", () -> { Config.setScale(1f);}); x += 36;
-        addButton(x+10, y, 30, 14, "+", () -> { Config.setScale(0.9f);}); x += 36;
-        addButton(x+10, y, 30, 14, "++", () -> { Config.setScale(0.8f);}); x += 36;
+        addButton(matrixStack, x+10, y, 30, 14, "--", () -> { Config.setScale(1.2f);}); x += 36;
+        addButton(matrixStack, x+10, y, 30, 14, "-", () -> { Config.setScale(1.1f);}); x += 36;
+        addButton(matrixStack, x+10, y, 30, 14, "0", () -> { Config.setScale(1f);}); x += 36;
+        addButton(matrixStack, x+10, y, 30, 14, "+", () -> { Config.setScale(0.9f);}); x += 36;
+        addButton(matrixStack, x+10, y, 30, 14, "++", () -> { Config.setScale(0.8f);}); x += 36;
 
         int margin = 90;
         hitboxes.add(new HitBox(0, 0, margin, margin, () -> {
@@ -151,8 +153,8 @@ public class GuiConfig extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        boolean rc = super.mouseClicked(mouseX, mouseY, mouseButton);
+    public boolean func_231044_a_(double mouseX, double mouseY, int mouseButton) {
+        boolean rc = super.func_231044_a_(mouseX, mouseY, mouseButton);
         if (rc) {
             return rc;
         }
@@ -179,9 +181,9 @@ public class GuiConfig extends Screen {
         }
     }
 
-    private int addPreset(int x, int y, Preset preset) {
-        fill(x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
-        RenderHelper.renderText(Minecraft.getInstance(), x + 20, y, preset.getName());
+    private int addPreset(MatrixStack matrixStack, int x, int y, Preset preset) {
+        func_238467_a_(matrixStack, x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 20, y, preset.getName());
         hitboxes.add(new HitBox(x + 10 - guiLeft, y - 1 - guiTop, x + 10 + WIDTH - 50 - guiLeft, y + 10 - guiTop, () -> {
             applyPreset(preset);
         }));
@@ -189,13 +191,13 @@ public class GuiConfig extends Screen {
         return y;
     }
 
-    private void addButton(int x, int y, int width, int height, String text, Runnable runnable) {
-        fill(x, y, x + width-1, y + height-1, 0xff000000);
-        RenderHelper.renderText(Minecraft.getInstance(), x + 3, y + 3, text);
+    private void addButton(MatrixStack matrixStack, int x, int y, int width, int height, String text, Runnable runnable) {
+        func_238467_a_(matrixStack, x, y, x + width-1, y + height-1, 0xff000000);
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 3, y + 3, text);
         hitboxes.add(new HitBox(x - guiLeft, y - guiTop, x + width -1 - guiLeft, y + height -1 - guiTop, runnable));
     }
 
-    private void renderProbe() {
+    private void renderProbe(MatrixStack matrixStack) {
         Block block = Blocks.OAK_LOG;
         String modid = Tools.getModName(block);
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
@@ -203,22 +205,21 @@ public class GuiConfig extends Screen {
         probeInfo.horizontal()
                 .item(pickBlock)
                 .vertical()
-                .text(NAME + pickBlock.getDisplayName().getFormattedText())
-                .text(MODNAME + modid);
-        probeInfo.text(LABEL + "Fuel: " + INFO + "5 volts");
-        probeInfo.text(LABEL + "Error: " + ERROR + "Oups!");
+                .text(CompoundText.create().name(pickBlock.getDisplayName()).get())
+                .text(CompoundText.create().style(MODNAME).text(modid).get());
+        probeInfo.text(CompoundText.create().style(LABEL).text("Fuel: ").style(INFO).text("5 volts").get());
+        probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text("Oups!").get());
 
-        renderElements(probeInfo, Config.getDefaultOverlayStyle());
+        renderElements(probeInfo, Config.getDefaultOverlayStyle(), matrixStack);
     }
 
-    private void renderElements(ProbeInfo probeInfo, IOverlayStyle style) {
-
-//        MatrixStack matrixStack = new MatrixStack();
-        RenderSystem.pushMatrix();
-        RenderSystem.scaled((1f/Config.tooltipScale.get()), (1f/Config.tooltipScale.get()), (1f/Config.tooltipScale.get()));
+    private void renderElements(ProbeInfo probeInfo, IOverlayStyle style, MatrixStack matrixStack) {
+        matrixStack.push();
+        float scale = (float) (1 / Config.tooltipScale.get());
+        matrixStack.scale(scale, scale, scale);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableLighting();
-        RenderSystem.translatef(0, 0, 1);
+        matrixStack.translate(0, 0, 1);
 
         int w = probeInfo.getWidth();
         int h = probeInfo.getHeight();
@@ -261,18 +262,18 @@ public class GuiConfig extends Screen {
             int x2 = x + w - 1;
             int y2 = y + h - 1;
             if (offset > 0) {
-                RenderHelper.drawThickBeveledBox(x, y, x2, y2, thick, style.getBoxColor(), style.getBoxColor(), style.getBoxColor());
+                RenderHelper.drawThickBeveledBox(matrixStack, x, y, x2, y2, thick, style.getBoxColor(), style.getBoxColor(), style.getBoxColor());
             }
-            RenderHelper.drawThickBeveledBox(x+offset, y+offset, x2-offset, y2-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
+            RenderHelper.drawThickBeveledBox(matrixStack, x+offset, y+offset, x2-offset, y2-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
         if (!Minecraft.getInstance().isGamePaused()) {
             RenderHelper.rot += .5f;
         }
 
-        probeInfo.render(x + margin, y + margin);
+        probeInfo.render(matrixStack, x + margin, y + margin);
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     public static void open() {

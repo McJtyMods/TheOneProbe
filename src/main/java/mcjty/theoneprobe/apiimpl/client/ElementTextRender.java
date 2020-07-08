@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
@@ -16,16 +17,12 @@ import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 
 public class ElementTextRender {
 
-    public static void render(String text, int x, int y) {
-        RenderHelper.renderText(Minecraft.getInstance(), x, y, stylifyString(text));
-    }
-
-    public static void render(ITextComponent text, int x, int y) {
-        RenderHelper.renderText(Minecraft.getInstance(), x, y, stylifyString(text));
+    public static void render(ITextComponent text, MatrixStack matrixStack, int x, int y) {
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, stylifyString(text));
     }
 
     private static String stylifyString(ITextComponent text) {
-        return stylifyString(text.getFormattedText());
+        return stylifyString(text.getString());
     }
 
     private static String stylifyString(String text) {
@@ -69,7 +66,7 @@ public class ElementTextRender {
         return text;
     }
 
-    public static int getWidth(String text) {
+    public static int getWidth(ITextComponent text) {
         return Minecraft.getInstance().fontRenderer.getStringWidth(stylifyString(text));
     }
 }

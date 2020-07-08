@@ -12,6 +12,7 @@ public class TopArmorMaterial implements IArmorMaterial {
     private final int durability;
     private final int[] damageReduction;
     private final int enchantability;
+    private final float toughness;
     private final SoundEvent soundEvent;
     private final Ingredient repairMaterial;
 
@@ -22,6 +23,7 @@ public class TopArmorMaterial implements IArmorMaterial {
         this.damageReduction = damageReduction;
         this.enchantability = enchantability;
         this.soundEvent = soundEvent;
+        this.toughness = toughness;
         this.repairMaterial = repairMaterial;
     }
 
@@ -57,6 +59,11 @@ public class TopArmorMaterial implements IArmorMaterial {
 
     @Override
     public float getToughness() {
+        return toughness;
+    }
+
+    @Override
+    public float func_230304_f_() {
         return 0;
     }
 }

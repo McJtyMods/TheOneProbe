@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IOverlayRenderer;
 import mcjty.theoneprobe.api.IOverlayStyle;
@@ -21,7 +22,7 @@ public class DefaultOverlayRenderer implements IOverlayRenderer {
     }
 
     @Override
-    public void render(IOverlayStyle style, IProbeInfo probeInfo) {
-        OverlayRenderer.renderOverlay(style, probeInfo);
+    public void render(IOverlayStyle style, IProbeInfo probeInfo, MatrixStack matrixStack) {
+        OverlayRenderer.renderOverlay(style, probeInfo, matrixStack);
     }
 }

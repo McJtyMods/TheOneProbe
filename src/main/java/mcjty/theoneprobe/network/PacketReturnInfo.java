@@ -3,20 +3,22 @@ package mcjty.theoneprobe.network;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketReturnInfo {
 
-    private DimensionType dim;
+    private RegistryKey<World> dim;
     private BlockPos pos;
     private ProbeInfo probeInfo;
 
     public PacketReturnInfo(PacketBuffer buf) {
-        dim = DimensionType.byName(buf.readResourceLocation());
+        dim = RegistryKey.func_240903_a_(Registry.field_239699_ae_, buf.readResourceLocation());
         pos = buf.readBlockPos();
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();
@@ -27,7 +29,7 @@ public class PacketReturnInfo {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeResourceLocation(dim.getRegistryName());
+        buf.writeResourceLocation(dim.func_240901_a_());
         buf.writeBlockPos(pos);
         if (probeInfo != null) {
             buf.writeBoolean(true);
@@ -40,7 +42,7 @@ public class PacketReturnInfo {
     public PacketReturnInfo() {
     }
 
-    public PacketReturnInfo(DimensionType dim, BlockPos pos, ProbeInfo probeInfo) {
+    public PacketReturnInfo(RegistryKey<World> dim, BlockPos pos, ProbeInfo probeInfo) {
         this.dim = dim;
         this.pos = pos;
         this.probeInfo = probeInfo;
