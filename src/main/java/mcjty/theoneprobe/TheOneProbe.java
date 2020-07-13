@@ -147,6 +147,7 @@ public class TheOneProbe {
         event.getRegistry().register(ModItems.diamondHelmetProbe);
         event.getRegistry().register(ModItems.goldHelmetProbe);
         event.getRegistry().register(ModItems.ironHelmetProbe);
+        event.getRegistry().register(ModItems.netheriteHelmetProbe);
 
         if (TheOneProbe.baubles) {
             event.getRegistry().register(ModItems.probeGoggles);
