@@ -13,19 +13,19 @@ public class TopArmorMaterial implements IArmorMaterial {
     private final int[] damageReduction;
     private final int enchantability;
     private final float toughness;
-    private final float field_234660_o_;
+    private final float knockbackResistance;
     private final SoundEvent soundEvent;
     private final Ingredient repairMaterial;
 
 
-    public TopArmorMaterial(String name, int durability, int[] damageReduction, int enchantability, SoundEvent soundEvent, float toughness, float field_234660_o_, Ingredient repairMaterial) {
+    public TopArmorMaterial(String name, int durability, int[] damageReduction, int enchantability, SoundEvent soundEvent, float toughness, float knockbackResistance, Ingredient repairMaterial) {
         this.name = name;
         this.durability = durability;
         this.damageReduction = damageReduction;
         this.enchantability = enchantability;
         this.soundEvent = soundEvent;
         this.toughness = toughness;
-        this.field_234660_o_ = field_234660_o_;
+        this.knockbackResistance = knockbackResistance;
         this.repairMaterial = repairMaterial;
     }
 
@@ -66,6 +66,6 @@ public class TopArmorMaterial implements IArmorMaterial {
 
     @Override
     public float func_230304_f_() {
-    	return this.field_234660_o_;
+        return this.knockbackResistance;
     }
 }
