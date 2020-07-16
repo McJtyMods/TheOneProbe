@@ -8,7 +8,8 @@ import net.minecraft.util.SoundEvent;
 
 public class TopArmorMaterial implements IArmorMaterial {
 
-    private final String name;
+    private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11}; // Durability multipliers for Boots, Leggings, Chestplates, and Helmets respectively.
+	private final String name;
     private final int durability;
     private final int[] damageReduction;
     private final int enchantability;
@@ -31,7 +32,7 @@ public class TopArmorMaterial implements IArmorMaterial {
 
     @Override
     public int getDurability(EquipmentSlotType entityEquipmentSlot) {
-        return durability;
+        return MAX_DAMAGE_ARRAY[entityEquipmentSlot.getIndex()] * durability;
     }
 
     @Override
