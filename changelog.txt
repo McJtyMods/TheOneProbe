@@ -1,3 +1,6 @@
+3.0.1-beta:
+- Fix for latest Forge
+
 3.0.0-beta:
 - First port of TOP to 1.16 by pupnewfster!
 
