@@ -27,7 +27,7 @@ probe required if you so desire.
 [[dependencies.theoneprobe]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[32,)" #mandatory
+    versionRange="[32.0.67,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
