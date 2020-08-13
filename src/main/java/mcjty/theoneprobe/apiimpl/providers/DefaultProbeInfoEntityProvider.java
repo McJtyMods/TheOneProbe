@@ -146,7 +146,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 double jumpStrength = ((HorseEntity) entity).getHorseJumpStrength();
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
                 probeInfo.text(CompoundText.create().style(LABEL).text("Jump height: ").style(INFO).text(dfCommas.format(jumpHeight)).get());
-                ModifiableAttributeInstance iattributeinstance = ((HorseEntity) entity).getAttribute(Attributes.field_233821_d_);
+                ModifiableAttributeInstance iattributeinstance = ((HorseEntity) entity).getAttribute(Attributes.MOVEMENT_SPEED);
                 probeInfo.text(CompoundText.create().style(LABEL).text("Speed: ").style(INFO).text(dfCommas.format(iattributeinstance.getValue())).get());
             }
         }
@@ -154,7 +154,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
         if (entity instanceof WolfEntity && Config.showCollarColor.get()) {
             if (((WolfEntity) entity).isTamed()) {
                 DyeColor collarColor = ((WolfEntity) entity).getCollarColor();
-                probeInfo.text(CompoundText.create().style(LABEL).text("Collar: ").style(INFO).text(collarColor.func_176610_l()).get());
+                probeInfo.text(CompoundText.create().style(LABEL).text("Collar: ").style(INFO).text(collarColor.getString()).get());
             }
         }
     }

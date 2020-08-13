@@ -34,21 +34,21 @@ public class GuiNote extends Screen {
     }
 
     @Override
-    public boolean func_231177_au__() {
+    public boolean isPauseScreen() {
         return false;
     }
 
     @Override
-    public void func_231160_c_() {
-        super.func_231160_c_();
-        guiLeft = (this.field_230708_k_ - WIDTH) / 2;
-        guiTop = (this.field_230709_l_ - HEIGHT) / 2;
+    public void init() {
+        super.init();
+        guiLeft = (this.width - WIDTH) / 2;
+        guiTop = (this.height - HEIGHT) / 2;
     }
 
     @Override
-    public void func_230430_a_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
-        field_230706_i_.getTextureManager().bindTexture(background);
+    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        minecraft.getTextureManager().bindTexture(background);
         drawTexturedModalRect(matrixStack.getLast().getMatrix(), guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;
@@ -97,8 +97,8 @@ public class GuiNote extends Screen {
     private int hitY;
 
     @Override
-    public boolean func_231044_a_(double mouseX, double mouseY, int mouseButton) {
-        boolean rc = super.func_231044_a_(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        boolean rc = super.mouseClicked(mouseX, mouseY, mouseButton);
         if (rc) {
             return rc;
         }
@@ -123,13 +123,13 @@ public class GuiNote extends Screen {
 
         hitY = y + guiTop;
         hitX = x + guiLeft;
-        func_238467_a_(matrixStack, x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
+        fill(matrixStack, x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 3, y + 4, "Needed"); x += BUTTON_MARGIN;
 
-        func_238467_a_(matrixStack, x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
+        fill(matrixStack, x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 3, y + 4, "Not needed"); x += BUTTON_MARGIN;
 
-        func_238467_a_(matrixStack, x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
+        fill(matrixStack, x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 3, y + 4, "Extended"); x += BUTTON_MARGIN;
 
         y += BUTTON_HEIGHT - 4;

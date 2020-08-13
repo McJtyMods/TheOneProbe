@@ -113,9 +113,9 @@ public class CompoundText {
         if (component == null) {
             component = cmp;
         } else if (component instanceof IFormattableTextComponent) {
-            ((IFormattableTextComponent) component).func_230529_a_(cmp);
+            ((IFormattableTextComponent) component).append(cmp);
         } else {
-            component = component.func_230532_e_().func_230529_a_(cmp);
+            component = component.deepCopy().append(cmp);
         }
         return this;
     }

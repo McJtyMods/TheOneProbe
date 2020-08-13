@@ -18,7 +18,7 @@ public class PacketReturnInfo {
     private ProbeInfo probeInfo;
 
     public PacketReturnInfo(PacketBuffer buf) {
-        dim = RegistryKey.func_240903_a_(Registry.field_239699_ae_, buf.readResourceLocation());
+        dim = RegistryKey.func_240903_a_(Registry.WORLD_KEY, buf.readResourceLocation());
         pos = buf.readBlockPos();
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();

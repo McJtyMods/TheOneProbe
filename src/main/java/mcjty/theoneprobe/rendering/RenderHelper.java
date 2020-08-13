@@ -78,11 +78,11 @@ public class RenderHelper {
     }
 
     public static void drawHorizontalLine(MatrixStack matrixStack, int x1, int y1, int x2, int color) {
-        AbstractGui.func_238467_a_(matrixStack, x1, y1, x2, y1 + 1, color);
+        AbstractGui.fill(matrixStack, x1, y1, x2, y1 + 1, color);
     }
 
     public static void drawVerticalLine(MatrixStack matrixStack, int x1, int y1, int y2, int color) {
-        AbstractGui.func_238467_a_(matrixStack, x1, y1, x1 + 1, y2, color);
+        AbstractGui.fill(matrixStack, x1, y1, x1 + 1, y2, color);
     }
 
     /**
@@ -90,12 +90,12 @@ public class RenderHelper {
      */
     public static void drawThickBeveledBox(MatrixStack matrixStack, int x1, int y1, int x2, int y2, int thickness, int topleftcolor, int botrightcolor, int fillcolor) {
         if (fillcolor != -1) {
-            AbstractGui.func_238467_a_(matrixStack, x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
+            AbstractGui.fill(matrixStack, x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
         }
-        AbstractGui.func_238467_a_(matrixStack, x1, y1, x2 - 1, y1 + thickness, topleftcolor);
-        AbstractGui.func_238467_a_(matrixStack, x1, y1, x1 + thickness, y2 - 1, topleftcolor);
-        AbstractGui.func_238467_a_(matrixStack, x2 - thickness, y1, x2, y2 - 1, botrightcolor);
-        AbstractGui.func_238467_a_(matrixStack, x1, y2 - thickness, x2, y2, botrightcolor);
+        AbstractGui.fill(matrixStack, x1, y1, x2 - 1, y1 + thickness, topleftcolor);
+        AbstractGui.fill(matrixStack, x1, y1, x1 + thickness, y2 - 1, topleftcolor);
+        AbstractGui.fill(matrixStack, x2 - thickness, y1, x2, y2 - 1, botrightcolor);
+        AbstractGui.fill(matrixStack, x1, y2 - thickness, x2, y2, botrightcolor);
     }
 
     /**
@@ -209,15 +209,15 @@ public class RenderHelper {
                 if (scaled >= 2) {
                     matrixStack.push();
                     matrixStack.scale(.5f, .5f, .5f);
-                    fr.func_238405_a_(matrixStack, s, ((xPosition + 19 - 2) * 2 - 1 - fr.getStringWidth(s)), yPosition * 2 + 24, 16777215);
+                    fr.drawStringWithShadow(matrixStack, s, ((xPosition + 19 - 2) * 2 - 1 - fr.getStringWidth(s)), yPosition * 2 + 24, 16777215);
                     matrixStack.pop();
                 } else if (scaled == 1) {
                     matrixStack.push();
                     matrixStack.scale(.75f, .75f, .75f);
-                    fr.func_238405_a_(matrixStack, s, ((xPosition - 2) * 1.34f + 24 - fr.getStringWidth(s)), yPosition * 1.34f + 14, 16777215);
+                    fr.drawStringWithShadow(matrixStack, s, ((xPosition - 2) * 1.34f + 24 - fr.getStringWidth(s)), yPosition * 1.34f + 14, 16777215);
                     matrixStack.pop();
                 } else {
-                    fr.func_238405_a_(matrixStack, s, (xPosition + 19 - 2 - fr.getStringWidth(s)), (yPosition + 6 + 3), 16777215);
+                    fr.drawStringWithShadow(matrixStack, s, (xPosition + 19 - 2 - fr.getStringWidth(s)), (yPosition + 6 + 3), 16777215);
                 }
                 RenderSystem.enableLighting();
                 RenderSystem.enableDepthTest();
@@ -292,7 +292,7 @@ public class RenderHelper {
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
         int width = mc.fontRenderer.getStringWidth(txt);
-        mc.fontRenderer.func_238405_a_(matrixStack, txt, x, y, 16777215);
+        mc.fontRenderer.drawStringWithShadow(matrixStack, txt, x, y, 16777215);
         RenderSystem.enableLighting();
         RenderSystem.enableDepthTest();
         // Fixes opaque cooldown overlay a bit lower

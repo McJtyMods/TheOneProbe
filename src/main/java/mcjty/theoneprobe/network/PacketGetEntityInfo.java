@@ -35,7 +35,7 @@ public class PacketGetEntityInfo {
     private Vector3d hitVec;
 
     public PacketGetEntityInfo(PacketBuffer buf) {
-        dim = RegistryKey.func_240903_a_(Registry.field_239699_ae_, buf.readResourceLocation());
+        dim = RegistryKey.func_240903_a_(Registry.WORLD_KEY, buf.readResourceLocation());
         uuid = buf.readUniqueId();
         mode = ProbeMode.values()[buf.readByte()];
         if (buf.readBoolean()) {

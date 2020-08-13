@@ -161,7 +161,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                     .text(CompoundText.create().style(LABEL).text("State: ").style(INFO).text(powered ? "On" : "Off").get());
         } else if (block instanceof ComparatorBlock) {
             ComparatorMode mode = blockState.get(ComparatorBlock.MODE);
-            probeInfo.text(CompoundText.create().style(LABEL).text("Mode: ").style(INFO).text(mode.func_176610_l()).get());
+            probeInfo.text(CompoundText.create().style(LABEL).text("Mode: ").style(INFO).text(mode.getString()).get());
         } else if (block instanceof RepeaterBlock) {
             Boolean locked = blockState.get(RepeaterBlock.LOCKED);
             Integer delay = blockState.get(RepeaterBlock.DELAY);
@@ -239,7 +239,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     }
 
     private void showGrowthLevel(IProbeInfo probeInfo, BlockState blockState) {
-        for (Property<?> property : blockState.func_235904_r_()) {
+        for (Property<?> property : blockState.getProperties()) {
             if (!"age".equals(property.getName())) {
                 continue;
             }
