@@ -8,10 +8,13 @@ import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
@@ -33,7 +36,20 @@ public class ElementEntityRender {
                 EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
                 if (value != null) {
                     try {
-                        entity = value.create(Minecraft.getInstance().world, entityNBT, null, null, new BlockPos(0, 0, 0), SpawnReason.COMMAND, false, false);
+                        World world = Minecraft.getInstance().world;
+                        
+                        entity = value.create(world);
+                        entity.setLocationAndAngles(0.5D, 0.0D, 0.5D, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
+                        
+                        if(entity instanceof MobEntity) {
+                            MobEntity mob = (MobEntity)entity;
+
+                            mob.rotationYawHead = mob.rotationYaw;
+                            mob.renderYawOffset = mob.rotationYaw;
+                            mob.setLeftHanded(world.rand.nextFloat() < 0.05F);
+                        }
+                        
+                        EntityType.applyItemNBT(world, null, entity, entityNBT);
                         entity.read(entityNBT);
                     } catch (Exception ignore) {
                         // This can crash due to a vanilla bug with foxes. Workaround here
