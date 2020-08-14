@@ -1,3 +1,6 @@
+Upcoming:
+- Fixed a bug where some configs were not properly being read
+
 2.0.4:
 - New API for using ITextComponent directly in the TOP API. This allows for better translatable messages
 

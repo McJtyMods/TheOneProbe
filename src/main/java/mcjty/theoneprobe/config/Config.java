@@ -15,18 +15,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.*;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
 import java.util.*;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
-import static net.minecraftforge.fml.Logging.CORE;
 
-@Mod.EventBusSubscriber
 public class Config {
 
     private static final Builder COMMON_BUILDER = new Builder();
@@ -525,20 +520,7 @@ public class Config {
         return dontSendNBTSet;
     }
 
-    @SubscribeEvent
-    public static void onLoad(final ModConfig.Loading configEvent) {
-        TheOneProbe.logger.debug("Loaded {} config file {}", TheOneProbe.MODID, configEvent.getConfig().getFileName());
-        resolveConfigs();
-
-    }
-
-    @SubscribeEvent
-    public static void onFileChange(final ModConfig.Reloading configEvent) {
-        TheOneProbe.logger.fatal(CORE, "{} config just got changed on the file system!", TheOneProbe.MODID);
-        resolveConfigs();
-    }
-
-    private static void resolveConfigs() {
+    public static void resolveConfigs() {
         DEFAULT_CONFIG.setRFMode(defaultRFMode.get());
         DEFAULT_CONFIG.setTankMode(defaultTankMode.get());
         rfbarFilledColor = parseColor(cfgRfbarFilledColor.get());
@@ -572,7 +554,7 @@ public class Config {
 
         inventoriesToShow = null;
         inventoriesToNotShow = null;
-        dontSendNBT = null;
+        dontSendNBTSet = null;
 
         for (Map.Entry<TextStyleClass, ConfigValue<String>> entry : cfgtextStyleClasses.entrySet()) {
             textStyleClasses.put(entry.getKey(), entry.getValue().get());
