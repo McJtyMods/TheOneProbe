@@ -229,7 +229,7 @@ public class OverlayRenderer {
             float damage = Minecraft.getInstance().playerController.curBlockDamageMP;
             if (damage > 0) {
                 if (Config.showBreakProgress.get() == 2) {
-                    damageElement = new ElementText(new StringTextComponent("Progress " + (int) (damage * 100) + "%").func_240699_a_(TextFormatting.RED));
+                    damageElement = new ElementText(new StringTextComponent("Progress " + (int) (damage * 100) + "%").mergeStyle(TextFormatting.RED));
                 } else {
                     damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
                             .prefix("Progress ")

@@ -67,15 +67,15 @@ public class GuiConfig extends Screen {
     }
 
     @Override
-    public boolean func_231177_au__() {
+    public boolean isPauseScreen() {
         return false;
     }
 
     @Override
-    protected void func_231160_c_() {
-        super.func_231160_c_();
-        guiLeft = (this.field_230708_k_ - WIDTH - WIDTH) / 2;
-        guiTop = (this.field_230709_l_ - HEIGHT) / 2;
+    protected void init() {
+        super.init();
+        guiLeft = (this.width - WIDTH - WIDTH) / 2;
+        guiTop = (this.height - HEIGHT) / 2;
     }
 
 //    @Override
@@ -84,12 +84,12 @@ public class GuiConfig extends Screen {
 //    }
 
     @Override
-    public void func_230430_a_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
-        field_230706_i_.getTextureManager().bindTexture(background);
+    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        minecraft.getTextureManager().bindTexture(background);
         Matrix4f matrix = matrixStack.getLast().getMatrix();
         drawTexturedModalRect(matrix, guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
-        field_230706_i_.getTextureManager().bindTexture(scene);
+        minecraft.getTextureManager().bindTexture(scene);
         drawTexturedModalRect(matrix, guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
 
         renderProbe(matrixStack);
@@ -153,8 +153,8 @@ public class GuiConfig extends Screen {
     }
 
     @Override
-    public boolean func_231044_a_(double mouseX, double mouseY, int mouseButton) {
-        boolean rc = super.func_231044_a_(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        boolean rc = super.mouseClicked(mouseX, mouseY, mouseButton);
         if (rc) {
             return rc;
         }
@@ -182,7 +182,7 @@ public class GuiConfig extends Screen {
     }
 
     private int addPreset(MatrixStack matrixStack, int x, int y, Preset preset) {
-        func_238467_a_(matrixStack, x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
+        fill(matrixStack, x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 20, y, preset.getName());
         hitboxes.add(new HitBox(x + 10 - guiLeft, y - 1 - guiTop, x + 10 + WIDTH - 50 - guiLeft, y + 10 - guiTop, () -> {
             applyPreset(preset);
@@ -192,7 +192,7 @@ public class GuiConfig extends Screen {
     }
 
     private void addButton(MatrixStack matrixStack, int x, int y, int width, int height, String text, Runnable runnable) {
-        func_238467_a_(matrixStack, x, y, x + width-1, y + height-1, 0xff000000);
+        fill(matrixStack, x, y, x + width-1, y + height-1, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 3, y + 3, text);
         hitboxes.add(new HitBox(x - guiLeft, y - guiTop, x + width -1 - guiLeft, y + height -1 - guiTop, runnable));
     }

@@ -42,7 +42,7 @@ public class PacketGetInfo  {
     @Nonnull private ItemStack pickBlock;
 
     public PacketGetInfo(PacketBuffer buf) {
-        dim = RegistryKey.func_240903_a_(Registry.field_239699_ae_, buf.readResourceLocation());
+        dim = RegistryKey.func_240903_a_(Registry.WORLD_KEY, buf.readResourceLocation());
         pos = buf.readBlockPos();
         mode = ProbeMode.values()[buf.readByte()];
         byte sideByte = buf.readByte();

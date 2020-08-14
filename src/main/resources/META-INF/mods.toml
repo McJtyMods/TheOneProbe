@@ -1,5 +1,8 @@
 modLoader="javafml" #mandatory
-loaderVersion="[32,)" #mandatory (25 is current forge version)
+loaderVersion="[33,)" #mandatory (25 is current forge version)
+# The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
+# Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
+license="MIT License https://github.com/McJtyMods/TheOneProbe/blob/1.16/LICENCE"
 issueTrackerURL="http://github.com/McJtyMods/TheOneProbe/issues"
 displayURL="http://github.com/McJtyMods/TheOneProbe/"
 # A file name (in the root of the mod JAR) containing a logo for display
@@ -27,7 +30,7 @@ probe required if you so desire.
 [[dependencies.theoneprobe]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[32.0.67,)" #mandatory
+    versionRange="[33,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
