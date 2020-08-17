@@ -41,10 +41,12 @@ public class RenderHelper {
         RenderSystem.rotatef(rot, 0.0F, 1.0F, 0.0F);
         RenderSystem.rotatef(0.0F, 1.0F, 0.0F, 0.0F);
 
-        entity.rotationPitch = 0.0F;
-        entity.prevRotationPitch = 0.0F;
-        entity.rotationYaw = 0.0f;
-        entity.prevRotationYaw = 0.0f;
+        if (!(entity instanceof PlayerEntity)) {
+            entity.rotationPitch = 0.0F;
+            entity.prevRotationPitch = 0.0F;
+            entity.rotationYaw = 0.0f;
+            entity.prevRotationYaw = 0.0f;
+        }
 
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;

@@ -1,5 +1,6 @@
 Upcoming:
 - Fixed a bug where some configs were not properly being read
+- Fixed a problem on servers where looking at a player would also rotate the head of the player
 
 2.0.4:
 - New API for using ITextComponent directly in the TOP API. This allows for better translatable messages
