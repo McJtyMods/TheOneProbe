@@ -1,4 +1,4 @@
-Upcoming:
+2.0.5:
 - Fixed a bug where some configs were not properly being read
 - Fixed a problem on servers where looking at a player would also rotate the head of the player
 
