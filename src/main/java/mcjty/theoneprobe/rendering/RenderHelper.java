@@ -43,10 +43,12 @@ public class RenderHelper {
         matrixStack.rotate(Vector3f.YP.rotationDegrees(rot));
         matrixStack.rotate(Vector3f.XP.rotationDegrees(0));
 
-        entity.rotationPitch = 0.0F;
-        entity.prevRotationPitch = 0.0F;
-        entity.rotationYaw = 0.0f;
-        entity.prevRotationYaw = 0.0f;
+        if (!(entity instanceof PlayerEntity)) {
+            entity.rotationPitch = 0.0F;
+            entity.prevRotationPitch = 0.0F;
+            entity.rotationYaw = 0.0f;
+            entity.prevRotationYaw = 0.0f;
+        }
 
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;

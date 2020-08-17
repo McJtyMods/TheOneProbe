@@ -1,3 +1,7 @@
+3.0.2-beta:
+- Fixed a bug where some configs were not properly being read
+- Fixed a problem on servers where looking at a player would also rotate the head of the player
+
 3.0.1-beta:
 - Fix for latest Forge
 
