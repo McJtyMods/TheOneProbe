@@ -301,10 +301,10 @@ public class OverlayRenderer {
             DefaultProbeInfoProvider.showStandardBlockInfo(probeConfig, mode, probeInfo, blockState, block, world, blockPos, player, data);
         } catch (Exception e) {
             ThrowableIdentity.registerThrowable(e);
-            probeInfo.text(ERROR + "Error (see log for details)!");
+            probeInfo.text(CompoundText.create().style(ERROR).text("Error (see log for details)!"));
         }
 
-        probeInfo.text(ERROR + "Waiting for server...");
+        probeInfo.text(CompoundText.create().style(ERROR).text("Waiting for server..."));
         return probeInfo;
     }
 
@@ -317,10 +317,10 @@ public class OverlayRenderer {
             DefaultProbeInfoEntityProvider.showStandardInfo(mode, probeInfo, entity, probeConfig);
         } catch (Exception e) {
             ThrowableIdentity.registerThrowable(e);
-            probeInfo.text(ERROR + "Error (see log for details)!");
+            probeInfo.text(CompoundText.create().style(ERROR).text("Error (see log for details)!"));
         }
 
-        probeInfo.text(ERROR + "Waiting for server...");
+        probeInfo.text(CompoundText.create().style(ERROR).text("Waiting for server..."));
         return probeInfo;
     }
 

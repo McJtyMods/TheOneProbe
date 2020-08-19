@@ -1,10 +1,7 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.Tools;
-import mcjty.theoneprobe.api.ElementAlignment;
-import mcjty.theoneprobe.api.IProbeConfig;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
@@ -92,7 +89,7 @@ public class ChestInfoTools {
             for (ItemStack stackInSlot : stacks) {
                 horizontal = vertical.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER));
                 horizontal.item(stackInSlot, new ItemStyle().width(16).height(16))
-                        .text(INFO + stackInSlot.getDisplayName().getFormattedText());
+                        .text(CompoundText.create().info(stackInSlot.getTranslationKey()));
             }
         } else {
             for (ItemStack stackInSlot : stacks) {

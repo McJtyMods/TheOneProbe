@@ -42,7 +42,11 @@ public class ElementText implements IElementNew {
 
     @Override
     public int getWidth() {
-        return ElementTextRender.getWidth(text);
+        if (textComponent != null) {
+            return ElementTextRender.getWidth(textComponent);
+        } else {
+            return ElementTextRender.getWidth(text);
+        }
     }
 
     @Override

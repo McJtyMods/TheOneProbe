@@ -90,6 +90,8 @@ public interface IProbeInfo {
      */
     IProbeInfo text(ITextComponent text);
     IProbeInfo text(ITextComponent text, ITextStyle style);
+    default IProbeInfo text(CompoundText text) { return text(text.get()); }
+    default IProbeInfo text(CompoundText text, ITextStyle style) { return text(text.get(), style); }
 
     IProbeInfo item(ItemStack stack, IItemStyle style);
     IProbeInfo item(ItemStack stack);

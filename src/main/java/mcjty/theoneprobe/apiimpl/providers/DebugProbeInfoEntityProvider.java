@@ -1,10 +1,7 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.IProbeHitEntityData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
-import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.entity.AgeableEntity;
@@ -12,9 +9,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
-
-import static mcjty.theoneprobe.api.TextStyleClass.INFO;
-import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 
 public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
 
@@ -37,11 +31,11 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                 float aiMoveSpeed = entityLivingBase.getAIMoveSpeed();
                 int revengeTimer = entityLivingBase.getRevengeTimer();
                 vertical
-                        .text(LABEL + "Tot armor: " + INFO + totalArmorValue)
-                        .text(LABEL + "Age: " + INFO + age)
-                        .text(LABEL + "Absorption: " + INFO + absorptionAmount)
-                        .text(LABEL + "AI Move Speed: " + INFO + aiMoveSpeed)
-                        .text(LABEL + "Revenge Timer: " + INFO + revengeTimer);
+                        .text(CompoundText.createLabelInfo("Tot armor: ", totalArmorValue))
+                        .text(CompoundText.createLabelInfo("Age: ", age))
+                        .text(CompoundText.createLabelInfo("Absorption: ", absorptionAmount))
+                        .text(CompoundText.createLabelInfo("AI Move Speed: ", aiMoveSpeed))
+                        .text(CompoundText.createLabelInfo("Revenge Timer: ", revengeTimer));
             }
             if (entity instanceof AgeableEntity) {
                 if (vertical == null) {
@@ -51,7 +45,7 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                 AgeableEntity entityAgeable = (AgeableEntity) entity;
                 int growingAge = entityAgeable.getGrowingAge();
                 vertical
-                        .text(LABEL + "Growing Age: " + INFO + growingAge);
+                        .text(CompoundText.createLabelInfo("Growing Age: ", growingAge));
             }
         }
     }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
+import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
@@ -59,7 +60,8 @@ public class GuiConfig extends Screen {
                 Pair.of(OBSOLETE, "white,strikethrough"),
                 Pair.of(LABEL, "white,underline"),
                 Pair.of(OK, "white"),
-                Pair.of(PROGRESS, "white")
+                Pair.of(PROGRESS, "white"),
+                Pair.of(HIGHLIGHTED, "white")
         ));
     }
 
@@ -203,10 +205,10 @@ public class GuiConfig extends Screen {
         probeInfo.horizontal()
                 .item(pickBlock)
                 .vertical()
-                .text(NAME + pickBlock.getDisplayName().getFormattedText())
-                .text(MODNAME + modid);
-        probeInfo.text(LABEL + "Fuel: " + INFO + "5 volts");
-        probeInfo.text(LABEL + "Error: " + ERROR + "Oups!");
+                .text(CompoundText.create().name(pickBlock.getDisplayName().getUnformattedComponentText()))
+                .text(CompoundText.create().style(MODNAME).text(modid));
+        probeInfo.text(CompoundText.createLabelInfo("Fuel: ","5 volts"));
+        probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text("Oups!"));
 
         renderElements(probeInfo, Config.getDefaultOverlayStyle());
     }
