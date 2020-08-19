@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
-import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 
 public class OverlayRenderer {
 
@@ -76,7 +75,7 @@ public class OverlayRenderer {
         RayTraceResult mouseOver = Minecraft.getInstance().objectMouseOver;
         if (mouseOver != null) {
             if (mouseOver.getType() == RayTraceResult.Type.ENTITY) {
-                RenderSystem.pushMatrix();
+                matrixStack.push();
 
                 double scale = Config.tooltipScale.get();
 
@@ -86,7 +85,7 @@ public class OverlayRenderer {
                 setupOverlayRendering(sw * scale, sh * scale);
                 renderHUDEntity(matrixStack, mode, mouseOver, sw * scale, sh * scale);
                 setupOverlayRendering(sw, sh);
-                RenderSystem.popMatrix();
+                matrixStack.pop();
 
                 checkCleanup();
                 return;
@@ -105,7 +104,7 @@ public class OverlayRenderer {
         }
 
         if (mouseOver.getType() == RayTraceResult.Type.BLOCK) {
-            RenderSystem.pushMatrix();
+            matrixStack.push();
 
             double scale = Config.tooltipScale.get();
 
@@ -116,7 +115,7 @@ public class OverlayRenderer {
             renderHUDBlock(matrixStack, mode, mouseOver, sw * scale, sh * scale);
             setupOverlayRendering(sw, sh);
 
-            RenderSystem.popMatrix();
+            matrixStack.pop();
         }
 
         checkCleanup();
@@ -339,7 +338,7 @@ public class OverlayRenderer {
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, MatrixStack matrixStack) {
-        RenderSystem.pushMatrix();
+        matrixStack.push();
 
         double scale = Config.tooltipScale.get();
 
@@ -349,7 +348,7 @@ public class OverlayRenderer {
         setupOverlayRendering(sw * scale, sh * scale);
         renderElements(matrixStack, (ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
         setupOverlayRendering(sw, sh);
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     private static void cleanupCachedBlocks(long time) {
