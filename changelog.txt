@@ -1,4 +1,4 @@
-Upcoming:
+3.0.3-beta:
 - Second attempt at fixing players turning heads when someone else looks at them
 
 3.0.2-beta:
