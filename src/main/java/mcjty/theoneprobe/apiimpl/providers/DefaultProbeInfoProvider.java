@@ -32,8 +32,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Collections;
 
-import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
-import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
 
@@ -127,10 +125,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 AbstractSpawner logic = ((MobSpawnerTileEntity) te).getSpawnerBaseLogic();
                 EntityType<?> type = ForgeRegistries.ENTITIES.getValue(logic.getEntityId());
                 if (type != null) {
-                    String mobName = type.getName().getFormattedText();
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                           .alignment(ElementAlignment.ALIGN_CENTER))
-                          .text(CompoundText.createLabelInfo("Mob: ", mobName));
+                          .text(CompoundText.create().style(LABEL).text("Mob: ").info(type.getName().getUnformattedComponentText()));
                 }
             }
         }
@@ -314,9 +311,5 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                         .text(CompoundText.create().name(block.getTranslationKey()));
             }
         }
-    }
-
-    private static String getBlockUnlocalizedName(Block block) {
-        return STARTLOC + block.getTranslationKey() + ".name" + ENDLOC;
     }
 }
