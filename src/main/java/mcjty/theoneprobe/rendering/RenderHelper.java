@@ -46,15 +46,15 @@ public class RenderHelper {
             entity.prevRotationPitch = 0.0F;
             entity.rotationYaw = 0.0f;
             entity.prevRotationYaw = 0.0f;
-        }
 
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity;
-            livingEntity.prevRenderYawOffset = 0.0f;
-            livingEntity.renderYawOffset = 0.0f;
+            if (entity instanceof LivingEntity) {
+                LivingEntity livingEntity = (LivingEntity) entity;
+                livingEntity.prevRenderYawOffset = 0.0f;
+                livingEntity.renderYawOffset = 0.0f;
 
-            livingEntity.rotationYawHead = 0.0f;
-            livingEntity.prevRotationYawHead = 0.0f;
+                livingEntity.rotationYawHead = 0.0f;
+                livingEntity.prevRotationYawHead = 0.0f;
+            }
         }
 
         RenderSystem.translatef(0.0F, (float) entity.getYOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);

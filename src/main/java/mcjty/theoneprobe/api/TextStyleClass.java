@@ -15,7 +15,7 @@ public enum TextStyleClass {
     OBSOLETE("O", "Obsolete"),       // Obsolete, deprecated, old information
     LABEL("l", "Label"),             // A label, use the 'context' code to set the same as the style that follows
     OK("o", "Ok"),                   // Status ok
-    HIGHLIGHTED("e", "High"),        // Highlighted information
+    HIGHLIGHTED("6", "High"),        // Highlighted information
     PROGRESS("p", "Progress");       // Progress rendering in case the bar is not used
 
     private final String code;

@@ -178,6 +178,7 @@ public class Config {
         defaultTextStyleClasses.put(OBSOLETE, "gray,strikethrough");
         defaultTextStyleClasses.put(LABEL, "gray");
         defaultTextStyleClasses.put(PROGRESS, "white");
+        defaultTextStyleClasses.put(HIGHLIGHTED, "gold");
         textStyleClasses = new HashMap<>(defaultTextStyleClasses);
 
         DEFAULT_CONFIG = new ProbeConfig();
