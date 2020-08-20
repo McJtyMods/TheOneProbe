@@ -111,9 +111,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 int fuel = ((BrewingStandTileEntity) te).fuel;
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
-                        .text(CompoundText.create().style(LABEL).text("Fuel: ").style(INFO).text(String.valueOf(fuel)).get());
+                        .text(CompoundText.createLabelInfo("Fuel: ", fuel));
                 if (brewtime > 0) {
-                    probeInfo.text(CompoundText.create().style(LABEL).text("Time: ").style(INFO).text(brewtime + " ticks").get());
+                    probeInfo.text(CompoundText.createLabelInfo("Time: ", brewtime + " ticks"));
                 }
 
             }
@@ -128,8 +128,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 EntityType<?> type = ForgeRegistries.ENTITIES.getValue(logic.getEntityId());
                 if (type != null) {
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle()
-                          .alignment(ElementAlignment.ALIGN_CENTER))
-                          .text(CompoundText.create().style(LABEL).text("Mob: ").info(type.getName()).get());
+                            .alignment(ElementAlignment.ALIGN_CENTER))
+                            .text(CompoundText.create().style(LABEL).text("Mob: ").info(type.getTranslationKey()));
                 }
             }
         }
@@ -150,7 +150,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (redstonePower > 0) {
             probeInfo.horizontal()
                     .item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
-                    .text(CompoundText.create().style(LABEL).text("Power: ").style(INFO).text(String.valueOf(redstonePower)).get());
+                    .text(CompoundText.createLabelInfo("Power: ", redstonePower));
         }
     }
 
@@ -158,16 +158,16 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (block instanceof LeverBlock) {
             Boolean powered = blockState.get(LeverBlock.POWERED);
             probeInfo.horizontal().item(new ItemStack(Items.REDSTONE), probeInfo.defaultItemStyle().width(14).height(14))
-                    .text(CompoundText.create().style(LABEL).text("State: ").style(INFO).text(powered ? "On" : "Off").get());
+                    .text(CompoundText.createLabelInfo("State: ", (powered ? "On" : "Off")));
         } else if (block instanceof ComparatorBlock) {
             ComparatorMode mode = blockState.get(ComparatorBlock.MODE);
-            probeInfo.text(CompoundText.create().style(LABEL).text("Mode: ").style(INFO).text(mode.getString()).get());
+            probeInfo.text(CompoundText.createLabelInfo("Mode: ", mode.getString()));
         } else if (block instanceof RepeaterBlock) {
             Boolean locked = blockState.get(RepeaterBlock.LOCKED);
             Integer delay = blockState.get(RepeaterBlock.DELAY);
-            probeInfo.text(CompoundText.create().style(LABEL).text("Delay: ").style(INFO).text(delay + " ticks").get());
+            probeInfo.text(CompoundText.createLabelInfo("Delay: ", delay + " ticks"));
             if (locked) {
-                probeInfo.text(CompoundText.create().style(INFO).text("Locked").get());
+                probeInfo.text(CompoundText.create().style(INFO).text("Locked"));
             }
         }
     }
@@ -191,7 +191,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
         int contents = fluidStack.getAmount();
         if (!fluidStack.isEmpty()) {
-            probeInfo.text(CompoundText.create().style(NAME).text("Liquid: " + STARTLOC + fluidStack.getTranslationKey() + ENDLOC).get());
+            probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(fluidStack.getTranslationKey()));
         }
         if (config.getTankMode() == 1) {
             probeInfo.progress(contents, maxContents,
@@ -202,7 +202,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                             .borderColor(Config.tankbarBorderColor)
                             .numberFormat(Config.tankFormat.get()));
         } else {
-            probeInfo.text(CompoundText.create().style(PROGRESS).text(ElementProgress.format(contents, Config.tankFormat.get(), "mB")).get());
+            probeInfo.text(CompoundText.create().style(PROGRESS).text(ElementProgress.format(contents, Config.tankFormat.get(), "mB")));
         }
     }
 
@@ -234,7 +234,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                             .borderColor(Config.rfbarBorderColor)
                             .numberFormat(Config.rfFormat.get()));
         } else {
-            probeInfo.text(CompoundText.create().style(PROGRESS).text("RF: " + ElementProgress.format(energy, Config.rfFormat.get(), "RF")).get());
+            probeInfo.text(CompoundText.create().style(PROGRESS).text("RF: " + ElementProgress.format(energy, Config.rfFormat.get(), "RF")));
         }
     }
 
@@ -248,9 +248,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 int age = blockState.get(integerProperty);
                 int maxAge = Collections.max(integerProperty.getAllowedValues());
                 if (age == maxAge) {
-                    probeInfo.text(CompoundText.create().style(OK).text("Fully grown").get());
+                    probeInfo.text(CompoundText.create().style(OK).text("Fully grown"));
                 } else {
-                    probeInfo.text(CompoundText.create().style(LABEL).text("Growth: ").style(WARNING).text((age * 100) / maxAge + "%").get());
+                    probeInfo.text(CompoundText.create().style(LABEL).text("Growth: ").style(WARNING).text((age * 100) / maxAge + "%"));
                 }
             }
             return;
@@ -285,8 +285,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 });
 
                 horizontal.vertical()
-                        .text(CompoundText.create().style(NAME).text(STARTLOC + fluidStack.getTranslationKey() + ENDLOC).get())
-                        .text(CompoundText.create().style(MODNAME).text(modid).get());
+                        .text(CompoundText.create().name(fluidStack.getTranslationKey()))
+                        .text(CompoundText.create().style(MODNAME).text(modid));
                 return;
             }
         }
@@ -297,7 +297,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                         .item(pickBlock)
                         .vertical()
                         .itemLabel(pickBlock)
-                        .text(CompoundText.create().style(MODNAME).text(modid).get());
+                        .text(CompoundText.create().style(MODNAME).text(modid));
             } else {
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(pickBlock)
@@ -306,16 +306,12 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         } else {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.vertical()
-                        .text(CompoundText.create().style(NAME).text(getBlockUnlocalizedName(block)).get())
-                        .text(CompoundText.create().style(MODNAME).text(modid).get());
+                        .text(CompoundText.create().name(block.getTranslationKey()))
+                        .text(CompoundText.create().style(MODNAME).text(modid));
             } else {
                 probeInfo.vertical()
-                        .text(CompoundText.create().style(NAME).text(getBlockUnlocalizedName(block)).get());
+                        .text(CompoundText.create().name(block.getTranslationKey()));
             }
         }
-    }
-
-    private static String getBlockUnlocalizedName(Block block) {
-        return STARTLOC + block.getTranslationKey() + ".name" + ENDLOC;
     }
 }

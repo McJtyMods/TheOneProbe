@@ -62,7 +62,8 @@ public class GuiConfig extends Screen {
                 Pair.of(OBSOLETE, "white,strikethrough"),
                 Pair.of(LABEL, "white,underline"),
                 Pair.of(OK, "white"),
-                Pair.of(PROGRESS, "white")
+                Pair.of(PROGRESS, "white"),
+                Pair.of(HIGHLIGHTED, "white")
         ));
     }
 
@@ -205,10 +206,10 @@ public class GuiConfig extends Screen {
         probeInfo.horizontal()
                 .item(pickBlock)
                 .vertical()
-                .text(CompoundText.create().name(pickBlock.getDisplayName()).get())
-                .text(CompoundText.create().style(MODNAME).text(modid).get());
-        probeInfo.text(CompoundText.create().style(LABEL).text("Fuel: ").style(INFO).text("5 volts").get());
-        probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text("Oups!").get());
+                .text(CompoundText.create().name(pickBlock.getDisplayName().getUnformattedComponentText()))
+                .text(CompoundText.create().style(MODNAME).text(modid));
+        probeInfo.text(CompoundText.createLabelInfo("Fuel: ","5 volts"));
+        probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text("Oups!"));
 
         renderElements(probeInfo, Config.getDefaultOverlayStyle(), matrixStack);
     }

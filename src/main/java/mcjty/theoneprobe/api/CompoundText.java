@@ -13,6 +13,14 @@ public class CompoundText {
         return new CompoundText();
     }
 
+    /**
+     * Conveniance for the common case where a label and info is required
+     * Equivalent to CompoundText.create().labelInfo(label, value)
+     */
+    public static CompoundText createLabelInfo(String label, Object value) {
+        return CompoundText.create().labelInfo(label, value);
+    }
+
     /// Use this to set a style that the player can configure client-side. This is the recommended way to do text formatting
     public CompoundText style(TextStyleClass style) {
         ITextComponent cmp = new StringTextComponent(style.toString());
@@ -27,6 +35,11 @@ public class CompoundText {
     /// Only use this for small strings or numbers for which no translation is useful
     public CompoundText text(String text) {
         return newComponent(new StringTextComponent(text));
+    }
+
+    /// A common usage: label + info
+    public CompoundText labelInfo(String label, Object value) {
+        return style(TextStyleClass.LABEL).text(label).style(TextStyleClass.INFO).text(String.valueOf(value));
     }
 
     /// Shorthand for style(TextStyleClass.INFO).text(new TranslationTextComponent(translationKey):

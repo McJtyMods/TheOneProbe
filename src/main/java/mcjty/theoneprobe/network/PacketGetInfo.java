@@ -136,7 +136,7 @@ public class PacketGetInfo  {
                 provider.addProbeInfo(mode, probeInfo, player, world, state, data);
             } catch (Throwable e) {
                 ThrowableIdentity.registerThrowable(e);
-                probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text(provider.getID()).get());
+                probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text(provider.getID()));
             }
         }
         return probeInfo;

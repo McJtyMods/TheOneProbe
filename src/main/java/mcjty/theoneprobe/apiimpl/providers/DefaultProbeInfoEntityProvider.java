@@ -28,8 +28,6 @@ import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.UUID;
 
-import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
-import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 
 public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider {
@@ -67,7 +65,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 probeInfo.progress(health, maxHealth, probeInfo.defaultProgressStyle().lifeBar(true).showText(false).width(150).height(10));
 
                 if (mode == ProbeMode.EXTENDED) {
-                    probeInfo.text(CompoundText.create().style(LABEL).text("Health: ").style(INFOIMP).text(health + " / " + maxHealth).get());
+                    probeInfo.text(CompoundText.createLabelInfo("Health: ",health + " / " + maxHealth));
                 }
 
                 if (armor > 0) {
@@ -78,7 +76,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if (Tools.show(mode, config.getShowMobGrowth()) && entity instanceof AgeableEntity) {
                int age = ((AgeableEntity) entity).getGrowingAge();
                if (age < 0) {
-                   probeInfo.text(CompoundText.create().style(LABEL).text("Growing time: ").style(INFO).text(((age * -1) / 20) + "s").get());
+                   probeInfo.text(CompoundText.createLabelInfo("Growing time: ",+ ((age * -1) / 20) + "s"));
                }
             }
 
@@ -88,21 +86,22 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                     IProbeInfo vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(0xffffffff));
                     float durationFactor = 1.0f;
                     for (EffectInstance effect : effects) {
-                        String s1 = STARTLOC + effect.getEffectName() + ENDLOC;
+                        CompoundText text = CompoundText.create().info(effect.getEffectName());
                         Effect potion = effect.getPotion();
+                        if (!potion.isBeneficial()) {
+                            text.style(ERROR);
+                        } else {
+                            text.style(OK);
+                        }
                         if (effect.getAmplifier() > 0) {
-                            s1 = s1 + " " + STARTLOC + "potion.potency." + effect.getAmplifier() + ENDLOC;
+                            text.text(" ").info("potion.potency." + effect.getAmplifier());
                         }
 
                         if (effect.getDuration() > 20) {
-                            s1 = s1 + " (" + getPotionDurationString(effect, durationFactor) + ")";
+                            text.text(" (" + getPotionDurationString(effect, durationFactor) + ")");
                         }
 
-                        if (!potion.isBeneficial()) {
-                            vertical.text(CompoundText.create().style(ERROR).text(s1).get());
-                        } else {
-                            vertical.text(CompoundText.create().style(OK).text(s1).get());
-                        }
+                        vertical.text(text);
                     }
                 }
             }
@@ -112,12 +111,12 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if(!stack.isEmpty()) {
                 probeInfo.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER))
                         .item(stack, new ItemStyle().width(16).height(16))
-                        .text(CompoundText.create().info(stack.getDisplayName()).get());
+                        .text(CompoundText.create().info(stack.getTranslationKey()));
                 if (mode == ProbeMode.EXTENDED) {
-                    probeInfo.text(CompoundText.create().style(LABEL).text("Rotation: ").style(INFO).text(String.valueOf(itemFrame.getRotation())).get());
+                    probeInfo.text(CompoundText.createLabelInfo("Rotation: ", itemFrame.getRotation()));
                 }
             } else {
-                probeInfo.text(CompoundText.create().style(LABEL).text("Empty").get());
+                probeInfo.text(CompoundText.create().style(LABEL).text("Empty"));
             }
         }
 
@@ -132,12 +131,12 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if (ownerId != null) {
                 String username = UsernameCache.getLastKnownUsername(ownerId);
                 if (username == null) {
-                    probeInfo.text(CompoundText.create().style(WARNING).text("Unknown owner").get());
+                    probeInfo.text(CompoundText.create().style(WARNING).text("Unknown owner"));
                 } else {
-                    probeInfo.text(CompoundText.create().style(LABEL).text("Owned by: ").style(INFO).text(username).get());
+                    probeInfo.text(CompoundText.createLabelInfo("Owned by: ", username));
                 }
             } else if (entity instanceof TameableEntity) {
-                probeInfo.text(CompoundText.create().style(LABEL).text("Tameable").get());
+                probeInfo.text(CompoundText.create().style(LABEL).text("Tameable"));
             }
         }
 
@@ -145,16 +144,16 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if (entity instanceof HorseEntity) {
                 double jumpStrength = ((HorseEntity) entity).getHorseJumpStrength();
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
-                probeInfo.text(CompoundText.create().style(LABEL).text("Jump height: ").style(INFO).text(dfCommas.format(jumpHeight)).get());
+                probeInfo.text(CompoundText.createLabelInfo("Jump height: ", dfCommas.format(jumpHeight)));
                 ModifiableAttributeInstance iattributeinstance = ((HorseEntity) entity).getAttribute(Attributes.MOVEMENT_SPEED);
-                probeInfo.text(CompoundText.create().style(LABEL).text("Speed: ").style(INFO).text(dfCommas.format(iattributeinstance.getValue())).get());
+                probeInfo.text(CompoundText.createLabelInfo("Speed: ", dfCommas.format(iattributeinstance.getValue())));
             }
         }
 
         if (entity instanceof WolfEntity && Config.showCollarColor.get()) {
             if (((WolfEntity) entity).isTamed()) {
                 DyeColor collarColor = ((WolfEntity) entity).getCollarColor();
-                probeInfo.text(CompoundText.create().style(LABEL).text("Collar: ").style(INFO).text(collarColor.getString()).get());
+                probeInfo.text(CompoundText.createLabelInfo("Collar: ", collarColor.getString()));
             }
         }
     }
@@ -183,12 +182,12 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             probeInfo.horizontal()
                     .entity(entity)
                     .vertical()
-                        .text(CompoundText.create().name(entity.getDisplayName()).get())
-                        .text(CompoundText.create().style(MODNAME).text(modid).get());
+                    .text(CompoundText.create().name(entity.getDisplayName().getUnformattedComponentText()))
+                    .text(CompoundText.create().style(MODNAME).text(modid));
         } else {
             probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                     .entity(entity)
-                    .text(CompoundText.create().name(entity.getDisplayName()).get());
+                    .text(CompoundText.create().name(entity.getDisplayName().getUnformattedComponentText()));
         }
     }
 }
