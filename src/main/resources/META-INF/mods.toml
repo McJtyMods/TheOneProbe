@@ -1,7 +1,5 @@
-modLoader="javafml" #mandatory
-loaderVersion="[33,)" #mandatory (25 is current forge version)
-# The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
-# Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
+modLoader="javafml"
+loaderVersion="[33,)"
 license="MIT License https://github.com/McJtyMods/TheOneProbe/blob/1.16/LICENCE"
 issueTrackerURL="http://github.com/McJtyMods/TheOneProbe/issues"
 displayURL="http://github.com/McJtyMods/TheOneProbe/"
