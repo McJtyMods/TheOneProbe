@@ -206,7 +206,7 @@ public class GuiConfig extends Screen {
         probeInfo.horizontal()
                 .item(pickBlock)
                 .vertical()
-                .text(CompoundText.create().name(pickBlock.getDisplayName().getUnformattedComponentText()))
+                .text(CompoundText.create().name(pickBlock.getTranslationKey()))
                 .text(CompoundText.create().style(MODNAME).text(modid));
         probeInfo.text(CompoundText.createLabelInfo("Fuel: ","5 volts"));
         probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text("Oups!"));

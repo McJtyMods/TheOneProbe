@@ -1,3 +1,6 @@
+Upcoming:
+- Second attempt at fixing players turning heads when someone else looks at them
+
 3.0.2-beta:
 - Fixed a bug where some configs were not properly being read
 - Fixed a problem on servers where looking at a player would also rotate the head of the player

@@ -182,12 +182,12 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             probeInfo.horizontal()
                     .entity(entity)
                     .vertical()
-                    .text(CompoundText.create().name(entity.getDisplayName().getUnformattedComponentText()))
+                    .text(CompoundText.create().name(entity.getType().getTranslationKey()))
                     .text(CompoundText.create().style(MODNAME).text(modid));
         } else {
             probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                     .entity(entity)
-                    .text(CompoundText.create().name(entity.getDisplayName().getUnformattedComponentText()));
+                    .text(CompoundText.create().name(entity.getType().getTranslationKey()));
         }
     }
 }
