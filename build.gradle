@@ -19,6 +19,7 @@ apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'maven-publish'
 
 repositories {
+    maven { url 'https://www.dogforce-games.com/maven/' }
     maven { // JEI
         url "https://dvs1.progwml6.com/files/maven"
     }

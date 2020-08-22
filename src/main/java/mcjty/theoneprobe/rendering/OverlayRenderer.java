@@ -205,7 +205,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntity player) {
-        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().func_234923_W_(), mode, mouseOver, entity));
+        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().getDimensionKey(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(MatrixStack matrixStack, ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
@@ -242,7 +242,7 @@ public class OverlayRenderer {
             }
         }
 
-        RegistryKey<World> dimension = player.getEntityWorld().func_234923_W_();
+        RegistryKey<World> dimension = player.getEntityWorld().getDimensionKey();
         Pair<RegistryKey<World>, BlockPos> key = Pair.of(dimension, blockPos);
         Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(key);
         if (cacheEntry == null || cacheEntry.getValue() == null) {
@@ -334,7 +334,7 @@ public class OverlayRenderer {
             pickBlock = pickBlock.copy();
             pickBlock.setTag(null);
         }
-        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.func_234923_W_(), blockPos, mode, mouseOver, pickBlock));
+        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.getDimensionKey(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, MatrixStack matrixStack) {
