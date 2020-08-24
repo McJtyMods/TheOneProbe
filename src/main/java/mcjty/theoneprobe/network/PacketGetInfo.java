@@ -119,25 +119,30 @@ public class PacketGetInfo  {
             return null;
         }
 
-        BlockState state = world.getBlockState(blockPos);
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
-        IProbeHitData data = new ProbeHitData(blockPos, hitVec, sideHit, pickBlock);
+        if (world.isBlockLoaded(blockPos)) {
+            BlockState state = world.getBlockState(blockPos);
+            IProbeHitData data = new ProbeHitData(blockPos, hitVec, sideHit, pickBlock);
 
-        IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
-        List<IProbeConfigProvider> configProviders = TheOneProbe.theOneProbeImp.getConfigProviders();
-        for (IProbeConfigProvider configProvider : configProviders) {
-            configProvider.getProbeConfig(probeConfig, player, world, state, data);
-        }
-        Config.setRealConfig(probeConfig);
-
-        List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
-        for (IProbeInfoProvider provider : providers) {
-            try {
-                provider.addProbeInfo(mode, probeInfo, player, world, state, data);
-            } catch (Throwable e) {
-                ThrowableIdentity.registerThrowable(e);
-                probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text(provider.getID()));
+            IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
+            List<IProbeConfigProvider> configProviders = TheOneProbe.theOneProbeImp.getConfigProviders();
+            for (IProbeConfigProvider configProvider : configProviders) {
+                configProvider.getProbeConfig(probeConfig, player, world, state, data);
             }
+            Config.setRealConfig(probeConfig);
+
+            List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
+            for (IProbeInfoProvider provider : providers) {
+                try {
+                    provider.addProbeInfo(mode, probeInfo, player, world, state, data);
+                } catch (Throwable e) {
+                    ThrowableIdentity.registerThrowable(e);
+                    probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text(provider.getID()));
+                }
+            }
+        } else {
+            // Block is not loaded. Something fishy is going on
+            probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text("Chunk not loaded!"));
         }
         return probeInfo;
     }
