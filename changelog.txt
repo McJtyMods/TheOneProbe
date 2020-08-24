@@ -1,3 +1,6 @@
+3.0.4-beta:
+- Fixed a potential exploit which could be used to attack a server
+
 3.0.3-beta:
 - Second attempt at fixing players turning heads when someone else looks at them
 
