@@ -29,18 +29,6 @@ repositories {
     maven { // CompatLayer
         url "http://maven.k-4u.nl"
     }
-    maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-    maven {
-        name = "CoFH Maven"
-        url = "http://maven.covers1624.net"
-    }
-    maven {
-        name = "TESLA"
-        url = "https://maven.mcmoddev.com"
-    }
 }
 
 group= "mcjty.theoneprobe" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
