@@ -3,40 +3,23 @@ loaderVersion="[33,)"
 license="MIT License https://github.com/McJtyMods/TheOneProbe/blob/1.16/LICENCE"
 issueTrackerURL="http://github.com/McJtyMods/TheOneProbe/issues"
 displayURL="http://github.com/McJtyMods/TheOneProbe/"
-# A file name (in the root of the mod JAR) containing a logo for display
 #logoFile="examplemod.png" #optional
-# A text field displayed in the mod UI
 #credits="Thanks for this example mod goes to Java" #optional
-# A text field displayed in the mod UI
 authors="McJty"
-# A list of mods - how many allowed here is determined by the individual mod loader
-[[mods]] #mandatory
-# The modid of the mod
+
+[[mods]]
 modId="theoneprobe"
-# The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="${file.jarVersion}" #mandatory
+version="${file.jarVersion}"
 displayName="The One Probe"
-# A URL to query for updates for this mod. See the JSON update specification <here>
 #updateJSONURL="http://myurl.me/" #optional
-# The description text for the mod (multi line!) (#mandatory)
 description='''
 The One Probe lets you examine the block that you are looking at. Having a
 probe in your hand lets you examine it better but you can also make this
 probe required if you so desire.
 '''
-# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.theoneprobe]] #optional
-    modId="forge" #mandatory
-    mandatory=true #mandatory
-    versionRange="[33,)" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
-    ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT or SERVER
-    side="BOTH"
-# Here's another dependency
 [[dependencies.theoneprobe]]
-    modId="minecraft"
+    modId="forge"
     mandatory=true
-    versionRange="[1.16,1.17)"
+    versionRange="[33,)"
     ordering="NONE"
     side="BOTH"
