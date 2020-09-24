@@ -42,7 +42,7 @@ public class PacketGetInfo  {
     @Nonnull private ItemStack pickBlock;
 
     public PacketGetInfo(PacketBuffer buf) {
-        dim = RegistryKey.func_240903_a_(Registry.WORLD_KEY, buf.readResourceLocation());
+        dim = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, buf.readResourceLocation());
         pos = buf.readBlockPos();
         mode = ProbeMode.values()[buf.readByte()];
         byte sideByte = buf.readByte();
@@ -58,7 +58,7 @@ public class PacketGetInfo  {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeResourceLocation(dim.func_240901_a_());
+        buf.writeResourceLocation(dim.getLocation());
         buf.writeBlockPos(pos);
         buf.writeByte(mode.ordinal());
         buf.writeByte(sideHit == null ? 127 : sideHit.ordinal());

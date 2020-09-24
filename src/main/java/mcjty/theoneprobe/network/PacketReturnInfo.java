@@ -18,7 +18,7 @@ public class PacketReturnInfo {
     private ProbeInfo probeInfo;
 
     public PacketReturnInfo(PacketBuffer buf) {
-        dim = RegistryKey.func_240903_a_(Registry.WORLD_KEY, buf.readResourceLocation());
+        dim = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, buf.readResourceLocation());
         pos = buf.readBlockPos();
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();
@@ -29,7 +29,7 @@ public class PacketReturnInfo {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeResourceLocation(dim.func_240901_a_());
+        buf.writeResourceLocation(dim.getLocation());
         buf.writeBlockPos(pos);
         if (probeInfo != null) {
             buf.writeBoolean(true);
