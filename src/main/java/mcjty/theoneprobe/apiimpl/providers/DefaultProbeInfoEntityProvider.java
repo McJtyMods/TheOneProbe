@@ -174,7 +174,6 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
         return i < 10 ? j + ":0" + i : j + ":" + i;
     }
 
-
     public static void showStandardInfo(ProbeMode mode, IProbeInfo probeInfo, Entity entity, IProbeConfig config) {
         String modid = Tools.getModName(entity);
 
@@ -182,12 +181,12 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             probeInfo.horizontal()
                     .entity(entity)
                     .vertical()
-                    .text(CompoundText.create().name(entity.getType().getTranslationKey()))
+                    .text(CompoundText.create().name(entity.getName()))
                     .text(CompoundText.create().style(MODNAME).text(modid));
         } else {
             probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                     .entity(entity)
-                    .text(CompoundText.create().name(entity.getType().getTranslationKey()));
+                    .text(CompoundText.create().name(entity.getName()));
         }
     }
 }
