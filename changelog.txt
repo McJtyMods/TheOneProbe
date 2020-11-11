@@ -1,3 +1,6 @@
+Upcoming:
+- Jais Djurhuus-Kempel fixed TOP so that entity names are also correct if the entity overrides them
+
 1.16-3.0.5:
 - Update forge fixing a problem with fluids
 
