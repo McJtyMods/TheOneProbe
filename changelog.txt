@@ -1,4 +1,4 @@
-Upcoming:
+1.16-3.0.6:
 - Jais Djurhuus-Kempel fixed TOP so that entity names are also correct if the entity overrides them
 
 1.16-3.0.5:
