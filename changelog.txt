@@ -1,3 +1,6 @@
+Upcoming:
+- Update forge fixing a problem with fluids
+
 3.0.4-beta:
 - Fixed a potential exploit which could be used to attack a server
 
