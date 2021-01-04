@@ -1,9 +1,6 @@
 package mcjty.theoneprobe.config;
 
 
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
-import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.NumberFormat;
@@ -15,10 +12,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.*;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.StringUtils;
 
-import java.nio.file.Path;
 import java.util.*;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
@@ -31,10 +27,6 @@ public class Config {
     public static final ForgeConfigSpec COMMON_CONFIG;
     public static final ForgeConfigSpec CLIENT_CONFIG;
 
-
-    public static String CATEGORY_THEONEPROBE = "theoneprobe";
-    public static String CATEGORY_PROVIDERS = "providers";
-    public static String CATEGORY_CLIENT = "client";
 
     public static final int PROBE_NOTNEEDED = 0;
     public static final int PROBE_NEEDED = 1;
@@ -126,6 +118,8 @@ public class Config {
     private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowHorseStatSetting;
     private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowSilverfish;
 
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> renderBlacklist;
+    private static Set<ResourceLocation> renderBlacklistSet = null;
 
 
     public static final Map<TextStyleClass, String> defaultTextStyleClasses = new HashMap<>();
@@ -153,21 +147,6 @@ public class Config {
     }
 
 
-    public static void loadConfig(ForgeConfigSpec spec, Path path) {
-        TheOneProbe.logger.debug("Loading config file {}", path);
-
-        final CommentedFileConfig configData = CommentedFileConfig.builder(path)
-                .sync()
-                .autosave()
-                .writingMode(WritingMode.REPLACE)
-                .build();
-
-        TheOneProbe.logger.debug("Built TOML config for {}", path.toString());
-        configData.load();
-        TheOneProbe.logger.debug("Loaded TOML config file {}", path.toString());
-        spec.setConfig(configData);
-    }
-
     static {
         defaultTextStyleClasses.put(NAME, "white");
         defaultTextStyleClasses.put(MODNAME, "blue,italic");
@@ -189,6 +168,10 @@ public class Config {
         loggingThrowableTimeout = COMMON_BUILDER
                 .comment("How much time (ms) to wait before reporting an exception again")
                 .defineInRange("loggingThrowableTimeout", 20000, 1, 10000000);
+
+        renderBlacklist = CLIENT_BUILDER
+                .comment("This is a list of entities that will not be rendered by TOP. This option also works if it is set client-side alone")
+                .defineList("renderBlacklist", Collections.emptyList(), s -> s instanceof String);
 
         needsProbe = COMMON_BUILDER
                 .comment("Is the probe needed to show the tooltip? 0 = no, 1 = yes, 2 = yes and clients cannot override, 3 = probe needed for extended info only")
@@ -562,5 +545,23 @@ public class Config {
             textStyleClasses.put(entry.getKey(), entry.getValue().get());
         }
 
+    }
+
+    public static boolean isBlacklistForRendering(ResourceLocation id) {
+        if (renderBlacklistSet == null) {
+            renderBlacklistSet = new HashSet<>();
+            for (String s : renderBlacklist.get()) {
+                renderBlacklistSet.add(new ResourceLocation(s));
+            }
+        }
+        return renderBlacklistSet.contains(id);
+    }
+
+    public static void onLoad(ModConfig.Loading event) {
+        renderBlacklistSet = null;
+    }
+
+    public static void onReload(ModConfig.Loading event) {
+        renderBlacklistSet = null;
     }
 }

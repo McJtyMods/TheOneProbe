@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.DataFixUtils;
 import mcjty.theoneprobe.api.IEntityStyle;
+import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -30,44 +31,46 @@ public class ElementEntityRender {
 
     public static void render(String entityName, CompoundNBT entityNBT, IEntityStyle style, MatrixStack matrixStack, int x, int y) {
         if (entityName != null && !entityName.isEmpty()) {
-            Entity entity = null;
-            if (entityNBT != null) {
-                String fixed = fixEntityId(entityName);
-                EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
-                if (value != null) {
-                    try {
-                        World world = Minecraft.getInstance().world;
-                        
-                        entity = value.create(world);
-                        entity.setLocationAndAngles(0.5D, 0.0D, 0.5D, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
-                        
-                        if(entity instanceof MobEntity) {
-                            MobEntity mob = (MobEntity)entity;
+            String fixed = fixEntityId(entityName);
+            ResourceLocation id = new ResourceLocation(fixed);
 
-                            mob.rotationYawHead = mob.rotationYaw;
-                            mob.renderYawOffset = mob.rotationYaw;
-                            mob.setLeftHanded(world.rand.nextFloat() < 0.05F);
+            if (!Config.isBlacklistForRendering(id)) {
+                Entity entity = null;
+                if (entityNBT != null) {
+                    EntityType<?> value = ForgeRegistries.ENTITIES.getValue(id);
+                    if (value != null) {
+                        try {
+                            World world = Minecraft.getInstance().world;
+
+                            entity = value.create(world);
+                            entity.setLocationAndAngles(0.5D, 0.0D, 0.5D, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
+
+                            if (entity instanceof MobEntity) {
+                                MobEntity mob = (MobEntity) entity;
+
+                                mob.rotationYawHead = mob.rotationYaw;
+                                mob.renderYawOffset = mob.rotationYaw;
+                                mob.setLeftHanded(world.rand.nextFloat() < 0.05F);
+                            }
+
+                            EntityType.applyItemNBT(world, null, entity, entityNBT);
+                        } catch (Exception ignore) {
+                            // This can crash due to a vanilla bug with foxes. Workaround here
                         }
-                        
-                        EntityType.applyItemNBT(world, null, entity, entityNBT);
-                        entity.read(entityNBT);
-                    } catch (Exception ignore) {
-                        // This can crash due to a vanilla bug with foxes. Workaround here
+                    }
+                } else {
+                    EntityType<?> value = ForgeRegistries.ENTITIES.getValue(id);
+                    if (value != null) {
+                        try {
+                            entity = value.create(Minecraft.getInstance().world);
+                        } catch (Exception ignore) {
+                            // This can crash due to a vanilla bug with foxes. Workaround here
+                        }
                     }
                 }
-            } else {
-                String fixed = fixEntityId(entityName);
-                EntityType<?> value = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(fixed));
-                if (value != null) {
-                    try {
-                        entity = value.create(Minecraft.getInstance().world);
-                    } catch (Exception ignore) {
-                        // This can crash due to a vanilla bug with foxes. Workaround here
-                    }
+                if (entity != null) {
+                    renderEntity(style, matrixStack, x, y, entity);
                 }
-            }
-            if (entity != null) {
-                renderEntity(style, matrixStack, x, y, entity);
             }
         }
     }

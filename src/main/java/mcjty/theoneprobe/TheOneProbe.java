@@ -73,6 +73,8 @@ public class TheOneProbe {
 
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(Config::onLoad);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(Config::onReload);
 
         // Register the processIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
