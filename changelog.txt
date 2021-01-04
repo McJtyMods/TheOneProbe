@@ -1,4 +1,4 @@
-Upcoming:
+1.16-3.0.7:
 - Fixed a problem with wolves and iron golems causing massive lag due to log spam
 - New 'renderBlacklist' config option that can be used to blacklist entities from rendering (if they have issues with that)
 
