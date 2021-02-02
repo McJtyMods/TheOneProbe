@@ -13,14 +13,13 @@
     "gpg",
     " g "
   ],
-  "type": "forge:ore_shaped",
+  "type": "minecraft:crafting_shaped",
   "key": {
     "p": {
       "item": "theoneprobe:probe"
     },
     "g": {
-      "type": "forge:ore_dict",
-      "ore": "nuggetGold"
+      "tag": "forge:nuggets/gold"
     }
   }
 }
