@@ -200,14 +200,14 @@ public class GuiConfig extends Screen {
 
     private void renderProbe(MatrixStack matrixStack) {
         Block block = Blocks.OAK_LOG;
-        String modid = Tools.getModName(block);
+        String modName = Tools.getModName(block);
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         ItemStack pickBlock = new ItemStack(block);
         probeInfo.horizontal()
                 .item(pickBlock)
                 .vertical()
                 .text(CompoundText.create().name(pickBlock.getTranslationKey()))
-                .text(CompoundText.create().style(MODNAME).text(modid));
+                .text(CompoundText.create().style(MODNAME).text(modName));
         probeInfo.text(CompoundText.createLabelInfo("Fuel: ","5 volts"));
         probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text("Oups!"));
 
