@@ -129,6 +129,8 @@ artifacts {
     archives apiJar
 }
 
+rootProject.name = "TheOneProbe-1.16"
+
 publishing {
     tasks.publish.dependsOn 'build'
     publications {
