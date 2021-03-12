@@ -259,7 +259,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     public static void showStandardBlockInfo(IProbeConfig config, ProbeMode mode, IProbeInfo probeInfo, BlockState blockState, Block block, World world,
                                              BlockPos pos, PlayerEntity player, IProbeHitData data) {
-        String modid = Tools.getModName(block);
+        String modName = Tools.getModName(block);
 
         ItemStack pickBlock = data.getPickBlock();
 
@@ -286,7 +286,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
                 horizontal.vertical()
                         .text(CompoundText.create().name(fluidStack.getTranslationKey()))
-                        .text(CompoundText.create().style(MODNAME).text(modid));
+                        .text(CompoundText.create().style(MODNAME).text(modName));
                 return;
             }
         }
@@ -297,7 +297,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                         .item(pickBlock)
                         .vertical()
                         .itemLabel(pickBlock)
-                        .text(CompoundText.create().style(MODNAME).text(modid));
+                        .text(CompoundText.create().style(MODNAME).text(modName));
             } else {
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(pickBlock)
@@ -307,7 +307,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.vertical()
                         .text(CompoundText.create().name(block.getTranslationKey()))
-                        .text(CompoundText.create().style(MODNAME).text(modid));
+                        .text(CompoundText.create().style(MODNAME).text(modName));
             } else {
                 probeInfo.vertical()
                         .text(CompoundText.create().name(block.getTranslationKey()));
