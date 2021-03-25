@@ -58,9 +58,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 break;
             }
         }
-        if (!handled) {
-            showStandardBlockInfo(config, mode, probeInfo, blockState, block, world, pos, player, data);
-        }
+        if(handled) return;
+        
+        showStandardBlockInfo(config, mode, probeInfo, blockState, block, world, pos, player, data);
 
         if (Tools.show(mode, config.getShowCropPercentage())) {
             showGrowthLevel(probeInfo, blockState);
