@@ -58,7 +58,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 break;
             }
         }
-        if(handled) return;
+        if (handled) return;
         
         showStandardBlockInfo(config, mode, probeInfo, blockState, block, world, pos, player, data);
 
