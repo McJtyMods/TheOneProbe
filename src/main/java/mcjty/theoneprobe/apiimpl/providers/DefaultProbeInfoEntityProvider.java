@@ -50,9 +50,9 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 break;
             }
         }
-        if (!handled) {
-            showStandardInfo(mode, probeInfo, entity, config);
-        }
+        if (handled) return;
+        
+        showStandardInfo(mode, probeInfo, entity, config);
 
         if (entity instanceof MobEntity) {
             MobEntity livingBase = (MobEntity) entity;
