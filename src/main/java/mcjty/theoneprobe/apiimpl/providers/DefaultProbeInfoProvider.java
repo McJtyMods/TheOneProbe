@@ -32,8 +32,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Collections;
 
-import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
-import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
 
@@ -86,7 +84,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         ChestInfoTools.showChestInfo(mode, probeInfo, world, pos, config);
 
         if (config.getRFMode() > 0) {
-            showRF(probeInfo, world, pos);
+            showEnergy(probeInfo, world, pos);
         }
         if (Tools.show(mode, config.getShowTankSetting())) {
             if (config.getTankMode() > 0) {
@@ -206,35 +204,35 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private void showRF(IProbeInfo probeInfo, World world, BlockPos pos) {
+    private void showEnergy(IProbeInfo probeInfo, World world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
         TileEntity te = world.getTileEntity(pos);
         if (TheOneProbe.tesla && TeslaTools.isEnergyHandler(te)) {
             long energy = TeslaTools.getEnergy(te);
             long maxEnergy = TeslaTools.getMaxEnergy(te);
-            addRFInfo(probeInfo, config, energy, maxEnergy);
+            addEnergyInfo(probeInfo, config, energy, maxEnergy);
         } else if (te instanceof IBigPower) {
             long energy = ((IBigPower) te).getStoredPower();
             long maxEnergy = ((IBigPower) te).getCapacity();
-            addRFInfo(probeInfo, config, energy, maxEnergy);
+            addEnergyInfo(probeInfo, config, energy, maxEnergy);
         } else if (te != null && te.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
             te.getCapability(CapabilityEnergy.ENERGY).ifPresent(handler -> {
-                addRFInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
+                addEnergyInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
             });
         }
     }
 
-    private void addRFInfo(IProbeInfo probeInfo, ProbeConfig config, long energy, long maxEnergy) {
+    private void addEnergyInfo(IProbeInfo probeInfo, ProbeConfig config, long energy, long maxEnergy) {
         if (config.getRFMode() == 1) {
             probeInfo.progress(energy, maxEnergy,
                     probeInfo.defaultProgressStyle()
-                            .suffix("RF")
+                            .suffix("FE")
                             .filledColor(Config.rfbarFilledColor)
                             .alternateFilledColor(Config.rfbarAlternateFilledColor)
                             .borderColor(Config.rfbarBorderColor)
                             .numberFormat(Config.rfFormat.get()));
         } else {
-            probeInfo.text(CompoundText.create().style(PROGRESS).text("RF: " + ElementProgress.format(energy, Config.rfFormat.get(), "RF")));
+            probeInfo.text(CompoundText.create().style(PROGRESS).text("FE: " + ElementProgress.format(energy, Config.rfFormat.get(), "FE")));
         }
     }
 
