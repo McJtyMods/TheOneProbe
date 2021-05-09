@@ -26,6 +26,7 @@ public class ProbeConfig implements IProbeConfig {
     private IProbeConfig.ConfigMode showMobOwner = EXTENDED;
     private IProbeConfig.ConfigMode showHorseStats = EXTENDED;
     private IProbeConfig.ConfigMode showSilverfish = NOT;
+    private IProbeConfig.ConfigMode showNoteblock = NORMAL;
 
     /// Make a lazy copy of this probe config.
     public IProbeConfig lazyCopy() {
@@ -239,5 +240,16 @@ public class ProbeConfig implements IProbeConfig {
     @Override
     public ConfigMode getShowSilverfish() {
         return showSilverfish;
+    }
+
+    @Override
+    public IProbeConfig showNoteblockInfo(ConfigMode mode) {
+        showNoteblock = mode;
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowNoteblockInfo() {
+        return showNoteblock;
     }
 }

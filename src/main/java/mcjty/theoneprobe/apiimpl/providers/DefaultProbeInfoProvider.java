@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.Property;
 import net.minecraft.state.properties.ComparatorMode;
+import net.minecraft.state.properties.NoteBlockInstrument;
 import net.minecraft.tileentity.BrewingStandTileEntity;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -99,6 +100,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (Tools.show(mode, config.getShowMobSpawnerSetting())) {
             showMobSpawnerInfo(probeInfo, world, data, block);
         }
+
+        if (Tools.show(mode, config.getShowNoteblockInfo())) {
+            showNoteblockInfo(probeInfo, world, data, blockState);
+        }
     }
 
     private void showBrewingStandInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
@@ -115,6 +120,16 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 }
 
             }
+        }
+    }
+
+    private void showNoteblockInfo(IProbeInfo probeInfo, World world, IProbeHitData data, BlockState blockState) {
+        if (blockState.getBlock() instanceof NoteBlock) {
+            Integer note = blockState.get(NoteBlock.NOTE);
+            NoteBlockInstrument instrument = blockState.get(NoteBlock.INSTRUMENT);
+            probeInfo.horizontal(probeInfo.defaultLayoutStyle()
+                    .alignment(ElementAlignment.ALIGN_CENTER))
+                    .text(CompoundText.create().style(LABEL).text("Note: ").info(instrument.name().toLowerCase() + " (" + note + ")"));
         }
     }
 

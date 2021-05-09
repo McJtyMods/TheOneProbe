@@ -246,4 +246,16 @@ public class LazyProbeConfig implements IProbeConfig {
 		realCopy().showSilverfish(mode);
 		return this;
 	}
+
+    @Override
+    public ConfigMode getShowNoteblockInfo() {
+        return original.getShowNoteblockInfo();
+    }
+
+    @Override
+    public IProbeConfig showNoteblockInfo(ConfigMode mode) {
+        realCopy().showNoteblockInfo(mode);
+        return this;
+    }
+
 }
