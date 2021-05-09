@@ -23,6 +23,7 @@ import net.minecraft.tileentity.BrewingStandTileEntity;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -215,7 +216,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                             .borderColor(Config.tankbarBorderColor)
                             .numberFormat(Config.tankFormat.get()));
         } else {
-            probeInfo.text(CompoundText.create().style(PROGRESS).text(ElementProgress.format(contents, Config.tankFormat.get(), "mB")));
+            probeInfo.text(CompoundText.create().style(PROGRESS).text(ElementProgress.format(contents, Config.tankFormat.get(), new StringTextComponent("mB"))));
         }
     }
 
@@ -247,7 +248,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                             .borderColor(Config.rfbarBorderColor)
                             .numberFormat(Config.rfFormat.get()));
         } else {
-            probeInfo.text(CompoundText.create().style(PROGRESS).text("FE: " + ElementProgress.format(energy, Config.rfFormat.get(), "FE")));
+            probeInfo.text(CompoundText.create().style(PROGRESS).text("FE: " + ElementProgress.format(energy, Config.rfFormat.get(), new StringTextComponent("FE"))));
         }
     }
 

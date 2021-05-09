@@ -1,16 +1,21 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
+import java.text.DecimalFormat;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
+
+import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementProgressRender;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
-import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.network.PacketBuffer;
-
-import java.text.DecimalFormat;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ElementProgress implements IElement {
 
@@ -30,8 +35,8 @@ public class ElementProgress implements IElement {
         style = new ProgressStyle()
                 .width(buf.readInt())
                 .height(buf.readInt())
-                .prefix(NetworkTools.readStringUTF8(buf))
-                .suffix(NetworkTools.readStringUTF8(buf))
+                .prefix(buf.readTextComponent())
+                .suffix(buf.readTextComponent())
                 .borderColor(buf.readInt())
                 .filledColor(buf.readInt())
                 .alternateFilledColor(buf.readInt())
@@ -39,7 +44,8 @@ public class ElementProgress implements IElement {
                 .showText(buf.readBoolean())
                 .numberFormat(NumberFormat.values()[buf.readByte()])
                 .lifeBar(buf.readBoolean())
-                .armorBar(buf.readBoolean());
+                .armorBar(buf.readBoolean())
+                .alignment(buf.readEnumValue(ElementAlignment.class));
     }
 
     private static DecimalFormat dfCommas = new DecimalFormat("###,###");
@@ -47,37 +53,32 @@ public class ElementProgress implements IElement {
     /**
      * If the suffix starts with 'm' we can possibly drop that
      */
-    public static String format(long in, NumberFormat style, String suffix) {
-        switch (style) {
-            case FULL:
-                return Long.toString(in) + suffix;
-            case COMPACT: {
-                int unit = 1000;
-                if (in < unit) {
-                    return Long.toString(in) + " " + suffix;
-                }
-                int exp = (int) (Math.log(in) / Math.log(unit));
-                char pre;
-                if (suffix.startsWith("m")) {
-                    suffix = suffix.substring(1);
-                    if (exp - 2 >= 0) {
-                        pre = "kMGTPE".charAt(exp - 2);
-                        return String.format("%.1f %s", in / Math.pow(unit, exp), pre) + suffix;
-                    } else {
-                        return String.format("%.1f %s", in / Math.pow(unit, exp), suffix);
-                    }
-                } else {
-                    pre = "kMGTPE".charAt(exp - 1);
-                    return String.format("%.1f %s", in / Math.pow(unit, exp), pre) + suffix;
-                }
-            }
-            case COMMAS:
-                return dfCommas.format(in) + suffix;
-            case NONE:
-                return suffix;
-        }
-        return Long.toString(in);
-    }
+	@OnlyIn(Dist.CLIENT)
+	public static ITextComponent format(long in, NumberFormat style, ITextComponent suffix) {
+		switch (style) {
+			case FULL:
+				return new StringTextComponent(Long.toString(in)).appendSibling(suffix);
+			case COMPACT:
+				if (in < 1000) return new StringTextComponent(Long.toString(in) + " ").appendSibling(suffix);
+				int unit = 1000;
+				int exp = (int) (Math.log(in) / Math.log(unit));
+				String s = suffix.getString();
+				if (s.startsWith("m")) {
+					s = s.substring(1);
+					if (exp - 2 >= 0) {
+						char pre = "kMGTPE".charAt(exp - 2);
+						return new StringTextComponent(String.format("%.1f %s", new Object[]{Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre)})).appendString(s);
+					}
+					return new StringTextComponent(String.format("%.1f", new Object[]{Double.valueOf(in / Math.pow(unit, exp))})).appendString(s);
+				}
+				char pre = "kMGTPE".charAt(exp - 1);
+				return new StringTextComponent(String.format("%.1f %s", new Object[]{Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre)})).appendSibling(suffix);
+			case COMMAS:
+				return new StringTextComponent(dfCommas.format(in)).appendSibling(suffix);
+			case NONE: return suffix;
+		}
+		return new StringTextComponent(Long.toString(in));
+	}
 
     @Override
     public void render(MatrixStack matrixStack, int x, int y) {
@@ -107,8 +108,8 @@ public class ElementProgress implements IElement {
         buf.writeLong(max);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
-        NetworkTools.writeStringUTF8(buf, style.getPrefix());
-        NetworkTools.writeStringUTF8(buf, style.getSuffix());
+        buf.writeTextComponent(style.getPrefixComp());
+        buf.writeTextComponent(style.getSuffixComp());
         buf.writeInt(style.getBorderColor());
         buf.writeInt(style.getFilledColor());
         buf.writeInt(style.getAlternatefilledColor());
@@ -117,6 +118,7 @@ public class ElementProgress implements IElement {
         buf.writeByte(style.getNumberFormat().ordinal());
         buf.writeBoolean(style.isLifeBar());
         buf.writeBoolean(style.isArmorBar());
+        buf.writeEnumValue(style.getAlignment());
     }
 
     @Override

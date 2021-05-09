@@ -1,7 +1,12 @@
 package mcjty.theoneprobe.rendering;
 
+import javax.annotation.Nullable;
+
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.client.Minecraft;
@@ -20,10 +25,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RenderHelper {
 
@@ -308,6 +313,37 @@ public class RenderHelper {
 
         return width;
     }
+    
+	@OnlyIn(Dist.CLIENT)
+	public static int renderText(Minecraft mc, MatrixStack stack, int x, int y, ITextComponent text)
+	{
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0f);
+
+        stack.push();
+        stack.translate(0.0F, 0.0F, 32.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.enableLighting();
+        net.minecraft.client.renderer.RenderHelper.setupGui3DDiffuseLighting();
+
+        RenderSystem.disableLighting();
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableBlend();
+        int width = mc.fontRenderer.func_243245_a(text.func_241878_f());//Otherwise it breaks
+        mc.fontRenderer.drawTextWithShadow(stack, text.func_241878_f(), x, y, 16777215);
+        RenderSystem.enableLighting();
+        RenderSystem.enableDepthTest();
+        // Fixes opaque cooldown overlay a bit lower
+        // TODO: check if enabled blending still screws things up down the line.
+        RenderSystem.enableBlend();
+
+
+        stack.pop();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.disableLighting();
+
+        return width;
+	}
 
     public static class Vector {
         public final float x;
