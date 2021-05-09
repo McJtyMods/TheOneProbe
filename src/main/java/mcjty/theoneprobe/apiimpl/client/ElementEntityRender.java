@@ -53,7 +53,8 @@ public class ElementEntityRender {
                                 mob.setLeftHanded(world.rand.nextFloat() < 0.05F);
                             }
 
-                            EntityType.applyItemNBT(world, null, entity, entityNBT);
+                            entity.read(entityNBT);
+//                            EntityType.applyItemNBT(world, null, entity, entityNBT);
                         } catch (Exception ignore) {
                             // This can crash due to a vanilla bug with foxes. Workaround here
                         }

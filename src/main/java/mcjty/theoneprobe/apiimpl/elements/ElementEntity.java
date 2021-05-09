@@ -34,7 +34,9 @@ public class ElementEntity implements IElement {
             entityNBT = null;
             playerID = player.getEntityId();
         } else {
-            entityNBT = entity.serializeNBT();
+            entityNBT = new CompoundNBT();
+            entity.writeWithoutTypeId(entityNBT);
+//            entityNBT = entity.serializeNBT();
             playerID = null;
         }
         ResourceLocation registryName = entity.getType().getRegistryName();

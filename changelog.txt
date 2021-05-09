@@ -2,6 +2,8 @@ Upcoming:
 - Ochotonida: Show the real modname instead of the modid
 - migmolrod changed: Show two decimals for horse speed and jump values so breeding is easier and more precise. One decimal is just not enough, specially for speed values since the range between min and max horse speed values is too short (0.1125 to 0.3375) with DecimalFormat rounding making even harder to work with horse breeding. Solves issue #320
 - The One Probe now supports showing the current instrument and note for a noteblock
+- Fixed a problem with paintings
+- Fixed entity rendering in general
 
 1.16-3.0.7:
 - Fixed a problem with wolves and iron golems causing massive lag due to log spam
