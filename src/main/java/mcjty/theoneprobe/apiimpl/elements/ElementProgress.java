@@ -47,7 +47,12 @@ public class ElementProgress implements IElement {
                 .armorBar(buf.readBoolean())
                 .alignment(buf.readEnumValue(ElementAlignment.class));
     }
-
+    
+    //Helper method that allows to edit the style of a helper method reducing copy/pasting code from internals
+    public IProgressStyle getStyle() {
+    	return style;
+    }
+    
     private static DecimalFormat dfCommas = new DecimalFormat("###,###");
 
     /**
