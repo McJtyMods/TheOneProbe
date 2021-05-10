@@ -34,7 +34,7 @@ public class ElementItemLabel implements IElement {
     @Override
     public int getWidth() {
         if (!itemStack.isEmpty()) {
-            return ElementTextRender.getWidth(itemStack.getDisplayName());
+            return ElementTextRender.getLegacyWidth(itemStack.getDisplayName());
         } else {
             return 10;
         }

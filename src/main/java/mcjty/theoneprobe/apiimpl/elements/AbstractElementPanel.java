@@ -1,18 +1,34 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
-import mcjty.theoneprobe.api.*;
+
+import mcjty.theoneprobe.api.CompoundText;
+import mcjty.theoneprobe.api.ElementAlignment;
+import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IEntityStyle;
+import mcjty.theoneprobe.api.IIconStyle;
+import mcjty.theoneprobe.api.IItemStyle;
+import mcjty.theoneprobe.api.ILayoutStyle;
+import mcjty.theoneprobe.api.IProbeConfig;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProgressStyle;
+import mcjty.theoneprobe.api.ITextStyle;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
-import mcjty.theoneprobe.apiimpl.styles.*;
+import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
+import mcjty.theoneprobe.apiimpl.styles.IconStyle;
+import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
+import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
+import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
+import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
@@ -78,7 +94,19 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         children.add(new ElementText(text));
         return this;
     }
-
+    
+    @Override
+    public IProbeInfo text(CompoundText text, ITextStyle style) {
+    	children.add(new ElementText(text.get(), style).setLegacy());
+    	return this;
+    }
+    
+    @Override
+    public IProbeInfo text(CompoundText text) {
+    	children.add(new ElementText(text.get()).setLegacy());
+    	return this;
+    }
+    
     @Override
     public IProbeInfo text(ITextComponent text, ITextStyle style) {
         children.add(new ElementText(text));
