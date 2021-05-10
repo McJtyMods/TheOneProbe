@@ -11,6 +11,7 @@ import net.minecraft.util.text.TranslationTextComponent;
  */
 public interface IProgressStyle {
 	
+	//Default Creation Methods that allow to allow create default instances for most basic cases
 	public static IProgressStyle createDefault() { return new ProgressStyle(); }
 	public static IProgressStyle createArmor() { return new ProgressStyle().armorBar(true); }
 	public static IProgressStyle createLife() { return new ProgressStyle().lifeBar(true); }
@@ -18,23 +19,6 @@ public interface IProgressStyle {
 	public static IProgressStyle createBounds(int width, int height) { return new ProgressStyle().bounds(width, height); }
 	public static IProgressStyle createTextOnly(String prefix) { return new ProgressStyle().prefix(prefix).numberFormat(NumberFormat.NONE); }
 	public static IProgressStyle createText(String prefix, String suffix) { return new ProgressStyle().prefix(prefix).suffix(suffix); }
-	public static IProgressStyle createText(String prefix, String suffix, NumberFormat format) { return new ProgressStyle().showText(true).prefix(prefix).suffix(suffix).numberFormat(format); }
-	public static IProgressStyle createColored(Color border, Color filledColor, Color background) { return new ProgressStyle().borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(filledColor); }
-	public static IProgressStyle createColored(Color border, Color filledColor, Color alternate, Color background) { return new ProgressStyle().borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(alternate); }
-	public static IProgressStyle createColored(int border, int filledColor, int background) { return new ProgressStyle().borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(filledColor); }
-	public static IProgressStyle createColored(int border, int filledColor, int alternate, int background) { return new ProgressStyle().borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(alternate); }
-	public static IProgressStyle createBorderlessColored(Color filledColor, Color background) { return new ProgressStyle().backgroundColor(background).filledColor(filledColor).alternateFilledColor(filledColor); }
-	public static IProgressStyle createBorderlessColored(Color filledColor, Color alternate, Color background) { return new ProgressStyle().backgroundColor(background).filledColor(filledColor).alternateFilledColor(alternate); }
-	public static IProgressStyle createBorderlessColored(int filledColor, int background) { return new ProgressStyle().backgroundColor(background).filledColor(filledColor).alternateFilledColor(filledColor); }
-	public static IProgressStyle createBorderlessColored(int filledColor, int alternate, int background) { return new ProgressStyle().backgroundColor(background).filledColor(filledColor).alternateFilledColor(alternate); }
-	public static IProgressStyle createAll(int width, int height, String prefix, String suffix, Color border, Color filledColor, Color background) { return new ProgressStyle().bounds(width, height).prefix(prefix).suffix(suffix).borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(filledColor); }
-	public static IProgressStyle createAll(int width, int height, String prefix, String suffix, ElementAlignment align, Color border, Color filledColor, Color background) { return new ProgressStyle().bounds(width, height).prefix(prefix).suffix(suffix).alignment(align).borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(filledColor); }
-	public static IProgressStyle createAll(int width, int height, String prefix, String suffix, int border, int filledColor, int background) { return new ProgressStyle().bounds(width, height).prefix(prefix).suffix(suffix).borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(filledColor); }
-	public static IProgressStyle createAll(int width, int height, String prefix, String suffix, ElementAlignment align, int border, int filledColor, int background) { return new ProgressStyle().bounds(width, height).prefix(prefix).suffix(suffix).alignment(align).borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(filledColor); }
-	public static IProgressStyle createAll(int width, int height, String prefix, String suffix, Color border, Color filledColor, Color alternate, Color background) { return new ProgressStyle().bounds(width, height).prefix(prefix).suffix(suffix).borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(alternate); }
-	public static IProgressStyle createAll(int width, int height, String prefix, String suffix, ElementAlignment align, Color border, Color filledColor, Color alternate, Color background) { return new ProgressStyle().bounds(width, height).prefix(prefix).suffix(suffix).alignment(align).borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(alternate); }
-	public static IProgressStyle createAll(int width, int height, String prefix, String suffix, int border, int filledColor, int alternate, int background) { return new ProgressStyle().bounds(width, height).prefix(prefix).suffix(suffix).borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(alternate); }
-	public static IProgressStyle createAll(int width, int height, String prefix, String suffix, ElementAlignment align, int border, int filledColor, int alternate, int background) { return new ProgressStyle().bounds(width, height).prefix(prefix).suffix(suffix).alignment(align).borderColor(border).backgroundColor(background).filledColor(filledColor).alternateFilledColor(alternate); }
 	
 	//Allows copying the state for easier template creation
 	IProgressStyle copy();
@@ -53,7 +37,17 @@ public interface IProgressStyle {
     /// If this is different from the filledColor then the fill color will alternate
     IProgressStyle alternateFilledColor(int c);
     default IProgressStyle alternateFilledColor(Color c) { return alternateFilledColor(c.getRGB()); }
-
+    
+    //Helper functions to compress code
+    default IProgressStyle borderlessColor(int filled, int background) { return filledColor(filled).backgroundColor(background); }
+    default IProgressStyle borderlessColor(int filled, int alternate, int background) { return filledColor(filled).alternateFilledColor(alternate).backgroundColor(background); }
+    default IProgressStyle borderlessColor(Color filled, Color background) { return filledColor(filled).backgroundColor(background); }
+    default IProgressStyle borderlessColor(Color filled, Color alternate, Color background) { return filledColor(filled).alternateFilledColor(alternate).backgroundColor(background); }
+    default IProgressStyle color(int border, int filled, int background) { return borderColor(border).filledColor(filled).backgroundColor(background); }
+    default IProgressStyle color(int border, int filled, int alternate, int background) { return borderColor(border).filledColor(filled).alternateFilledColor(alternate).backgroundColor(background); }
+    default IProgressStyle color(Color border, Color filled, Color background) { return borderColor(border).filledColor(filled).backgroundColor(background); }
+    default IProgressStyle color(Color border, Color filled, Color alternate, Color background) { return borderColor(border).filledColor(filled).alternateFilledColor(alternate).backgroundColor(background); }
+    
     /// If true then text is shown inside the progress bar
     IProgressStyle showText(boolean b);
 
@@ -91,11 +85,10 @@ public interface IProgressStyle {
     ITextComponent getPrefixComp();
     ITextComponent getSuffixComp();
     
-    
     int getWidth();
     int getHeight();
     ElementAlignment getAlignment();
-
+    
     boolean isLifeBar();
     boolean isArmorBar();
 }
