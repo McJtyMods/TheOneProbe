@@ -1,6 +1,7 @@
 Upcoming:
 - Show actual note information in addition to just numbers
 - If hovering over a player head also show the player name
+- VT-14 updated some of the assets to more modern versions
 
 1.16-3.0.8:
 - Ochotonida: Show the real modname instead of the modid
