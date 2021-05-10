@@ -1,3 +1,7 @@
+Upcoming:
+- Show actual note information in addition to just numbers
+- If hovering over a player head also show the player name
+
 1.16-3.0.8:
 - Ochotonida: Show the real modname instead of the modid
 - migmolrod changed: Show two decimals for horse speed and jump values so breeding is easier and more precise. One decimal is just not enough, specially for speed values since the range between min and max horse speed values is too short (0.1125 to 0.3375) with DecimalFormat rounding making even harder to work with horse breeding. Solves issue #320

@@ -83,4 +83,7 @@ public interface IProbeConfig {
 
     IProbeConfig showNoteblockInfo(ConfigMode mode);
     ConfigMode getShowNoteblockInfo();
+
+    IProbeConfig showSkullInfo(ConfigMode mode);
+    ConfigMode getShowSkullInfo();
 }
