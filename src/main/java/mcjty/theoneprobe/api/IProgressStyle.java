@@ -76,7 +76,6 @@ public interface IProgressStyle {
     int getFilledColor();
     int getAlternatefilledColor();
     
-    
     boolean isShowText();
     NumberFormat getNumberFormat();
     
