@@ -19,6 +19,7 @@ public interface ITextStyle {
 	public default ITextStyle padding(int padding) { return topPadding(padding).bottomPadding(padding).leftPadding(padding).rightPadding(padding); }
 	public default ITextStyle vPadding(int padding) { return topPadding(padding).bottomPadding(padding); }
 	public default ITextStyle hPadding(int padding) { return leftPadding(padding).rightPadding(padding); }
+
 	public ITextStyle topPadding(int padding);
 	public ITextStyle bottomPadding(int padding);
 	public ITextStyle leftPadding(int padding);

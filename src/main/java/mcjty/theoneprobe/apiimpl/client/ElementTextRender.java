@@ -18,8 +18,11 @@ import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 public class ElementTextRender {
 
 	public static void render(ITextComponent text, MatrixStack matrixStack, int x, int y, boolean legacy) {
-		if(legacy) render(text, matrixStack, x, y);
-		else RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, text);
+		if (legacy) {
+            render(text, matrixStack, x, y);
+        } else {
+            RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, text);
+        }
 	}
 	
     public static void render(ITextComponent text, MatrixStack matrixStack, int x, int y) {
