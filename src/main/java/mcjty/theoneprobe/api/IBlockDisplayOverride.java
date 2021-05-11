@@ -1,5 +1,7 @@
 package mcjty.theoneprobe.api;
 
+import java.util.EnumMap;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
@@ -16,5 +18,22 @@ public interface IBlockDisplayOverride {
      * own info.
      */
     boolean overrideStandardInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data);
-
+    
+    default boolean overrideStandardInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data, EnumMap<DisplayFlag, Runnable> overrides) {
+    	return overrideStandardInfo(mode, probeInfo, player, world, blockState, data);
+    }
+    
+    public static enum DisplayFlag {
+    	GROWTH_INFO,
+    	HARVEST_INFO,
+    	REDSTONE_INFO,
+    	LEVER_INFO,
+    	CHEST_INFO,
+    	RF_INFO,
+    	TANK_INFO,
+    	BREW_INFO,
+    	MOB_INFO,
+    	NOTE_BLOCK_INFO,
+    	SKULL_INFO;
+    }
 }

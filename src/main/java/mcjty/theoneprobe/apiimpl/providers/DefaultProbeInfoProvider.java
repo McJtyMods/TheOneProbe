@@ -1,15 +1,47 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import static mcjty.theoneprobe.api.TextStyleClass.INFO;
+import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
+import static mcjty.theoneprobe.api.TextStyleClass.MODNAME;
+import static mcjty.theoneprobe.api.TextStyleClass.NAME;
+import static mcjty.theoneprobe.api.TextStyleClass.OK;
+import static mcjty.theoneprobe.api.TextStyleClass.PROGRESS;
+import static mcjty.theoneprobe.api.TextStyleClass.WARNING;
+import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
+
+import java.util.Collections;
+import java.util.EnumMap;
+
 import com.mojang.authlib.GameProfile;
+
 import mcjty.lib.api.power.IBigPower;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
-import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.api.CompoundText;
+import mcjty.theoneprobe.api.ElementAlignment;
+import mcjty.theoneprobe.api.IBlockDisplayOverride;
+import mcjty.theoneprobe.api.IBlockDisplayOverride.DisplayFlag;
+import mcjty.theoneprobe.api.IProbeConfig;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BrewingStandBlock;
+import net.minecraft.block.ComparatorBlock;
+import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.block.LeverBlock;
+import net.minecraft.block.NoteBlock;
+import net.minecraft.block.RedstoneWireBlock;
+import net.minecraft.block.RepeaterBlock;
+import net.minecraft.block.SilverfishBlock;
+import net.minecraft.block.SkullBlock;
+import net.minecraft.block.SpawnerBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -34,11 +66,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Collections;
-
-import static mcjty.theoneprobe.api.TextStyleClass.*;
-import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
-
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
@@ -52,10 +79,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         BlockPos pos = data.getPos();
 
         IProbeConfig config = Config.getRealConfig();
-
+        
         boolean handled = false;
+        EnumMap<DisplayFlag, Runnable> overrides = new EnumMap<>(DisplayFlag.class);
         for (IBlockDisplayOverride override : TheOneProbe.theOneProbeImp.getBlockOverrides()) {
-            if (override.overrideStandardInfo(mode, probeInfo, player, world, blockState, data)) {
+            if (override.overrideStandardInfo(mode, probeInfo, player, world, blockState, data, overrides)) {
                 handled = true;
                 break;
             }
@@ -65,51 +93,106 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
 
         if (Tools.show(mode, config.getShowCropPercentage())) {
-            showGrowthLevel(probeInfo, blockState);
+        	Runnable override = overrides.get(DisplayFlag.GROWTH_INFO);
+        	if(override != null) {
+        		override.run();
+        	} else {
+                showGrowthLevel(probeInfo, blockState);        		
+        	}
         }
-
-        boolean showHarvestLevel = Tools.show(mode, config.getShowHarvestLevel());
-        boolean showHarvested = Tools.show(mode, config.getShowCanBeHarvested());
-        if (showHarvested && showHarvestLevel) {
-            HarvestInfoTools.showHarvestInfo(probeInfo, world, pos, block, blockState, player);
-        } else if (showHarvestLevel) {
-            HarvestInfoTools.showHarvestLevel(probeInfo, blockState, block);
-        } else if (showHarvested) {
-            HarvestInfoTools.showCanBeHarvested(probeInfo, world, pos, block, player);
-        }
+        
+    	Runnable override = overrides.get(DisplayFlag.HARVEST_INFO);
+    	if(override != null) {
+    		override.run();
+    	} else {
+            boolean showHarvestLevel = Tools.show(mode, config.getShowHarvestLevel());
+            boolean showHarvested = Tools.show(mode, config.getShowCanBeHarvested());
+            if (showHarvested && showHarvestLevel) {
+                HarvestInfoTools.showHarvestInfo(probeInfo, world, pos, block, blockState, player);
+            } else if (showHarvestLevel) {
+                HarvestInfoTools.showHarvestLevel(probeInfo, blockState, block);
+            } else if (showHarvested) {
+                HarvestInfoTools.showCanBeHarvested(probeInfo, world, pos, block, player);
+            }
+    	}
 
         if (Tools.show(mode, config.getShowRedstone())) {
-            showRedstonePower(probeInfo, world, blockState, data, block, Tools.show(mode, config.getShowLeverSetting()));
+        	override = overrides.get(DisplayFlag.REDSTONE_INFO);
+        	if(override != null) {
+        		override.run();
+        	} else {
+        		showRedstonePower(probeInfo, world, blockState, data, block, Tools.show(mode, config.getShowLeverSetting()));
+        	}
         }
         if (Tools.show(mode, config.getShowLeverSetting())) {
-            showLeverSetting(probeInfo, world, blockState, data, block);
+        	override = overrides.get(DisplayFlag.LEVER_INFO);
+        	if(override != null) {
+        		override.run();
+        	} else {
+        		showLeverSetting(probeInfo, world, blockState, data, block);
+        	}
         }
-
-        ChestInfoTools.showChestInfo(mode, probeInfo, world, pos, config);
+        
+    	override = overrides.get(DisplayFlag.CHEST_INFO);
+    	if(override != null) {
+    		override.run();
+    	} else {
+    		ChestInfoTools.showChestInfo(mode, probeInfo, world, pos, config);
+    	}
 
         if (config.getRFMode() > 0) {
-            showEnergy(probeInfo, world, pos);
+        	override = overrides.get(DisplayFlag.RF_INFO);
+        	if(override != null) {
+        		override.run();
+        	} else {
+        		showEnergy(probeInfo, world, pos);
+        	}
         }
         if (Tools.show(mode, config.getShowTankSetting())) {
-            if (config.getTankMode() > 0) {
-                showTankInfo(probeInfo, world, pos);
-            }
+        	override = overrides.get(DisplayFlag.TANK_INFO);
+        	if(override != null) {
+        		override.run();
+        	} else {
+        		if (config.getTankMode() > 0) {
+        			showTankInfo(probeInfo, world, pos);
+        		}
+        	}
         }
 
         if (Tools.show(mode, config.getShowBrewStandSetting())) {
-            showBrewingStandInfo(probeInfo, world, data, block);
+        	override = overrides.get(DisplayFlag.BREW_INFO);
+        	if(override != null) {
+        		override.run();
+        	} else {
+        		showBrewingStandInfo(probeInfo, world, data, block);
+        	}
         }
 
         if (Tools.show(mode, config.getShowMobSpawnerSetting())) {
-            showMobSpawnerInfo(probeInfo, world, data, block);
+        	override = overrides.get(DisplayFlag.MOB_INFO);
+        	if(override != null) {
+        		override.run();
+        	} else {
+        		showMobSpawnerInfo(probeInfo, world, data, block);
+        	}
         }
 
         if (Tools.show(mode, config.getShowNoteblockInfo())) {
-            showNoteblockInfo(probeInfo, world, data, blockState);
+        	override = overrides.get(DisplayFlag.NOTE_BLOCK_INFO);
+        	if(override != null) {
+        		override.run();
+        	} else {
+        		showNoteblockInfo(probeInfo, world, data, blockState);
+        	}
         }
 
         if (Tools.show(mode, config.getShowSkullInfo())) {
-            showSkullInfo(probeInfo, world, data, blockState);
+        	override = overrides.get(DisplayFlag.SKULL_INFO);
+        	if(override != null) {
+        		override.run();
+        	} else {
+                showSkullInfo(probeInfo, world, data, blockState);        		
+        	}
         }
     }
 
