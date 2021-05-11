@@ -16,6 +16,7 @@ import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.ITextStyle;
+import mcjty.theoneprobe.api.TankReference;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
 import mcjty.theoneprobe.apiimpl.styles.IconStyle;
@@ -179,8 +180,20 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         children.add(new ElementProgress(current, max, style));
         return this;
     }
-
+    
     @Override
+	public IProbeInfo tank(TankReference tank) {
+    	children.add(new ElementTank(tank));
+		return this;
+	}
+    
+	@Override
+	public IProbeInfo tank(TankReference tank, IProgressStyle style) {
+    	children.add(new ElementTank(tank, style));
+		return this;
+	}
+	
+	@Override
     public IProbeInfo horizontal(ILayoutStyle style) {
         ElementHorizontal e = new ElementHorizontal(style.getBorderColor(), style.getSpacing(), style.getAlignment());
         children.add(e);

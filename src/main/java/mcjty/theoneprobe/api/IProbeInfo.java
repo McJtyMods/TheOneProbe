@@ -5,6 +5,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
  * Information to return to the probe. Most methods here return the same probe info
@@ -101,7 +104,21 @@ public interface IProbeInfo {
     IProbeInfo progress(int current, int max);
     IProbeInfo progress(long current, long max, IProgressStyle style);
     IProbeInfo progress(long current, long max);
-
+    
+    
+    /**
+     * This creates a Tank Progress bar of 100 width with Fluid Icon Rendering
+     */
+    default IProbeInfo tankSimple(int capacity, FluidStack fluid) { return tank(TankReference.createSimple(capacity, fluid));}
+    default IProbeInfo tank(IFluidTank tank) { return tank(TankReference.createTank(tank));}
+    default IProbeInfo tankHandler(IFluidHandler handler) { return tank(TankReference.createHandler(handler));}
+    IProbeInfo tank(TankReference tank);
+    
+    default IProbeInfo tankSimple(int capacity, FluidStack fluid, IProgressStyle style) { return tank(TankReference.createSimple(capacity, fluid), style);}
+    default IProbeInfo tank(IFluidTank tank, IProgressStyle style) { return tank(TankReference.createTank(tank), style);}
+    default IProbeInfo tankHandler(IFluidHandler handler, IProgressStyle style) { return tank(TankReference.createHandler(handler), style);}
+    IProbeInfo tank(TankReference tank, IProgressStyle style);
+    
     /**
      * Create a new horizontal probe info as a child of this one. Note that the returned
      * probe info is the new horizontal layout and not this one!

@@ -1,23 +1,45 @@
 package mcjty.theoneprobe.api;
 
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public final class TankReference {
-	int maxCapacity;
+	int capacity;
 	int stored;
 	FluidStack[] fluids;
 	
-	public TankReference(int maxCapacity, int stored, FluidStack... fluids) {
-		this.maxCapacity = maxCapacity;
+	public TankReference(int capacity, int stored, FluidStack... fluids) {
+		this.capacity = capacity;
 		this.stored = stored;
 		this.fluids = fluids;
 	}
 	
+	public TankReference(PacketBuffer buffer) {
+		capacity = buffer.readInt();
+		stored = buffer.readInt();
+		fluids = new FluidStack[buffer.readInt()];
+		for(int i = 0;i<fluids.length;i++) {
+			fluids[i] = buffer.readFluidStack();
+		}
+	}
+		
+	public int getCapacity() {
+		return capacity;
+	}
+	
+	public int getStored() {
+		return stored;
+	}
+	
+	public FluidStack[] getFluids() {
+		return fluids;
+	}
+	
 	///Simple Self Simulated Tank or just a fluid display
-	public static TankReference createSimple(int maxCapacity, FluidStack fluid) {
-		return new TankReference(maxCapacity, fluid.getAmount(), fluid);
+	public static TankReference createSimple(int capacity, FluidStack fluid) {
+		return new TankReference(capacity, fluid.getAmount(), fluid);
 	}
 	
 	///Simple Tank like FluidTank
@@ -27,16 +49,16 @@ public final class TankReference {
 	
 	///Any Fluid Handler, but Squashes all the fluids into 1 Progress Bar
 	public static TankReference createHandler(IFluidHandler handler) {
-		int maxCapacity = 0;
+		int capacity = 0;
 		int stored = 0;
 		FluidStack[] fluids = new FluidStack[handler.getTanks()];
 		for(int i = 0;i < fluids.length;i++) {
-			maxCapacity += handler.getTankCapacity(i);
+			capacity += handler.getTankCapacity(i);
 			FluidStack fluid = handler.getFluidInTank(i);
 			fluids[i] = fluid;
 			stored += fluid.getAmount();
 		}
-		return new TankReference(maxCapacity, stored, fluids);
+		return new TankReference(capacity, stored, fluids);
 	}
 	
 	///Any Fluid Handler but splits each internal Tank into its own Progress Bar
@@ -47,5 +69,14 @@ public final class TankReference {
 			references[i] = new TankReference(handler.getTankCapacity(i), fluid.getAmount(), fluid);
 		}
 		return references;
+	}
+	
+	public void toBytes(PacketBuffer buffer) {
+		buffer.writeInt(capacity);
+		buffer.writeInt(stored);
+		buffer.writeInt(fluids.length);
+		for(int i = 0;i<fluids.length;i++) {
+			buffer.writeFluidStack(fluids[i]);
+		}
 	}
 }
