@@ -320,7 +320,7 @@ public class RenderHelper {
         RenderSystem.enableRescaleNormal();
         RenderSystem.enableLighting();
         net.minecraft.client.renderer.RenderHelper.setupGui3DDiffuseLighting();
-
+      
         RenderSystem.disableLighting();
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
@@ -339,7 +339,7 @@ public class RenderHelper {
 
         return width;
 	}
-
+    
     public static class Vector {
         public final float x;
         public final float y;

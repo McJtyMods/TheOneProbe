@@ -17,6 +17,11 @@ import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 
 public class ElementTextRender {
 
+	public static void render(ITextComponent text, MatrixStack matrixStack, int x, int y, boolean legacy) {
+		if(legacy) render(text, matrixStack, x, y);
+		else RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, text);
+	}
+	
     public static void render(ITextComponent text, MatrixStack matrixStack, int x, int y) {
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, stylifyString(text));
     }
@@ -66,7 +71,15 @@ public class ElementTextRender {
         return text;
     }
 
-    public static int getWidth(ITextComponent text) {
+    public static int getLegacyWidth(ITextComponent text) {
         return Minecraft.getInstance().fontRenderer.getStringWidth(stylifyString(text));
+    }
+    
+    public static int getWidth(ITextComponent text) {
+    	return Minecraft.getInstance().fontRenderer.func_243245_a(text.func_241878_f());
+    }
+    
+    public static int getHeight() {
+    	return Minecraft.getInstance().fontRenderer.FONT_HEIGHT;
     }
 }
