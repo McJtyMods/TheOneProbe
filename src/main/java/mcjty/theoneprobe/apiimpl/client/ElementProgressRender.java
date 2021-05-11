@@ -2,12 +2,16 @@ package mcjty.theoneprobe.apiimpl.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class ElementProgressRender {
@@ -30,7 +34,7 @@ public class ElementProgressRender {
                         RenderHelper.drawThickBeveledBox(matrixStack, x + 1, y + 1, x + dx + 1, y + h - 1, 1, style.getFilledColor(), style.getFilledColor(), style.getFilledColor());
                     }
                 } else {
-                    for (int xx = x + 1; xx <= x + dx + 1; xx++) {
+                    for (int xx = x + 1; xx < x + dx + 1; xx++) {
                         int color = (xx & 1) == 0 ? style.getFilledColor() : style.getAlternatefilledColor();
                         RenderHelper.drawVerticalLine(matrixStack, xx, y + 1, y + h - 1, color);
                     }
@@ -39,7 +43,22 @@ public class ElementProgressRender {
         }
 
         if (style.isShowText()) {
-            RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 3, y + 2, style.getPrefix() + ElementProgress.format(current, style.getNumberFormat(), style.getSuffix()));
+			Minecraft mc = Minecraft.getInstance();
+			FontRenderer render = mc.fontRenderer;
+			ITextComponent s = ((IFormattableTextComponent)style.getPrefixComp()).appendSibling(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
+			int textWidth = render.func_243245_a(s.func_241878_f());
+			switch(style.getAlignment())
+			{
+				case ALIGN_BOTTOMRIGHT:
+					RenderHelper.renderText(mc, matrixStack, (x + w - 3) - textWidth, y + 2, s);					
+					break;
+				case ALIGN_CENTER:
+					RenderHelper.renderText(mc, matrixStack, (x + (w / 2)) - (textWidth / 2), y + 2, s);
+					break;
+				case ALIGN_TOPLEFT:
+					RenderHelper.renderText(mc, matrixStack, x + 3, y + 2, s);
+					break;
+			}
         }
     }
 

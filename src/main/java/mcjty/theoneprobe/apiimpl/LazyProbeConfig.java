@@ -258,4 +258,14 @@ public class LazyProbeConfig implements IProbeConfig {
         return this;
     }
 
+    @Override
+    public IProbeConfig showSkullInfo(ConfigMode mode) {
+        realCopy().showSkullInfo(mode);
+        return this;
+    }
+
+    @Override
+    public ConfigMode getShowSkullInfo() {
+        return original.getShowSkullInfo();
+    }
 }

@@ -322,7 +322,7 @@ public class RenderHelper {
         RenderSystem.enableRescaleNormal();
         RenderSystem.enableLighting();
         net.minecraft.client.renderer.RenderHelper.setupGui3DDiffuseLighting();
-
+      
         RenderSystem.disableLighting();
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();

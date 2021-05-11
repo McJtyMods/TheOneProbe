@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import com.mojang.authlib.GameProfile;
 import mcjty.lib.api.power.IBigPower;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
@@ -21,8 +22,10 @@ import net.minecraft.state.properties.ComparatorMode;
 import net.minecraft.state.properties.NoteBlockInstrument;
 import net.minecraft.tileentity.BrewingStandTileEntity;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
+import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -104,6 +107,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (Tools.show(mode, config.getShowNoteblockInfo())) {
             showNoteblockInfo(probeInfo, world, data, blockState);
         }
+
+        if (Tools.show(mode, config.getShowSkullInfo())) {
+            showSkullInfo(probeInfo, world, data, blockState);
+        }
     }
 
     private void showBrewingStandInfo(IProbeInfo probeInfo, World world, IProbeHitData data, Block block) {
@@ -123,13 +130,38 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
+    private static final String[] NOTE_TABLE = {
+            "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#"
+    };
+
     private void showNoteblockInfo(IProbeInfo probeInfo, World world, IProbeHitData data, BlockState blockState) {
         if (blockState.getBlock() instanceof NoteBlock) {
-            Integer note = blockState.get(NoteBlock.NOTE);
+            int note = blockState.get(NoteBlock.NOTE);
             NoteBlockInstrument instrument = blockState.get(NoteBlock.INSTRUMENT);
+            if (note < 0) {
+                note = 0;
+            } else if (note > 24) {
+                note = 24;
+            }
             probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                     .alignment(ElementAlignment.ALIGN_CENTER))
-                    .text(CompoundText.create().style(LABEL).text("Note: ").info(instrument.name().toLowerCase() + " (" + note + ")"));
+                    .text(CompoundText.create().style(LABEL).text("Note: ")
+                            .info(instrument.name().toLowerCase() + " " + NOTE_TABLE[note] + " (" + note + ")"));
+        }
+    }
+
+    private void showSkullInfo(IProbeInfo probeInfo, World world, IProbeHitData data, BlockState blockState) {
+        if (blockState.getBlock() instanceof SkullBlock) {
+            TileEntity te = world.getTileEntity(data.getPos());
+            if (te instanceof SkullTileEntity) {
+                GameProfile profile = ((SkullTileEntity) te).getPlayerProfile();
+                if (profile != null) {
+                    probeInfo.horizontal(probeInfo.defaultLayoutStyle()
+                            .alignment(ElementAlignment.ALIGN_CENTER))
+                            .text(CompoundText.create().style(LABEL).text("Player: ")
+                                    .info(profile.getName()));
+                }
+            }
         }
     }
 
@@ -215,7 +247,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                             .borderColor(Config.tankbarBorderColor)
                             .numberFormat(Config.tankFormat.get()));
         } else {
-            probeInfo.text(CompoundText.create().style(PROGRESS).text(ElementProgress.format(contents, Config.tankFormat.get(), "mB")));
+            probeInfo.text(CompoundText.create().style(PROGRESS).text(ElementProgress.format(contents, Config.tankFormat.get(), new StringTextComponent("mB"))));
         }
     }
 
@@ -247,7 +279,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                             .borderColor(Config.rfbarBorderColor)
                             .numberFormat(Config.rfFormat.get()));
         } else {
-            probeInfo.text(CompoundText.create().style(PROGRESS).text("FE: " + ElementProgress.format(energy, Config.rfFormat.get(), "FE")));
+            probeInfo.text(CompoundText.create().style(PROGRESS).text("FE: " + ElementProgress.format(energy, Config.rfFormat.get(), new StringTextComponent("FE"))));
         }
     }
 
