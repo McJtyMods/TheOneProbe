@@ -12,7 +12,12 @@ public class TextStyle implements ITextStyle {
     Integer width = null;
     Integer height = null;
     ElementAlignment align = ElementAlignment.ALIGN_TOPLEFT;
-
+    
+    @Override
+    public ITextStyle copy() {
+    	return new TextStyle().bottomPadding(bottom).leftPadding(left).rightPadding(right).topPadding(top).bounds(width, height).alignment(align);
+    }
+    
     @Override
     public TextStyle topPadding(int padding) {
         top = padding;
