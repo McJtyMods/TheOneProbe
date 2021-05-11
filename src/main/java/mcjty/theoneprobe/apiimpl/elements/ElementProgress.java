@@ -70,9 +70,9 @@ public class ElementProgress implements IElement {
 					s = s.substring(1);
 					if (exp - 2 >= 0) {
 						char pre = "kMGTPE".charAt(exp - 2);
-						return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).appendString(s);
+						return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).appendSibling(new StringTextComponent(s).mergeStyle(suffix.getStyle()));
 					}
-					return new StringTextComponent(String.format("%.1f", Double.valueOf(in / Math.pow(unit, exp)))).appendString(s);
+					return new StringTextComponent(String.format("%.1f", Double.valueOf(in / Math.pow(unit, exp)))).appendSibling(new StringTextComponent(s).mergeStyle(suffix.getStyle()));
 				}
 				char pre = "kMGTPE".charAt(exp - 1);
 				return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).appendSibling(suffix);
