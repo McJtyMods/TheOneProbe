@@ -40,7 +40,11 @@ public class ElementIcon implements IElement {
                 .textureHeight(buf.readInt())
                 .color(buf.readInt());
     }
-
+    
+    public IIconStyle getStyle() {
+    	return style;
+    }
+    
     @Override
     public void render(MatrixStack matrixStack, int x, int y) {
         ElementIconRender.render(icon, matrixStack, x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight(), style.getColor());
