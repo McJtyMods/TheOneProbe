@@ -11,7 +11,7 @@ import net.minecraft.util.text.TranslationTextComponent;
  */
 public interface IProgressStyle {
 	
-	//Default Creation Methods that allow to allow create default instances for most basic cases
+	/// Default Creation Methods that allow to allow create default instances for most basic cases
 	public static IProgressStyle createDefault() { return new ProgressStyle(); }
 	public static IProgressStyle createArmor() { return new ProgressStyle().armorBar(true); }
 	public static IProgressStyle createLife() { return new ProgressStyle().lifeBar(true); }
@@ -20,7 +20,7 @@ public interface IProgressStyle {
 	public static IProgressStyle createTextOnly(String prefix) { return new ProgressStyle().prefix(prefix).numberFormat(NumberFormat.NONE); }
 	public static IProgressStyle createText(String prefix, String suffix) { return new ProgressStyle().prefix(prefix).suffix(suffix); }
 	
-	//Allows copying the state for easier template creation
+	/// Allows copying the state for easier template creation
 	IProgressStyle copy();
     /// The color that is used for the border of the progress bar
     IProgressStyle borderColor(int c);
@@ -38,7 +38,7 @@ public interface IProgressStyle {
     IProgressStyle alternateFilledColor(int c);
     default IProgressStyle alternateFilledColor(Color c) { return alternateFilledColor(c.getRGB()); }
     
-    //Helper functions to compress code
+    /// Helper functions to compress code
     default IProgressStyle borderlessColor(int filled, int background) { return filledColor(filled).backgroundColor(background); }
     default IProgressStyle borderlessColor(int filled, int alternate, int background) { return filledColor(filled).alternateFilledColor(alternate).backgroundColor(background); }
     default IProgressStyle borderlessColor(Color filled, Color background) { return filledColor(filled).backgroundColor(background); }

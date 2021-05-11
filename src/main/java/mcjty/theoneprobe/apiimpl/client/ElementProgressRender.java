@@ -47,8 +47,7 @@ public class ElementProgressRender {
 			FontRenderer render = mc.fontRenderer;
 			ITextComponent s = ((IFormattableTextComponent)style.getPrefixComp()).appendSibling(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
 			int textWidth = render.func_243245_a(s.func_241878_f());
-			switch(style.getAlignment())
-			{
+			switch(style.getAlignment()) {
 				case ALIGN_BOTTOMRIGHT:
 					RenderHelper.renderText(mc, matrixStack, (x + w - 3) - textWidth, y + 2, s);					
 					break;
