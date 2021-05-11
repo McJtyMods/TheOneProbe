@@ -16,6 +16,9 @@ public interface ITextStyle {
 	public static ITextStyle createPadding(int xPadding, int yPadding) { return new TextStyle().hPadding(yPadding).vPadding(xPadding); }
 	public static ITextStyle createPadding(int top, int bottom, int left, int right) { return new TextStyle().topPadding(top).bottomPadding(bottom).leftPadding(left).rightPadding(right); }
 	
+	/// Allows copying the state for easier template creation
+	public ITextStyle copy();
+	
 	public default ITextStyle padding(int padding) { return topPadding(padding).bottomPadding(padding).leftPadding(padding).rightPadding(padding); }
 	public default ITextStyle vPadding(int padding) { return topPadding(padding).bottomPadding(padding); }
 	public default ITextStyle hPadding(int padding) { return leftPadding(padding).rightPadding(padding); }
