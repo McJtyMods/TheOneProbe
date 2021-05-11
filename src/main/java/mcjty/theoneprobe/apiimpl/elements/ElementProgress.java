@@ -1,9 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import java.text.DecimalFormat;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IProgressStyle;
@@ -14,8 +11,8 @@ import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.text.DecimalFormat;
 
 public class ElementProgress implements IElement {
 
@@ -48,7 +45,7 @@ public class ElementProgress implements IElement {
                 .alignment(buf.readEnumValue(ElementAlignment.class));
     }
     
-    //Helper method that allows to edit the style of a helper method reducing copy/pasting code from internals
+    // Helper method that allows to edit the style of a helper method reducing copy/pasting code from internals
     public IProgressStyle getStyle() {
     	return style;
     }
@@ -58,13 +55,14 @@ public class ElementProgress implements IElement {
     /**
      * If the suffix starts with 'm' we can possibly drop that
      */
-	@OnlyIn(Dist.CLIENT)
 	public static ITextComponent format(long in, NumberFormat style, ITextComponent suffix) {
 		switch (style) {
 			case FULL:
 				return new StringTextComponent(Long.toString(in)).appendSibling(suffix);
 			case COMPACT:
-				if (in < 1000) return new StringTextComponent(Long.toString(in) + " ").appendSibling(suffix);
+				if (in < 1000) {
+                    return new StringTextComponent(Long.toString(in) + " ").appendSibling(suffix);
+                }
 				int unit = 1000;
 				int exp = (int) (Math.log(in) / Math.log(unit));
 				String s = suffix.getString();
@@ -72,12 +70,12 @@ public class ElementProgress implements IElement {
 					s = s.substring(1);
 					if (exp - 2 >= 0) {
 						char pre = "kMGTPE".charAt(exp - 2);
-						return new StringTextComponent(String.format("%.1f %s", new Object[]{Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre)})).appendString(s);
+						return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).appendString(s);
 					}
-					return new StringTextComponent(String.format("%.1f", new Object[]{Double.valueOf(in / Math.pow(unit, exp))})).appendString(s);
+					return new StringTextComponent(String.format("%.1f", Double.valueOf(in / Math.pow(unit, exp)))).appendString(s);
 				}
 				char pre = "kMGTPE".charAt(exp - 1);
-				return new StringTextComponent(String.format("%.1f %s", new Object[]{Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre)})).appendSibling(suffix);
+				return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).appendSibling(suffix);
 			case COMMAS:
 				return new StringTextComponent(dfCommas.format(in)).appendSibling(suffix);
 			case NONE: return suffix;
