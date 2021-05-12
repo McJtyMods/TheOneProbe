@@ -231,8 +231,8 @@ public class RenderHelper {
 
             if (stack.getItem().showDurabilityBar(stack)) {
                 double health = stack.getItem().getDurabilityForDisplay(stack);
-                int j = (int) Math.round(13.0D - health * 13.0D);
-                int i = (int) Math.round(255.0D - health * 255.0D);
+                int i = Math.round(13.0F - (float)health * 13.0F);
+                int j = stack.getItem().getRGBDurabilityForDisplay(stack);
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableTexture();
@@ -243,7 +243,7 @@ public class RenderHelper {
                 Matrix4f matrix = matrixStack.getLast().getMatrix();
                 draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
                 draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
-                draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, j, 1, 255 - i, i, 0, 255);
+                draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
                 RenderSystem.enableBlend();
                 RenderSystem.enableAlphaTest();
                 RenderSystem.enableTexture();
