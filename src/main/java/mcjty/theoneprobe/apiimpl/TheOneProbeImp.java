@@ -17,6 +17,7 @@ public class TheOneProbeImp implements ITheOneProbe {
     public static int ELEMENT_ENTITY;
     public static int ELEMENT_ICON;
     public static int ELEMENT_ITEMLABEL;
+    public static int ELEMENT_TANK;
 
     private List<IProbeConfigProvider> configProviders = new ArrayList<>();
 
@@ -39,6 +40,7 @@ public class TheOneProbeImp implements ITheOneProbe {
         ELEMENT_ENTITY = TheOneProbe.theOneProbeImp.registerElementFactory(ElementEntity::new);
         ELEMENT_ICON = TheOneProbe.theOneProbeImp.registerElementFactory(ElementIcon::new);
         ELEMENT_ITEMLABEL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementItemLabel::new);
+        ELEMENT_TANK = TheOneProbe.theOneProbeImp.registerElementFactory(ElementTank::new);
     }
 
     private int findProvider(String id) {
