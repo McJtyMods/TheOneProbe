@@ -5,11 +5,16 @@ import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.ILayoutStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
+import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import net.minecraft.network.PacketBuffer;
 
 public class ElementVertical extends AbstractElementPanel {
 
     public static final int SPACING = 2;
+    
+    public ElementVertical(){
+    	super(new LayoutStyle());
+    }
     
     public ElementVertical(ILayoutStyle style) {
     	super(style);
