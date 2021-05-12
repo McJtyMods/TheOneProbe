@@ -37,12 +37,17 @@ public class ElementIcon implements IElement {
                 .width(buf.readInt())
                 .height(buf.readInt())
                 .textureWidth(buf.readInt())
-                .textureHeight(buf.readInt());
+                .textureHeight(buf.readInt())
+                .color(buf.readInt());
     }
-
+    
+    public IIconStyle getStyle() {
+    	return style;
+    }
+    
     @Override
     public void render(MatrixStack matrixStack, int x, int y) {
-        ElementIconRender.render(icon, matrixStack, x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight());
+        ElementIconRender.render(icon, matrixStack, x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight(), style.getColor());
     }
 
     @Override
@@ -66,6 +71,7 @@ public class ElementIcon implements IElement {
         buf.writeInt(style.getHeight());
         buf.writeInt(style.getTextureWidth());
         buf.writeInt(style.getTextureHeight());
+        buf.writeInt(style.getColor());
     }
 
     @Override
