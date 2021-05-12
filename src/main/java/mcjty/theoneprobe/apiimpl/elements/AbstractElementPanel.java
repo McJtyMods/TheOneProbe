@@ -34,13 +34,12 @@ import net.minecraft.util.text.ITextComponent;
 public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
     protected List<IElement> children = new ArrayList<>();
-    protected Integer borderColor;
-    protected int spacing;
-    protected ElementAlignment alignment;
+    protected ILayoutStyle layout;
     protected IProbeConfig overriddenConfig;
-
+    
     @Override
     public void render(MatrixStack matrixStack, int x, int y) {
+    	Integer borderColor = layout.getBorderColor();
         if (borderColor != null) {
             int w = getWidth();
             int h = getHeight();
@@ -50,35 +49,44 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
             RenderHelper.drawVerticalLine(matrixStack, x + w - 1, y, y + h, borderColor);
         }
     }
-
+    
+    public AbstractElementPanel(ILayoutStyle style) {
+    	this.layout = style;
+	}
+    
+    @Deprecated
     public AbstractElementPanel(Integer borderColor, int spacing, ElementAlignment alignment) {
-        this.borderColor = borderColor;
-        this.spacing = spacing;
-        this.alignment = alignment;
+    	this(new LayoutStyle().borderColor(borderColor).spacing(spacing).alignment(alignment));
     }
 
     public AbstractElementPanel(PacketBuffer buf) {
         children = ProbeInfo.createElements(buf);
-        if (buf.readBoolean()) {
-            borderColor = buf.readInt();
-        }
-        spacing = buf.readShort();
-        alignment = ElementAlignment.values()[buf.readShort()];
+		this.layout = new LayoutStyle();
+		layout.alignment(buf.readEnumValue(ElementAlignment.class));
+		if(buf.readBoolean()) layout.borderColor(buf.readInt());
+		layout.spacing(buf.readInt()).topPadding(buf.readInt()).bottomPadding(buf.readInt()).leftPadding(buf.readInt()).rightPadding(buf.readInt());
     }
-
+    
     @Override
     public void toBytes(PacketBuffer buf) {
         ProbeInfo.writeElements(children, buf);
-        if (borderColor != null) {
-            buf.writeBoolean(true);
-            buf.writeInt(borderColor);
-        } else {
-            buf.writeBoolean(false);
-        }
-        buf.writeShort(spacing);
-        buf.writeShort(alignment.ordinal());
+        buf.writeEnumValue(layout.getAlignment()).writeBoolean(layout.getBorderColor() != null);
+		if(layout.getBorderColor() != null) buf.writeInt(layout.getBorderColor().intValue());
+		buf.writeInt(layout.getSpacing()).writeInt(layout.getTopPadding()).writeInt(layout.getBottomPadding()).writeInt(layout.getLeftPadding()).writeInt(layout.getRightPadding());
     }
-
+    
+    public List<IElement> getElements() {
+        return children;
+    }
+    
+	protected int getYPadding() {
+		return layout.getBottomPadding() + layout.getTopPadding();
+	}
+	
+	protected int getXPadding() {
+		return layout.getLeftPadding() + layout.getRightPadding();
+	}
+    
     @Override
     public IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h) {
         return icon(icon, u, v, w, h, new IconStyle());
@@ -195,28 +203,28 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 	
 	@Override
     public IProbeInfo horizontal(ILayoutStyle style) {
-        ElementHorizontal e = new ElementHorizontal(style.getBorderColor(), style.getSpacing(), style.getAlignment());
+        ElementHorizontal e = new ElementHorizontal(style);
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo horizontal() {
-        ElementHorizontal e = new ElementHorizontal(null, spacing, ElementAlignment.ALIGN_TOPLEFT);
+        ElementHorizontal e = new ElementHorizontal(new LayoutStyle().spacing(layout.getSpacing()).alignment(ElementAlignment.ALIGN_TOPLEFT));
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo vertical(ILayoutStyle style) {
-        ElementVertical e = new ElementVertical(style.getBorderColor(), style.getSpacing(), style.getAlignment());
+        ElementVertical e = new ElementVertical(style);
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo vertical() {
-        ElementVertical e = new ElementVertical(null, ElementVertical.SPACING, ElementAlignment.ALIGN_TOPLEFT);
+        ElementVertical e = new ElementVertical(new LayoutStyle().spacing(ElementVertical.SPACING).alignment(ElementAlignment.ALIGN_TOPLEFT));
         children.add(e);
         return e;
     }

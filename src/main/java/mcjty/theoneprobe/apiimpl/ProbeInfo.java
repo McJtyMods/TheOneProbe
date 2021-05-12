@@ -3,6 +3,7 @@ package mcjty.theoneprobe.apiimpl;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.ElementVertical;
+import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import net.minecraft.network.PacketBuffer;
 
 import java.util.ArrayList;
@@ -10,16 +11,12 @@ import java.util.List;
 
 public class ProbeInfo extends ElementVertical {
 
-    public List<IElement> getElements() {
-        return children;
-    }
-
     public void fromBytes(PacketBuffer buf) {
         children = createElements(buf);
     }
 
     public ProbeInfo() {
-        super((Integer) null, 2, ElementAlignment.ALIGN_TOPLEFT);
+    	super(new LayoutStyle().spacing(2).alignment(ElementAlignment.ALIGN_TOPLEFT));
     }
 
     public static List<IElement> createElements(PacketBuffer buf) {
