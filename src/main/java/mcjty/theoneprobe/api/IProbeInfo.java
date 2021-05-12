@@ -119,6 +119,8 @@ public interface IProbeInfo {
     default IProbeInfo tankHandler(IFluidHandler handler, IProgressStyle style) { return tank(TankReference.createHandler(handler), style);}
     IProbeInfo tank(TankReference tank, IProgressStyle style);
     
+    IProbeInfo padding(int width, int height);
+    
     /**
      * Create a new horizontal probe info as a child of this one. Note that the returned
      * probe info is the new horizontal layout and not this one!

@@ -1,11 +1,32 @@
 package mcjty.theoneprobe.apiimpl;
 
-import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.*;
-import mcjty.theoneprobe.apiimpl.elements.*;
-import mcjty.theoneprobe.config.Config;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
+import mcjty.theoneprobe.TheOneProbe;
+import mcjty.theoneprobe.api.IBlockDisplayOverride;
+import mcjty.theoneprobe.api.IElementFactory;
+import mcjty.theoneprobe.api.IEntityDisplayOverride;
+import mcjty.theoneprobe.api.IOverlayRenderer;
+import mcjty.theoneprobe.api.IProbeConfig;
+import mcjty.theoneprobe.api.IProbeConfigProvider;
+import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
+import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.ITheOneProbe;
+import mcjty.theoneprobe.apiimpl.elements.ElementEntity;
+import mcjty.theoneprobe.apiimpl.elements.ElementHorizontal;
+import mcjty.theoneprobe.apiimpl.elements.ElementIcon;
+import mcjty.theoneprobe.apiimpl.elements.ElementItemLabel;
+import mcjty.theoneprobe.apiimpl.elements.ElementItemStack;
+import mcjty.theoneprobe.apiimpl.elements.ElementPadding;
+import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
+import mcjty.theoneprobe.apiimpl.elements.ElementTank;
+import mcjty.theoneprobe.apiimpl.elements.ElementText;
+import mcjty.theoneprobe.apiimpl.elements.ElementVertical;
+import mcjty.theoneprobe.config.Config;
 
 public class TheOneProbeImp implements ITheOneProbe {
 
@@ -18,6 +39,7 @@ public class TheOneProbeImp implements ITheOneProbe {
     public static int ELEMENT_ICON;
     public static int ELEMENT_ITEMLABEL;
     public static int ELEMENT_TANK;
+    public static int ELEMENT_PADDING;
 
     private List<IProbeConfigProvider> configProviders = new ArrayList<>();
 
@@ -41,6 +63,7 @@ public class TheOneProbeImp implements ITheOneProbe {
         ELEMENT_ICON = TheOneProbe.theOneProbeImp.registerElementFactory(ElementIcon::new);
         ELEMENT_ITEMLABEL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementItemLabel::new);
         ELEMENT_TANK = TheOneProbe.theOneProbeImp.registerElementFactory(ElementTank::new);
+        ELEMENT_PADDING = TheOneProbe.theOneProbeImp.registerElementFactory(ElementPadding::new);
     }
 
     private int findProvider(String id) {

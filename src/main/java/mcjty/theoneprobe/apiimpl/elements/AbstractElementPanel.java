@@ -194,6 +194,12 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 	}
 	
 	@Override
+	public IProbeInfo padding(int width, int height) {
+		children.add(new ElementPadding(width, height));
+		return this;
+	}
+	
+	@Override
     public IProbeInfo horizontal(ILayoutStyle style) {
         ElementHorizontal e = new ElementHorizontal(style.getBorderColor(), style.getSpacing(), style.getAlignment());
         children.add(e);
