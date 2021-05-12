@@ -51,27 +51,27 @@ public class ElementProgressRender {
         }
         renderText(matrixStack, x, y, w, current, style);
     }
-    
+
     private static void renderText(MatrixStack matrixStack, int x, int y, int w, long current, IProgressStyle style) {
         if (style.isShowText()) {
-			Minecraft mc = Minecraft.getInstance();
-			FontRenderer render = mc.fontRenderer;
-			ITextComponent s = ((IFormattableTextComponent)style.getPrefixComp()).appendSibling(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
-			int textWidth = render.func_243245_a(s.func_241878_f());
-			switch(style.getAlignment()) {
-				case ALIGN_BOTTOMRIGHT:
-					RenderHelper.renderText(mc, matrixStack, (x + w - 3) - textWidth, y + 2, s);					
-					break;
-				case ALIGN_CENTER:
-					RenderHelper.renderText(mc, matrixStack, (x + (w / 2)) - (textWidth / 2), y + 2, s);
-					break;
-				case ALIGN_TOPLEFT:
-					RenderHelper.renderText(mc, matrixStack, x + 3, y + 2, s);
-					break;
-			}
+            Minecraft mc = Minecraft.getInstance();
+            FontRenderer render = mc.fontRenderer;
+            ITextComponent s = ((IFormattableTextComponent) style.getPrefixComp()).appendSibling(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
+            int textWidth = render.func_243245_a(s.func_241878_f());
+            switch (style.getAlignment()) {
+                case ALIGN_BOTTOMRIGHT:
+                    RenderHelper.renderText(mc, matrixStack, (x + w - 3) - textWidth, y + 2, s);
+                    break;
+                case ALIGN_CENTER:
+                    RenderHelper.renderText(mc, matrixStack, (x + (w / 2)) - (textWidth / 2), y + 2, s);
+                    break;
+                case ALIGN_TOPLEFT:
+                    RenderHelper.renderText(mc, matrixStack, x + 3, y + 2, s);
+                    break;
+            }
         }
     }
-    
+
     private static void renderLifeBar(long current, MatrixStack matrixStack, int x, int y, int w, int h) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
@@ -109,42 +109,41 @@ public class ElementProgressRender {
             }
         }
     }
-    
+
     public static void renderTank(MatrixStack matrixStack, int x, int y, int width, int height, IProgressStyle style, TankReference tank) {
-		RenderHelper.drawThickBeveledBox(matrixStack, x, y, x + width, y + height, 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
-		if(tank.getStored() <= 0) {
-			if(style.isShowText()) {
-				renderText(matrixStack, x, y, width, 0, style);
-			}
-			return;
-		}
-		Minecraft mc = Minecraft.getInstance();
-		mc.getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-		Function<ResourceLocation, TextureAtlasSprite> map = mc.getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-		width -= 2;
-		FluidStack[] fluids = tank.getFluids();
-		int start = 1;
-		int tanks = fluids.length;
-		int max = tank.getCapacity();
-		Matrix4f matrix = matrixStack.getLast().getMatrix();
-		for(int i = 0;i<tanks;i++) {
-			FluidStack stack = fluids[i];
-			int lvl = (int)(stack == null ? 0 : (((double)stack.getAmount() / max) * width));
-			if(lvl == 0) continue;
-			FluidAttributes attr = stack.getFluid().getAttributes();
-			TextureAtlasSprite liquidIcon = map.apply(attr.getStillTexture(stack));
-			if(liquidIcon == map.apply(MissingTextureSprite.getLocation())) continue;
-			int color = attr.getColor(stack);
-	        RenderSystem.color4f(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
-			while(lvl != 0)
-			{
-				int maxX = Math.min(16, lvl);
-				lvl -= maxX;
-				RenderHelper.drawTexturedModalRect(matrix, maxX + start, y + 1, liquidIcon, maxX, height - 2);
-				start += maxX;
-			}
-		}
+        RenderHelper.drawThickBeveledBox(matrixStack, x, y, x + width, y + height, 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
+        if (tank.getStored() <= 0) {
+            if (style.isShowText()) {
+                renderText(matrixStack, x, y, width, 0, style);
+            }
+            return;
+        }
+        Minecraft mc = Minecraft.getInstance();
+        mc.getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+        Function<ResourceLocation, TextureAtlasSprite> map = mc.getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+        width -= 2;
+        FluidStack[] fluids = tank.getFluids();
+        int start = 1;
+        int tanks = fluids.length;
+        int max = tank.getCapacity();
+        Matrix4f matrix = matrixStack.getLast().getMatrix();
+        for (int i = 0; i < tanks; i++) {
+            FluidStack stack = fluids[i];
+            int lvl = (int) (stack == null ? 0 : (((double) stack.getAmount() / max) * width));
+            if (lvl == 0) continue;
+            FluidAttributes attr = stack.getFluid().getAttributes();
+            TextureAtlasSprite liquidIcon = map.apply(attr.getStillTexture(stack));
+            if (liquidIcon == map.apply(MissingTextureSprite.getLocation())) continue;
+            int color = attr.getColor(stack);
+            RenderSystem.color4f(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
+            while (lvl != 0) {
+                int maxX = Math.min(16, lvl);
+                lvl -= maxX;
+                RenderHelper.drawTexturedModalRect(matrix, maxX + start, y + 1, liquidIcon, maxX, height - 2);
+                start += maxX;
+            }
+        }
         RenderSystem.color4f(1F, 1F, 1F, 1F);
-        renderText(matrixStack, x, y, width+2, tank.getStored(), style);
+        renderText(matrixStack, x, y, width + 2, tank.getStored(), style);
     }
 }

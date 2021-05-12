@@ -13,8 +13,8 @@ import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.network.PacketBuffer;
 
 public class ElementTank implements IElement {
-	TankReference tank;
-	IProgressStyle style;
+	private final TankReference tank;
+	private final IProgressStyle style;
 	
 	public ElementTank(TankReference tank) {
 		this(tank, new ProgressStyle());
