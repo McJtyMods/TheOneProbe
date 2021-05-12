@@ -6,7 +6,12 @@ public class EntityStyle implements IEntityStyle {
     private int width = 25;
     private int height = 25;
     private float scale = 1.0f;
-
+    
+    @Override
+    public IEntityStyle copy() {
+    	return new EntityStyle().bounds(width, height).scale(scale);
+    }
+    
     @Override
     public IEntityStyle width(int w) {
         this.width = w;
