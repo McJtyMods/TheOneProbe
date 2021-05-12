@@ -75,6 +75,10 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 		buf.writeInt(layout.getSpacing()).writeInt(layout.getTopPadding()).writeInt(layout.getBottomPadding()).writeInt(layout.getLeftPadding()).writeInt(layout.getRightPadding());
     }
     
+    public ILayoutStyle getStyle() {
+    	return layout;
+    }
+    
     public List<IElement> getElements() {
         return children;
     }
