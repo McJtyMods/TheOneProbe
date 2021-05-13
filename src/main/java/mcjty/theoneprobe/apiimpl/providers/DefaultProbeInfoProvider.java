@@ -312,22 +312,23 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             block = ((SilverfishBlock) block).getMimickedBlock();
             pickBlock = new ItemStack(block, 1);
         }
-
+        
         if (block instanceof FlowingFluidBlock) {
-            FluidState fluidState = block.getFluidState(blockState);
+            FluidState fluidState = blockState.getFluidState();
             Fluid fluid = fluidState.getFluid();
             if (fluid != Fluids.EMPTY) {
-                FluidStack fluidStack = new FluidStack(fluid.getFluid(), BUCKET_VOLUME);
-                ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
-
                 IProbeInfo horizontal = probeInfo.horizontal();
-                FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {
-                    if (fluidStack.isFluidEqual(fc)) {
-                        horizontal.item(bucketStack);
-                    } else {
-                        horizontal.icon(fluid.getAttributes().getStillTexture(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20));
-                    }
-                });
+                FluidStack fluidStack = new FluidStack(fluid.getFluid(), BUCKET_VOLUME);
+                horizontal.icon(fluid.getAttributes().getStillTexture(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20).color(fluid.getAttributes().getColor(fluidStack)));
+                //Proposal Fluids should look at the icon only not buckets of it. Dunno you have to decide. I just fixed the fluid color bug
+//              ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
+//                FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {
+//                    if (fluidStack.isFluidEqual(fc)) {
+//                        horizontal.item(bucketStack);
+//                    } else {
+//                        horizontal.icon(fluid.getAttributes().getStillTexture(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20).color(fluid.getAttributes().getColor(fluidStack)));
+//                    }
+//                });
 
                 horizontal.vertical()
                         .text(CompoundText.create().name(fluidStack.getTranslationKey()))
@@ -351,7 +352,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         } else {
             if (Tools.show(mode, config.getShowModName())) {
                 probeInfo.vertical()
-                        .text(CompoundText.create().name(block.getTranslationKey()))
+                        .text(CompoundText.create().name(block.getTranslationKey()))//This should maybe send over the registry name and convert it into the block name on the client
                         .text(CompoundText.create().style(MODNAME).text(modName));
             } else {
                 probeInfo.vertical()
