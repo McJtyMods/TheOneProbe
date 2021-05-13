@@ -5,7 +5,11 @@ import mcjty.theoneprobe.api.IItemStyle;
 public class ItemStyle implements IItemStyle {
     private int width = 20;
     private int height = 20;
-
+    
+    public IItemStyle copy() {
+    	return new ItemStyle().bounds(width, height);
+    }
+    
     @Override
     public IItemStyle width(int w) {
         width = w;
