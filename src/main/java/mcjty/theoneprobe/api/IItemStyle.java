@@ -6,8 +6,8 @@ import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
  * Style for the item element.
  */
 public interface IItemStyle {
-	public static IItemStyle createDefault() { return new ItemStyle();}
-	public static IItemStyle createBounds(int width, int height) { return new ItemStyle().bounds(width, height);}
+	static IItemStyle createDefault() { return new ItemStyle();}
+	static IItemStyle createBounds(int width, int height) { return new ItemStyle().bounds(width, height);}
 	
 	IItemStyle copy();
 	

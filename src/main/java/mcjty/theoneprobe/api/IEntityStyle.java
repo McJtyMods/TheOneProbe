@@ -6,9 +6,9 @@ import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
  * Style for the entity element.
  */
 public interface IEntityStyle {
-	public static IEntityStyle createDefault() { return new EntityStyle(); }
-	public static IEntityStyle createBounds(int width, int height) { return new EntityStyle().bounds(width, height); }
-	public static IEntityStyle createScale(float scale) { return new EntityStyle().scale(scale); }
+	static IEntityStyle createDefault() { return new EntityStyle(); }
+	static IEntityStyle createBounds(int width, int height) { return new EntityStyle().bounds(width, height); }
+	static IEntityStyle createScale(float scale) { return new EntityStyle().scale(scale); }
 	
 	IEntityStyle copy();
 	

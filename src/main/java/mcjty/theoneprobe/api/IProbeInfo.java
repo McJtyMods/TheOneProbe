@@ -28,8 +28,8 @@ public interface IProbeInfo {
      * Use STARTLOC/ENDLOC in your strings for localization on the client
      * Note that usage of this is deprecated. Use TranslationTextComponent instead
      */
-    public static final String STARTLOC = "{*";
-    public static final String ENDLOC = "*}";
+    String STARTLOC = "{*";
+    String ENDLOC = "*}";
 
     /**
      * Create a default layout style for the horizontal or vertical elements

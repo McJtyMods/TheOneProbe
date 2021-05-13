@@ -8,11 +8,11 @@ import mcjty.theoneprobe.apiimpl.styles.IconStyle;
  * Style for the icon element.
  */
 public interface IIconStyle {
-	public static IIconStyle createDefault() { return new IconStyle(); }
-	public static IIconStyle createColor(Color color) { return new IconStyle().color(color); }
-	public static IIconStyle createColor(int color) { return new IconStyle().color(color); }
-	public static IIconStyle createBounds(int width, int height) { return new IconStyle().width(width).height(height); }
-	public static IIconStyle createTexBounds(int texWidth, int texHeight) { return new IconStyle().textureWidth(texWidth).textureHeight(texHeight); }
+	static IIconStyle createDefault() { return new IconStyle(); }
+	static IIconStyle createColor(Color color) { return new IconStyle().color(color); }
+	static IIconStyle createColor(int color) { return new IconStyle().color(color); }
+	static IIconStyle createBounds(int width, int height) { return new IconStyle().width(width).height(height); }
+	static IIconStyle createTexBounds(int texWidth, int texHeight) { return new IconStyle().textureWidth(texWidth).textureHeight(texHeight); }
 	
 	
 	IIconStyle copy();
