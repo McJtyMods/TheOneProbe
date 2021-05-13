@@ -194,8 +194,8 @@ public class Config {
                 .comment("How to display RF: 0 = do not show, 1 = show in a bar, 2 = show as text")
                 .defineInRange("showRF", DEFAULT_CONFIG.getRFMode(), 0, 2);
         defaultTankMode = COMMON_BUILDER
-                .comment("How to display tank contents: 0 = do not show, 1 = show in a bar, 2 = show as text")
-                .defineInRange("showTank", DEFAULT_CONFIG.getRFMode(), 0, 2);
+                .comment("How to display tank contents: 0 = do not show, 1 = show in fluid bar, 2 = show in a bar, 3 = show as text")
+                .defineInRange("showTank", DEFAULT_CONFIG.getRFMode(), 0, 3);
         rfFormat = addEnumConfig(COMMON_BUILDER, "rfFormat", "Format for displaying RF",
                 NumberFormat.COMPACT, NumberFormat.COMMAS, NumberFormat.COMPACT, NumberFormat.FULL, NumberFormat.NONE);
         tankFormat = addEnumConfig(COMMON_BUILDER, "tankFormat", "Format for displaying tank contents",

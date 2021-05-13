@@ -139,7 +139,7 @@ public class ElementProgressRender {
             while (lvl != 0) {
                 int maxX = Math.min(16, lvl);
                 lvl -= maxX;
-                RenderHelper.drawTexturedModalRect(matrix, maxX + start, y + 1, liquidIcon, maxX, height - 2);
+                RenderHelper.drawTexturedModalRect(matrix, x + start, y + 1, liquidIcon, maxX, height - 2);
                 start += maxX;
             }
         }
