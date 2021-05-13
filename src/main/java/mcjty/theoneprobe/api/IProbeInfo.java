@@ -1,5 +1,8 @@
 package mcjty.theoneprobe.api;
 
+import java.util.Collection;
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -25,8 +28,8 @@ public interface IProbeInfo {
      * Use STARTLOC/ENDLOC in your strings for localization on the client
      * Note that usage of this is deprecated. Use TranslationTextComponent instead
      */
-    public static final String STARTLOC = "{*";
-    public static final String ENDLOC = "*}";
+    String STARTLOC = "{*";
+    String ENDLOC = "*}";
 
     /**
      * Create a default layout style for the horizontal or vertical elements
@@ -139,4 +142,32 @@ public interface IProbeInfo {
      * Add a custom element. Make sure the factory for this element is properly registered.
      */
     IProbeInfo element(IElement element);
+    /**
+     * Bulk adding methods for cached elements to be simpler added.
+     * Stuff that never changes
+     */
+    default IProbeInfo elements(IElement...elements) {
+    	for(IElement element : elements) {
+    		element(element);
+    	}
+    	return this;
+    }
+    /**
+     * Bulk adding methods for cached elements to be simpler added.
+     * Stuff that never changes
+     */
+    default IProbeInfo elements(Collection<IElement> elements) {
+    	for(IElement element : elements) {
+    		element(element);
+    	}
+    	return this;
+    }
+    
+    
+    /**
+     * Allows access to the elements stored in the Probe Info via the interface.
+     * Removes the need of Casting to implementation just to achieve what the user wants.
+     * Or for simplifying counting methods if checks happen if a custom Panel has elements or not.
+     */
+    List<IElement> getElements();
 }

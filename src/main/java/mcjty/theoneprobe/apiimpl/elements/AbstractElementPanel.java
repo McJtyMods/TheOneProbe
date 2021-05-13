@@ -34,13 +34,12 @@ import net.minecraft.util.text.ITextComponent;
 public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
     protected List<IElement> children = new ArrayList<>();
-    protected Integer borderColor;
-    protected int spacing;
-    protected ElementAlignment alignment;
+    protected ILayoutStyle layout;
     protected IProbeConfig overriddenConfig;
 
     @Override
     public void render(MatrixStack matrixStack, int x, int y) {
+        Integer borderColor = layout.getBorderColor();
         if (borderColor != null) {
             int w = getWidth();
             int h = getHeight();
@@ -51,32 +50,49 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         }
     }
 
+    public AbstractElementPanel(ILayoutStyle style) {
+        this.layout = style;
+    }
+
+    @Deprecated
     public AbstractElementPanel(Integer borderColor, int spacing, ElementAlignment alignment) {
-        this.borderColor = borderColor;
-        this.spacing = spacing;
-        this.alignment = alignment;
+        this(new LayoutStyle().borderColor(borderColor).spacing(spacing).alignment(alignment));
     }
 
     public AbstractElementPanel(PacketBuffer buf) {
         children = ProbeInfo.createElements(buf);
+        this.layout = new LayoutStyle();
+        layout.alignment(buf.readEnumValue(ElementAlignment.class));
         if (buf.readBoolean()) {
-            borderColor = buf.readInt();
+            layout.borderColor(buf.readInt());
         }
-        spacing = buf.readShort();
-        alignment = ElementAlignment.values()[buf.readShort()];
+        layout.spacing(buf.readInt()).topPadding(buf.readInt()).bottomPadding(buf.readInt()).leftPadding(buf.readInt()).rightPadding(buf.readInt());
     }
 
     @Override
     public void toBytes(PacketBuffer buf) {
         ProbeInfo.writeElements(children, buf);
-        if (borderColor != null) {
-            buf.writeBoolean(true);
-            buf.writeInt(borderColor);
-        } else {
-            buf.writeBoolean(false);
+        buf.writeEnumValue(layout.getAlignment()).writeBoolean(layout.getBorderColor() != null);
+        if (layout.getBorderColor() != null) {
+            buf.writeInt(layout.getBorderColor());
         }
-        buf.writeShort(spacing);
-        buf.writeShort(alignment.ordinal());
+        buf.writeInt(layout.getSpacing()).writeInt(layout.getTopPadding()).writeInt(layout.getBottomPadding()).writeInt(layout.getLeftPadding()).writeInt(layout.getRightPadding());
+    }
+
+    public ILayoutStyle getStyle() {
+        return layout;
+    }
+
+    public List<IElement> getElements() {
+        return children;
+    }
+
+    protected int getYPadding() {
+        return layout.getBottomPadding() + layout.getTopPadding();
+    }
+
+    protected int getXPadding() {
+        return layout.getLeftPadding() + layout.getRightPadding();
     }
 
     @Override
@@ -95,19 +111,19 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         children.add(new ElementText(text));
         return this;
     }
-    
+
     @Override
     public IProbeInfo text(CompoundText text, ITextStyle style) {
-    	children.add(new ElementText(text.get(), style).setLegacy());
-    	return this;
+        children.add(new ElementText(text.get(), style).setLegacy());
+        return this;
     }
-    
+
     @Override
     public IProbeInfo text(CompoundText text) {
-    	children.add(new ElementText(text.get()).setLegacy());
-    	return this;
+        children.add(new ElementText(text.get()).setLegacy());
+        return this;
     }
-    
+
     @Override
     public IProbeInfo text(ITextComponent text, ITextStyle style) {
         children.add(new ElementText(text));
@@ -182,47 +198,47 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
     
     @Override
-	public IProbeInfo tank(TankReference tank) {
+	  public IProbeInfo tank(TankReference tank) {
     	children.add(new ElementTank(tank));
-		return this;
-	}
+	  	return this;
+	  }
     
-	@Override
-	public IProbeInfo tank(TankReference tank, IProgressStyle style) {
+	  @Override
+	  public IProbeInfo tank(TankReference tank, IProgressStyle style) {
     	children.add(new ElementTank(tank, style));
-		return this;
-	}
+	  	return this;
+	  }
 	
-	@Override
-	public IProbeInfo padding(int width, int height) {
-		children.add(new ElementPadding(width, height));
-		return this;
-	}
+	   @Override
+	   public IProbeInfo padding(int width, int height) {
+		   children.add(new ElementPadding(width, height));
+		   return this;
+	   }
 	
-	@Override
+  	@Override
     public IProbeInfo horizontal(ILayoutStyle style) {
-        ElementHorizontal e = new ElementHorizontal(style.getBorderColor(), style.getSpacing(), style.getAlignment());
+        ElementHorizontal e = new ElementHorizontal(style);
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo horizontal() {
-        ElementHorizontal e = new ElementHorizontal(null, spacing, ElementAlignment.ALIGN_TOPLEFT);
+        ElementHorizontal e = new ElementHorizontal(new LayoutStyle().spacing(layout.getSpacing()).alignment(ElementAlignment.ALIGN_TOPLEFT));
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo vertical(ILayoutStyle style) {
-        ElementVertical e = new ElementVertical(style.getBorderColor(), style.getSpacing(), style.getAlignment());
+        ElementVertical e = new ElementVertical(style);
         children.add(e);
         return e;
     }
 
     @Override
     public IProbeInfo vertical() {
-        ElementVertical e = new ElementVertical(null, ElementVertical.SPACING, ElementAlignment.ALIGN_TOPLEFT);
+        ElementVertical e = new ElementVertical(new LayoutStyle().spacing(ElementVertical.SPACING).alignment(ElementAlignment.ALIGN_TOPLEFT));
         children.add(e);
         return e;
     }
