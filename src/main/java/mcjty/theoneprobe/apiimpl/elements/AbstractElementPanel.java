@@ -36,10 +36,10 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     protected List<IElement> children = new ArrayList<>();
     protected ILayoutStyle layout;
     protected IProbeConfig overriddenConfig;
-    
+
     @Override
     public void render(MatrixStack matrixStack, int x, int y) {
-    	Integer borderColor = layout.getBorderColor();
+        Integer borderColor = layout.getBorderColor();
         if (borderColor != null) {
             int w = getWidth();
             int h = getHeight();
@@ -49,48 +49,52 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
             RenderHelper.drawVerticalLine(matrixStack, x + w - 1, y, y + h, borderColor);
         }
     }
-    
+
     public AbstractElementPanel(ILayoutStyle style) {
-    	this.layout = style;
-	}
-    
+        this.layout = style;
+    }
+
     @Deprecated
     public AbstractElementPanel(Integer borderColor, int spacing, ElementAlignment alignment) {
-    	this(new LayoutStyle().borderColor(borderColor).spacing(spacing).alignment(alignment));
+        this(new LayoutStyle().borderColor(borderColor).spacing(spacing).alignment(alignment));
     }
 
     public AbstractElementPanel(PacketBuffer buf) {
         children = ProbeInfo.createElements(buf);
-		this.layout = new LayoutStyle();
-		layout.alignment(buf.readEnumValue(ElementAlignment.class));
-		if(buf.readBoolean()) layout.borderColor(buf.readInt());
-		layout.spacing(buf.readInt()).topPadding(buf.readInt()).bottomPadding(buf.readInt()).leftPadding(buf.readInt()).rightPadding(buf.readInt());
+        this.layout = new LayoutStyle();
+        layout.alignment(buf.readEnumValue(ElementAlignment.class));
+        if (buf.readBoolean()) {
+            layout.borderColor(buf.readInt());
+        }
+        layout.spacing(buf.readInt()).topPadding(buf.readInt()).bottomPadding(buf.readInt()).leftPadding(buf.readInt()).rightPadding(buf.readInt());
     }
-    
+
     @Override
     public void toBytes(PacketBuffer buf) {
         ProbeInfo.writeElements(children, buf);
         buf.writeEnumValue(layout.getAlignment()).writeBoolean(layout.getBorderColor() != null);
-		if(layout.getBorderColor() != null) buf.writeInt(layout.getBorderColor().intValue());
-		buf.writeInt(layout.getSpacing()).writeInt(layout.getTopPadding()).writeInt(layout.getBottomPadding()).writeInt(layout.getLeftPadding()).writeInt(layout.getRightPadding());
+        if (layout.getBorderColor() != null) {
+            buf.writeInt(layout.getBorderColor());
+        }
+        buf.writeInt(layout.getSpacing()).writeInt(layout.getTopPadding()).writeInt(layout.getBottomPadding()).writeInt(layout.getLeftPadding()).writeInt(layout.getRightPadding());
     }
-    
+
     public ILayoutStyle getStyle() {
-    	return layout;
+        return layout;
     }
-    
+
     public List<IElement> getElements() {
         return children;
     }
-    
-	protected int getYPadding() {
-		return layout.getBottomPadding() + layout.getTopPadding();
-	}
-	
-	protected int getXPadding() {
-		return layout.getLeftPadding() + layout.getRightPadding();
-	}
-    
+
+    protected int getYPadding() {
+        return layout.getBottomPadding() + layout.getTopPadding();
+    }
+
+    protected int getXPadding() {
+        return layout.getLeftPadding() + layout.getRightPadding();
+    }
+
     @Override
     public IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h) {
         return icon(icon, u, v, w, h, new IconStyle());
@@ -107,19 +111,19 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         children.add(new ElementText(text));
         return this;
     }
-    
+
     @Override
     public IProbeInfo text(CompoundText text, ITextStyle style) {
-    	children.add(new ElementText(text.get(), style).setLegacy());
-    	return this;
+        children.add(new ElementText(text.get(), style).setLegacy());
+        return this;
     }
-    
+
     @Override
     public IProbeInfo text(CompoundText text) {
-    	children.add(new ElementText(text.get()).setLegacy());
-    	return this;
+        children.add(new ElementText(text.get()).setLegacy());
+        return this;
     }
-    
+
     @Override
     public IProbeInfo text(ITextComponent text, ITextStyle style) {
         children.add(new ElementText(text));
@@ -192,20 +196,20 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         children.add(new ElementProgress(current, max, style));
         return this;
     }
-    
+
     @Override
-	public IProbeInfo tank(TankReference tank) {
-    	children.add(new ElementTank(tank));
-		return this;
-	}
-    
-	@Override
-	public IProbeInfo tank(TankReference tank, IProgressStyle style) {
-    	children.add(new ElementTank(tank, style));
-		return this;
-	}
-	
-	@Override
+    public IProbeInfo tank(TankReference tank) {
+        children.add(new ElementTank(tank));
+        return this;
+    }
+
+    @Override
+    public IProbeInfo tank(TankReference tank, IProgressStyle style) {
+        children.add(new ElementTank(tank, style));
+        return this;
+    }
+
+    @Override
     public IProbeInfo horizontal(ILayoutStyle style) {
         ElementHorizontal e = new ElementHorizontal(style);
         children.add(e);
