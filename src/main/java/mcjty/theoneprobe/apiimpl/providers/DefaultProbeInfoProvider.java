@@ -222,7 +222,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         TileEntity te = world.getTileEntity(pos);
         if (te != null && te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).isPresent()) {
             te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
-                for (int i = 0 ; i < handler.getTanks() ; i++) {
+                for (int i = 0; i < handler.getTanks(); i++) {
                     FluidStack fluidStack = handler.getFluidInTank(i);
                     int maxContents = handler.getTankCapacity(i);
                     if (!fluidStack.isEmpty()) {
@@ -288,8 +288,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             if (!"age".equals(property.getName())) {
                 continue;
             }
-            if(property.getValueClass() == Integer.class) {
-                Property<Integer> integerProperty = (Property<Integer>)property;
+            if (property.getValueClass() == Integer.class) {
+                Property<Integer> integerProperty = (Property<Integer>) property;
                 int age = blockState.get(integerProperty);
                 int maxAge = Collections.max(integerProperty.getAllowedValues());
                 if (age == maxAge) {
@@ -308,11 +308,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
         ItemStack pickBlock = data.getPickBlock();
 
-        if (block instanceof SilverfishBlock && mode != ProbeMode.DEBUG && !Tools.show(mode,config.getShowSilverfish())) {
+        if (block instanceof SilverfishBlock && mode != ProbeMode.DEBUG && !Tools.show(mode, config.getShowSilverfish())) {
             block = ((SilverfishBlock) block).getMimickedBlock();
             pickBlock = new ItemStack(block, 1);
         }
-        
+
         if (block instanceof FlowingFluidBlock) {
             FluidState fluidState = blockState.getFluidState();
             Fluid fluid = fluidState.getFluid();
@@ -321,14 +321,12 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 FluidStack fluidStack = new FluidStack(fluid.getFluid(), BUCKET_VOLUME);
                 horizontal.icon(fluid.getAttributes().getStillTexture(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20).color(fluid.getAttributes().getColor(fluidStack)));
                 //Proposal Fluids should look at the icon only not buckets of it. Dunno you have to decide. I just fixed the fluid color bug
-//              ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
-//                FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {
-//                    if (fluidStack.isFluidEqual(fc)) {
-//                        horizontal.item(bucketStack);
-//                    } else {
-//                        horizontal.icon(fluid.getAttributes().getStillTexture(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20).color(fluid.getAttributes().getColor(fluidStack)));
-//                    }
-//                });
+                ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
+                FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {
+                    if (fluidStack.isFluidEqual(fc)) {
+                        horizontal.item(bucketStack);
+                    }
+                });
 
                 horizontal.vertical()
                         .text(CompoundText.create().name(fluidStack.getTranslationKey()))
