@@ -1,15 +1,47 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import static mcjty.theoneprobe.api.TextStyleClass.INFO;
+import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
+import static mcjty.theoneprobe.api.TextStyleClass.MODNAME;
+import static mcjty.theoneprobe.api.TextStyleClass.NAME;
+import static mcjty.theoneprobe.api.TextStyleClass.OK;
+import static mcjty.theoneprobe.api.TextStyleClass.PROGRESS;
+import static mcjty.theoneprobe.api.TextStyleClass.WARNING;
+import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
+
+import java.awt.Color;
+import java.util.Collections;
+
 import com.mojang.authlib.GameProfile;
+
 import mcjty.lib.api.power.IBigPower;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
-import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.api.CompoundText;
+import mcjty.theoneprobe.api.ElementAlignment;
+import mcjty.theoneprobe.api.IBlockDisplayOverride;
+import mcjty.theoneprobe.api.IProbeConfig;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.NumberFormat;
+import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BrewingStandBlock;
+import net.minecraft.block.ComparatorBlock;
+import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.block.LeverBlock;
+import net.minecraft.block.NoteBlock;
+import net.minecraft.block.RedstoneWireBlock;
+import net.minecraft.block.RepeaterBlock;
+import net.minecraft.block.SilverfishBlock;
+import net.minecraft.block.SkullBlock;
+import net.minecraft.block.SpawnerBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -25,6 +57,7 @@ import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
@@ -33,11 +66,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.Collections;
-
-import static mcjty.theoneprobe.api.TextStyleClass.*;
-import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -235,19 +263,36 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
         int contents = fluidStack.getAmount();
-        if (!fluidStack.isEmpty()) {
-            probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(fluidStack.getTranslationKey()));
-        }
-        if (config.getTankMode() == 1) {
-            probeInfo.progress(contents, maxContents,
-                    probeInfo.defaultProgressStyle()
-                            .suffix("mB")
-                            .filledColor(Config.tankbarFilledColor)
-                            .alternateFilledColor(Config.tankbarAlternateFilledColor)
-                            .borderColor(Config.tankbarBorderColor)
-                            .numberFormat(Config.tankFormat.get()));
+    	if(config.getTankMode() == 1) {
+        	Color color = new Color(fluidStack.getFluid().getAttributes().getColor(fluidStack));
+        	if(fluidStack.getFluid() == Fluids.LAVA) {
+    			color = new Color(255, 139, 27);
+        	}
+        	IFormattableTextComponent text = new StringTextComponent("");
+        	text.appendSibling(ElementProgress.format(contents, Config.tankFormat.get(), new StringTextComponent("mB")));
+        	text.appendString("/");
+        	text.appendSibling(ElementProgress.format(maxContents, Config.tankFormat.get(), new StringTextComponent("mB")));
+        	probeInfo.tankSimple(maxContents, fluidStack, 
+        			probeInfo.defaultProgressStyle()
+        			.numberFormat(NumberFormat.NONE)
+        			.borderlessColor(color, color.darker().darker())
+        			.prefix(((IFormattableTextComponent)fluidStack.getDisplayName()).appendString(": "))
+        			.suffix(text));
         } else {
-            probeInfo.text(CompoundText.create().style(PROGRESS).text(ElementProgress.format(contents, Config.tankFormat.get(), new StringTextComponent("mB"))));
+            if (!fluidStack.isEmpty()) {
+                probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(fluidStack.getTranslationKey()));
+            }
+            if (config.getTankMode() == 2) {
+                probeInfo.progress(contents, maxContents,
+                        probeInfo.defaultProgressStyle()
+                                .suffix("mB")
+                                .filledColor(Config.tankbarFilledColor)
+                                .alternateFilledColor(Config.tankbarAlternateFilledColor)
+                                .borderColor(Config.tankbarBorderColor)
+                                .numberFormat(Config.tankFormat.get()));
+            } else {
+                probeInfo.text(CompoundText.create().style(PROGRESS).text(ElementProgress.format(contents, Config.tankFormat.get(), new StringTextComponent("mB"))));
+            }
         }
     }
 
