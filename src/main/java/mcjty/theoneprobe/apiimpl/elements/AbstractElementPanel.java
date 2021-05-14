@@ -196,20 +196,26 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         children.add(new ElementProgress(current, max, style));
         return this;
     }
-
+    
     @Override
-    public IProbeInfo tank(TankReference tank) {
-        children.add(new ElementTank(tank));
-        return this;
-    }
-
-    @Override
-    public IProbeInfo tank(TankReference tank, IProgressStyle style) {
-        children.add(new ElementTank(tank, style));
-        return this;
-    }
-
-    @Override
+	  public IProbeInfo tank(TankReference tank) {
+    	children.add(new ElementTank(tank));
+	  	return this;
+	  }
+    
+	  @Override
+	  public IProbeInfo tank(TankReference tank, IProgressStyle style) {
+    	children.add(new ElementTank(tank, style));
+	  	return this;
+	  }
+	
+	   @Override
+	   public IProbeInfo padding(int width, int height) {
+		   children.add(new ElementPadding(width, height));
+		   return this;
+	   }
+	
+  	@Override
     public IProbeInfo horizontal(ILayoutStyle style) {
         ElementHorizontal e = new ElementHorizontal(style);
         children.add(e);
