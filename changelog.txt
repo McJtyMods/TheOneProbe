@@ -6,6 +6,7 @@ Upcoming:
     - Various changes to the api with helper functions for various styles and a few new features
     - Implemented ITextStyle and added many text formatting options
     - More tank rendering options
+    - And lots more
 
 1.16-3.0.8:
 - Ochotonida: Show the real modname instead of the modid
