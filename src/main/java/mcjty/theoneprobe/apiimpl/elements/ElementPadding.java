@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import java.awt.Color;
+import mcjty.theoneprobe.api.Color;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 

@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.api;
 
-import java.awt.Color;
+import mcjty.theoneprobe.api.Color;
 
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 

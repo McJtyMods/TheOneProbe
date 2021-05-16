@@ -9,7 +9,7 @@ import static mcjty.theoneprobe.api.TextStyleClass.PROGRESS;
 import static mcjty.theoneprobe.api.TextStyleClass.WARNING;
 import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
 
-import java.awt.Color;
+import mcjty.theoneprobe.api.Color;
 import java.util.Collections;
 
 import com.mojang.authlib.GameProfile;
