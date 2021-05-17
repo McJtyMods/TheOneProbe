@@ -2,6 +2,8 @@ package mcjty.theoneprobe.api;
 
 /**
  * Style for a horizontal or vertical layout.
+ * Do not create custom implementations of this interface. This interface is implemented by TOP
+ * and you can get instances from either IProbeInfo or else the IStyleManager
  */
 public interface ILayoutStyle {
 	

@@ -7,15 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.IBlockDisplayOverride;
-import mcjty.theoneprobe.api.IElementFactory;
-import mcjty.theoneprobe.api.IEntityDisplayOverride;
-import mcjty.theoneprobe.api.IOverlayRenderer;
-import mcjty.theoneprobe.api.IProbeConfig;
-import mcjty.theoneprobe.api.IProbeConfigProvider;
-import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
-import mcjty.theoneprobe.api.IProbeInfoProvider;
-import mcjty.theoneprobe.api.ITheOneProbe;
+import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.ElementEntity;
 import mcjty.theoneprobe.apiimpl.elements.ElementHorizontal;
 import mcjty.theoneprobe.apiimpl.elements.ElementIcon;
@@ -26,6 +18,7 @@ import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.apiimpl.elements.ElementTank;
 import mcjty.theoneprobe.apiimpl.elements.ElementText;
 import mcjty.theoneprobe.apiimpl.elements.ElementVertical;
+import mcjty.theoneprobe.apiimpl.styles.StyleManager;
 import mcjty.theoneprobe.config.Config;
 
 public class TheOneProbeImp implements ITheOneProbe {
@@ -41,6 +34,7 @@ public class TheOneProbeImp implements ITheOneProbe {
     public static int ELEMENT_TANK;
     public static int ELEMENT_PADDING;
 
+    private final StyleManager styleManager = new StyleManager();
     private List<IProbeConfigProvider> configProviders = new ArrayList<>();
 
     private List<IProbeInfoProvider> providers = new ArrayList<>();
@@ -226,5 +220,10 @@ public class TheOneProbeImp implements ITheOneProbe {
 
     public List<IEntityDisplayOverride> getEntityOverrides() {
         return entityOverrides;
+    }
+
+    @Override
+    public IStyleManager getStyleManager() {
+        return styleManager;
     }
 }

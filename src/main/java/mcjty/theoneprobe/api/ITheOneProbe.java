@@ -88,4 +88,9 @@ public interface ITheOneProbe {
      * entity information is shown for your entities.
      */
     void registerEntityDisplayOverride(IEntityDisplayOverride override);
+
+    /**
+     * Get the style manager that you can use to create your own styles.
+     */
+    IStyleManager getStyleManager();
 }
