@@ -1,22 +1,9 @@
 package mcjty.theoneprobe.api;
 
-import mcjty.theoneprobe.api.Color;
-
-import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
-
 /**
  * Style for a horizontal or vertical layout.
  */
 public interface ILayoutStyle {
-	
-	static ILayoutStyle createDefault() { return new LayoutStyle(); }
-	static ILayoutStyle createBorder(Color color) { return new LayoutStyle().borderColor(color); }
-	static ILayoutStyle createBorder(Integer color) { return new LayoutStyle().borderColor(color); }
-	static ILayoutStyle createSpacing(int spacing) { return new LayoutStyle().spacing(spacing); }
-	static ILayoutStyle createAligned(ElementAlignment align) { return new LayoutStyle().alignment(align); }
-	static ILayoutStyle createPadding(int padding) { return new LayoutStyle().padding(padding); }
-	static ILayoutStyle createPadding(int xPadding, int yPadding) { return new LayoutStyle().hPadding(xPadding).vPadding(yPadding); }
-	static ILayoutStyle createPadding(int top, int bottom, int left, int right) { return new LayoutStyle().topPadding(top).bottomPadding(bottom).leftPadding(left).rightPadding(right); }
 	
 	ILayoutStyle copy();
 	

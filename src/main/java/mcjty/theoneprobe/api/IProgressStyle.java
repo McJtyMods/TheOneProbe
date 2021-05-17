@@ -1,8 +1,5 @@
 package mcjty.theoneprobe.api;
 
-import mcjty.theoneprobe.api.Color;
-
-import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -10,15 +7,6 @@ import net.minecraft.util.text.TranslationTextComponent;
  * Style for the progress bar.
  */
 public interface IProgressStyle {
-	
-	/// Default Creation Methods that allow to allow create default instances for most basic cases
-	static IProgressStyle createDefault() { return new ProgressStyle(); }
-	static IProgressStyle createArmor() { return new ProgressStyle().armorBar(true); }
-	static IProgressStyle createLife() { return new ProgressStyle().lifeBar(true); }
-	static IProgressStyle createAligned(ElementAlignment align) { return new ProgressStyle().alignment(align); }
-	static IProgressStyle createBounds(int width, int height) { return new ProgressStyle().bounds(width, height); }
-	static IProgressStyle createTextOnly(String prefix) { return new ProgressStyle().prefix(prefix).numberFormat(NumberFormat.NONE); }
-	static IProgressStyle createText(String prefix, String suffix) { return new ProgressStyle().prefix(prefix).suffix(suffix); }
 	
 	/// Allows copying the state for easier template creation
 	IProgressStyle copy();

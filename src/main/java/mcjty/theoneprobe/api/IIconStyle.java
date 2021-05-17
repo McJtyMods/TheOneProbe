@@ -1,21 +1,12 @@
 package mcjty.theoneprobe.api;
 
-import mcjty.theoneprobe.api.Color;
-
-import mcjty.theoneprobe.apiimpl.styles.IconStyle;
-
 /**
  * Style for the icon element.
  */
 public interface IIconStyle {
-	static IIconStyle createDefault() { return new IconStyle(); }
-	static IIconStyle createColor(Color color) { return new IconStyle().color(color); }
-	static IIconStyle createColor(int color) { return new IconStyle().color(color); }
-	static IIconStyle createBounds(int width, int height) { return new IconStyle().width(width).height(height); }
-	static IIconStyle createTexBounds(int texWidth, int texHeight) { return new IconStyle().textureWidth(texWidth).textureHeight(texHeight); }
-	
-	
+
 	IIconStyle copy();
+
     /**
      * Change the width of the icon. Default is 16
      */

@@ -1,3 +1,7 @@
+Upcoming:
+- Removed usage of AWT.Color in the updated API
+- Removed the new static create methods for the various styles in the API because they caused API dependency problems
+
 1.16-3.1.0:
 - Show actual note information in addition to just numbers
 - If hovering over a player head also show the player name

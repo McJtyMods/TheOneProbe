@@ -1,7 +1,5 @@
 package mcjty.theoneprobe.api;
 
-import mcjty.theoneprobe.api.Color;
-
 /**
  * The style for the overlay.
  */

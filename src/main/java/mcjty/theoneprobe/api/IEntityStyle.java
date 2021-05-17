@@ -1,15 +1,11 @@
 package mcjty.theoneprobe.api;
 
-import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
-
 /**
  * Style for the entity element.
+ * Do not create custom implementations of this interface. This interface is implemented by TOP
  */
 public interface IEntityStyle {
-	static IEntityStyle createDefault() { return new EntityStyle(); }
-	static IEntityStyle createBounds(int width, int height) { return new EntityStyle().bounds(width, height); }
-	static IEntityStyle createScale(float scale) { return new EntityStyle().scale(scale); }
-	
+
 	IEntityStyle copy();
 	
     /**
