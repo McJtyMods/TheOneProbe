@@ -56,7 +56,7 @@ public class ElementProgressRender {
         if (style.isShowText()) {
             Minecraft mc = Minecraft.getInstance();
             FontRenderer render = mc.fontRenderer;
-            ITextComponent s = ((IFormattableTextComponent) style.getPrefixComp()).appendSibling(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
+            ITextComponent s = style.getPrefixComp().deepCopy().appendSibling(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
             int textWidth = render.func_243245_a(s.func_241878_f());
             switch (style.getAlignment()) {
                 case ALIGN_BOTTOMRIGHT:

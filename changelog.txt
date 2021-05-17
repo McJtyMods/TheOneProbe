@@ -1,3 +1,6 @@
+Upcoming:
+- Small fix for Forge energy and progressbars in general
+
 1.16-3.1.2:
 - Added a new IStyleManager which allows mods to make it easier to manage their styles
 
