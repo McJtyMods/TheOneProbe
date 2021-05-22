@@ -1,5 +1,6 @@
 Upcoming:
 - Compatibility fix with IProbeInfo.text()
+- Speiger fixed a problem with infinite recursion and invalid values for fluid rendering
 
 1.16-3.1.3:
 - Small fix for Forge energy and progressbars in general
