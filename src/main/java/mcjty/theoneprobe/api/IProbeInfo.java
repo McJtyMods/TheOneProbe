@@ -84,12 +84,14 @@ public interface IProbeInfo {
      */
     IProbeInfo text(ITextComponent text);
     IProbeInfo text(ITextComponent text, ITextStyle style);
+    IProbeInfo mcText(ITextComponent text);
+    IProbeInfo mcText(ITextComponent text, ITextStyle style);
     default IProbeInfo text(CompoundText text) { return text(text.get()); }
     default IProbeInfo text(CompoundText text, ITextStyle style) { return text(text.get(), style); }
-    default IProbeInfo text(String text) { return text(new TranslationTextComponent(text)); }
-    default IProbeInfo text(String text, Object...args) { return text(new TranslationTextComponent(text, args)); }
-    default IProbeInfo text(String text, ITextStyle style) { return text(new TranslationTextComponent(text), style); }
-    default IProbeInfo text(String text, ITextStyle style, Object...args) { return text(new TranslationTextComponent(text, args), style); }
+    default IProbeInfo text(String text) { return mcText(new TranslationTextComponent(text)); }
+    default IProbeInfo text(String text, Object...args) { return mcText(new TranslationTextComponent(text, args)); }
+    default IProbeInfo text(String text, ITextStyle style) { return mcText(new TranslationTextComponent(text), style); }
+    default IProbeInfo text(String text, ITextStyle style, Object...args) { return mcText(new TranslationTextComponent(text, args), style); }
     
     IProbeInfo item(ItemStack stack, IItemStyle style);
     IProbeInfo item(ItemStack stack);
