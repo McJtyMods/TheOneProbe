@@ -130,13 +130,13 @@ public class ElementProgressRender {
         for (int i = 0; i < tanks; i++) {
             FluidStack stack = fluids[i];
             int lvl = (int) (stack == null ? 0 : (((double) stack.getAmount() / max) * width));
-            if (lvl == 0) continue;
+            if (lvl <= 0) continue;
             FluidAttributes attr = stack.getFluid().getAttributes();
             TextureAtlasSprite liquidIcon = map.apply(attr.getStillTexture(stack));
             if (liquidIcon == map.apply(MissingTextureSprite.getLocation())) continue;
             int color = attr.getColor(stack);
             RenderSystem.color4f(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
-            while (lvl != 0) {
+            while (lvl > 0) {
                 int maxX = Math.min(16, lvl);
                 lvl -= maxX;
                 RenderHelper.drawTexturedModalRect(matrix, x + start, y + 1, liquidIcon, maxX, height - 2);
@@ -144,6 +144,9 @@ public class ElementProgressRender {
             }
         }
         RenderSystem.color4f(1F, 1F, 1F, 1F);
-        renderText(matrixStack, x, y, width + 2, tank.getStored(), style);
+        if(style.isShowText())
+        {
+            renderText(matrixStack, x, y, width + 2, tank.getStored(), style);
+        }
     }
 }
