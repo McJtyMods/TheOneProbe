@@ -10,19 +10,21 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
+import net.minecraft.item.Item.Properties;
+
 public class Probe extends Item {
 
     public Probe() {
         super(new Properties()
-                .maxStackSize(1)
-                .group(TheOneProbe.tabProbe));
+                .stacksTo(1)
+                .tab(TheOneProbe.tabProbe));
         setRegistryName("probe");
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (world.isRemote) {
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (world.isClientSide) {
             GuiConfig.open();
         }
         return new ActionResult<>(ActionResultType.SUCCESS, stack);

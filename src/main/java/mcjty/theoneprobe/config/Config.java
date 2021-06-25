@@ -435,7 +435,7 @@ public class Config {
         StringBuilder builder = new StringBuilder();
         String[] splitted = StringUtils.split(input, ',');
         for (String s : splitted) {
-            TextFormatting format = TextFormatting.getValueByName(s);
+            TextFormatting format = TextFormatting.getByName(s);
             if (format != null) {
                 builder.append(format.toString());
             }

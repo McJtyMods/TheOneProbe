@@ -32,10 +32,10 @@ public class ElementEntity implements IElement {
         if (entity instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entity;
             entityNBT = null;
-            playerID = player.getEntityId();
+            playerID = player.getId();
         } else {
             entityNBT = new CompoundNBT();
-            entity.writeWithoutTypeId(entityNBT);
+            entity.saveWithoutId(entityNBT);
 //            entityNBT = entity.serializeNBT();
             playerID = null;
         }
@@ -54,7 +54,7 @@ public class ElementEntity implements IElement {
                 .width(buf.readInt())
                 .height(buf.readInt())
                 .scale(buf.readFloat());
-        entityNBT = buf.readCompoundTag();
+        entityNBT = buf.readNbt();
         if (buf.readBoolean()) {
             playerID = buf.readInt();
         } else {
@@ -87,7 +87,7 @@ public class ElementEntity implements IElement {
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
         buf.writeFloat(style.getScale());
-        buf.writeCompoundTag(entityNBT);
+        buf.writeNbt(entityNBT);
         if (playerID != null) {
             buf.writeBoolean(true);
             buf.writeInt(playerID);

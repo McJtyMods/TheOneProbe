@@ -60,7 +60,7 @@ public class TheOneProbe {
 
     public static ItemGroup tabProbe = new ItemGroup("Probe") {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(ModItems.probe);
         }
     };

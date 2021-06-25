@@ -11,8 +11,8 @@ public class KeyBindings {
     public static KeyBinding toggleVisible;
 
     public static void init() {
-        toggleLiquids = new KeyBinding("key.toggleLiquids", KeyConflictContext.IN_GAME, InputMappings.INPUT_INVALID, "key.categories.theoneprobe");
-        toggleVisible = new KeyBinding("key.toggleVisible", KeyConflictContext.IN_GAME, InputMappings.INPUT_INVALID, "key.categories.theoneprobe");
+        toggleLiquids = new KeyBinding("key.toggleLiquids", KeyConflictContext.IN_GAME, InputMappings.UNKNOWN, "key.categories.theoneprobe");
+        toggleVisible = new KeyBinding("key.toggleVisible", KeyConflictContext.IN_GAME, InputMappings.UNKNOWN, "key.categories.theoneprobe");
         ClientRegistry.registerKeyBinding(toggleLiquids);
         ClientRegistry.registerKeyBinding(toggleVisible);
     }

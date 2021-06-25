@@ -56,13 +56,13 @@ public class HarvestInfoTools {
     }
 
     static void showCanBeHarvested(IProbeInfo probeInfo, World world, BlockPos pos, Block block, PlayerEntity player) {
-        if (ModItems.isProbeInHand(player.getHeldItemMainhand())) {
+        if (ModItems.isProbeInHand(player.getMainHandItem())) {
             // If the player holds the probe there is no need to show harvestability information as the
             // probe cannot harvest anything. This is only supposed to work in off hand.
             return;
         }
 
-        boolean harvestable = block.canHarvestBlock(world.getBlockState(pos), world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
+        boolean harvestable = block.canHarvestBlock(world.getBlockState(pos), world, pos, player) && world.getBlockState(pos).getDestroySpeed(world, pos) >= 0;
         if (harvestable) {
             probeInfo.text(CompoundText.create().style(OK).text("Harvestable"));
         } else {
@@ -71,14 +71,14 @@ public class HarvestInfoTools {
     }
 
     static void showHarvestInfo(IProbeInfo probeInfo, World world, BlockPos pos, Block block, BlockState blockState, PlayerEntity player) {
-        boolean harvestable = block.canHarvestBlock(world.getBlockState(pos), world, pos, player) && world.getBlockState(pos).getBlockHardness(world, pos) >= 0;
+        boolean harvestable = block.canHarvestBlock(world.getBlockState(pos), world, pos, player) && world.getBlockState(pos).getDestroySpeed(world, pos) >= 0;
 
         ToolType harvestTool = block.getHarvestTool(blockState);
         String harvestName = null;
 
         if (harvestTool == null) {
             // The block doesn't have an explicitly-set harvest tool, so we're going to test our wooden tools against the block.
-            float blockHardness = blockState.getBlockHardness(world, pos);
+            float blockHardness = blockState.getDestroySpeed(world, pos);
             if (blockHardness > 0f) {
                 for (Map.Entry<ToolType, ItemStack> testToolEntry : TEST_TOOLS.entrySet()) {
                     // loop through our test tools until we find a winner.
@@ -87,7 +87,7 @@ public class HarvestInfoTools {
                     if (testTool != null && testTool.getItem() instanceof ToolItem) {
                         ToolItem toolItem = (ToolItem) testTool.getItem();
                         // @todo 1.13
-                        if (testTool.getDestroySpeed(blockState) >= toolItem.getTier().getEfficiency()) {
+                        if (testTool.getDestroySpeed(blockState) >= toolItem.getTier().getSpeed()) {
                             // BINGO!
                             harvestTool = testToolEntry.getKey();
                             break;

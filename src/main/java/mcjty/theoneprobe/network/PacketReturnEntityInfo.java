@@ -14,7 +14,7 @@ public class PacketReturnEntityInfo {
     private ProbeInfo probeInfo;
 
     public PacketReturnEntityInfo(PacketBuffer buf) {
-        uuid = buf.readUniqueId();
+        uuid = buf.readUUID();
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();
             probeInfo.fromBytes(buf);
@@ -24,7 +24,7 @@ public class PacketReturnEntityInfo {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeUniqueId(uuid);
+        buf.writeUUID(uuid);
         if (probeInfo != null) {
             buf.writeBoolean(true);
             probeInfo.toBytes(buf);

@@ -62,7 +62,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     public AbstractElementPanel(PacketBuffer buf) {
         children = ProbeInfo.createElements(buf);
         this.layout = new LayoutStyle();
-        layout.alignment(buf.readEnumValue(ElementAlignment.class));
+        layout.alignment(buf.readEnum(ElementAlignment.class));
         if (buf.readBoolean()) {
             layout.borderColor(buf.readInt());
         }
@@ -72,7 +72,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     @Override
     public void toBytes(PacketBuffer buf) {
         ProbeInfo.writeElements(children, buf);
-        buf.writeEnumValue(layout.getAlignment()).writeBoolean(layout.getBorderColor() != null);
+        buf.writeEnum(layout.getAlignment()).writeBoolean(layout.getBorderColor() != null);
         if (layout.getBorderColor() != null) {
             buf.writeInt(layout.getBorderColor());
         }

@@ -11,19 +11,19 @@ public class AddProbeTagRecipeSerializer extends net.minecraftforge.registries.F
     private final ShapedRecipe.Serializer serializer = new ShapedRecipe.Serializer();
 
     @Override
-    public AddProbeTagRecipe read(ResourceLocation recipeId, JsonObject json) {
-        ShapedRecipe recipe = serializer.read(recipeId, json);
+    public AddProbeTagRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+        ShapedRecipe recipe = serializer.fromJson(recipeId, json);
         return new AddProbeTagRecipe(recipe);
     }
 
     @Override
-    public AddProbeTagRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-        ShapedRecipe recipe = serializer.read(recipeId, buffer);
+    public AddProbeTagRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+        ShapedRecipe recipe = serializer.fromNetwork(recipeId, buffer);
         return new AddProbeTagRecipe(recipe);
     }
 
     @Override
-    public void write(PacketBuffer buffer, AddProbeTagRecipe recipe) {
-        serializer.write(buffer, recipe.getRecipe());
+    public void toNetwork(PacketBuffer buffer, AddProbeTagRecipe recipe) {
+        serializer.toNetwork(buffer, recipe.getRecipe());
     }
 }

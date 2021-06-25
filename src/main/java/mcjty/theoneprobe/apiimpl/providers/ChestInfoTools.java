@@ -90,7 +90,7 @@ public class ChestInfoTools {
             for (ItemStack stackInSlot : stacks) {
                 horizontal = vertical.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER));
                 horizontal.item(stackInSlot, new ItemStyle().width(16).height(16))
-                        .text(CompoundText.create().info(stackInSlot.getTranslationKey()));
+                        .text(CompoundText.create().info(stackInSlot.getDescriptionId()));
             }
         } else {
             for (ItemStack stackInSlot : stacks) {
@@ -108,7 +108,7 @@ public class ChestInfoTools {
     }
 
     private static int getChestContents(World world, BlockPos pos, List<ItemStack> stacks) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
 
         Set<Item> foundItems = Config.compactEqualStacks.get() ? new HashSet<>() : null;
         AtomicInteger maxSlots = new AtomicInteger();
@@ -123,9 +123,9 @@ public class ChestInfoTools {
                 });
             } else if (te instanceof IInventory) {
                 IInventory inventory = (IInventory) te;
-                maxSlots.set(inventory.getSizeInventory());
+                maxSlots.set(inventory.getContainerSize());
                 for (int i = 0; i < maxSlots.get(); i++) {
-                    addItemStack(stacks, foundItems, inventory.getStackInSlot(i));
+                    addItemStack(stacks, foundItems, inventory.getItem(i));
                 }
             }
         } catch (RuntimeException e) {

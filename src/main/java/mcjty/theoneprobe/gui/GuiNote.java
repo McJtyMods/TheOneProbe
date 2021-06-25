@@ -48,8 +48,8 @@ public class GuiNote extends Screen {
     @Override
     public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        minecraft.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(matrixStack.getLast().getMatrix(), guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
+        minecraft.getTextureManager().bind(background);
+        drawTexturedModalRect(matrixStack.last().pose(), guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "Things you should know about" + TextFormatting.GOLD + " The One Probe"); y += 10;
@@ -137,6 +137,6 @@ public class GuiNote extends Screen {
     }
 
     public static void open() {
-        Minecraft.getInstance().displayGuiScreen(new GuiNote());
+        Minecraft.getInstance().setScreen(new GuiNote());
     }
 }

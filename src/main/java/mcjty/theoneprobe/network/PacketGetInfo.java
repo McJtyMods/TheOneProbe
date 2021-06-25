@@ -42,7 +42,7 @@ public class PacketGetInfo  {
     @Nonnull private ItemStack pickBlock;
 
     public PacketGetInfo(PacketBuffer buf) {
-        dim = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, buf.readResourceLocation());
+        dim = RegistryKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
         pos = buf.readBlockPos();
         mode = ProbeMode.values()[buf.readByte()];
         byte sideByte = buf.readByte();
@@ -54,11 +54,11 @@ public class PacketGetInfo  {
         if (buf.readBoolean()) {
             hitVec = new Vector3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
         }
-        pickBlock = buf.readItemStack();
+        pickBlock = buf.readItem();
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeResourceLocation(dim.getLocation());
+        buf.writeResourceLocation(dim.location());
         buf.writeBlockPos(pos);
         buf.writeByte(mode.ordinal());
         buf.writeByte(sideHit == null ? 127 : sideHit.ordinal());
@@ -72,12 +72,12 @@ public class PacketGetInfo  {
         }
 
         PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
-        buffer.writeItemStack(pickBlock);
+        buffer.writeItem(pickBlock);
         if (buffer.writerIndex() <= Config.maxPacketToServer.get()) {
             buf.writeBytes(buffer);
         } else {
             ItemStack copy = new ItemStack(pickBlock.getItem(), pickBlock.getCount());
-            buf.writeItemStack(copy);
+            buf.writeItem(copy);
         }
     }
 
@@ -88,18 +88,18 @@ public class PacketGetInfo  {
         this.dim = dim;
         this.pos = pos;
         this.mode = mode;
-        this.sideHit = ((BlockRayTraceResult)mouseOver).getFace();
-        this.hitVec = mouseOver.getHitVec();
+        this.sideHit = ((BlockRayTraceResult)mouseOver).getDirection();
+        this.hitVec = mouseOver.getLocation();
         this.pickBlock = pickBlock;
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerWorld world = ctx.get().getSender().server.getWorld(dim);
+            ServerWorld world = ctx.get().getSender().server.getLevel(dim);
             if (world != null) {
                 ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(),
                         mode, world, pos, sideHit, hitVec, pickBlock);
-                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(dim, pos, probeInfo), ctx.get().getSender().connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(dim, pos, probeInfo), ctx.get().getSender().connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
             }
         });
         ctx.get().setPacketHandled(true);
@@ -120,7 +120,7 @@ public class PacketGetInfo  {
         }
 
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
-        if (world.isBlockLoaded(blockPos)) {
+        if (world.hasChunkAt(blockPos)) {
             BlockState state = world.getBlockState(blockPos);
             IProbeHitData data = new ProbeHitData(blockPos, hitVec, sideHit, pickBlock);
 

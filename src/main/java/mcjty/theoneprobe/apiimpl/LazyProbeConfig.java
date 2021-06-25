@@ -2,6 +2,8 @@ package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.api.IProbeConfig;
 
+import mcjty.theoneprobe.api.IProbeConfig.ConfigMode;
+
 public class LazyProbeConfig implements IProbeConfig {
 
     private IProbeConfig original;

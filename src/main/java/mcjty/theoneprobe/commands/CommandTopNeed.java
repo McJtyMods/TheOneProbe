@@ -18,15 +18,15 @@ public class CommandTopNeed implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("need")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity player = context.getSource().asPlayer();
-        PacketHandler.INSTANCE.sendTo(new PacketOpenGui(PacketOpenGui.GUI_NOTE), player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+        ServerPlayerEntity player = context.getSource().getPlayerOrException();
+        PacketHandler.INSTANCE.sendTo(new PacketOpenGui(PacketOpenGui.GUI_NOTE), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
         return 0;
     }
 }

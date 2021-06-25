@@ -25,11 +25,11 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                 vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2));
 
                 MobEntity entityLivingBase = (MobEntity) entity;
-                int totalArmorValue = entityLivingBase.getTotalArmorValue();
-                int age = entityLivingBase.getIdleTime();
+                int totalArmorValue = entityLivingBase.getArmorValue();
+                int age = entityLivingBase.getNoActionTime();
                 float absorptionAmount = entityLivingBase.getAbsorptionAmount();
-                float aiMoveSpeed = entityLivingBase.getAIMoveSpeed();
-                int revengeTimer = entityLivingBase.getRevengeTimer();
+                float aiMoveSpeed = entityLivingBase.getSpeed();
+                int revengeTimer = entityLivingBase.getLastHurtByMobTimestamp();
                 vertical
                         .text(CompoundText.createLabelInfo("Tot armor: ", totalArmorValue))
                         .text(CompoundText.createLabelInfo("Age: ", age))
@@ -43,7 +43,7 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                 }
 
                 AgeableEntity entityAgeable = (AgeableEntity) entity;
-                int growingAge = entityAgeable.getGrowingAge();
+                int growingAge = entityAgeable.getAge();
                 vertical
                         .text(CompoundText.createLabelInfo("Growing Age: ", growingAge));
             }

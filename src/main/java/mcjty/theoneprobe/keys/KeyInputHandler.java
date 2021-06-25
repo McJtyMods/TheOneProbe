@@ -8,9 +8,9 @@ public class KeyInputHandler {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (KeyBindings.toggleLiquids.isPressed()) {
+        if (KeyBindings.toggleLiquids.consumeClick()) {
             Config.setLiquids(!Config.showLiquids.get());
-        } else if (KeyBindings.toggleVisible.isPressed()) {
+        } else if (KeyBindings.toggleVisible.consumeClick()) {
             if (!Config.holdKeyToMakeVisible.get()) {
                 Config.setVisible(!Config.isVisible.get());
             }

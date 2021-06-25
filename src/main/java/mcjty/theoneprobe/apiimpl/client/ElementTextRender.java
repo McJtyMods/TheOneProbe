@@ -41,7 +41,7 @@ public class ElementTextRender {
                 // Translation is needed
                 String left = text.substring(0, start);
                 String middle = text.substring(start + 2, end);
-                middle = I18n.format(middle).trim();
+                middle = I18n.get(middle).trim();
                 String right = text.substring(end+2);
                 text = left + middle + right;
             } else {
@@ -75,14 +75,14 @@ public class ElementTextRender {
     }
 
     public static int getLegacyWidth(ITextComponent text) {
-        return Minecraft.getInstance().fontRenderer.getStringWidth(stylifyString(text));
+        return Minecraft.getInstance().font.width(stylifyString(text));
     }
     
     public static int getWidth(ITextComponent text) {
-    	return Minecraft.getInstance().fontRenderer.func_243245_a(text.func_241878_f());
+    	return Minecraft.getInstance().font.width(text.getVisualOrderText());
     }
     
     public static int getHeight() {
-    	return Minecraft.getInstance().fontRenderer.FONT_HEIGHT;
+    	return Minecraft.getInstance().font.lineHeight;
     }
 }

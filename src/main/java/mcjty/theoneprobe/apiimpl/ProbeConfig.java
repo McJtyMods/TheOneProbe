@@ -4,6 +4,8 @@ import mcjty.theoneprobe.api.IProbeConfig;
 
 import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.*;
 
+import mcjty.theoneprobe.api.IProbeConfig.ConfigMode;
+
 public class ProbeConfig implements IProbeConfig {
 
     private int showRF = 1;

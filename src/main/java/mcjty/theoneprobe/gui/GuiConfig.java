@@ -87,10 +87,10 @@ public class GuiConfig extends Screen {
     @Override
     public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        minecraft.getTextureManager().bindTexture(background);
-        Matrix4f matrix = matrixStack.getLast().getMatrix();
+        minecraft.getTextureManager().bind(background);
+        Matrix4f matrix = matrixStack.last().pose();
         drawTexturedModalRect(matrix, guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
-        minecraft.getTextureManager().bindTexture(scene);
+        minecraft.getTextureManager().bind(scene);
         drawTexturedModalRect(matrix, guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
 
         renderProbe(matrixStack);
@@ -206,7 +206,7 @@ public class GuiConfig extends Screen {
         probeInfo.horizontal()
                 .item(pickBlock)
                 .vertical()
-                .text(CompoundText.create().name(pickBlock.getTranslationKey()))
+                .text(CompoundText.create().name(pickBlock.getDescriptionId()))
                 .text(CompoundText.create().style(MODNAME).text(modName));
         probeInfo.text(CompoundText.createLabelInfo("Fuel: ","5 volts"));
         probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text("Oups!"));
@@ -215,7 +215,7 @@ public class GuiConfig extends Screen {
     }
 
     private void renderElements(ProbeInfo probeInfo, IOverlayStyle style, MatrixStack matrixStack) {
-        matrixStack.push();
+        matrixStack.pushPose();
         float scale = (float) (1 / Config.tooltipScale.get());
         matrixStack.scale(scale, scale, scale);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -268,16 +268,16 @@ public class GuiConfig extends Screen {
             RenderHelper.drawThickBeveledBox(matrixStack, x+offset, y+offset, x2-offset, y2-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
-        if (!Minecraft.getInstance().isGamePaused()) {
+        if (!Minecraft.getInstance().isPaused()) {
             RenderHelper.rot += .5f;
         }
 
         probeInfo.render(matrixStack, x + margin, y + margin);
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     public static void open() {
-        Minecraft.getInstance().displayGuiScreen(new GuiConfig());
+        Minecraft.getInstance().setScreen(new GuiConfig());
     }
 }

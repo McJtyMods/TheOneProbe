@@ -30,8 +30,8 @@ public class ElementTank implements IElement {
         style = new ProgressStyle()
                 .width(buffer.readInt())
                 .height(buffer.readInt())
-                .prefix(buffer.readTextComponent())
-                .suffix(buffer.readTextComponent())
+                .prefix(buffer.readComponent())
+                .suffix(buffer.readComponent())
                 .borderColor(buffer.readInt())
                 .filledColor(buffer.readInt())
                 .alternateFilledColor(buffer.readInt())
@@ -40,7 +40,7 @@ public class ElementTank implements IElement {
                 .numberFormat(NumberFormat.values()[buffer.readByte()])
                 .lifeBar(buffer.readBoolean())
                 .armorBar(buffer.readBoolean())
-                .alignment(buffer.readEnumValue(ElementAlignment.class));
+                .alignment(buffer.readEnum(ElementAlignment.class));
 	}
 	
 	public IProgressStyle getStyle() {
@@ -67,8 +67,8 @@ public class ElementTank implements IElement {
 		tank.toBytes(buf);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
-        buf.writeTextComponent(style.getPrefixComp());
-        buf.writeTextComponent(style.getSuffixComp());
+        buf.writeComponent(style.getPrefixComp());
+        buf.writeComponent(style.getSuffixComp());
         buf.writeInt(style.getBorderColor());
         buf.writeInt(style.getFilledColor());
         buf.writeInt(style.getAlternatefilledColor());
@@ -77,7 +77,7 @@ public class ElementTank implements IElement {
         buf.writeByte(style.getNumberFormat().ordinal());
         buf.writeBoolean(style.isLifeBar());
         buf.writeBoolean(style.isArmorBar());
-        buf.writeEnumValue(style.getAlignment());
+        buf.writeEnum(style.getAlignment());
 	}
 	
 	@Override

@@ -11,6 +11,6 @@ public class LootTables extends LootTableProvider {
     }
 
     @Override
-    public void act(DirectoryCache cache) {
+    public void run(DirectoryCache cache) {
     }
 }

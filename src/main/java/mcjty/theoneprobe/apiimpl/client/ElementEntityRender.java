@@ -23,7 +23,7 @@ import java.util.Map;
 public class ElementEntityRender {
 
     public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, MatrixStack matrixStack, int x, int y) {
-        Entity entity = Minecraft.getInstance().world.getEntityByID(playerID);
+        Entity entity = Minecraft.getInstance().level.getEntity(playerID);
         if (entity != null) {
             renderEntity(style, matrixStack, x, y, entity);
         }
@@ -40,20 +40,20 @@ public class ElementEntityRender {
                     EntityType<?> value = ForgeRegistries.ENTITIES.getValue(id);
                     if (value != null) {
                         try {
-                            World world = Minecraft.getInstance().world;
+                            World world = Minecraft.getInstance().level;
 
                             entity = value.create(world);
-                            entity.setLocationAndAngles(0.5D, 0.0D, 0.5D, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
+                            entity.moveTo(0.5D, 0.0D, 0.5D, MathHelper.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
 
                             if (entity instanceof MobEntity) {
                                 MobEntity mob = (MobEntity) entity;
 
-                                mob.rotationYawHead = mob.rotationYaw;
-                                mob.renderYawOffset = mob.rotationYaw;
-                                mob.setLeftHanded(world.rand.nextFloat() < 0.05F);
+                                mob.yHeadRot = mob.yRot;
+                                mob.yBodyRot = mob.yRot;
+                                mob.setLeftHanded(world.random.nextFloat() < 0.05F);
                             }
 
-                            entity.read(entityNBT);
+                            entity.load(entityNBT);
 //                            EntityType.applyItemNBT(world, null, entity, entityNBT);
                         } catch (Exception ignore) {
                             // This can crash due to a vanilla bug with foxes. Workaround here
@@ -63,7 +63,7 @@ public class ElementEntityRender {
                     EntityType<?> value = ForgeRegistries.ENTITIES.getValue(id);
                     if (value != null) {
                         try {
-                            entity = value.create(Minecraft.getInstance().world);
+                            entity = value.create(Minecraft.getInstance().level);
                         } catch (Exception ignore) {
                             // This can crash due to a vanilla bug with foxes. Workaround here
                         }
@@ -178,7 +178,7 @@ public class ElementEntityRender {
     }
 
     private static void renderEntity(IEntityStyle style, MatrixStack matrixStack, int x, int y, Entity entity) {
-        float height = entity.getHeight();
+        float height = entity.getBbHeight();
         height = (float) ((height - 1) * .7 + 1);
         float s = style.getScale() * ((style.getHeight() * 14.0f / 25) / height);
 

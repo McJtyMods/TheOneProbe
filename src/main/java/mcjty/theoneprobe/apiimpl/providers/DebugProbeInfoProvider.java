@@ -36,13 +36,13 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
         String simpleName = block.getClass().getSimpleName();
         IProbeInfo vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2))
                 .text(CompoundText.createLabelInfo("Reg Name: ", block.getRegistryName().toString()))
-                .text(CompoundText.createLabelInfo("Unlocname: ", block.getTranslationKey()))
+                .text(CompoundText.createLabelInfo("Unlocname: ", block.getDescriptionId()))
                 .text(CompoundText.createLabelInfo("Class: ", simpleName))
-                .text(CompoundText.createLabelInfo("Hardness: ", blockState.getBlockHardness(world, pos)))
-                .text(CompoundText.createLabelInfo("Power W: ",+ blockState.getWeakPower(world, pos, side.getOpposite()))
-                        .style(LABEL).text(", S: ").style(INFO).text(String.valueOf(blockState.getStrongPower(world, pos, side.getOpposite()))))
+                .text(CompoundText.createLabelInfo("Hardness: ", blockState.getDestroySpeed(world, pos)))
+                .text(CompoundText.createLabelInfo("Power W: ",+ blockState.getSignal(world, pos, side.getOpposite()))
+                        .style(LABEL).text(", S: ").style(INFO).text(String.valueOf(blockState.getDirectSignal(world, pos, side.getOpposite()))))
                 .text(CompoundText.createLabelInfo("Light: ", block.getLightValue(blockState, world, pos)));
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if (te != null) {
             vertical.text(CompoundText.createLabelInfo("TE: ", te.getClass().getSimpleName()));
         }

@@ -29,7 +29,7 @@ public class ElementItemStackRender {
 
             if (!RenderHelper.renderItemStack(Minecraft.getInstance(), itemRender, itemStack, matrixStack, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount)) {
                 // There was a crash rendering this item
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, TextFormatting.RED + "ERROR: " + itemStack.getDisplayName());
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, TextFormatting.RED + "ERROR: " + itemStack.getHoverName());
             }
         }
     }

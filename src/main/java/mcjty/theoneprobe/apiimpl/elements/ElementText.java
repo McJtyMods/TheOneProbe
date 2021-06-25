@@ -37,8 +37,8 @@ public class ElementText implements IElement {
     }
 
     public ElementText(PacketBuffer buf) {
-        text = buf.readTextComponent();
-        style = new TextStyle().alignment(buf.readEnumValue(ElementAlignment.class)).topPadding(buf.readInt()).bottomPadding(buf.readInt()).leftPadding(buf.readInt()).rightPadding(buf.readInt());
+        text = buf.readComponent();
+        style = new TextStyle().alignment(buf.readEnum(ElementAlignment.class)).topPadding(buf.readInt()).bottomPadding(buf.readInt()).leftPadding(buf.readInt()).rightPadding(buf.readInt());
         if (buf.readBoolean()) {
             style.width(buf.readInt());
         }
@@ -95,8 +95,8 @@ public class ElementText implements IElement {
 
     @Override
     public void toBytes(PacketBuffer buffer) {
-        buffer.writeTextComponent(text);
-        buffer.writeEnumValue(style.getAlignment()).writeInt(style.getTopPadding()).writeInt(style.getBottomPadding()).writeInt(style.getLeftPadding()).writeInt(style.getRightPadding());
+        buffer.writeComponent(text);
+        buffer.writeEnum(style.getAlignment()).writeInt(style.getTopPadding()).writeInt(style.getBottomPadding()).writeInt(style.getLeftPadding()).writeInt(style.getRightPadding());
         buffer.writeBoolean(style.getWidth() != null);
         if (style.getWidth() != null) {
             buffer.writeInt(style.getWidth());

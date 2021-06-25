@@ -11,20 +11,22 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
+import net.minecraft.item.Item.Properties;
+
 public class ProbeNote extends Item {
 
     public ProbeNote() {
         super(new Properties()
-                .maxStackSize(1)
-                .group(TheOneProbe.tabProbe));
+                .stacksTo(1)
+                .tab(TheOneProbe.tabProbe));
         setRegistryName("probenote");
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (world.isRemote) {
-            if (player.isSneaking()) {
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (world.isClientSide) {
+            if (player.isShiftKeyDown()) {
                 GuiConfig.open();
             } else {
                 GuiNote.open();

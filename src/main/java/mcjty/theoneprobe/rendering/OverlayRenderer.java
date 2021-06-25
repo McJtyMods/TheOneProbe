@@ -72,20 +72,20 @@ public class OverlayRenderer {
     public static void renderHUD(ProbeMode mode, MatrixStack matrixStack, float partialTicks) {
         double dist = Config.probeDistance.get();
 
-        RayTraceResult mouseOver = Minecraft.getInstance().objectMouseOver;
+        RayTraceResult mouseOver = Minecraft.getInstance().hitResult;
         if (mouseOver != null) {
             if (mouseOver.getType() == RayTraceResult.Type.ENTITY) {
-                matrixStack.push();
+                matrixStack.pushPose();
 
                 double scale = Config.tooltipScale.get();
 
-                double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
-                double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
+                double sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+                double sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
                 setupOverlayRendering(sw * scale, sh * scale);
                 renderHUDEntity(matrixStack, mode, mouseOver, sw * scale, sh * scale);
                 setupOverlayRendering(sw, sh);
-                matrixStack.pop();
+                matrixStack.popPose();
 
                 checkCleanup();
                 return;
@@ -94,28 +94,28 @@ public class OverlayRenderer {
 
         PlayerEntity entity = Minecraft.getInstance().player;
         Vector3d start  = entity.getEyePosition(partialTicks);
-        Vector3d vec31 = entity.getLook(partialTicks);
+        Vector3d vec31 = entity.getViewVector(partialTicks);
         Vector3d end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
 
         RayTraceContext context = new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, Config.showLiquids.get() ? RayTraceContext.FluidMode.ANY : RayTraceContext.FluidMode.NONE, entity);
-        mouseOver = entity.getEntityWorld().rayTraceBlocks(context);
+        mouseOver = entity.getCommandSenderWorld().clip(context);
         if (mouseOver == null) {
             return;
         }
 
         if (mouseOver.getType() == RayTraceResult.Type.BLOCK) {
-            matrixStack.push();
+            matrixStack.pushPose();
 
             double scale = Config.tooltipScale.get();
 
-            double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
-            double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
+            double sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+            double sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
             setupOverlayRendering(sw * scale, sh * scale);
             renderHUDBlock(matrixStack, mode, mouseOver, sw * scale, sh * scale);
             setupOverlayRendering(sw, sh);
 
-            matrixStack.pop();
+            matrixStack.popPose();
         }
 
         checkCleanup();
@@ -154,13 +154,13 @@ public class OverlayRenderer {
 //        }
 
 //        String entityString = EntityList.getEntityString(entity);
-        String entityString = entity.getEntityString();
+        String entityString = entity.getEncodeId();
         if (entityString == null && !(entity instanceof PlayerEntity)) {
             // We can't show info for this entity
             return;
         }
 
-        UUID uuid = entity.getUniqueID();
+        UUID uuid = entity.getUUID();
 
         PlayerEntity player = Minecraft.getInstance().player;
         long time = System.currentTimeMillis();
@@ -205,19 +205,19 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntity player) {
-        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getEntityWorld().getDimensionKey(), mode, mouseOver, entity));
+        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(MatrixStack matrixStack, ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
         if (!(mouseOver instanceof BlockRayTraceResult)) {
             return;
         }
-        BlockPos blockPos = ((BlockRayTraceResult) mouseOver).getPos();
+        BlockPos blockPos = ((BlockRayTraceResult) mouseOver).getBlockPos();
         if (blockPos == null) {
             return;
         }
         PlayerEntity player = Minecraft.getInstance().player;
-        if (player.getEntityWorld().isAirBlock(blockPos)) {
+        if (player.getCommandSenderWorld().isEmptyBlock(blockPos)) {
             return;
         }
 
@@ -225,10 +225,10 @@ public class OverlayRenderer {
 
         IElement damageElement = null;
         if (Config.showBreakProgress.get() > 0) {
-            float damage = Minecraft.getInstance().playerController.curBlockDamageMP;
+            float damage = Minecraft.getInstance().gameMode.destroyProgress;
             if (damage > 0) {
                 if (Config.showBreakProgress.get() == 2) {
-                    damageElement = new ElementText(new StringTextComponent("Progress " + (int) (damage * 100) + "%").mergeStyle(TextFormatting.RED));
+                    damageElement = new ElementText(new StringTextComponent("Progress " + (int) (damage * 100) + "%").withStyle(TextFormatting.RED));
                 } else {
                     damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
                             .prefix("Progress ")
@@ -242,7 +242,7 @@ public class OverlayRenderer {
             }
         }
 
-        RegistryKey<World> dimension = player.getEntityWorld().getDimensionKey();
+        RegistryKey<World> dimension = player.getCommandSenderWorld().dimension();
         Pair<RegistryKey<World>, BlockPos> key = Pair.of(dimension, blockPos);
         Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(key);
         if (cacheEntry == null || cacheEntry.getValue() == null) {
@@ -287,11 +287,11 @@ public class OverlayRenderer {
     private static ProbeInfo getWaitingInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, PlayerEntity player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
 
-        World world = player.getEntityWorld();
+        World world = player.getCommandSenderWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
-        IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getHitVec(), ((BlockRayTraceResult)mouseOver).getFace(), pickBlock);
+        IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getLocation(), ((BlockRayTraceResult)mouseOver).getDirection(), pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
         try {
@@ -307,7 +307,7 @@ public class OverlayRenderer {
 
     private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntity player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
-        IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.getHitVec());
+        IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.getLocation());
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
         try {
@@ -322,7 +322,7 @@ public class OverlayRenderer {
     }
 
     private static void requestBlockInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, PlayerEntity player) {
-        World world = player.getEntityWorld();
+        World world = player.getCommandSenderWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
@@ -334,21 +334,21 @@ public class OverlayRenderer {
             pickBlock = pickBlock.copy();
             pickBlock.setTag(null);
         }
-        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.getDimensionKey(), blockPos, mode, mouseOver, pickBlock));
+        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.dimension(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, MatrixStack matrixStack) {
-        matrixStack.push();
+        matrixStack.pushPose();
 
         double scale = Config.tooltipScale.get();
 
-        double sw = Minecraft.getInstance().getMainWindow().getScaledWidth();
-        double sh = Minecraft.getInstance().getMainWindow().getScaledHeight();
+        double sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        double sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
         setupOverlayRendering(sw * scale, sh * scale);
         renderElements(matrixStack, (ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
         setupOverlayRendering(sw, sh);
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     private static void cleanupCachedBlocks(long time) {
@@ -426,7 +426,7 @@ public class OverlayRenderer {
             RenderHelper.drawThickBeveledBox(matrixStack, x+offset, y+offset, x + w-1-offset, y + h-1-offset, thick, style.getBorderColor(), style.getBorderColor(), style.getBoxColor());
         }
 
-        if (!Minecraft.getInstance().isGamePaused()) {
+        if (!Minecraft.getInstance().isPaused()) {
             RenderHelper.rot += .5f;
         }
 

@@ -76,7 +76,7 @@ public class ClientProxy implements IProxy {
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
         if (ignoreNextGuiClose) {
-            Screen current = Minecraft.getInstance().currentScreen;
+            Screen current = Minecraft.getInstance().screen;
             if (event.getGui() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
                 ignoreNextGuiClose = false;
                 // We don't want our gui to be closed for a new 'null' guil
@@ -92,7 +92,7 @@ public class ClientProxy implements IProxy {
         }
 
         if (Config.holdKeyToMakeVisible.get()) {
-            if (!KeyBindings.toggleVisible.isKeyDown()) {
+            if (!KeyBindings.toggleVisible.isDown()) {
                 return;
             }
         } else {
@@ -126,18 +126,18 @@ public class ClientProxy implements IProxy {
                 return ProbeMode.EXTENDED;
             }
         }
-        return player.isSneaking() ? ProbeMode.EXTENDED : ProbeMode.NORMAL;
+        return player.isShiftKeyDown() ? ProbeMode.EXTENDED : ProbeMode.NORMAL;
     }
 
     private boolean hasItemInEitherHand(Item item) {
-        ItemStack mainHeldItem = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
-        ItemStack offHeldItem = Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND);
+        ItemStack mainHeldItem = Minecraft.getInstance().player.getItemInHand(Hand.MAIN_HAND);
+        ItemStack offHeldItem = Minecraft.getInstance().player.getItemInHand(Hand.OFF_HAND);
         return mainHeldItem.getItem() == item || offHeldItem.getItem() == item;
     }
 
 
     private boolean hasItemInMainHand(Item item) {
-        ItemStack mainHeldItem = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
+        ItemStack mainHeldItem = Minecraft.getInstance().player.getItemInHand(Hand.MAIN_HAND);
         return mainHeldItem.getItem() == item;
     }
 }

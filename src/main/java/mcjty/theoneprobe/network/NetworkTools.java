@@ -11,11 +11,11 @@ public class NetworkTools {
 
     /// This function supports itemstacks with more then 64 items.
     public static ItemStack readItemStack(PacketBuffer buf) {
-        CompoundNBT nbt = buf.readCompoundTag();
+        CompoundNBT nbt = buf.readNbt();
         if (nbt == null) {
             return ItemStack.EMPTY;
         }
-        ItemStack stack = ItemStack.read(nbt);
+        ItemStack stack = ItemStack.of(nbt);
         stack.setCount(buf.readInt());
         return stack;
     }
@@ -23,9 +23,9 @@ public class NetworkTools {
     /// This function supports itemstacks with more then 64 items.
     public static void writeItemStack(PacketBuffer buf, ItemStack itemStack) {
         CompoundNBT nbt = new CompoundNBT();
-        itemStack.write(nbt);
+        itemStack.save(nbt);
         try {
-            buf.writeCompoundTag(nbt);
+            buf.writeNbt(nbt);
             buf.writeInt(itemStack.getCount());
         } catch (Exception e) {
             TheOneProbe.logger.error(e);
@@ -85,7 +85,7 @@ public class NetworkTools {
     public static <T extends Enum<T>> void writeEnumCollection(PacketBuffer buf, Collection<T> collection) {
         buf.writeVarInt(collection.size());
         for (T type : collection) {
-            buf.writeEnumValue(type);
+            buf.writeEnum(type);
         }
     }
 
@@ -93,7 +93,7 @@ public class NetworkTools {
         collection.clear();
         int size = buf.readVarInt();
         for (int i = 0 ; i < size ; i++) {
-            collection.add(buf.readEnumValue(enumClass));
+            collection.add(buf.readEnum(enumClass));
         }
     }
 

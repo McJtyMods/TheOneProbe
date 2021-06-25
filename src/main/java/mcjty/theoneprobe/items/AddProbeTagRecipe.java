@@ -18,8 +18,8 @@ public class AddProbeTagRecipe extends AbstractRecipeAdaptor {
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
-        ItemStack result = recipe.getCraftingResult(inv);
+    public ItemStack assemble(CraftingInventory inv) {
+        ItemStack result = recipe.assemble(inv);
         CompoundNBT tc = new CompoundNBT();
         tc.putInt(ModItems.PROBETAG, 1);
         result.setTag(tc);

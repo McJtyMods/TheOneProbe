@@ -19,8 +19,8 @@ public abstract class AbstractRecipeAdaptor implements ICraftingRecipe, net.mine
     }
 
     @Override
-    public boolean canFit(int width, int height) {
-        return recipe.canFit(width, height);
+    public boolean canCraftInDimensions(int width, int height) {
+        return recipe.canCraftInDimensions(width, height);
     }
 
     @Override
@@ -34,8 +34,8 @@ public abstract class AbstractRecipeAdaptor implements ICraftingRecipe, net.mine
     }
 
     @Override
-    public boolean isDynamic() {
-        return recipe.isDynamic();
+    public boolean isSpecial() {
+        return recipe.isSpecial();
     }
 
     @Override
@@ -44,8 +44,8 @@ public abstract class AbstractRecipeAdaptor implements ICraftingRecipe, net.mine
     }
 
     @Override
-    public ItemStack getIcon() {
-        return recipe.getIcon();
+    public ItemStack getToastSymbol() {
+        return recipe.getToastSymbol();
     }
 
     public ShapedRecipe getRecipe() {
@@ -68,13 +68,13 @@ public abstract class AbstractRecipeAdaptor implements ICraftingRecipe, net.mine
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
-        return recipe.getCraftingResult(inv);
+    public ItemStack assemble(CraftingInventory inv) {
+        return recipe.assemble(inv);
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
-        return recipe.getRecipeOutput();
+    public ItemStack getResultItem() {
+        return recipe.getResultItem();
     }
 
     @Override

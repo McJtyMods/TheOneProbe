@@ -32,8 +32,8 @@ public class ElementProgress implements IElement {
         style = new ProgressStyle()
                 .width(buf.readInt())
                 .height(buf.readInt())
-                .prefix(buf.readTextComponent())
-                .suffix(buf.readTextComponent())
+                .prefix(buf.readComponent())
+                .suffix(buf.readComponent())
                 .borderColor(buf.readInt())
                 .filledColor(buf.readInt())
                 .alternateFilledColor(buf.readInt())
@@ -42,7 +42,7 @@ public class ElementProgress implements IElement {
                 .numberFormat(NumberFormat.values()[buf.readByte()])
                 .lifeBar(buf.readBoolean())
                 .armorBar(buf.readBoolean())
-                .alignment(buf.readEnumValue(ElementAlignment.class));
+                .alignment(buf.readEnum(ElementAlignment.class));
     }
     
     // Helper method that allows to edit the style of a helper method reducing copy/pasting code from internals
@@ -58,10 +58,10 @@ public class ElementProgress implements IElement {
 	public static ITextComponent format(long in, NumberFormat style, ITextComponent suffix) {
 		switch (style) {
 			case FULL:
-				return new StringTextComponent(Long.toString(in)).appendSibling(suffix);
+				return new StringTextComponent(Long.toString(in)).append(suffix);
 			case COMPACT:
 				if (in < 1000) {
-                    return new StringTextComponent(Long.toString(in) + " ").appendSibling(suffix);
+                    return new StringTextComponent(Long.toString(in) + " ").append(suffix);
                 }
 				int unit = 1000;
 				int exp = (int) (Math.log(in) / Math.log(unit));
@@ -70,14 +70,14 @@ public class ElementProgress implements IElement {
 					s = s.substring(1);
 					if (exp - 2 >= 0) {
 						char pre = "kMGTPE".charAt(exp - 2);
-						return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).appendSibling(new StringTextComponent(s).mergeStyle(suffix.getStyle()));
+						return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).append(new StringTextComponent(s).withStyle(suffix.getStyle()));
 					}
-					return new StringTextComponent(String.format("%.1f", Double.valueOf(in / Math.pow(unit, exp)))).appendSibling(new StringTextComponent(s).mergeStyle(suffix.getStyle()));
+					return new StringTextComponent(String.format("%.1f", Double.valueOf(in / Math.pow(unit, exp)))).append(new StringTextComponent(s).withStyle(suffix.getStyle()));
 				}
 				char pre = "kMGTPE".charAt(exp - 1);
-				return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).appendSibling(suffix);
+				return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).append(suffix);
 			case COMMAS:
-				return new StringTextComponent(dfCommas.format(in)).appendSibling(suffix);
+				return new StringTextComponent(dfCommas.format(in)).append(suffix);
 			case NONE: return suffix;
 		}
 		return new StringTextComponent(Long.toString(in));
@@ -111,8 +111,8 @@ public class ElementProgress implements IElement {
         buf.writeLong(max);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
-        buf.writeTextComponent(style.getPrefixComp());
-        buf.writeTextComponent(style.getSuffixComp());
+        buf.writeComponent(style.getPrefixComp());
+        buf.writeComponent(style.getSuffixComp());
         buf.writeInt(style.getBorderColor());
         buf.writeInt(style.getFilledColor());
         buf.writeInt(style.getAlternatefilledColor());
@@ -121,7 +121,7 @@ public class ElementProgress implements IElement {
         buf.writeByte(style.getNumberFormat().ordinal());
         buf.writeBoolean(style.isLifeBar());
         buf.writeBoolean(style.isArmorBar());
-        buf.writeEnumValue(style.getAlignment());
+        buf.writeEnum(style.getAlignment());
     }
 
     @Override

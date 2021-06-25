@@ -35,8 +35,8 @@ public class PacketGetEntityInfo {
     private Vector3d hitVec;
 
     public PacketGetEntityInfo(PacketBuffer buf) {
-        dim = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, buf.readResourceLocation());
-        uuid = buf.readUniqueId();
+        dim = RegistryKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
+        uuid = buf.readUUID();
         mode = ProbeMode.values()[buf.readByte()];
         if (buf.readBoolean()) {
             hitVec = new Vector3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
@@ -44,8 +44,8 @@ public class PacketGetEntityInfo {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeResourceLocation(dim.getLocation());
-        buf.writeUniqueId(uuid);
+        buf.writeResourceLocation(dim.location());
+        buf.writeUUID(uuid);
         buf.writeByte(mode.ordinal());
         if (hitVec == null) {
             buf.writeBoolean(false);
@@ -62,20 +62,20 @@ public class PacketGetEntityInfo {
 
     public PacketGetEntityInfo(RegistryKey<World> dim, ProbeMode mode, RayTraceResult mouseOver, Entity entity) {
         this.dim = dim;
-        this.uuid = entity.getUniqueID();
+        this.uuid = entity.getUUID();
         this.mode = mode;
-        this.hitVec = mouseOver.getHitVec();
+        this.hitVec = mouseOver.getLocation();
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerWorld world = ctx.get().getSender().server.getWorld(dim);
+            ServerWorld world = ctx.get().getSender().server.getLevel(dim);
             if (world != null) {
-                Entity entity = world.getEntityByUuid(uuid);
+                Entity entity = world.getEntity(uuid);
                 if (entity != null) {
                     ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(), mode, world, entity, hitVec);
                     PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(uuid, probeInfo),
-                            ctx.get().getSender().connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+                            ctx.get().getSender().connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
                 }
             }
         });

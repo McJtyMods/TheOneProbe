@@ -55,9 +55,9 @@ public class ElementProgressRender {
     private static void renderText(MatrixStack matrixStack, int x, int y, int w, long current, IProgressStyle style) {
         if (style.isShowText()) {
             Minecraft mc = Minecraft.getInstance();
-            FontRenderer render = mc.fontRenderer;
-            ITextComponent s = style.getPrefixComp().deepCopy().appendSibling(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
-            int textWidth = render.func_243245_a(s.func_241878_f());
+            FontRenderer render = mc.font;
+            ITextComponent s = style.getPrefixComp().copy().append(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
+            int textWidth = render.width(s.getVisualOrderText());
             switch (style.getAlignment()) {
                 case ALIGN_BOTTOMRIGHT:
                     RenderHelper.renderText(mc, matrixStack, (x + w - 3) - textWidth, y + 2, s);
@@ -74,8 +74,8 @@ public class ElementProgressRender {
 
     private static void renderLifeBar(long current, MatrixStack matrixStack, int x, int y, int w, int h) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
-        Matrix4f matrix = matrixStack.getLast().getMatrix();
+        Minecraft.getInstance().getTextureManager().bind(ICONS);
+        Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(matrix, x, y, 52, 0, 9, 9);
@@ -93,8 +93,8 @@ public class ElementProgressRender {
 
     private static void renderArmorBar(long current, MatrixStack matrixStack, int x, int y, int w, int h) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
-        Matrix4f matrix = matrixStack.getLast().getMatrix();
+        Minecraft.getInstance().getTextureManager().bind(ICONS);
+        Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(matrix, x, y, 43, 9, 9, 9);
@@ -119,14 +119,14 @@ public class ElementProgressRender {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
-        mc.getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-        Function<ResourceLocation, TextureAtlasSprite> map = mc.getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+        mc.getTextureManager().bind(PlayerContainer.BLOCK_ATLAS);
+        Function<ResourceLocation, TextureAtlasSprite> map = mc.getTextureAtlas(PlayerContainer.BLOCK_ATLAS);
         width -= 2;
         FluidStack[] fluids = tank.getFluids();
         int start = 1;
         int tanks = fluids.length;
         int max = tank.getCapacity();
-        Matrix4f matrix = matrixStack.getLast().getMatrix();
+        Matrix4f matrix = matrixStack.last().pose();
         for (int i = 0; i < tanks; i++) {
             FluidStack stack = fluids[i];
             int lvl = (int) (stack == null ? 0 : (((double) stack.getAmount() / max) * width));
