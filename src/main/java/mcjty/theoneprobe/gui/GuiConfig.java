@@ -1,8 +1,10 @@
 package mcjty.theoneprobe.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import javax.annotation.Nonnull;
+
+import com.mojang.math.Matrix4f;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.CompoundText;
@@ -11,15 +13,14 @@ import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class GuiConfig extends Screen {
     private static final List<Preset> presets = new ArrayList<>();
 
     public GuiConfig() {
-        super(new StringTextComponent("TOP Config"));
+        super(new TextComponent("TOP Config"));
     }
 
     private List<HitBox> hitboxes = Collections.emptyList();
@@ -85,7 +86,7 @@ public class GuiConfig extends Screen {
 //    }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         minecraft.getTextureManager().bind(background);
         Matrix4f matrix = matrixStack.last().pose();
@@ -97,7 +98,7 @@ public class GuiConfig extends Screen {
 
         int x = WIDTH + guiLeft + 10;
         int y = guiTop + 10;
-        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, TextFormatting.GOLD + "Placement:");
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, ChatFormatting.GOLD + "Placement:");
         y += 12;
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x+10, y, "Click on corner in screenshot");
         y += 10;
@@ -107,7 +108,7 @@ public class GuiConfig extends Screen {
         y += 20;
 
         hitboxes = new ArrayList<>();
-        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, TextFormatting.GOLD + "Presets:");
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, ChatFormatting.GOLD + "Presets:");
         y += 12;
         for (Preset preset : presets) {
             y = addPreset(matrixStack, x, y, preset);
@@ -115,7 +116,7 @@ public class GuiConfig extends Screen {
 
         y += 20;
 
-        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, TextFormatting.GOLD + "Scale:");
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, ChatFormatting.GOLD + "Scale:");
         y += 12;
         addButton(matrixStack, x+10, y, 30, 14, "--", () -> { Config.setScale(1.2f);}); x += 36;
         addButton(matrixStack, x+10, y, 30, 14, "-", () -> { Config.setScale(1.1f);}); x += 36;
@@ -182,7 +183,7 @@ public class GuiConfig extends Screen {
         }
     }
 
-    private int addPreset(MatrixStack matrixStack, int x, int y, Preset preset) {
+    private int addPreset(PoseStack matrixStack, int x, int y, Preset preset) {
         fill(matrixStack, x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 20, y, preset.getName());
         hitboxes.add(new HitBox(x + 10 - guiLeft, y - 1 - guiTop, x + 10 + WIDTH - 50 - guiLeft, y + 10 - guiTop, () -> {
@@ -192,13 +193,13 @@ public class GuiConfig extends Screen {
         return y;
     }
 
-    private void addButton(MatrixStack matrixStack, int x, int y, int width, int height, String text, Runnable runnable) {
+    private void addButton(PoseStack matrixStack, int x, int y, int width, int height, String text, Runnable runnable) {
         fill(matrixStack, x, y, x + width-1, y + height-1, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 3, y + 3, text);
         hitboxes.add(new HitBox(x - guiLeft, y - guiTop, x + width -1 - guiLeft, y + height -1 - guiTop, runnable));
     }
 
-    private void renderProbe(MatrixStack matrixStack) {
+    private void renderProbe(PoseStack matrixStack) {
         Block block = Blocks.OAK_LOG;
         String modName = Tools.getModName(block);
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
@@ -214,7 +215,7 @@ public class GuiConfig extends Screen {
         renderElements(probeInfo, Config.getDefaultOverlayStyle(), matrixStack);
     }
 
-    private void renderElements(ProbeInfo probeInfo, IOverlayStyle style, MatrixStack matrixStack) {
+    private void renderElements(ProbeInfo probeInfo, IOverlayStyle style, PoseStack matrixStack) {
         matrixStack.pushPose();
         float scale = (float) (1 / Config.tooltipScale.get());
         matrixStack.scale(scale, scale, scale);

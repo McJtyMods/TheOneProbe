@@ -4,14 +4,14 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.ElementVertical;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProbeInfo extends ElementVertical {
 
-    public void fromBytes(PacketBuffer buf) {
+    public void fromBytes(FriendlyByteBuf buf) {
         children = createElements(buf);
     }
 
@@ -19,7 +19,7 @@ public class ProbeInfo extends ElementVertical {
     	super(new LayoutStyle().spacing(2).alignment(ElementAlignment.ALIGN_TOPLEFT));
     }
 
-    public static List<IElement> createElements(PacketBuffer buf) {
+    public static List<IElement> createElements(FriendlyByteBuf buf) {
         int size = buf.readVarInt();
         List<IElement> elements = new ArrayList<>(size);
         for (int i = 0 ; i < size ; i++) {
@@ -30,7 +30,7 @@ public class ProbeInfo extends ElementVertical {
         return elements;
     }
 
-    public static void writeElements(List<IElement> elements, PacketBuffer buf) {
+    public static void writeElements(List<IElement> elements, FriendlyByteBuf buf) {
         buf.writeVarInt(elements.size());
         for (IElement element : elements) {
             buf.writeVarInt(element.getID());

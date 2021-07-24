@@ -3,9 +3,9 @@ package mcjty.theoneprobe.apiimpl.styles;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.NumberFormat;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * Style for the progress bar.
@@ -21,8 +21,8 @@ public class ProgressStyle implements IProgressStyle {
     private boolean lifeBar = false;
     private boolean armorBar = false;
 	private ElementAlignment alignment = ElementAlignment.ALIGN_TOPLEFT;
-	private ITextComponent prefix = StringTextComponent.EMPTY;
-	private ITextComponent suffix = StringTextComponent.EMPTY;
+	private Component prefix = TextComponent.EMPTY;
+	private Component suffix = TextComponent.EMPTY;
 
     private NumberFormat numberFormat = NumberFormat.FULL;
     
@@ -79,22 +79,22 @@ public class ProgressStyle implements IProgressStyle {
 
     @Override
     public ProgressStyle prefix(String prefix) {
-        return prefix(new TranslationTextComponent(prefix));
+        return prefix(new TranslatableComponent(prefix));
     }
 
     @Override
     public ProgressStyle suffix(String suffix) {
-        return suffix(new TranslationTextComponent(suffix));
+        return suffix(new TranslatableComponent(suffix));
     }
     
     @Override
-	public ProgressStyle prefix(ITextComponent prefix) {
+	public ProgressStyle prefix(Component prefix) {
     	this.prefix = prefix;
 		return this;
 	}
 
 	@Override
-	public ProgressStyle suffix(ITextComponent suffix) {
+	public ProgressStyle suffix(Component suffix) {
     	this.suffix = suffix;
 		return this;
 	}
@@ -170,12 +170,12 @@ public class ProgressStyle implements IProgressStyle {
     }
     
 	@Override
-	public ITextComponent getPrefixComp() {
+	public Component getPrefixComp() {
 		return prefix;
 	}
 
 	@Override
-	public ITextComponent getSuffixComp() {
+	public Component getSuffixComp() {
 		return suffix;
 	}
 

@@ -9,11 +9,11 @@ import mcjty.theoneprobe.keys.KeyBindings;
 import mcjty.theoneprobe.keys.KeyInputHandler;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -120,7 +120,7 @@ public class ClientProxy implements IProxy {
     }
 
     private ProbeMode getModeForPlayer() {
-        PlayerEntity player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().player;
         if (Config.extendedInMain.get()) {
             if (hasItemInMainHand(ModItems.probe)) {
                 return ProbeMode.EXTENDED;
@@ -130,14 +130,14 @@ public class ClientProxy implements IProxy {
     }
 
     private boolean hasItemInEitherHand(Item item) {
-        ItemStack mainHeldItem = Minecraft.getInstance().player.getItemInHand(Hand.MAIN_HAND);
-        ItemStack offHeldItem = Minecraft.getInstance().player.getItemInHand(Hand.OFF_HAND);
+        ItemStack mainHeldItem = Minecraft.getInstance().player.getItemInHand(InteractionHand.MAIN_HAND);
+        ItemStack offHeldItem = Minecraft.getInstance().player.getItemInHand(InteractionHand.OFF_HAND);
         return mainHeldItem.getItem() == item || offHeldItem.getItem() == item;
     }
 
 
     private boolean hasItemInMainHand(Item item) {
-        ItemStack mainHeldItem = Minecraft.getInstance().player.getItemInHand(Hand.MAIN_HAND);
+        ItemStack mainHeldItem = Minecraft.getInstance().player.getItemInHand(InteractionHand.MAIN_HAND);
         return mainHeldItem.getItem() == item;
     }
 }

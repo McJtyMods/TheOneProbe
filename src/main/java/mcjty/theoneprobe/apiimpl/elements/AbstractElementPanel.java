@@ -3,7 +3,7 @@ package mcjty.theoneprobe.apiimpl.elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.ElementAlignment;
@@ -25,11 +25,11 @@ import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 
 public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
@@ -38,7 +38,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     protected IProbeConfig overriddenConfig;
 
     @Override
-    public void render(MatrixStack matrixStack, int x, int y) {
+    public void render(PoseStack matrixStack, int x, int y) {
         Integer borderColor = layout.getBorderColor();
         if (borderColor != null) {
             int w = getWidth();
@@ -59,7 +59,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         this(new LayoutStyle().borderColor(borderColor).spacing(spacing).alignment(alignment));
     }
 
-    public AbstractElementPanel(PacketBuffer buf) {
+    public AbstractElementPanel(FriendlyByteBuf buf) {
         children = ProbeInfo.createElements(buf);
         this.layout = new LayoutStyle();
         layout.alignment(buf.readEnum(ElementAlignment.class));
@@ -70,7 +70,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         ProbeInfo.writeElements(children, buf);
         buf.writeEnum(layout.getAlignment()).writeBoolean(layout.getBorderColor() != null);
         if (layout.getBorderColor() != null) {
@@ -107,7 +107,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo text(ITextComponent text) {
+    public IProbeInfo text(Component text) {
         children.add(new ElementText(text).setLegacy());
         return this;
     }
@@ -125,19 +125,19 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo text(ITextComponent text, ITextStyle style) {
+    public IProbeInfo text(Component text, ITextStyle style) {
         children.add(new ElementText(text, style).setLegacy());
         return this;
     }
     
     @Override
-	public IProbeInfo mcText(ITextComponent text) {
+	public IProbeInfo mcText(Component text) {
         children.add(new ElementText(text));
 		return this;
 	}
 
 	@Override
-	public IProbeInfo mcText(ITextComponent text, ITextStyle style) {
+	public IProbeInfo mcText(Component text, ITextStyle style) {
         children.add(new ElementText(text, style));
 		return this;
 	}

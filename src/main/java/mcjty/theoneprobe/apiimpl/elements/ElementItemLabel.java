@@ -1,12 +1,12 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.network.NetworkTools;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
 
 public class ElementItemLabel implements IElement {
 
@@ -16,7 +16,7 @@ public class ElementItemLabel implements IElement {
         this.itemStack = itemStack;
     }
 
-    public ElementItemLabel(PacketBuffer buf) {
+    public ElementItemLabel(FriendlyByteBuf buf) {
         if (buf.readBoolean()) {
             itemStack = NetworkTools.readItemStack(buf);
         } else {
@@ -25,7 +25,7 @@ public class ElementItemLabel implements IElement {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int x, int y) {
+    public void render(PoseStack matrixStack, int x, int y) {
         if (!itemStack.isEmpty()) {
             ElementTextRender.render(itemStack.getHoverName(), matrixStack, x, y);
         }
@@ -46,7 +46,7 @@ public class ElementItemLabel implements IElement {
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         if (!itemStack.isEmpty()) {
             buf.writeBoolean(true);
             NetworkTools.writeItemStack(buf, itemStack);

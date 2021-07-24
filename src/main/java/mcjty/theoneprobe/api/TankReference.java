@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -16,7 +16,7 @@ public final class TankReference {
         this.fluids = fluids;
     }
 
-    public TankReference(PacketBuffer buffer) {
+    public TankReference(FriendlyByteBuf buffer) {
         capacity = buffer.readInt();
         stored = buffer.readInt();
         fluids = new FluidStack[buffer.readInt()];
@@ -71,7 +71,7 @@ public final class TankReference {
         return references;
     }
 
-    public void toBytes(PacketBuffer buffer) {
+    public void toBytes(FriendlyByteBuf buffer) {
         buffer.writeInt(capacity);
         buffer.writeInt(stored);
         buffer.writeInt(fluids.length);

@@ -1,12 +1,12 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.ILayoutStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class ElementVertical extends AbstractElementPanel {
 
@@ -25,12 +25,12 @@ public class ElementVertical extends AbstractElementPanel {
         super(borderColor, spacing, alignment);
     }
 
-    public ElementVertical(PacketBuffer buf) {
+    public ElementVertical(FriendlyByteBuf buf) {
         super(buf);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int x, int y) {
+    public void render(PoseStack matrixStack, int x, int y) {
         super.render(matrixStack, x, y);
         if (layout.getBorderColor() != null) {
             x += 3;

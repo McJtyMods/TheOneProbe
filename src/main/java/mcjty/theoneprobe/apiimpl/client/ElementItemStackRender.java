@@ -1,16 +1,16 @@
 package mcjty.theoneprobe.apiimpl.client;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.IItemStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.ChatFormatting;
 
 public class ElementItemStackRender {
 
-    public static void render(ItemStack itemStack, IItemStyle style, MatrixStack matrixStack, int x, int y) {
+    public static void render(ItemStack itemStack, IItemStyle style, PoseStack matrixStack, int x, int y) {
         ItemRenderer itemRender = Minecraft.getInstance().getItemRenderer();
         if (!itemStack.isEmpty()) {
             int size = itemStack.getCount();
@@ -29,7 +29,7 @@ public class ElementItemStackRender {
 
             if (!RenderHelper.renderItemStack(Minecraft.getInstance(), itemRender, itemStack, matrixStack, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount)) {
                 // There was a crash rendering this item
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, TextFormatting.RED + "ERROR: " + itemStack.getHoverName());
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, ChatFormatting.RED + "ERROR: " + itemStack.getHoverName());
             }
         }
     }

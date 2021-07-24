@@ -7,19 +7,19 @@ import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Registry;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -34,15 +34,15 @@ import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
 public class PacketGetInfo  {
 
-    private RegistryKey<World> dim;
+    private ResourceKey<Level> dim;
     private BlockPos pos;
     private ProbeMode mode;
     private Direction sideHit;
-    private Vector3d hitVec;
+    private Vec3 hitVec;
     @Nonnull private ItemStack pickBlock;
 
-    public PacketGetInfo(PacketBuffer buf) {
-        dim = RegistryKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
+    public PacketGetInfo(FriendlyByteBuf buf) {
+        dim = ResourceKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
         pos = buf.readBlockPos();
         mode = ProbeMode.values()[buf.readByte()];
         byte sideByte = buf.readByte();
@@ -52,12 +52,12 @@ public class PacketGetInfo  {
             sideHit = Direction.values()[sideByte];
         }
         if (buf.readBoolean()) {
-            hitVec = new Vector3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            hitVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         }
         pickBlock = buf.readItem();
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeResourceLocation(dim.location());
         buf.writeBlockPos(pos);
         buf.writeByte(mode.ordinal());
@@ -71,7 +71,7 @@ public class PacketGetInfo  {
             buf.writeDouble(hitVec.z);
         }
 
-        PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         buffer.writeItem(pickBlock);
         if (buffer.writerIndex() <= Config.maxPacketToServer.get()) {
             buf.writeBytes(buffer);
@@ -84,18 +84,18 @@ public class PacketGetInfo  {
     public PacketGetInfo() {
     }
 
-    public PacketGetInfo(RegistryKey<World> dim, BlockPos pos, ProbeMode mode, RayTraceResult mouseOver, @Nonnull ItemStack pickBlock) {
+    public PacketGetInfo(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode, HitResult mouseOver, @Nonnull ItemStack pickBlock) {
         this.dim = dim;
         this.pos = pos;
         this.mode = mode;
-        this.sideHit = ((BlockRayTraceResult)mouseOver).getDirection();
+        this.sideHit = ((BlockHitResult)mouseOver).getDirection();
         this.hitVec = mouseOver.getLocation();
         this.pickBlock = pickBlock;
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerWorld world = ctx.get().getSender().server.getLevel(dim);
+            ServerLevel world = ctx.get().getSender().server.getLevel(dim);
             if (world != null) {
                 ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(),
                         mode, world, pos, sideHit, hitVec, pickBlock);
@@ -105,7 +105,7 @@ public class PacketGetInfo  {
         ctx.get().setPacketHandled(true);
     }
 
-    private static ProbeInfo getProbeInfo(PlayerEntity player, ProbeMode mode, World world, BlockPos blockPos, Direction sideHit, Vector3d hitVec, @Nonnull ItemStack pickBlock) {
+    private static ProbeInfo getProbeInfo(Player player, ProbeMode mode, Level world, BlockPos blockPos, Direction sideHit, Vec3 hitVec, @Nonnull ItemStack pickBlock) {
         if (Config.needsProbe.get() == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
             if (!ModItems.hasAProbeSomewhere(player)) {

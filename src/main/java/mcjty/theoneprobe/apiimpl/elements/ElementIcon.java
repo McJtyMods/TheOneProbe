@@ -1,13 +1,13 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IIconStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementIconRender;
 import mcjty.theoneprobe.apiimpl.styles.IconStyle;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 public class ElementIcon implements IElement {
 
@@ -27,7 +27,7 @@ public class ElementIcon implements IElement {
         this.style = style;
     }
 
-    public ElementIcon(PacketBuffer buf) {
+    public ElementIcon(FriendlyByteBuf buf) {
         icon = buf.readResourceLocation();
         u = buf.readInt();
         v = buf.readInt();
@@ -46,7 +46,7 @@ public class ElementIcon implements IElement {
     }
     
     @Override
-    public void render(MatrixStack matrixStack, int x, int y) {
+    public void render(PoseStack matrixStack, int x, int y) {
         ElementIconRender.render(icon, matrixStack, x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight(), style.getColor());
     }
 
@@ -61,7 +61,7 @@ public class ElementIcon implements IElement {
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeResourceLocation(icon);
         buf.writeInt(u);
         buf.writeInt(v);

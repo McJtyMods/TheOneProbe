@@ -5,15 +5,15 @@ import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.ToolItem;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ToolType;
 
 import java.util.HashMap;
@@ -55,7 +55,7 @@ public class HarvestInfoTools {
         }
     }
 
-    static void showCanBeHarvested(IProbeInfo probeInfo, World world, BlockPos pos, Block block, PlayerEntity player) {
+    static void showCanBeHarvested(IProbeInfo probeInfo, Level world, BlockPos pos, Block block, Player player) {
         if (ModItems.isProbeInHand(player.getMainHandItem())) {
             // If the player holds the probe there is no need to show harvestability information as the
             // probe cannot harvest anything. This is only supposed to work in off hand.
@@ -70,7 +70,7 @@ public class HarvestInfoTools {
         }
     }
 
-    static void showHarvestInfo(IProbeInfo probeInfo, World world, BlockPos pos, Block block, BlockState blockState, PlayerEntity player) {
+    static void showHarvestInfo(IProbeInfo probeInfo, Level world, BlockPos pos, Block block, BlockState blockState, Player player) {
         boolean harvestable = block.canHarvestBlock(world.getBlockState(pos), world, pos, player) && world.getBlockState(pos).getDestroySpeed(world, pos) >= 0;
 
         ToolType harvestTool = block.getHarvestTool(blockState);
@@ -84,8 +84,8 @@ public class HarvestInfoTools {
                     // loop through our test tools until we find a winner.
                     ItemStack testTool = testToolEntry.getValue();
 
-                    if (testTool != null && testTool.getItem() instanceof ToolItem) {
-                        ToolItem toolItem = (ToolItem) testTool.getItem();
+                    if (testTool != null && testTool.getItem() instanceof DiggerItem) {
+                        DiggerItem toolItem = (DiggerItem) testTool.getItem();
                         // @todo 1.13
                         if (testTool.getDestroySpeed(blockState) >= toolItem.getTier().getSpeed()) {
                             // BINGO!

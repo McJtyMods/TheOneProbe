@@ -1,21 +1,21 @@
 package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.api.IProbeHitData;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 
 public class ProbeHitData implements IProbeHitData {
 
     private final BlockPos pos;
-    private final Vector3d hitVec;
+    private final Vec3 hitVec;
     private final Direction side;
     private final ItemStack pickBlock;
 
-    public ProbeHitData(BlockPos pos, Vector3d hitVec, Direction side, @Nonnull ItemStack pickBlock) {
+    public ProbeHitData(BlockPos pos, Vec3 hitVec, Direction side, @Nonnull ItemStack pickBlock) {
         this.pos = pos;
         this.hitVec = hitVec;
         this.side = side;
@@ -28,7 +28,7 @@ public class ProbeHitData implements IProbeHitData {
     }
 
     @Override
-    public Vector3d getHitVec() {
+    public Vec3 getHitVec() {
         return hitVec;
     }
 

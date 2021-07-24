@@ -5,13 +5,13 @@ import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 
 import static mcjty.theoneprobe.api.TextStyleClass.INFO;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
@@ -24,14 +24,14 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
     }
 
     @Override
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data) {
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, Player player, Level world, BlockState blockState, IProbeHitData data) {
         if (mode == ProbeMode.DEBUG && Config.showDebugInfo.get()) {
             BlockPos pos = data.getPos();
             showDebugInfo(probeInfo, world, blockState, pos, data.getSideHit());
         }
     }
 
-    private void showDebugInfo(IProbeInfo probeInfo, World world, BlockState blockState, BlockPos pos, Direction side) {
+    private void showDebugInfo(IProbeInfo probeInfo, Level world, BlockState blockState, BlockPos pos, Direction side) {
         Block block = blockState.getBlock();
         String simpleName = block.getClass().getSimpleName();
         IProbeInfo vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2))
@@ -42,7 +42,7 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
                 .text(CompoundText.createLabelInfo("Power W: ",+ blockState.getSignal(world, pos, side.getOpposite()))
                         .style(LABEL).text(", S: ").style(INFO).text(String.valueOf(blockState.getDirectSignal(world, pos, side.getOpposite()))))
                 .text(CompoundText.createLabelInfo("Light: ", block.getLightValue(blockState, world, pos)));
-        TileEntity te = world.getBlockEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
         if (te != null) {
             vertical.text(CompoundText.createLabelInfo("TE: ", te.getClass().getSimpleName()));
         }

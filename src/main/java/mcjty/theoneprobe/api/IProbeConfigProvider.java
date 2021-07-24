@@ -1,9 +1,9 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Implement this interface if you want to override the default
@@ -15,12 +15,12 @@ public interface IProbeConfigProvider {
      * Possibly override the config for this entity. You can make modifications to the given 'config' which starts
      * from default.
      */
-    void getProbeConfig(IProbeConfig config, PlayerEntity player, World world, Entity entity, IProbeHitEntityData data);
+    void getProbeConfig(IProbeConfig config, Player player, Level world, Entity entity, IProbeHitEntityData data);
 
     /**
      * Possibly override the config for this block. You can make modifications to the given 'config' which starts
      * from default.
      */
-    void getProbeConfig(IProbeConfig config, PlayerEntity player, World world, BlockState blockState, IProbeHitData data);
+    void getProbeConfig(IProbeConfig config, Player player, Level world, BlockState blockState, IProbeHitData data);
 
 }

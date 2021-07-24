@@ -6,15 +6,15 @@ import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -29,21 +29,21 @@ import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
 public class PacketGetEntityInfo {
 
-    private RegistryKey<World> dim;
+    private ResourceKey<Level> dim;
     private UUID uuid;
     private ProbeMode mode;
-    private Vector3d hitVec;
+    private Vec3 hitVec;
 
-    public PacketGetEntityInfo(PacketBuffer buf) {
-        dim = RegistryKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
+    public PacketGetEntityInfo(FriendlyByteBuf buf) {
+        dim = ResourceKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
         uuid = buf.readUUID();
         mode = ProbeMode.values()[buf.readByte()];
         if (buf.readBoolean()) {
-            hitVec = new Vector3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            hitVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         }
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeResourceLocation(dim.location());
         buf.writeUUID(uuid);
         buf.writeByte(mode.ordinal());
@@ -60,7 +60,7 @@ public class PacketGetEntityInfo {
     public PacketGetEntityInfo() {
     }
 
-    public PacketGetEntityInfo(RegistryKey<World> dim, ProbeMode mode, RayTraceResult mouseOver, Entity entity) {
+    public PacketGetEntityInfo(ResourceKey<Level> dim, ProbeMode mode, HitResult mouseOver, Entity entity) {
         this.dim = dim;
         this.uuid = entity.getUUID();
         this.mode = mode;
@@ -69,7 +69,7 @@ public class PacketGetEntityInfo {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerWorld world = ctx.get().getSender().server.getLevel(dim);
+            ServerLevel world = ctx.get().getSender().server.getLevel(dim);
             if (world != null) {
                 Entity entity = world.getEntity(uuid);
                 if (entity != null) {
@@ -82,7 +82,7 @@ public class PacketGetEntityInfo {
         ctx.get().setPacketHandled(true);
     }
 
-    private static ProbeInfo getProbeInfo(PlayerEntity player, ProbeMode mode, World world, Entity entity, Vector3d hitVec) {
+    private static ProbeInfo getProbeInfo(Player player, ProbeMode mode, Level world, Entity entity, Vec3 hitVec) {
         if (Config.needsProbe.get() == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
             if (!ModItems.hasAProbeSomewhere(player)) {

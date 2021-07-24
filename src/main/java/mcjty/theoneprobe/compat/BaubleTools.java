@@ -3,12 +3,12 @@ package mcjty.theoneprobe.compat;
 //import baubles.api.BaublesApi;
 //import baubles.api.cap.IBaublesItemHandler;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 
 public class BaubleTools {
 
-    public static boolean hasProbeGoggle(PlayerEntity player) {
+    public static boolean hasProbeGoggle(Player player) {
 //        IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
 //        if (handler == null) {
 //            return false;

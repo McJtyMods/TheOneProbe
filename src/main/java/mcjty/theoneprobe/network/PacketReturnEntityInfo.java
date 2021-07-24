@@ -2,7 +2,7 @@ package mcjty.theoneprobe.network;
 
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
@@ -13,7 +13,7 @@ public class PacketReturnEntityInfo {
     private UUID uuid;
     private ProbeInfo probeInfo;
 
-    public PacketReturnEntityInfo(PacketBuffer buf) {
+    public PacketReturnEntityInfo(FriendlyByteBuf buf) {
         uuid = buf.readUUID();
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();
@@ -23,7 +23,7 @@ public class PacketReturnEntityInfo {
         }
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeUUID(uuid);
         if (probeInfo != null) {
             buf.writeBoolean(true);

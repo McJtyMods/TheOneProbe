@@ -3,11 +3,11 @@ package mcjty.theoneprobe.api;
 import java.util.Collection;
 import java.util.List;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -82,16 +82,16 @@ public interface IProbeInfo {
      * CompoundText as a conveniance and giving you the option to use TextStyleClass
      * for your text
      */
-    IProbeInfo text(ITextComponent text);
-    IProbeInfo text(ITextComponent text, ITextStyle style);
-    IProbeInfo mcText(ITextComponent text);
-    IProbeInfo mcText(ITextComponent text, ITextStyle style);
+    IProbeInfo text(Component text);
+    IProbeInfo text(Component text, ITextStyle style);
+    IProbeInfo mcText(Component text);
+    IProbeInfo mcText(Component text, ITextStyle style);
     default IProbeInfo text(CompoundText text) { return text(text.get()); }
     default IProbeInfo text(CompoundText text, ITextStyle style) { return text(text.get(), style); }
-    default IProbeInfo text(String text) { return mcText(new TranslationTextComponent(text)); }
-    default IProbeInfo text(String text, Object...args) { return mcText(new TranslationTextComponent(text, args)); }
-    default IProbeInfo text(String text, ITextStyle style) { return mcText(new TranslationTextComponent(text), style); }
-    default IProbeInfo text(String text, ITextStyle style, Object...args) { return mcText(new TranslationTextComponent(text, args), style); }
+    default IProbeInfo text(String text) { return mcText(new TranslatableComponent(text)); }
+    default IProbeInfo text(String text, Object...args) { return mcText(new TranslatableComponent(text, args)); }
+    default IProbeInfo text(String text, ITextStyle style) { return mcText(new TranslatableComponent(text), style); }
+    default IProbeInfo text(String text, ITextStyle style, Object...args) { return mcText(new TranslatableComponent(text, args), style); }
     
     IProbeInfo item(ItemStack stack, IItemStyle style);
     IProbeInfo item(ItemStack stack);

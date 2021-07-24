@@ -1,12 +1,12 @@
 package mcjty.theoneprobe.items;
 
 import com.google.gson.JsonObject;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 
-public class AddProbeTagRecipeSerializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AddProbeTagRecipe> {
+public class AddProbeTagRecipeSerializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AddProbeTagRecipe> {
 
     private final ShapedRecipe.Serializer serializer = new ShapedRecipe.Serializer();
 
@@ -17,13 +17,13 @@ public class AddProbeTagRecipeSerializer extends net.minecraftforge.registries.F
     }
 
     @Override
-    public AddProbeTagRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+    public AddProbeTagRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
         ShapedRecipe recipe = serializer.fromNetwork(recipeId, buffer);
         return new AddProbeTagRecipe(recipe);
     }
 
     @Override
-    public void toNetwork(PacketBuffer buffer, AddProbeTagRecipe recipe) {
+    public void toNetwork(FriendlyByteBuf buffer, AddProbeTagRecipe recipe) {
         serializer.toNetwork(buffer, recipe.getRecipe());
     }
 }

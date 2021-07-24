@@ -1,9 +1,9 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 
@@ -14,7 +14,7 @@ public interface IProbeHitData {
 
     BlockPos getPos();
 
-    Vector3d getHitVec();
+    Vec3 getHitVec();
 
     Direction getSideHit();
 

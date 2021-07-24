@@ -1,12 +1,12 @@
 package mcjty.theoneprobe.apiimpl.client;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.EnumSet;
@@ -17,7 +17,7 @@ import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 
 public class ElementTextRender {
 
-	public static void render(ITextComponent text, MatrixStack matrixStack, int x, int y, boolean legacy) {
+	public static void render(Component text, PoseStack matrixStack, int x, int y, boolean legacy) {
 		if (legacy) {
             render(text, matrixStack, x, y);
         } else {
@@ -25,11 +25,11 @@ public class ElementTextRender {
         }
 	}
 	
-    public static void render(ITextComponent text, MatrixStack matrixStack, int x, int y) {
+    public static void render(Component text, PoseStack matrixStack, int x, int y) {
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, stylifyString(text));
     }
 
-    private static String stylifyString(ITextComponent text) {
+    private static String stylifyString(Component text) {
         return stylifyString(text.getString());
     }
 
@@ -74,11 +74,11 @@ public class ElementTextRender {
         return text;
     }
 
-    public static int getLegacyWidth(ITextComponent text) {
+    public static int getLegacyWidth(Component text) {
         return Minecraft.getInstance().font.width(stylifyString(text));
     }
     
-    public static int getWidth(ITextComponent text) {
+    public static int getWidth(Component text) {
     	return Minecraft.getInstance().font.width(text.getVisualOrderText());
     }
     
