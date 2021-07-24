@@ -2,6 +2,7 @@ package mcjty.theoneprobe.rendering;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Matrix4f;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -81,10 +82,10 @@ public class OverlayRenderer {
             if (mouseOver.getType() == HitResult.Type.ENTITY) {
                 matrixStack.pushPose();
 
-                double scale = Config.tooltipScale.get();
+                float scale = Config.tooltipScale.get().floatValue();
 
-                double sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-                double sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+                float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+                float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
                 setupOverlayRendering(sw * scale, sh * scale);
                 renderHUDEntity(matrixStack, mode, mouseOver, sw * scale, sh * scale);
@@ -101,7 +102,7 @@ public class OverlayRenderer {
         Vec3 vec31 = entity.getViewVector(partialTicks);
         Vec3 end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
 
-        ClipContext context = new ClipContext(start, end, ClipContext.BlockMode.OUTLINE, Config.showLiquids.get() ? ClipContext.FluidMode.ANY : ClipContext.FluidMode.NONE, entity);
+        ClipContext context = new ClipContext(start, end, ClipContext.Block.OUTLINE, Config.showLiquids.get() ? ClipContext.Fluid.ANY : ClipContext.Fluid.NONE, entity);
         mouseOver = entity.getCommandSenderWorld().clip(context);
         if (mouseOver == null) {
             return;
@@ -110,10 +111,10 @@ public class OverlayRenderer {
         if (mouseOver.getType() == HitResult.Type.BLOCK) {
             matrixStack.pushPose();
 
-            double scale = Config.tooltipScale.get();
+            float scale = Config.tooltipScale.get().floatValue();
 
-            double sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-            double sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+            float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+            float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
             setupOverlayRendering(sw * scale, sh * scale);
             renderHUDBlock(matrixStack, mode, mouseOver, sw * scale, sh * scale);
@@ -125,14 +126,13 @@ public class OverlayRenderer {
         checkCleanup();
     }
 
-    private static void setupOverlayRendering(double sw, double sh) {
+    private static void setupOverlayRendering(float sw, float sh) {
         RenderSystem.clear(256, true);
-        RenderSystem.matrixMode(GL11.GL_PROJECTION);
-        RenderSystem.loadIdentity();
-        RenderSystem.ortho(0.0D, sw, sh, 0.0D, 1000.0D, 3000.0D);
-        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
-        RenderSystem.loadIdentity();
-        RenderSystem.translatef(0.0F, 0.0F, -2000.0F);
+        RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0.0f, sw, sh, 0.0f, 1000.0f, 3000.0f));
+        RenderSystem.getModelViewStack().clear();
+        RenderSystem.getModelViewStack().setIdentity();
+        RenderSystem.getModelViewStack().translate(0.0F, 0.0F, -2000.0F);
+        RenderSystem.applyModelViewMatrix();
     }
 
     private static void checkCleanup() {
@@ -344,10 +344,10 @@ public class OverlayRenderer {
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, PoseStack matrixStack) {
         matrixStack.pushPose();
 
-        double scale = Config.tooltipScale.get();
+        float scale = Config.tooltipScale.get().floatValue();
 
-        double sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        double sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
         setupOverlayRendering(sw * scale, sh * scale);
         renderElements(matrixStack, (ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
@@ -385,8 +385,7 @@ public class OverlayRenderer {
             probeInfo.element(extra);
         }
 
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.disableLighting();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 //        final ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getInstance());
 //        final int scaledWidth = scaledresolution.getScaledWidth();

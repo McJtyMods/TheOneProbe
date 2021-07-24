@@ -72,8 +72,8 @@ public class ElementProgressRender {
     }
 
     private static void renderLifeBar(long current, PoseStack matrixStack, int x, int y, int w, int h) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bind(ICONS);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, ICONS);
         Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
             // Shortened view
@@ -91,8 +91,8 @@ public class ElementProgressRender {
     }
 
     private static void renderArmorBar(long current, PoseStack matrixStack, int x, int y, int w, int h) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bind(ICONS);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, ICONS);
         Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
             // Shortened view
@@ -118,7 +118,7 @@ public class ElementProgressRender {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
-        mc.getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         Function<ResourceLocation, TextureAtlasSprite> map = mc.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
         width -= 2;
         FluidStack[] fluids = tank.getFluids();
@@ -134,7 +134,7 @@ public class ElementProgressRender {
             TextureAtlasSprite liquidIcon = map.apply(attr.getStillTexture(stack));
             if (liquidIcon == map.apply(MissingTextureAtlasSprite.getLocation())) continue;
             int color = attr.getColor(stack);
-            RenderSystem.color4f(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
+            RenderSystem.setShaderColor(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
             while (lvl > 0) {
                 int maxX = Math.min(16, lvl);
                 lvl -= maxX;
@@ -142,7 +142,7 @@ public class ElementProgressRender {
                 start += maxX;
             }
         }
-        RenderSystem.color4f(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         if(style.isShowText())
         {
             renderText(matrixStack, x, y, width + 2, tank.getStored(), style);

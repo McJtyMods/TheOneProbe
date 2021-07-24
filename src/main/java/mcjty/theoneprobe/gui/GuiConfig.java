@@ -88,10 +88,10 @@ public class GuiConfig extends Screen {
     @Override
     public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        minecraft.getTextureManager().bind(background);
+        RenderSystem.setShaderTexture(0, background);
         Matrix4f matrix = matrixStack.last().pose();
         drawTexturedModalRect(matrix, guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
-        minecraft.getTextureManager().bind(scene);
+        RenderSystem.setShaderTexture(0, scene);
         drawTexturedModalRect(matrix, guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
 
         renderProbe(matrixStack);
@@ -219,8 +219,7 @@ public class GuiConfig extends Screen {
         matrixStack.pushPose();
         float scale = (float) (1 / Config.tooltipScale.get());
         matrixStack.scale(scale, scale, scale);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.disableLighting();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         matrixStack.translate(0, 0, 1);
 
         int w = probeInfo.getWidth();

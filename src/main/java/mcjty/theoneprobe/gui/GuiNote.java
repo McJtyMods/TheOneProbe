@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import javax.annotation.Nonnull;
 
@@ -49,7 +50,7 @@ public class GuiNote extends Screen {
     @Override
     public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        minecraft.getTextureManager().bind(background);
+        RenderSystem.setShaderTexture(0, background);
         drawTexturedModalRect(matrixStack.last().pose(), guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;
