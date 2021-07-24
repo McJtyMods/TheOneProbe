@@ -99,7 +99,7 @@ public class ModItems {
     }
 
     private static boolean hasProbeInHelmet(Player player) {
-        ItemStack helmet = player.inventory.getItem(36+3);
+        ItemStack helmet = player.getInventory().getItem(36+3);
 //        ItemStack helmet = player.inventory.armorInventory.get(3);
         return isProbeHelmet(helmet);
     }

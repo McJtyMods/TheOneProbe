@@ -198,7 +198,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             BlockEntity te = world.getBlockEntity(data.getPos());
             if (te instanceof SpawnerBlockEntity) {
                 BaseSpawner logic = ((SpawnerBlockEntity) te).getSpawner();
-                EntityType<?> type = ForgeRegistries.ENTITIES.getValue(logic.getEntityId());
+                EntityType<?> type = ForgeRegistries.ENTITIES.getValue(logic.getEntityId(world, data.getPos()));
                 if (type != null) {
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                             .alignment(ElementAlignment.ALIGN_CENTER))
@@ -363,7 +363,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             Fluid fluid = fluidState.getType();
             if (fluid != Fluids.EMPTY) {
                 IProbeInfo horizontal = probeInfo.horizontal();
-                FluidStack fluidStack = new FluidStack(fluid.getFluid(), BUCKET_VOLUME);
+                FluidStack fluidStack = new FluidStack(fluid, BUCKET_VOLUME);
                 horizontal.icon(fluid.getAttributes().getStillTexture(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20).color(fluid.getAttributes().getColor(fluidStack)));
                 //Proposal Fluids should look at the icon only not buckets of it. Dunno you have to decide. I just fixed the fluid color bug
                 ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);

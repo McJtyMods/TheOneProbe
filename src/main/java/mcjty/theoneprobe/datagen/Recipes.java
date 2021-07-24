@@ -12,7 +12,4 @@ public class Recipes extends RecipeProvider {
         super(generatorIn);
     }
 
-    @Override
-    protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumer) {
-    }
 }

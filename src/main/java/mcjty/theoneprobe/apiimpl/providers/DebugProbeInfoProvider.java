@@ -41,7 +41,7 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
                 .text(CompoundText.createLabelInfo("Hardness: ", blockState.getDestroySpeed(world, pos)))
                 .text(CompoundText.createLabelInfo("Power W: ",+ blockState.getSignal(world, pos, side.getOpposite()))
                         .style(LABEL).text(", S: ").style(INFO).text(String.valueOf(blockState.getDirectSignal(world, pos, side.getOpposite()))))
-                .text(CompoundText.createLabelInfo("Light: ", block.getLightValue(blockState, world, pos)));
+                .text(CompoundText.createLabelInfo("Light: ", block.getLightEmission(blockState, world, pos)));
         BlockEntity te = world.getBlockEntity(pos);
         if (te != null) {
             vertical.text(CompoundText.createLabelInfo("TE: ", te.getClass().getSimpleName()));

@@ -46,8 +46,8 @@ public class ElementEntityRender {
                             if (entity instanceof Mob) {
                                 Mob mob = (Mob) entity;
 
-                                mob.yHeadRot = mob.yRot;
-                                mob.yBodyRot = mob.yRot;
+                                mob.yHeadRot = mob.getYRot();
+                                mob.yBodyRot = mob.getYRot();
                                 mob.setLeftHanded(world.random.nextFloat() < 0.05F);
                             }
 

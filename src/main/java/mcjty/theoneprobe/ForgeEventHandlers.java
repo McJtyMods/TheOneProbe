@@ -58,7 +58,7 @@ public class ForgeEventHandlers {
         if (Config.spawnNote.get()) {
             event.getPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(note -> {
                 if (!note.isPlayerGotNote()) {
-                    boolean success = event.getPlayer().inventory.add(new ItemStack(ModItems.probeNote));
+                    boolean success = event.getPlayer().getInventory().add(new ItemStack(ModItems.probeNote));
                     if (success) {
                         note.setPlayerGotNote(true);
                     }
