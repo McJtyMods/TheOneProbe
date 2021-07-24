@@ -10,7 +10,7 @@ import mcjty.theoneprobe.network.PacketOpenGui;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 
 public class CommandTopCfg implements Command<CommandSourceStack> {
 

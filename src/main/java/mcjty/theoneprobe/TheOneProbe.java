@@ -157,21 +157,7 @@ public class TheOneProbe {
 
 
     private static void registerCapabilities(){
-        CapabilityManager.INSTANCE.register(PlayerGotNote.class, new Capability.IStorage<PlayerGotNote>() {
-
-            @Override
-            public void readNBT(Capability<PlayerGotNote> capability, PlayerGotNote playerGotNote, Direction direction, Tag inbt) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public Tag writeNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side) {
-                throw new UnsupportedOperationException();
-            }
-
-        }, () -> {
-            throw new UnsupportedOperationException();
-        });
+        CapabilityManager.INSTANCE.register(PlayerGotNote.class);
     }
 
     private void configureProviders() {

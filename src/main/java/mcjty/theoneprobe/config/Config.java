@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.*;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -557,11 +558,11 @@ public class Config {
         return renderBlacklistSet.contains(id);
     }
 
-    public static void onLoad(ModConfig.Loading event) {
+    public static void onLoad(ModConfigEvent.Loading event) {
         renderBlacklistSet = null;
     }
 
-    public static void onReload(ModConfig.Loading event) {
+    public static void onReload(ModConfigEvent.Reloading event) {
         renderBlacklistSet = null;
     }
 }
