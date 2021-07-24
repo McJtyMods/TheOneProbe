@@ -127,11 +127,11 @@ public class OverlayRenderer {
     }
 
     private static void setupOverlayRendering(float sw, float sh) {
-        RenderSystem.clear(256, true);
-        RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0.0f, sw, sh, 0.0f, 1000.0f, 3000.0f));
-        RenderSystem.getModelViewStack().clear();
-        RenderSystem.getModelViewStack().setIdentity();
-        RenderSystem.getModelViewStack().translate(0.0F, 0.0F, -2000.0F);
+        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
+        RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0, sw, 0, sh, 1000.0f, 3000.0f));
+        PoseStack posestack = RenderSystem.getModelViewStack();
+        posestack.setIdentity();
+        posestack.translate(0.0F, 0.0F, -2000.0F);
         RenderSystem.applyModelViewMatrix();
     }
 
