@@ -37,12 +37,14 @@ if (System.getenv('BUILD_NUMBER') != null) {
     version += "-${System.getenv('BUILD_NUMBER')}"
 }
 
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
+}
 
 minecraft {
-    mappings channel: 'official', version: "1.16.5"
+    mappings channel: 'official', version: "1.17.1"
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     //runDir = "run"
