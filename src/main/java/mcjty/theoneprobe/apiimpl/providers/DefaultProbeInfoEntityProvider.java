@@ -11,7 +11,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -73,8 +73,8 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 }
             }
 
-            if (Tools.show(mode, config.getShowMobGrowth()) && entity instanceof AgableMob) {
-               int age = ((AgableMob) entity).getAge();
+            if (Tools.show(mode, config.getShowMobGrowth()) && entity instanceof AgeableMob) {
+               int age = ((AgeableMob) entity).getAge();
                if (age < 0) {
                    probeInfo.text(CompoundText.createLabelInfo("Growing time: ",+ ((age * -1) / 20) + "s"));
                }

@@ -4,7 +4,7 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
-import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -37,12 +37,12 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                         .text(CompoundText.createLabelInfo("AI Move Speed: ", aiMoveSpeed))
                         .text(CompoundText.createLabelInfo("Revenge Timer: ", revengeTimer));
             }
-            if (entity instanceof AgableMob) {
+            if (entity instanceof AgeableMob) {
                 if (vertical == null) {
                     vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2));
                 }
 
-                AgableMob entityAgeable = (AgableMob) entity;
+                AgeableMob entityAgeable = (AgeableMob) entity;
                 int growingAge = entityAgeable.getAge();
                 vertical
                         .text(CompoundText.createLabelInfo("Growing Age: ", growingAge));
