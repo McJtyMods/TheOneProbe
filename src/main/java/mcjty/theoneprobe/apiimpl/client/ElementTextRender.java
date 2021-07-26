@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.EnumSet;
-import java.util.Set;
 
 import static mcjty.theoneprobe.api.IProbeInfo.ENDLOC;
 import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
@@ -49,7 +48,7 @@ public class ElementTextRender {
             }
         }
         if (text.contains("{=")) {
-            Set<TextStyleClass> stylesNeedingContext = EnumSet.noneOf(TextStyleClass.class);
+            var stylesNeedingContext = EnumSet.noneOf(TextStyleClass.class);
             TextStyleClass context = null;
             for (TextStyleClass styleClass : Config.textStyleClasses.keySet()) {
                 if (text.contains(styleClass.toString())) {

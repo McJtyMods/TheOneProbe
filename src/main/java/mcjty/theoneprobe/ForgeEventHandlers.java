@@ -44,8 +44,7 @@ public class ForgeEventHandlers {
     public void onPlayerCloned(PlayerEvent.Clone event) {
         if (event.isWasDeath()) {
             // We need to copyFrom the capabilities
-            LazyOptional<PlayerGotNote> capability = event.getOriginal().getCapability(PlayerProperties.PLAYER_GOT_NOTE);
-            capability.ifPresent(oldStore -> {
+            event.getOriginal().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(oldStore -> {
                 event.getPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
@@ -58,8 +57,7 @@ public class ForgeEventHandlers {
         if (Config.spawnNote.get()) {
             event.getPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(note -> {
                 if (!note.isPlayerGotNote()) {
-                    boolean success = event.getPlayer().getInventory().add(new ItemStack(ModItems.probeNote));
-                    if (success) {
+                    if (event.getPlayer().getInventory().add(new ItemStack(ModItems.probeNote))) {
                         note.setPlayerGotNote(true);
                     }
                 }

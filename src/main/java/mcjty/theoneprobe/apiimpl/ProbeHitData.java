@@ -8,12 +8,9 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 
-public class ProbeHitData implements IProbeHitData {
-
-    private final BlockPos pos;
-    private final Vec3 hitVec;
-    private final Direction side;
-    private final ItemStack pickBlock;
+public record ProbeHitData(BlockPos pos, Vec3 hitVec,
+                           Direction side,
+                           ItemStack pickBlock) implements IProbeHitData {
 
     public ProbeHitData(BlockPos pos, Vec3 hitVec, Direction side, @Nonnull ItemStack pickBlock) {
         this.pos = pos;

@@ -64,15 +64,9 @@ public class ElementText implements IElement {
     public void render(PoseStack matrixStack, int x, int y) {
         int width = getTextWidth();
         switch (style.getAlignment()) {
-            case ALIGN_BOTTOMRIGHT:
-                ElementTextRender.render(text, matrixStack, (x + getInternalWidth() - width) + style.getLeftPadding(), y + style.getTopPadding(), legacy);
-                break;
-            case ALIGN_CENTER:
-                ElementTextRender.render(text, matrixStack, ((x + (getInternalWidth() / 2)) - (width / 2)) + style.getLeftPadding(), y + style.getTopPadding(), legacy);
-                break;
-            case ALIGN_TOPLEFT:
-                ElementTextRender.render(text, matrixStack, x + style.getLeftPadding(), y + style.getTopPadding(), legacy);
-                break;
+            case ALIGN_BOTTOMRIGHT -> ElementTextRender.render(text, matrixStack, (x + getInternalWidth() - width) + style.getLeftPadding(), y + style.getTopPadding(), legacy);
+            case ALIGN_CENTER -> ElementTextRender.render(text, matrixStack, ((x + (getInternalWidth() / 2)) - (width / 2)) + style.getLeftPadding(), y + style.getTopPadding(), legacy);
+            case ALIGN_TOPLEFT -> ElementTextRender.render(text, matrixStack, x + style.getLeftPadding(), y + style.getTopPadding(), legacy);
         }
     }
 

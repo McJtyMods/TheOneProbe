@@ -43,9 +43,7 @@ public class ElementEntityRender {
                             entity = value.create(world);
                             entity.moveTo(0.5D, 0.0D, 0.5D, Mth.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
 
-                            if (entity instanceof Mob) {
-                                Mob mob = (Mob) entity;
-
+                            if (entity instanceof Mob mob) {
                                 mob.yHeadRot = mob.getYRot();
                                 mob.yBodyRot = mob.getYRot();
                                 mob.setLeftHanded(world.random.nextFloat() < 0.05F);
@@ -77,7 +75,7 @@ public class ElementEntityRender {
     // @todo 1.13
 //    private static final EntityId FIXER = new EntityId();
     // copied from vanilla until this is fixed in forge
-    private static final Map OLD_TO_NEW_ID_MAP = (Map) DataFixUtils.make(Maps.newHashMap(), (p_209312_0_) -> {
+    private static final Map OLD_TO_NEW_ID_MAP = DataFixUtils.make(Maps.newHashMap(), (p_209312_0_) -> {
         p_209312_0_.put("AreaEffectCloud", "minecraft:area_effect_cloud");
         p_209312_0_.put("ArmorStand", "minecraft:armor_stand");
         p_209312_0_.put("Arrow", "minecraft:arrow");

@@ -84,8 +84,7 @@ public class HarvestInfoTools {
                     // loop through our test tools until we find a winner.
                     ItemStack testTool = testToolEntry.getValue();
 
-                    if (testTool != null && testTool.getItem() instanceof DiggerItem) {
-                        DiggerItem toolItem = (DiggerItem) testTool.getItem();
+                    if (testTool != null && testTool.getItem() instanceof DiggerItem toolItem) {
                         // @todo 1.13
                         if (testTool.getDestroySpeed(blockState) >= toolItem.getTier().getSpeed()) {
                             // BINGO!

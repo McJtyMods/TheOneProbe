@@ -21,10 +21,9 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
     public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, Player player, Level world, Entity entity, IProbeHitEntityData data) {
         if (mode == ProbeMode.DEBUG && Config.showDebugInfo.get()) {
             IProbeInfo vertical = null;
-            if (entity instanceof Mob) {
+            if (entity instanceof Mob entityLivingBase) {
                 vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2));
 
-                Mob entityLivingBase = (Mob) entity;
                 int totalArmorValue = entityLivingBase.getArmorValue();
                 int age = entityLivingBase.getNoActionTime();
                 float absorptionAmount = entityLivingBase.getAbsorptionAmount();
@@ -37,12 +36,11 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
                         .text(CompoundText.createLabelInfo("AI Move Speed: ", aiMoveSpeed))
                         .text(CompoundText.createLabelInfo("Revenge Timer: ", revengeTimer));
             }
-            if (entity instanceof AgeableMob) {
+            if (entity instanceof AgeableMob entityAgeable) {
                 if (vertical == null) {
                     vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2));
                 }
 
-                AgeableMob entityAgeable = (AgeableMob) entity;
                 int growingAge = entityAgeable.getAge();
                 vertical
                         .text(CompoundText.createLabelInfo("Growing Age: ", growingAge));

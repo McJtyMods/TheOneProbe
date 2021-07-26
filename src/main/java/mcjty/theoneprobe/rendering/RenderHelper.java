@@ -49,8 +49,7 @@ public class RenderHelper {
             entity.setYRot(0.0f);
             entity.yRotO = 0.0f;
 
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingEntity = (LivingEntity) entity;
+            if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.yBodyRotO = 0.0f;
                 livingEntity.yBodyRot = 0.0f;
 
@@ -310,28 +309,7 @@ public class RenderHelper {
         return width;
     }
 
-    public static class Vector {
-        public final float x;
-        public final float y;
-        public final float z;
-
-        public Vector(float x, float y, float z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-
-        public float getX() {
-            return x;
-        }
-
-        public float getY() {
-            return y;
-        }
-
-        public float getZ() {
-            return z;
-        }
+    public record Vector(float x, float y, float z) {
 
         public float norm() {
             return (float) Math.sqrt(x * x + y * y + z * z);
@@ -343,22 +321,22 @@ public class RenderHelper {
         }
     }
 
-    private static Vector Cross(Vector a, Vector b) {
+    private static Vector cross(Vector a, Vector b) {
         float x = a.y * b.z - a.z * b.y;
         float y = a.z * b.x - a.x * b.z;
         float z = a.x * b.y - a.y * b.x;
         return new Vector(x, y, z);
     }
 
-    private static Vector Sub(Vector a, Vector b) {
+    private static Vector sub(Vector a, Vector b) {
         return new Vector(a.x - b.x, a.y - b.y, a.z - b.z);
     }
 
-    private static Vector Add(Vector a, Vector b) {
+    private static Vector add(Vector a, Vector b) {
         return new Vector(a.x + b.x, a.y + b.y, a.z + b.z);
     }
 
-    private static Vector Mul(Vector a, float f) {
+    private static Vector mul(Vector a, float f) {
         return new Vector(a.x * f, a.y * f, a.z * f);
     }
 

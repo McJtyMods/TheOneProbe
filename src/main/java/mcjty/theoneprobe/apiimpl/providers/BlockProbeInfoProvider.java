@@ -17,8 +17,7 @@ public class BlockProbeInfoProvider implements IProbeInfoProvider {
     @Override
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, Player player, Level world, BlockState blockState, IProbeHitData data) {
         Block block = blockState.getBlock();
-        if (block instanceof IProbeInfoAccessor) {
-            IProbeInfoAccessor accessor = (IProbeInfoAccessor) block;
+        if (block instanceof IProbeInfoAccessor accessor) {
             accessor.addProbeInfo(mode, probeInfo, player, world, blockState, data);
         }
     }

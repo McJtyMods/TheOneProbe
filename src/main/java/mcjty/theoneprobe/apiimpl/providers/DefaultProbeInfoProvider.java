@@ -1,71 +1,46 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
-import static mcjty.theoneprobe.api.TextStyleClass.INFO;
-import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
-import static mcjty.theoneprobe.api.TextStyleClass.MODNAME;
-import static mcjty.theoneprobe.api.TextStyleClass.NAME;
-import static mcjty.theoneprobe.api.TextStyleClass.OK;
-import static mcjty.theoneprobe.api.TextStyleClass.PROGRESS;
-import static mcjty.theoneprobe.api.TextStyleClass.WARNING;
-import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
-
-import mcjty.theoneprobe.api.Color;
-import java.util.Collections;
-
 import com.mojang.authlib.GameProfile;
-
 import mcjty.lib.api.power.IBigPower;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
-import mcjty.theoneprobe.api.CompoundText;
-import mcjty.theoneprobe.api.ElementAlignment;
-import mcjty.theoneprobe.api.IBlockDisplayOverride;
-import mcjty.theoneprobe.api.IProbeConfig;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoProvider;
-import mcjty.theoneprobe.api.NumberFormat;
-import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.InfestedBlock;
-import net.minecraft.world.level.block.LeverBlock;
-import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.NoteBlock;
-import net.minecraft.world.level.block.SpawnerBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.BrewingStandBlock;
-import net.minecraft.world.level.block.ComparatorBlock;
-import net.minecraft.world.level.block.RedStoneWireBlock;
-import net.minecraft.world.level.block.RepeaterBlock;
-import net.minecraft.world.level.block.SkullBlock;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.properties.ComparatorMode;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BaseSpawner;
-import net.minecraft.world.level.block.state.properties.ComparatorMode;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraft.world.level.block.entity.SkullBlockEntity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Collections;
+import java.util.Objects;
+
+import static mcjty.theoneprobe.api.TextStyleClass.*;
+import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -144,9 +119,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showBrewingStandInfo(IProbeInfo probeInfo, Level world, IProbeHitData data, Block block) {
         if (block instanceof BrewingStandBlock) {
             BlockEntity te = world.getBlockEntity(data.getPos());
-            if (te instanceof BrewingStandBlockEntity) {
-                int brewtime = ((BrewingStandBlockEntity) te).brewTime;
-                int fuel = ((BrewingStandBlockEntity) te).fuel;
+            if (te instanceof BrewingStandBlockEntity brewingStand) {
+                int brewtime = brewingStand.brewTime;
+                int fuel = brewingStand.fuel;
                 probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
                         .item(new ItemStack(Items.BLAZE_POWDER), probeInfo.defaultItemStyle().width(16).height(16))
                         .text(CompoundText.createLabelInfo("Fuel: ", fuel));
@@ -181,8 +156,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showSkullInfo(IProbeInfo probeInfo, Level world, IProbeHitData data, BlockState blockState) {
         if (blockState.getBlock() instanceof SkullBlock) {
             BlockEntity te = world.getBlockEntity(data.getPos());
-            if (te instanceof SkullBlockEntity) {
-                GameProfile profile = ((SkullBlockEntity) te).getOwnerProfile();
+            if (te instanceof SkullBlockEntity skullBlockEntity) {
+                GameProfile profile = skullBlockEntity.getOwnerProfile();
                 if (profile != null) {
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                             .alignment(ElementAlignment.ALIGN_CENTER))
@@ -196,8 +171,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showMobSpawnerInfo(IProbeInfo probeInfo, Level world, IProbeHitData data, Block block) {
         if (block instanceof SpawnerBlock) {
             BlockEntity te = world.getBlockEntity(data.getPos());
-            if (te instanceof SpawnerBlockEntity) {
-                BaseSpawner logic = ((SpawnerBlockEntity) te).getSpawner();
+            if (te instanceof SpawnerBlockEntity spawnerBlock) {
+                BaseSpawner logic = spawnerBlock.getSpawner();
                 EntityType<?> type = ForgeRegistries.ENTITIES.getValue(logic.getEntityId(world, data.getPos()));
                 if (type != null) {
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle()
@@ -265,7 +240,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         int contents = fluidStack.getAmount();
     	if(config.getTankMode() == 1) {
         	Color color = new Color(fluidStack.getFluid().getAttributes().getColor(fluidStack));
-        	if(fluidStack.getFluid() == Fluids.LAVA) {
+        	if (Objects.equals(fluidStack.getFluid(), Fluids.LAVA)) {
     			color = new Color(255, 139, 27);
         	}
         	MutableComponent text = new TextComponent("");
@@ -303,9 +278,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             long energy = TeslaTools.getEnergy(te);
             long maxEnergy = TeslaTools.getMaxEnergy(te);
             addEnergyInfo(probeInfo, config, energy, maxEnergy);
-        } else if (te instanceof IBigPower) {
-            long energy = ((IBigPower) te).getStoredPower();
-            long maxEnergy = ((IBigPower) te).getCapacity();
+        } else if (te instanceof IBigPower bigPower) {
+            long energy = bigPower.getStoredPower();
+            long maxEnergy = bigPower.getCapacity();
             addEnergyInfo(probeInfo, config, energy, maxEnergy);
         } else if (te != null && te.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
             te.getCapability(CapabilityEnergy.ENERGY).ifPresent(handler -> {
@@ -361,7 +336,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (block instanceof LiquidBlock) {
             FluidState fluidState = blockState.getFluidState();
             Fluid fluid = fluidState.getType();
-            if (fluid != Fluids.EMPTY) {
+            if (!Objects.equals(fluid, Fluids.EMPTY)) {
                 IProbeInfo horizontal = probeInfo.horizontal();
                 FluidStack fluidStack = new FluidStack(fluid, BUCKET_VOLUME);
                 horizontal.icon(fluid.getAttributes().getStillTexture(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20).color(fluid.getAttributes().getColor(fluidStack)));

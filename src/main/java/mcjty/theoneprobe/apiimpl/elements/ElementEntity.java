@@ -29,8 +29,7 @@ public class ElementEntity implements IElement {
     }
 
     public ElementEntity(Entity entity, IEntityStyle style) {
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
+        if (entity instanceof Player player) {
             entityNBT = null;
             playerID = player.getId();
         } else {

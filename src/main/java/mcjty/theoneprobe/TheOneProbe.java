@@ -10,20 +10,17 @@ import mcjty.theoneprobe.items.AddProbeTagRecipeSerializer;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
-import mcjty.theoneprobe.proxy.ClientProxy;
-import mcjty.theoneprobe.proxy.IProxy;
-import mcjty.theoneprobe.proxy.ServerProxy;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.Tag;
+import mcjty.theoneprobe.rendering.ClientSetup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
@@ -49,7 +46,6 @@ import java.util.function.Supplier;
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
 
-    public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
     public static final Logger logger = LogManager.getLogger();
 
     public static TheOneProbeImp theOneProbeImp = new TheOneProbeImp();
@@ -70,17 +66,18 @@ public class TheOneProbe {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
 
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        bus.addListener(this::init);
+        bus.addListener(Config::onLoad);
+        bus.addListener(Config::onReload);
 
-        // Register the setup method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(Config::onLoad);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(Config::onReload);
+        bus.addListener(this::processIMC);
 
-        // Register the processIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-
-        // Register ourselves for server, registry and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            bus.addListener(ClientSetup::onClientSetup);
+        });
     }
 
     private void init(final FMLCommonSetupEvent event) {
@@ -120,8 +117,6 @@ public class TheOneProbe {
 
         configureProviders();
         configureEntityProviders();
-
-        proxy.setup(event);
     }
 
     private void processIMC(final InterModProcessEvent event) {

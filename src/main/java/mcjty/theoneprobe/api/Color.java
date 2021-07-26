@@ -1,19 +1,14 @@
 package mcjty.theoneprobe.api;
 
-public class Color {
+public record Color(int value) {
 	static final int ALPHA = 0xFF << 24;
-    private final int value;
-
-    public Color(int value) {
-        this.value = value;
-    }
 
     public Color(int r, int g, int b) {
         this(r, g, b, 255);
     }
 
     public Color(int r, int g, int b, int a) {
-        this.value = (a & 255) << 24 | (r & 255) << 16 | (g & 255) << 8 | (b & 255) << 0;
+        this((a & 255) << 24 | (r & 255) << 16 | (g & 255) << 8 | (b & 255));
     }
     
     public Color darker() {
@@ -45,7 +40,7 @@ public class Color {
     }
 
     public int getBlue() {
-        return this.getRGB() >> 0 & 255;
+        return this.getRGB() & 255;
     }
 
     public int getAlpha() {
@@ -61,7 +56,7 @@ public class Color {
     }
     
     public static int rgb(int r, int g, int b, int a) {
-    	return (a & 255) << 24 | (r & 255) << 16 | (g & 255) << 8 | (b & 255) << 0;
+    	return (a & 255) << 24 | (r & 255) << 16 | (g & 255) << 8 | (b & 255);
     }
     
     /// type specific mix function so people don't have to create a Object if they want to mix something.

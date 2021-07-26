@@ -58,15 +58,9 @@ public class ElementProgressRender {
             Component s = style.getPrefixComp().copy().append(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
             int textWidth = render.width(s.getVisualOrderText());
             switch (style.getAlignment()) {
-                case ALIGN_BOTTOMRIGHT:
-                    RenderHelper.renderText(mc, matrixStack, (x + w - 3) - textWidth, y + 2, s);
-                    break;
-                case ALIGN_CENTER:
-                    RenderHelper.renderText(mc, matrixStack, (x + (w / 2)) - (textWidth / 2), y + 2, s);
-                    break;
-                case ALIGN_TOPLEFT:
-                    RenderHelper.renderText(mc, matrixStack, x + 3, y + 2, s);
-                    break;
+                case ALIGN_BOTTOMRIGHT -> RenderHelper.renderText(mc, matrixStack, (x + w - 3) - textWidth, y + 2, s);
+                case ALIGN_CENTER -> RenderHelper.renderText(mc, matrixStack, (x + (w / 2)) - (textWidth / 2), y + 2, s);
+                case ALIGN_TOPLEFT -> RenderHelper.renderText(mc, matrixStack, x + 3, y + 2, s);
             }
         }
     }
@@ -126,8 +120,7 @@ public class ElementProgressRender {
         int tanks = fluids.length;
         int max = tank.getCapacity();
         Matrix4f matrix = matrixStack.last().pose();
-        for (int i = 0; i < tanks; i++) {
-            FluidStack stack = fluids[i];
+        for (FluidStack stack : fluids) {
             int lvl = (int) (stack == null ? 0 : (((double) stack.getAmount() / max) * width));
             if (lvl <= 0) continue;
             FluidAttributes attr = stack.getFluid().getAttributes();

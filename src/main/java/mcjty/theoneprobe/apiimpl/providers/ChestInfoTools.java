@@ -119,8 +119,7 @@ public class ChestInfoTools {
                     }
 
                 });
-            } else if (te instanceof Container) {
-                Container inventory = (Container) te;
+            } else if (te instanceof Container inventory) {
                 maxSlots.set(inventory.getContainerSize());
                 for (int i = 0; i < maxSlots.get(); i++) {
                     addItemStack(stacks, foundItems, inventory.getItem(i));

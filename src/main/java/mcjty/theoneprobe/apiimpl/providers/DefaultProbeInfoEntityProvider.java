@@ -6,18 +6,18 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -54,8 +54,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             showStandardInfo(mode, probeInfo, entity, config);
         }
 
-        if (entity instanceof Mob) {
-            Mob livingBase = (Mob) entity;
+        if (entity instanceof Mob livingBase) {
 
             if (Tools.show(mode, config.getShowMobHealth())) {
                 int health = (int) livingBase.getHealth();
@@ -73,8 +72,8 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 }
             }
 
-            if (Tools.show(mode, config.getShowMobGrowth()) && entity instanceof AgeableMob) {
-               int age = ((AgeableMob) entity).getAge();
+            if (Tools.show(mode, config.getShowMobGrowth()) && entity instanceof AgeableMob ageable) {
+               int age = ageable.getAge();
                if (age < 0) {
                    probeInfo.text(CompoundText.createLabelInfo("Growing time: ",+ ((age * -1) / 20) + "s"));
                }
@@ -105,8 +104,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                     }
                 }
             }
-        } else if (entity instanceof ItemFrame) {
-            ItemFrame itemFrame = (ItemFrame)entity;
+        } else if (entity instanceof ItemFrame itemFrame) {
             ItemStack stack = itemFrame.getItem();
             if(!stack.isEmpty()) {
                 probeInfo.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER))
@@ -122,10 +120,10 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
 
         if (Tools.show(mode, config.getAnimalOwnerSetting())) {
             UUID ownerId = null;
-            if (entity instanceof TamableAnimal) {
-                ownerId = ((TamableAnimal) entity).getOwnerUUID();
-            } else if (entity instanceof Horse) {
-                ownerId = ((Horse) entity).getOwnerUUID();
+            if (entity instanceof TamableAnimal tamable) {
+                ownerId = tamable.getOwnerUUID();
+            } else if (entity instanceof Horse horse) {
+                ownerId = horse.getOwnerUUID();
             }
 
             if (ownerId != null) {
@@ -141,18 +139,18 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
         }
 
         if (Tools.show(mode, config.getHorseStatSetting())) {
-            if (entity instanceof Horse) {
-                double jumpStrength = ((Horse) entity).getCustomJump();
+            if (entity instanceof Horse horse) {
+                double jumpStrength = horse.getCustomJump();
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
                 probeInfo.text(CompoundText.createLabelInfo("Jump height: ", dfCommas.format(jumpHeight)));
-                AttributeInstance iattributeinstance = ((Horse) entity).getAttribute(Attributes.MOVEMENT_SPEED);
+                AttributeInstance iattributeinstance = horse.getAttribute(Attributes.MOVEMENT_SPEED);
                 probeInfo.text(CompoundText.createLabelInfo("Speed: ", dfCommas.format(iattributeinstance.getValue())));
             }
         }
 
-        if (entity instanceof Wolf && Config.showCollarColor.get()) {
-            if (((Wolf) entity).isTame()) {
-                DyeColor collarColor = ((Wolf) entity).getCollarColor();
+        if (entity instanceof Wolf wolf && Config.showCollarColor.get()) {
+            if (wolf.isTame()) {
+                DyeColor collarColor = wolf.getCollarColor();
                 probeInfo.text(CompoundText.createLabelInfo("Collar: ", collarColor.getSerializedName()));
             }
         }

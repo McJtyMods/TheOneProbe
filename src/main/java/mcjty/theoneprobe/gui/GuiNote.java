@@ -62,30 +62,40 @@ public class GuiNote extends Screen {
 
         y += 10;
         switch (Config.needsProbe.get()) {
-            case PROBE_NEEDED:
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "In this pack the probe is configured to be"); y += 10;
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "required in order to see the tooltip"); y += 10;
+            case PROBE_NEEDED -> {
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "In this pack the probe is configured to be");
+                y += 10;
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "required in order to see the tooltip");
+                y += 10;
                 y += 16;
                 y = setInConfig(matrixStack, x, y);
-                break;
-            case PROBE_NOTNEEDED:
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "In this pack the probe is configured to be not"); y += 10;
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "required in order to see the tooltip"); y += 10;
+            }
+            case PROBE_NOTNEEDED -> {
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "In this pack the probe is configured to be not");
+                y += 10;
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "required in order to see the tooltip");
+                y += 10;
                 y += 16;
                 y = setInConfig(matrixStack, x, y);
-                break;
-            case PROBE_NEEDEDFOREXTENDED:
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "In this pack the probe is configured to be"); y += 10;
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "required to see extended information (when"); y += 10;
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "sneaking) but not for basic information"); y += 10;
+            }
+            case PROBE_NEEDEDFOREXTENDED -> {
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "In this pack the probe is configured to be");
+                y += 10;
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "required to see extended information (when");
+                y += 10;
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "sneaking) but not for basic information");
+                y += 10;
                 y += 6;
                 y = setInConfig(matrixStack, x, y);
-                break;
-            case PROBE_NEEDEDHARD:
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "In this pack the probe is configured to be"); y += 10;
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "required in order to see the tooltip"); y += 10;
-                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "This is set server side"); y += 10;
-                break;
+            }
+            case PROBE_NEEDEDHARD -> {
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "In this pack the probe is configured to be");
+                y += 10;
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "required in order to see the tooltip");
+                y += 10;
+                RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "This is set server side");
+                y += 10;
+            }
         }
 
         y += 10;

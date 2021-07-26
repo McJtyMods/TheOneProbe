@@ -1,4 +1,4 @@
-package mcjty.theoneprobe.proxy;
+package mcjty.theoneprobe.rendering;
 
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.config.Config;
@@ -7,7 +7,6 @@ import mcjty.theoneprobe.gui.GuiNote;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.keys.KeyBindings;
 import mcjty.theoneprobe.keys.KeyInputHandler;
-import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.InteractionHand;
@@ -15,61 +14,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import static mcjty.theoneprobe.config.Config.*;
 
-public class ClientProxy implements IProxy {
+public class ClientSetup {
 
-    @Override
-    public void setup(FMLCommonSetupEvent event) {
-        MinecraftForge.EVENT_BUS.register(this);
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        MinecraftForge.EVENT_BUS.register(new ClientSetup());
 
         MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
         KeyBindings.init();
     }
-
-    @SubscribeEvent
-    public void registerModels(ModelRegistryEvent event) {
-    }
-
-//    @SubscribeEvent
-//    public void testCustomRenderer(RenderGameOverlayEvent event) {
-//        if (event.isCanceled() || event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
-//            return;
-//        }
-//        IOverlayRenderer renderer = TheOneProbe.instance.theOneProbeImp.getOverlayRenderer();
-//        IOverlayStyle style = renderer.createDefaultStyle()
-//                .location(-1, -1, -1, 20)
-//                .borderThickness(0)
-//                .boxColor(0x00000000);
-//        IProbeInfo probeInfo = renderer.createProbeInfo();
-//        IProbeInfo vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
-//        vertical
-//                .horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_BOTTOMRIGHT))
-//                .item(new ItemStack(Items.DIAMOND))
-//                .text("Extra!")
-//                .item(new ItemStack(Items.EMERALD));
-//        vertical
-//                .horizontal(probeInfo.defaultLayoutStyle().borderColor(0xffffffff))
-//                .entity(EntityList.getEntityStringFromClass(EntityCaveSpider.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityCow.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityWither.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityChicken.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityEnderman.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityHorse.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityWolf.class))
-//                .entity(EntityList.getEntityStringFromClass(EntityDragon.class))
-//                ;
-//        vertical
-//                .progress(8, 10, probeInfo.defaultProgressStyle().lifeBar(true));
-//        renderer.render(style, probeInfo);
-//    }
 
     public static boolean ignoreNextGuiClose = false;
 

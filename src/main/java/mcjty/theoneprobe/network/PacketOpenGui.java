@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 
 public class PacketOpenGui {
 
-    public static int GUI_CONFIG = 0;
-    public static int GUI_NOTE = 1;
+    public static final int GUI_CONFIG = 0;
+    public static final int GUI_NOTE = 1;
 
     private int gui;
 

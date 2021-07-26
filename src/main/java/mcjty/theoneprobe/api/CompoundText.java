@@ -125,8 +125,8 @@ public class CompoundText {
     private CompoundText newComponent(Component cmp) {
         if (component == null) {
             component = cmp;
-        } else if (component instanceof MutableComponent) {
-            ((MutableComponent) component).append(cmp);
+        } else if (component instanceof MutableComponent mutable) {
+            mutable.append(cmp);
         } else {
             component = component.copy().append(cmp);
         }

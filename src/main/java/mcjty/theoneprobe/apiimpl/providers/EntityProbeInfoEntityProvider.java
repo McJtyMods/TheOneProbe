@@ -15,8 +15,7 @@ public class EntityProbeInfoEntityProvider implements IProbeInfoEntityProvider {
 
     @Override
     public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, Player player, Level world, Entity entity, IProbeHitEntityData data) {
-        if (entity instanceof IProbeInfoEntityAccessor) {
-            IProbeInfoEntityAccessor accessor = (IProbeInfoEntityAccessor) entity;
+        if (entity instanceof IProbeInfoEntityAccessor accessor) {
             accessor.addProbeInfo(mode, probeInfo, player, world, entity, data);
         }
     }

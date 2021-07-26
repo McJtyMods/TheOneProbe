@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.playerdata;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -12,13 +12,22 @@ import javax.annotation.Nullable;
 
 public class PropertiesDispatcher implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-    private PlayerGotNote playerGotNote = new PlayerGotNote();
+    private PlayerGotNote playerGotNote = null;
+    private LazyOptional<PlayerGotNote> opt = LazyOptional.of(this::createPlayerGotNote);
+
+    @Nonnull
+    private PlayerGotNote createPlayerGotNote() {
+        if (playerGotNote == null) {
+            playerGotNote = new PlayerGotNote();
+        }
+        return playerGotNote;
+    }
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
         if (cap == PlayerProperties.PLAYER_GOT_NOTE) {
-            return LazyOptional.of(() -> (T) playerGotNote);
+            return opt.cast();
         }
         return LazyOptional.empty();
     }
@@ -32,12 +41,12 @@ public class PropertiesDispatcher implements ICapabilityProvider, INBTSerializab
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        playerGotNote.saveNBTData(nbt);
+        createPlayerGotNote().saveNBTData(nbt);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        playerGotNote.loadNBTData(nbt);
+        createPlayerGotNote().loadNBTData(nbt);
     }
 }

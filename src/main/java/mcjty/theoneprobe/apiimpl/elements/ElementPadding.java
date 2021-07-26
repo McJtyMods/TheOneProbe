@@ -2,20 +2,16 @@ package mcjty.theoneprobe.apiimpl.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.Color;
-
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
-import net.minecraft.client.gui.screens.Screen;
+import mcjty.theoneprobe.apiimpl.client.ElementPaddingRender;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ElementPadding implements IElement
-{	
-	final int width;
-	final int height;
-	int color = -1;
+public class ElementPadding implements IElement {
+	private final int width;
+	private final int height;
+	private int color = -1;
 	
 	public ElementPadding(int width, int height) {
 		this.width = width;
@@ -40,13 +36,12 @@ public class ElementPadding implements IElement
 	}
 	
 	@Override
-	@OnlyIn(Dist.CLIENT) //Eh i don't know where to put this? Could you decide where this impl goes? Temp until you found a solution
 	public void render(PoseStack stack, int x, int y) {
-		if(color != -1) {
-			Screen.fill(stack, x, y, x + getWidth(), y + getHeight(), color);
+		if (color != -1) {
+			ElementPaddingRender.renderPadding(stack, x, y, getWidth(), getHeight(), color);
 		}
 	}
-	
+
 	@Override
 	public int getWidth() {
 		return width;
