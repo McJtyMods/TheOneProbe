@@ -21,29 +21,25 @@ public class DebugProbeInfoEntityProvider implements IProbeInfoEntityProvider {
     public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, Player player, Level world, Entity entity, IProbeHitEntityData data) {
         if (mode == ProbeMode.DEBUG && Config.showDebugInfo.get()) {
             IProbeInfo vertical = null;
-            if (entity instanceof Mob entityLivingBase) {
+            if (entity instanceof Mob mob) {
                 vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2));
 
-                int totalArmorValue = entityLivingBase.getArmorValue();
-                int age = entityLivingBase.getNoActionTime();
-                float absorptionAmount = entityLivingBase.getAbsorptionAmount();
-                float aiMoveSpeed = entityLivingBase.getSpeed();
-                int revengeTimer = entityLivingBase.getLastHurtByMobTimestamp();
+                int totalArmorValue = mob.getArmorValue();
+                int age = mob.getNoActionTime();
+                float absorptionAmount = mob.getAbsorptionAmount();
+                float aiMoveSpeed = mob.getSpeed();
+                int revengeTimer = mob.getLastHurtByMobTimestamp();
                 vertical
                         .text(CompoundText.createLabelInfo("Tot armor: ", totalArmorValue))
                         .text(CompoundText.createLabelInfo("Age: ", age))
                         .text(CompoundText.createLabelInfo("Absorption: ", absorptionAmount))
                         .text(CompoundText.createLabelInfo("AI Move Speed: ", aiMoveSpeed))
                         .text(CompoundText.createLabelInfo("Revenge Timer: ", revengeTimer));
-            }
-            if (entity instanceof AgeableMob entityAgeable) {
-                if (vertical == null) {
-                    vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2));
-                }
 
-                int growingAge = entityAgeable.getAge();
-                vertical
-                        .text(CompoundText.createLabelInfo("Growing Age: ", growingAge));
+                if (entity instanceof AgeableMob ageable) {
+                    vertical
+                            .text(CompoundText.createLabelInfo("Growing Age: ", ageable.getAge()));
+                }
             }
         }
     }

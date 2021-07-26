@@ -57,7 +57,7 @@ public class TheOneProbe {
     public static CreativeModeTab tabProbe = new CreativeModeTab("Probe") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(ModItems.probe);
+            return new ItemStack(ModItems.PROBE);
         }
     };
 
@@ -121,7 +121,7 @@ public class TheOneProbe {
 
     private void processIMC(final InterModProcessEvent event) {
         event.getIMCStream().forEach(message -> {
-            if ("getTheOneProbe".equalsIgnoreCase(message.getMethod())) {
+            if ("getTheOneProbe".equalsIgnoreCase(message.method())) {
                 Supplier<Function<ITheOneProbe, Void>> supplier = message.getMessageSupplier();
                 supplier.get().apply(theOneProbeImp);
             }
@@ -137,16 +137,16 @@ public class TheOneProbe {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         ModItems.init();
 
-        event.getRegistry().register(ModItems.probe);
-        event.getRegistry().register(ModItems.creativeProbe);
-        event.getRegistry().register(ModItems.probeNote);
+        event.getRegistry().register(ModItems.PROBE);
+        event.getRegistry().register(ModItems.CREATIVE_PROBE);
+        event.getRegistry().register(ModItems.PROBE_NOTE);
 
-        event.getRegistry().register(ModItems.diamondHelmetProbe);
-        event.getRegistry().register(ModItems.goldHelmetProbe);
-        event.getRegistry().register(ModItems.ironHelmetProbe);
+        event.getRegistry().register(ModItems.DIAMOND_HELMET_PROBE);
+        event.getRegistry().register(ModItems.GOLD_HELMET_PROBE);
+        event.getRegistry().register(ModItems.IRON_HELMET_PROBE);
 
         if (TheOneProbe.baubles) {
-            event.getRegistry().register(ModItems.probeGoggles);
+            event.getRegistry().register(ModItems.PROBE_GOGGLES);
         }
     }
 
@@ -163,12 +163,11 @@ public class TheOneProbe {
             defaultValues[i++] = provider.getID();
         }
 
-        String[] sortedProviders = defaultValues; // @todo TheOneProbe.config.getStringList("sortedProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which providers should be used");
         String[] excludedProviders = new String[] {}; // @todo TheOneProbe.config.getStringList("excludedProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Providers that should be excluded");
         Set<String> excluded = new HashSet<>();
         Collections.addAll(excluded, excludedProviders);
 
-        TheOneProbe.theOneProbeImp.configureProviders(sortedProviders, excluded);
+        TheOneProbe.theOneProbeImp.configureProviders(defaultValues, excluded);
     }
 
     private void configureEntityProviders() {
@@ -179,12 +178,11 @@ public class TheOneProbe {
             defaultValues[i++] = provider.getID();
         }
 
-        String[] sortedProviders = defaultValues; // @todo TheOneProbe.config.getStringList("sortedEntityProviders", Config.CATEGORY_PROVIDERS, defaultValues, "Order in which entity providers should be used");
         String[] excludedProviders = new String[] {}; // @todo TheOneProbe.config.getStringList("excludedEntityProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Entity providers that should be excluded");
         Set<String> excluded = new HashSet<>();
         Collections.addAll(excluded, excludedProviders);
 
-        TheOneProbe.theOneProbeImp.configureEntityProviders(sortedProviders, excluded);
+        TheOneProbe.theOneProbeImp.configureEntityProviders(defaultValues, excluded);
     }
 
 }

@@ -42,7 +42,7 @@ public class ElementEntity implements IElement {
         if (registryName == null) {
             registryName = ForgeRegistries.ENTITIES.getKey(entity.getType());
         }
-        this.entityName = registryName.toString();
+        this.entityName = registryName == null ? "<null>" : registryName.toString();
 //        this.entityName = EntityList.getEntityString(entity);
         this.style = style;
     }

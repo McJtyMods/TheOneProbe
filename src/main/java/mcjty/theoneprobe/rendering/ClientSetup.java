@@ -61,7 +61,7 @@ public class ClientSetup {
             }
         }
 
-        if (hasItemInEitherHand(ModItems.creativeProbe)) {
+        if (hasItemInEitherHand(ModItems.CREATIVE_PROBE)) {
             OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getMatrixStack(), event.getPartialTicks());
         } else {
             switch (Config.needsProbe.get()) {
@@ -82,7 +82,7 @@ public class ClientSetup {
     private ProbeMode getModeForPlayer() {
         Player player = Minecraft.getInstance().player;
         if (Config.extendedInMain.get()) {
-            if (hasItemInMainHand(ModItems.probe)) {
+            if (hasItemInMainHand(ModItems.PROBE)) {
                 return ProbeMode.EXTENDED;
             }
         }

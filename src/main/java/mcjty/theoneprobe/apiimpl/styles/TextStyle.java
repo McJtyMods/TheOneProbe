@@ -5,13 +5,13 @@ import mcjty.theoneprobe.api.ITextStyle;
 
 public class TextStyle implements ITextStyle {
 
-    int top = 0;
-    int bottom = 0;
-    int left = 0;
-    int right = 0;
-    Integer width = null;
-    Integer height = null;
-    ElementAlignment align = ElementAlignment.ALIGN_TOPLEFT;
+    private int top = 0;
+    private int bottom = 0;
+    private int left = 0;
+    private int right = 0;
+    private Integer width = null;
+    private Integer height = null;
+    private ElementAlignment align = ElementAlignment.ALIGN_TOPLEFT;
     
     @Override
     public ITextStyle copy() {

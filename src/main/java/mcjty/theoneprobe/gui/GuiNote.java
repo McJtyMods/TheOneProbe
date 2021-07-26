@@ -112,7 +112,7 @@ public class GuiNote extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         boolean rc = super.mouseClicked(mouseX, mouseY, mouseButton);
         if (rc) {
-            return rc;
+            return true;
         }
         mouseX += guiLeft;
         mouseY += guiTop;

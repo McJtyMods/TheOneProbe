@@ -3,14 +3,12 @@ package mcjty.theoneprobe;
 import mcjty.theoneprobe.commands.ModCommands;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.playerdata.PlayerProperties;
 import mcjty.theoneprobe.playerdata.PropertiesDispatcher;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -57,7 +55,7 @@ public class ForgeEventHandlers {
         if (Config.spawnNote.get()) {
             event.getPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(note -> {
                 if (!note.isPlayerGotNote()) {
-                    if (event.getPlayer().getInventory().add(new ItemStack(ModItems.probeNote))) {
+                    if (event.getPlayer().getInventory().add(new ItemStack(ModItems.PROBE_NOTE))) {
                         note.setPlayerGotNote(true);
                     }
                 }

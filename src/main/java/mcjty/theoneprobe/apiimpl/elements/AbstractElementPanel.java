@@ -83,6 +83,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         return layout;
     }
 
+    @Override
     public List<IElement> getElements() {
         return children;
     }

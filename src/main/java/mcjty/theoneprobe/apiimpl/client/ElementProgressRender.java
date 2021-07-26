@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.client;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -122,10 +123,14 @@ public class ElementProgressRender {
         Matrix4f matrix = matrixStack.last().pose();
         for (FluidStack stack : fluids) {
             int lvl = (int) (stack == null ? 0 : (((double) stack.getAmount() / max) * width));
-            if (lvl <= 0) continue;
+            if (lvl <= 0) {
+                continue;
+            }
             FluidAttributes attr = stack.getFluid().getAttributes();
             TextureAtlasSprite liquidIcon = map.apply(attr.getStillTexture(stack));
-            if (liquidIcon == map.apply(MissingTextureAtlasSprite.getLocation())) continue;
+            if (Objects.equals(liquidIcon, map.apply(MissingTextureAtlasSprite.getLocation()))) {
+                continue;
+            }
             int color = attr.getColor(stack);
             RenderSystem.setShaderColor(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
             while (lvl > 0) {

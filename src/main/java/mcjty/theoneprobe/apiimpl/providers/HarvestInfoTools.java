@@ -1,25 +1,25 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ToolType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static mcjty.theoneprobe.api.TextStyleClass.*;
+import static mcjty.theoneprobe.api.TextStyleClass.OK;
+import static mcjty.theoneprobe.api.TextStyleClass.WARNING;
 
 public class HarvestInfoTools {
 

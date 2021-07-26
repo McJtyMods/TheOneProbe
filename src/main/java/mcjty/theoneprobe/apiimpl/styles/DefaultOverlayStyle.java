@@ -13,6 +13,7 @@ public class DefaultOverlayStyle implements IOverlayStyle {
     private int topY;
     private int bottomY;
 
+    @Override
     public IOverlayStyle copy() {
         return new DefaultOverlayStyle()
                 .borderThickness(borderThickness)

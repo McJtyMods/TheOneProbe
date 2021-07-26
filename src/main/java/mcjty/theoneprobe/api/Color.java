@@ -62,11 +62,10 @@ public record Color(int value) {
     /// type specific mix function so people don't have to create a Object if they want to mix something.
 	public static int mix(int from, int to, double factor) {
 	    double weight0 = (1D - factor);
-	    double weight1 = factor;
-	    int r = (int)((((from >> 16) & 0xFF) * weight0) + (((to >> 16) & 0xFF) * weight1));
-	    int g = (int)((((from >> 8) & 0xFF) * weight0) + (((to >> 8) & 0xFF) * weight1));
-	    int b = (int)(((from & 0xFF) * weight0) + ((to & 0xFF) * weight1));
-	    int a = (int)((((from >> 24) & 0xFF) * weight0) + (((to >> 24) & 0xFF) * weight1));
+        int r = (int)((((from >> 16) & 0xFF) * weight0) + (((to >> 16) & 0xFF) * factor));
+	    int g = (int)((((from >> 8) & 0xFF) * weight0) + (((to >> 8) & 0xFF) * factor));
+	    int b = (int)(((from & 0xFF) * weight0) + ((to & 0xFF) * factor));
+	    int a = (int)((((from >> 24) & 0xFF) * weight0) + (((to >> 24) & 0xFF) * factor));
 	    return ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | b & 0xFF;
 	}
     
@@ -87,9 +86,15 @@ public record Color(int value) {
 		if(r == 0 && g == 0 && b == 0) {
 			return (color & ALPHA) | ((i & 0xFF) << 16) | ((i & 0xFF) << 8) | (i & 0xFF);
 		}
-		if(r > 0 && r < i) r = i;
-		if(g > 0 && g < i) g = i;
-		if(b > 0 && b < i) b = i;
+		if (r > 0 && r < i) {
+            r = i;
+        }
+		if (g > 0 && g < i) {
+            g = i;
+        }
+		if (b > 0 && b < i) {
+            b = i;
+        }
 		return (color & ALPHA) | Math.min(255, (int)(r / factor)) << 16 | Math.min(255, (int)(g / factor)) << 8 | Math.min(255, (int)(b / factor));
 	}
 }

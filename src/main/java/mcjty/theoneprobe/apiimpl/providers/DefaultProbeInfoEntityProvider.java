@@ -75,7 +75,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if (Tools.show(mode, config.getShowMobGrowth()) && entity instanceof AgeableMob ageable) {
                int age = ageable.getAge();
                if (age < 0) {
-                   probeInfo.text(CompoundText.createLabelInfo("Growing time: ",+ ((age * -1) / 20) + "s"));
+                   probeInfo.text(CompoundText.createLabelInfo("Growing time: ",((age * -1) / 20) + "s"));
                }
             }
 
@@ -143,8 +143,10 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 double jumpStrength = horse.getCustomJump();
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
                 probeInfo.text(CompoundText.createLabelInfo("Jump height: ", dfCommas.format(jumpHeight)));
-                AttributeInstance iattributeinstance = horse.getAttribute(Attributes.MOVEMENT_SPEED);
-                probeInfo.text(CompoundText.createLabelInfo("Speed: ", dfCommas.format(iattributeinstance.getValue())));
+                AttributeInstance attribute = horse.getAttribute(Attributes.MOVEMENT_SPEED);
+                if (attribute != null) {
+                    probeInfo.text(CompoundText.createLabelInfo("Speed: ", dfCommas.format(attribute.getValue())));
+                }
             }
         }
 

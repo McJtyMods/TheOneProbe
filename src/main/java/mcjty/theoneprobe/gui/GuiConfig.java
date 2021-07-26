@@ -158,7 +158,7 @@ public class GuiConfig extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         boolean rc = super.mouseClicked(mouseX, mouseY, mouseButton);
         if (rc) {
-            return rc;
+            return true;
         }
         if (mouseButton == 0) {
             for (HitBox box : hitboxes) {
@@ -256,8 +256,8 @@ public class GuiConfig extends Screen {
         y += guiTop;
 
         double factor = (Config.tooltipScale.get() - 1) * 1.4 + 1;
-        x *= factor;
-        y *= factor;
+        x = (int) (x * factor);
+        y = (int) (y * factor);
 
         if (thick > 0) {
             int x2 = x + w - 1;

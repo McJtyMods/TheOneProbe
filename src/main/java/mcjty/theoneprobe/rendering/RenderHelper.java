@@ -109,10 +109,10 @@ public class RenderHelper {
         BufferBuilder buffer = tessellator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
-        buffer.vertex(matrix, (x + 0), (y + height), zLevel).uv(((u + 0) * f), ((v + height) * f1)).endVertex();
+        buffer.vertex(matrix, (x), (y + height), zLevel).uv(((u) * f), ((v + height) * f1)).endVertex();
         buffer.vertex(matrix, (x + width), (y + height), zLevel).uv(((u + width) * f), ((v + height) * f1)).endVertex();
-        buffer.vertex(matrix, (x + width), (y + 0), zLevel).uv(((u + width) * f), ((v + 0) * f1)).endVertex();
-        buffer.vertex(matrix, (x + 0), (y + 0), zLevel).uv(((u + 0) * f), ((v + 0) * f1)).endVertex();
+        buffer.vertex(matrix, (x + width), (y), zLevel).uv(((u + width) * f), ((v) * f1)).endVertex();
+        buffer.vertex(matrix, (x), (y), zLevel).uv(((u) * f), ((v) * f1)).endVertex();
         tessellator.end();
     }
 
@@ -127,10 +127,10 @@ public class RenderHelper {
         BufferBuilder buffer = tessellator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
-        buffer.vertex(matrix, (x + 0), (y + height), zLevel).uv(((u + 0) * f), ((v + height) * f1)).endVertex();
+        buffer.vertex(matrix, (x), (y + height), zLevel).uv(((u) * f), ((v + height) * f1)).endVertex();
         buffer.vertex(matrix, (x + width), (y + height), zLevel).uv(((u + width) * f), ((v + height) * f1)).endVertex();
-        buffer.vertex(matrix, (x + width), (y + 0), zLevel).uv(((u + width) * f), ((v + 0) * f1)).endVertex();
-        buffer.vertex(matrix, (x + 0), (y + 0), zLevel).uv(((u + 0) * f), ((v + 0) * f1)).endVertex();
+        buffer.vertex(matrix, (x + width), (y), zLevel).uv(((u + width) * f), ((v) * f1)).endVertex();
+        buffer.vertex(matrix, (x), (y), zLevel).uv(((u) * f), ((v) * f1)).endVertex();
         tessellator.end();
     }
 
@@ -147,10 +147,10 @@ public class RenderHelper {
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(matrix, (x + 0), (y + height), zLevel).uv(u1, v1).endVertex();
+        buffer.vertex(matrix, (x), (y + height), zLevel).uv(u1, v1).endVertex();
         buffer.vertex(matrix, (x + width), (y + height), zLevel).uv(u1, v2).endVertex();
-        buffer.vertex(matrix, (x + width), (y + 0), zLevel).uv(u2, v2).endVertex();
-        buffer.vertex(matrix, (x + 0), (y + 0), zLevel).uv(u2, v1).endVertex();
+        buffer.vertex(matrix, (x + width), (y), zLevel).uv(u2, v2).endVertex();
+        buffer.vertex(matrix, (x), (y), zLevel).uv(u2, v1).endVertex();
         tessellator.end();
     }
 
@@ -235,8 +235,8 @@ public class RenderHelper {
                 RenderSystem.enableDepthTest();
             }
 
-            Player PlayerEntitysp = Minecraft.getInstance().player;
-            float f = PlayerEntitysp == null ? 0.0F : PlayerEntitysp.getCooldowns().getCooldownPercent(stack.getItem(), Minecraft.getInstance().getFrameTime());
+            Player playerEntitysp = Minecraft.getInstance().player;
+            float f = playerEntitysp == null ? 0.0F : playerEntitysp.getCooldowns().getCooldownPercent(stack.getItem(), Minecraft.getInstance().getFrameTime());
 
             if (f > 0.0F) {
                 RenderSystem.disableDepthTest();
@@ -255,10 +255,10 @@ public class RenderHelper {
      */
     private static void draw(BufferBuilder renderer, Matrix4f matrix, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
         renderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        renderer.vertex(matrix, (x + 0), (y + 0), 0).color(red, green, blue, alpha).endVertex();
-        renderer.vertex(matrix, (x + 0), (y + height), 0).color(red, green, blue, alpha).endVertex();
+        renderer.vertex(matrix, (x), (y), 0).color(red, green, blue, alpha).endVertex();
+        renderer.vertex(matrix, (x), (y + height), 0).color(red, green, blue, alpha).endVertex();
         renderer.vertex(matrix, (x + width), (y + height), 0).color(red, green, blue, alpha).endVertex();
-        renderer.vertex(matrix, (x + width), (y + 0), 0).color(red, green, blue, alpha).endVertex();
+        renderer.vertex(matrix, (x + width), (y), 0).color(red, green, blue, alpha).endVertex();
         Tesselator.getInstance().end();
     }
 

@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.Tools;
-import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
@@ -76,13 +75,11 @@ public class ChestInfoTools {
     }
 
     private static void showChestContents(IProbeInfo probeInfo, Level world, BlockPos pos, List<ItemStack> stacks, boolean detailed) {
-        IProbeInfo vertical = null;
-        IProbeInfo horizontal = null;
-
         int rows = 0;
         int idx = 0;
 
-        vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(Config.chestContentsBorderColor).spacing(0));
+        IProbeInfo horizontal = null;
+        IProbeInfo vertical = probeInfo.vertical(probeInfo.defaultLayoutStyle().borderColor(Config.chestContentsBorderColor).spacing(0));
 
         if (detailed) {
             for (ItemStack stackInSlot : stacks) {

@@ -6,6 +6,7 @@ public class ItemStyle implements IItemStyle {
     private int width = 20;
     private int height = 20;
     
+    @Override
     public IItemStyle copy() {
     	return new ItemStyle().bounds(width, height);
     }

@@ -12,7 +12,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.*;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.StringUtils;
 
@@ -125,7 +124,7 @@ public class Config {
 
     public static final Map<TextStyleClass, String> defaultTextStyleClasses = new HashMap<>();
     public static Map<TextStyleClass, ConfigValue<String>> cfgtextStyleClasses = new HashMap<>();
-    public static Map<TextStyleClass, String> textStyleClasses = new HashMap<>();
+    public static Map<TextStyleClass, String> textStyleClasses;
 
     public static IntValue loggingThrowableTimeout;
 
@@ -371,10 +370,11 @@ public class Config {
         CLIENT_BUILDER.push("style");
 
         Map<TextStyleClass, ConfigValue<String>> newformat = new HashMap<>();
-        for (TextStyleClass styleClass : textStyleClasses.keySet()) {
+        for (Map.Entry<TextStyleClass, String> entry : textStyleClasses.entrySet()) {
+            TextStyleClass styleClass = entry.getKey();
             ConfigValue<String> configValue = CLIENT_BUILDER
                     .comment("Text style. Use a comma delimited list with colors like: 'red', 'green', 'blue', ... or style codes like 'underline', 'bold', 'italic', 'strikethrough', ...\"")
-                    .define(styleClass.getReadableName(), textStyleClasses.get(styleClass));
+                    .define(styleClass.getReadableName(), entry.getValue());
             newformat.put(styleClass, configValue);
         }
         cfgtextStyleClasses = newformat;
@@ -455,7 +455,6 @@ public class Config {
         try {
             return (int) Long.parseLong(col, 16);
         } catch (NumberFormatException e) {
-            System.out.println("Config.parseColor");
             return 0;
         }
     }

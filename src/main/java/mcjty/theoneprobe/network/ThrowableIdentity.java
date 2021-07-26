@@ -41,12 +41,18 @@ public class ThrowableIdentity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ThrowableIdentity that = (ThrowableIdentity) o;
 
-        if (identifier != null ? !identifier.equals(that.identifier) : that.identifier != null) return false;
+        if (identifier != null ? !identifier.equals(that.identifier) : that.identifier != null) {
+            return false;
+        }
 
         return true;
     }

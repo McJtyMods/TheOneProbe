@@ -309,6 +309,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 continue;
             }
             if (property.getValueClass() == Integer.class) {
+                @SuppressWarnings("unchecked")
                 Property<Integer> integerProperty = (Property<Integer>) property;
                 int age = blockState.getValue(integerProperty);
                 int maxAge = Collections.max(integerProperty.getPossibleValues());
