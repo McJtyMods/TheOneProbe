@@ -3,12 +3,11 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url 'https://plugins.gradle.org/m2/' }
-        jcenter()
+        gradlePluginPortal()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
     }
 }
@@ -27,7 +26,7 @@ repositories {
         url "https://maven.blamejared.com"
     }
     maven { // CompatLayer
-        url "http://maven.k-4u.nl"
+        url "https://maven.k-4u.nl"
     }
 }
 
@@ -38,12 +37,14 @@ if (System.getenv('BUILD_NUMBER') != null) {
     version += "-${System.getenv('BUILD_NUMBER')}"
 }
 
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
+}
 
 minecraft {
-    mappings channel: 'official', version: "1.16.5"
+    mappings channel: 'official', version: "1.17.1"
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     //runDir = "run"
@@ -78,9 +79,9 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     // compile against the JEI API but do not include it at runtime
-    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
+//    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
+//    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
     //deobfCompile "cofh:RedstoneFlux:${redstoneflux_version}"
     //deobfCompile "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
 }

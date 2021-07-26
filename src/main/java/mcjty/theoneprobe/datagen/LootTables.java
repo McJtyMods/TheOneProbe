@@ -1,8 +1,8 @@
 package mcjty.theoneprobe.datagen;
 
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.LootTableProvider;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.loot.LootTableProvider;
 
 public class LootTables extends LootTableProvider {
 
@@ -11,6 +11,6 @@ public class LootTables extends LootTableProvider {
     }
 
     @Override
-    public void run(DirectoryCache cache) {
+    public void run(HashCache cache) {
     }
 }

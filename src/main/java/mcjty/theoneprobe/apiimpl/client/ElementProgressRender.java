@@ -2,23 +2,22 @@ package mcjty.theoneprobe.apiimpl.client;
 
 import java.util.function.Function;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import com.mojang.math.Matrix4f;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.TankReference;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.rendering.RenderHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.texture.MissingTextureSprite;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -26,7 +25,7 @@ public class ElementProgressRender {
 
     private static final ResourceLocation ICONS = new ResourceLocation("textures/gui/icons.png");
 
-    public static void render(IProgressStyle style, long current, long max, MatrixStack matrixStack, int x, int y, int w, int h) {
+    public static void render(IProgressStyle style, long current, long max, PoseStack matrixStack, int x, int y, int w, int h) {
         if (style.isLifeBar()) {
             renderLifeBar(current, matrixStack, x, y, w, h);
         } else if (style.isArmorBar()) {
@@ -52,11 +51,11 @@ public class ElementProgressRender {
         renderText(matrixStack, x, y, w, current, style);
     }
 
-    private static void renderText(MatrixStack matrixStack, int x, int y, int w, long current, IProgressStyle style) {
+    private static void renderText(PoseStack matrixStack, int x, int y, int w, long current, IProgressStyle style) {
         if (style.isShowText()) {
             Minecraft mc = Minecraft.getInstance();
-            FontRenderer render = mc.font;
-            ITextComponent s = style.getPrefixComp().copy().append(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
+            Font render = mc.font;
+            Component s = style.getPrefixComp().copy().append(ElementProgress.format(current, style.getNumberFormat(), style.getSuffixComp()));
             int textWidth = render.width(s.getVisualOrderText());
             switch (style.getAlignment()) {
                 case ALIGN_BOTTOMRIGHT:
@@ -72,14 +71,14 @@ public class ElementProgressRender {
         }
     }
 
-    private static void renderLifeBar(long current, MatrixStack matrixStack, int x, int y, int w, int h) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bind(ICONS);
+    private static void renderLifeBar(long current, PoseStack matrixStack, int x, int y, int w, int h) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, ICONS);
         Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(matrix, x, y, 52, 0, 9, 9);
-            RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
+            RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 12, y, ChatFormatting.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
                 RenderHelper.drawTexturedModalRect(matrix, x, y, 52, 0, 9, 9);
@@ -91,14 +90,14 @@ public class ElementProgressRender {
         }
     }
 
-    private static void renderArmorBar(long current, MatrixStack matrixStack, int x, int y, int w, int h) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bind(ICONS);
+    private static void renderArmorBar(long current, PoseStack matrixStack, int x, int y, int w, int h) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, ICONS);
         Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
             // Shortened view
             RenderHelper.drawTexturedModalRect(matrix, x, y, 43, 9, 9, 9);
-            RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 12, y, TextFormatting.WHITE + String.valueOf((current / 2)));
+            RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x + 12, y, ChatFormatting.WHITE + String.valueOf((current / 2)));
         } else {
             for (int i = 0; i < current / 2; i++) {
                 RenderHelper.drawTexturedModalRect(matrix, x, y, 43, 9, 9, 9);
@@ -110,7 +109,7 @@ public class ElementProgressRender {
         }
     }
 
-    public static void renderTank(MatrixStack matrixStack, int x, int y, int width, int height, IProgressStyle style, TankReference tank) {
+    public static void renderTank(PoseStack matrixStack, int x, int y, int width, int height, IProgressStyle style, TankReference tank) {
         RenderHelper.drawThickBeveledBox(matrixStack, x, y, x + width, y + height, 1, style.getBorderColor(), style.getBorderColor(), style.getBackgroundColor());
         if (tank.getStored() <= 0) {
             if (style.isShowText()) {
@@ -119,8 +118,8 @@ public class ElementProgressRender {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
-        mc.getTextureManager().bind(PlayerContainer.BLOCK_ATLAS);
-        Function<ResourceLocation, TextureAtlasSprite> map = mc.getTextureAtlas(PlayerContainer.BLOCK_ATLAS);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+        Function<ResourceLocation, TextureAtlasSprite> map = mc.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
         width -= 2;
         FluidStack[] fluids = tank.getFluids();
         int start = 1;
@@ -133,9 +132,9 @@ public class ElementProgressRender {
             if (lvl <= 0) continue;
             FluidAttributes attr = stack.getFluid().getAttributes();
             TextureAtlasSprite liquidIcon = map.apply(attr.getStillTexture(stack));
-            if (liquidIcon == map.apply(MissingTextureSprite.getLocation())) continue;
+            if (liquidIcon == map.apply(MissingTextureAtlasSprite.getLocation())) continue;
             int color = attr.getColor(stack);
-            RenderSystem.color4f(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
+            RenderSystem.setShaderColor(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
             while (lvl > 0) {
                 int maxX = Math.min(16, lvl);
                 lvl -= maxX;
@@ -143,7 +142,7 @@ public class ElementProgressRender {
                 start += maxX;
             }
         }
-        RenderSystem.color4f(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         if(style.isShowText())
         {
             renderText(matrixStack, x, y, width + 2, tank.getStored(), style);

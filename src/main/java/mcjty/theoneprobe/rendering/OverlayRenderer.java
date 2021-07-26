@@ -1,7 +1,8 @@
 package mcjty.theoneprobe.rendering;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Matrix4f;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -17,18 +18,22 @@ import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.network.ThrowableIdentity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -41,7 +46,7 @@ import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 
 public class OverlayRenderer {
 
-    private static Map<Pair<RegistryKey<World>,BlockPos>, Pair<Long, ProbeInfo>> cachedInfo = new HashMap<>();
+    private static Map<Pair<ResourceKey<Level>,BlockPos>, Pair<Long, ProbeInfo>> cachedInfo = new HashMap<>();
     private static Map<UUID, Pair<Long, ProbeInfo>> cachedEntityInfo = new HashMap<>();
     private static long lastCleanupTime = 0;
 
@@ -53,7 +58,7 @@ public class OverlayRenderer {
     // When the server delays too long we also show some preliminary information already
     private static long lastRenderedTime = -1;
 
-    public static void registerProbeInfo(RegistryKey<World> dim, BlockPos pos, ProbeInfo probeInfo) {
+    public static void registerProbeInfo(ResourceKey<Level> dim, BlockPos pos, ProbeInfo probeInfo) {
         if (probeInfo == null) {
             return;
         }
@@ -69,18 +74,18 @@ public class OverlayRenderer {
         cachedEntityInfo.put(uuid, Pair.of(time, probeInfo));
     }
 
-    public static void renderHUD(ProbeMode mode, MatrixStack matrixStack, float partialTicks) {
+    public static void renderHUD(ProbeMode mode, PoseStack matrixStack, float partialTicks) {
         double dist = Config.probeDistance.get();
 
-        RayTraceResult mouseOver = Minecraft.getInstance().hitResult;
+        HitResult mouseOver = Minecraft.getInstance().hitResult;
         if (mouseOver != null) {
-            if (mouseOver.getType() == RayTraceResult.Type.ENTITY) {
+            if (mouseOver.getType() == HitResult.Type.ENTITY) {
                 matrixStack.pushPose();
 
-                double scale = Config.tooltipScale.get();
+                float scale = Config.tooltipScale.get().floatValue();
 
-                double sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-                double sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+                float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+                float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
                 setupOverlayRendering(sw * scale, sh * scale);
                 renderHUDEntity(matrixStack, mode, mouseOver, sw * scale, sh * scale);
@@ -92,24 +97,24 @@ public class OverlayRenderer {
             }
         }
 
-        PlayerEntity entity = Minecraft.getInstance().player;
-        Vector3d start  = entity.getEyePosition(partialTicks);
-        Vector3d vec31 = entity.getViewVector(partialTicks);
-        Vector3d end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
+        Player entity = Minecraft.getInstance().player;
+        Vec3 start  = entity.getEyePosition(partialTicks);
+        Vec3 vec31 = entity.getViewVector(partialTicks);
+        Vec3 end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
 
-        RayTraceContext context = new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, Config.showLiquids.get() ? RayTraceContext.FluidMode.ANY : RayTraceContext.FluidMode.NONE, entity);
+        ClipContext context = new ClipContext(start, end, ClipContext.Block.OUTLINE, Config.showLiquids.get() ? ClipContext.Fluid.ANY : ClipContext.Fluid.NONE, entity);
         mouseOver = entity.getCommandSenderWorld().clip(context);
         if (mouseOver == null) {
             return;
         }
 
-        if (mouseOver.getType() == RayTraceResult.Type.BLOCK) {
+        if (mouseOver.getType() == HitResult.Type.BLOCK) {
             matrixStack.pushPose();
 
-            double scale = Config.tooltipScale.get();
+            float scale = Config.tooltipScale.get().floatValue();
 
-            double sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-            double sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+            float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+            float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
             setupOverlayRendering(sw * scale, sh * scale);
             renderHUDBlock(matrixStack, mode, mouseOver, sw * scale, sh * scale);
@@ -121,14 +126,13 @@ public class OverlayRenderer {
         checkCleanup();
     }
 
-    private static void setupOverlayRendering(double sw, double sh) {
-        RenderSystem.clear(256, true);
-        RenderSystem.matrixMode(GL11.GL_PROJECTION);
-        RenderSystem.loadIdentity();
-        RenderSystem.ortho(0.0D, sw, sh, 0.0D, 1000.0D, 3000.0D);
-        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
-        RenderSystem.loadIdentity();
-        RenderSystem.translatef(0.0F, 0.0F, -2000.0F);
+    private static void setupOverlayRendering(float sw, float sh) {
+        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
+        RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0, sw, 0, sh, 1000.0f, 3000.0f));
+        PoseStack posestack = RenderSystem.getModelViewStack();
+        posestack.setIdentity();
+        posestack.translate(0.0F, 0.0F, -2000.0F);
+        RenderSystem.applyModelViewMatrix();
     }
 
     private static void checkCleanup() {
@@ -140,11 +144,11 @@ public class OverlayRenderer {
         }
     }
 
-    private static void renderHUDEntity(MatrixStack matrixStack, ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
-        if (!(mouseOver instanceof EntityRayTraceResult)) {
+    private static void renderHUDEntity(PoseStack matrixStack, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
+        if (!(mouseOver instanceof EntityHitResult)) {
             return;
         }
-        Entity entity = ((EntityRayTraceResult) mouseOver).getEntity();
+        Entity entity = ((EntityHitResult) mouseOver).getEntity();
 //@todo
 //        if (entity instanceof EntityDragonPart) {
 //            EntityDragonPart part = (EntityDragonPart) entity;
@@ -155,14 +159,14 @@ public class OverlayRenderer {
 
 //        String entityString = EntityList.getEntityString(entity);
         String entityString = entity.getEncodeId();
-        if (entityString == null && !(entity instanceof PlayerEntity)) {
+        if (entityString == null && !(entity instanceof Player)) {
             // We can't show info for this entity
             return;
         }
 
         UUID uuid = entity.getUUID();
 
-        PlayerEntity player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().player;
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
@@ -204,19 +208,19 @@ public class OverlayRenderer {
         }
     }
 
-    private static void requestEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntity player) {
+    private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, Player player) {
         PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity));
     }
 
-    private static void renderHUDBlock(MatrixStack matrixStack, ProbeMode mode, RayTraceResult mouseOver, double sw, double sh) {
-        if (!(mouseOver instanceof BlockRayTraceResult)) {
+    private static void renderHUDBlock(PoseStack matrixStack, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
+        if (!(mouseOver instanceof BlockHitResult)) {
             return;
         }
-        BlockPos blockPos = ((BlockRayTraceResult) mouseOver).getBlockPos();
+        BlockPos blockPos = ((BlockHitResult) mouseOver).getBlockPos();
         if (blockPos == null) {
             return;
         }
-        PlayerEntity player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().player;
         if (player.getCommandSenderWorld().isEmptyBlock(blockPos)) {
             return;
         }
@@ -228,7 +232,7 @@ public class OverlayRenderer {
             float damage = Minecraft.getInstance().gameMode.destroyProgress;
             if (damage > 0) {
                 if (Config.showBreakProgress.get() == 2) {
-                    damageElement = new ElementText(new StringTextComponent("Progress " + (int) (damage * 100) + "%").withStyle(TextFormatting.RED));
+                    damageElement = new ElementText(new TextComponent("Progress " + (int) (damage * 100) + "%").withStyle(ChatFormatting.RED));
                 } else {
                     damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
                             .prefix("Progress ")
@@ -242,8 +246,8 @@ public class OverlayRenderer {
             }
         }
 
-        RegistryKey<World> dimension = player.getCommandSenderWorld().dimension();
-        Pair<RegistryKey<World>, BlockPos> key = Pair.of(dimension, blockPos);
+        ResourceKey<Level> dimension = player.getCommandSenderWorld().dimension();
+        Pair<ResourceKey<Level>, BlockPos> key = Pair.of(dimension, blockPos);
         Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(key);
         if (cacheEntry == null || cacheEntry.getValue() == null) {
 
@@ -284,14 +288,14 @@ public class OverlayRenderer {
     }
 
     // Information for when the server is laggy
-    private static ProbeInfo getWaitingInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, PlayerEntity player) {
+    private static ProbeInfo getWaitingInfo(ProbeMode mode, HitResult mouseOver, BlockPos blockPos, Player player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
 
-        World world = player.getCommandSenderWorld();
+        Level world = player.getCommandSenderWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
-        IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getLocation(), ((BlockRayTraceResult)mouseOver).getDirection(), pickBlock);
+        IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getLocation(), ((BlockHitResult)mouseOver).getDirection(), pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
         try {
@@ -305,7 +309,7 @@ public class OverlayRenderer {
         return probeInfo;
     }
 
-    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, RayTraceResult mouseOver, Entity entity, PlayerEntity player) {
+    private static ProbeInfo getWaitingEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, Player player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         IProbeHitEntityData data = new ProbeHitEntityData(mouseOver.getLocation());
 
@@ -321,8 +325,8 @@ public class OverlayRenderer {
         return probeInfo;
     }
 
-    private static void requestBlockInfo(ProbeMode mode, RayTraceResult mouseOver, BlockPos blockPos, PlayerEntity player) {
-        World world = player.getCommandSenderWorld();
+    private static void requestBlockInfo(ProbeMode mode, HitResult mouseOver, BlockPos blockPos, Player player) {
+        Level world = player.getCommandSenderWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
@@ -337,13 +341,13 @@ public class OverlayRenderer {
         PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.dimension(), blockPos, mode, mouseOver, pickBlock));
     }
 
-    public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, MatrixStack matrixStack) {
+    public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, PoseStack matrixStack) {
         matrixStack.pushPose();
 
-        double scale = Config.tooltipScale.get();
+        float scale = Config.tooltipScale.get().floatValue();
 
-        double sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        double sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
         setupOverlayRendering(sw * scale, sh * scale);
         renderElements(matrixStack, (ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
@@ -353,8 +357,8 @@ public class OverlayRenderer {
 
     private static void cleanupCachedBlocks(long time) {
         // It has been a while. Time to clean up unused cached pairs.
-        Map<Pair<RegistryKey<World>,BlockPos>, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
-        for (Map.Entry<Pair<RegistryKey<World>, BlockPos>, Pair<Long, ProbeInfo>> entry : cachedInfo.entrySet()) {
+        Map<Pair<ResourceKey<Level>,BlockPos>, Pair<Long, ProbeInfo>> newCachedInfo = new HashMap<>();
+        for (Map.Entry<Pair<ResourceKey<Level>, BlockPos>, Pair<Long, ProbeInfo>> entry : cachedInfo.entrySet()) {
             long t = entry.getValue().getLeft();
             if (time < t + Config.timeout.get() + 1000) {
                 newCachedInfo.put(entry.getKey(), entry.getValue());
@@ -375,14 +379,13 @@ public class OverlayRenderer {
         cachedEntityInfo = newCachedInfo;
     }
 
-    public static void renderElements(MatrixStack matrixStack, ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh,
-                                      @Nullable IElement extra) {
+    public static void renderElements(PoseStack matrixStack, ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh,
+									  @Nullable IElement extra) {
         if (extra != null) {
             probeInfo.element(extra);
         }
 
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.disableLighting();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 //        final ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getInstance());
 //        final int scaledWidth = scaledresolution.getScaledWidth();

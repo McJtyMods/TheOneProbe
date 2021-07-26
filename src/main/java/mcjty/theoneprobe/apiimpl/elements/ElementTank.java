@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
@@ -10,7 +10,7 @@ import mcjty.theoneprobe.api.TankReference;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementProgressRender;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class ElementTank implements IElement {
 	private final TankReference tank;
@@ -25,7 +25,7 @@ public class ElementTank implements IElement {
 		this.style = style;
 	}
 	
-	public ElementTank(PacketBuffer buffer) {
+	public ElementTank(FriendlyByteBuf buffer) {
 		tank = new TankReference(buffer);
         style = new ProgressStyle()
                 .width(buffer.readInt())
@@ -48,7 +48,7 @@ public class ElementTank implements IElement {
 	}
 	
 	@Override
-	public void render(MatrixStack matrixStack, int x, int y) {
+	public void render(PoseStack matrixStack, int x, int y) {
 		ElementProgressRender.renderTank(matrixStack, x, y, getWidth(), getHeight(), style, tank);
 	}
 	
@@ -63,7 +63,7 @@ public class ElementTank implements IElement {
 	}
 	
 	@Override
-	public void toBytes(PacketBuffer buf) {
+	public void toBytes(FriendlyByteBuf buf) {
 		tank.toBytes(buf);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());

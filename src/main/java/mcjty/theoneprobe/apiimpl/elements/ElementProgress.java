@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IProgressStyle;
@@ -8,9 +8,9 @@ import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementProgressRender;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 import java.text.DecimalFormat;
 
@@ -26,7 +26,7 @@ public class ElementProgress implements IElement {
         this.style = style;
     }
 
-    public ElementProgress(PacketBuffer buf) {
+    public ElementProgress(FriendlyByteBuf buf) {
         current = buf.readLong();
         max = buf.readLong();
         style = new ProgressStyle()
@@ -55,13 +55,13 @@ public class ElementProgress implements IElement {
     /**
      * If the suffix starts with 'm' we can possibly drop that
      */
-	public static ITextComponent format(long in, NumberFormat style, ITextComponent suffix) {
+	public static Component format(long in, NumberFormat style, Component suffix) {
 		switch (style) {
 			case FULL:
-				return new StringTextComponent(Long.toString(in)).append(suffix);
+				return new TextComponent(Long.toString(in)).append(suffix);
 			case COMPACT:
 				if (in < 1000) {
-                    return new StringTextComponent(Long.toString(in) + " ").append(suffix);
+                    return new TextComponent(Long.toString(in) + " ").append(suffix);
                 }
 				int unit = 1000;
 				int exp = (int) (Math.log(in) / Math.log(unit));
@@ -70,21 +70,21 @@ public class ElementProgress implements IElement {
 					s = s.substring(1);
 					if (exp - 2 >= 0) {
 						char pre = "kMGTPE".charAt(exp - 2);
-						return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).append(new StringTextComponent(s).withStyle(suffix.getStyle()));
+						return new TextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).append(new TextComponent(s).withStyle(suffix.getStyle()));
 					}
-					return new StringTextComponent(String.format("%.1f", Double.valueOf(in / Math.pow(unit, exp)))).append(new StringTextComponent(s).withStyle(suffix.getStyle()));
+					return new TextComponent(String.format("%.1f", Double.valueOf(in / Math.pow(unit, exp)))).append(new TextComponent(s).withStyle(suffix.getStyle()));
 				}
 				char pre = "kMGTPE".charAt(exp - 1);
-				return new StringTextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).append(suffix);
+				return new TextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).append(suffix);
 			case COMMAS:
-				return new StringTextComponent(dfCommas.format(in)).append(suffix);
+				return new TextComponent(dfCommas.format(in)).append(suffix);
 			case NONE: return suffix;
 		}
-		return new StringTextComponent(Long.toString(in));
+		return new TextComponent(Long.toString(in));
 	}
 
     @Override
-    public void render(MatrixStack matrixStack, int x, int y) {
+    public void render(PoseStack matrixStack, int x, int y) {
         ElementProgressRender.render(style, current, max, matrixStack, x, y, getWidth(), getHeight());
     }
 
@@ -106,7 +106,7 @@ public class ElementProgress implements IElement {
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeLong(current);
         buf.writeLong(max);
         buf.writeInt(style.getWidth());

@@ -6,10 +6,10 @@ import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.playerdata.PlayerProperties;
 import mcjty.theoneprobe.playerdata.PropertiesDispatcher;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -33,7 +33,7 @@ public class ForgeEventHandlers {
 
     @SubscribeEvent
     public void onEntityConstructing(AttachCapabilitiesEvent<Entity> event){
-        if (event.getObject() instanceof PlayerEntity) {
+        if (event.getObject() instanceof Player) {
             if (!event.getObject().getCapability(PlayerProperties.PLAYER_GOT_NOTE).isPresent()) {
                 event.addCapability(new ResourceLocation(TheOneProbe.MODID, "properties"), new PropertiesDispatcher());
             }
@@ -58,7 +58,7 @@ public class ForgeEventHandlers {
         if (Config.spawnNote.get()) {
             event.getPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(note -> {
                 if (!note.isPlayerGotNote()) {
-                    boolean success = event.getPlayer().inventory.add(new ItemStack(ModItems.probeNote));
+                    boolean success = event.getPlayer().getInventory().add(new ItemStack(ModItems.probeNote));
                     if (success) {
                         note.setPlayerGotNote(true);
                     }

@@ -8,11 +8,12 @@ import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import mcjty.theoneprobe.items.IEnumConfig;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.*;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -435,7 +436,7 @@ public class Config {
         StringBuilder builder = new StringBuilder();
         String[] splitted = StringUtils.split(input, ',');
         for (String s : splitted) {
-            TextFormatting format = TextFormatting.getByName(s);
+            ChatFormatting format = ChatFormatting.getByName(s);
             if (format != null) {
                 builder.append(format.toString());
             }
@@ -557,11 +558,11 @@ public class Config {
         return renderBlacklistSet.contains(id);
     }
 
-    public static void onLoad(ModConfig.Loading event) {
+    public static void onLoad(ModConfigEvent.Loading event) {
         renderBlacklistSet = null;
     }
 
-    public static void onReload(ModConfig.Loading event) {
+    public static void onReload(ModConfigEvent.Reloading event) {
         renderBlacklistSet = null;
     }
 }

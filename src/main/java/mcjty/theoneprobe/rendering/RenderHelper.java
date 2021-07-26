@@ -1,28 +1,29 @@
 package mcjty.theoneprobe.rendering;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix4f;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.network.ThrowableIdentity;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.HangingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import com.mojang.math.Vector3f;
 
 import javax.annotation.Nullable;
 
@@ -30,24 +31,22 @@ public class RenderHelper {
 
     public static float rot = 0.0f;
 
-    public static void renderEntity(Entity entity, MatrixStack matrixStack, int xPos, int yPos, float scale) {
+    public static void renderEntity(Entity entity, PoseStack matrixStack, int xPos, int yPos, float scale) {
         matrixStack.pushPose();
-        RenderSystem.color4f(1f, 1f, 1f, 1f);
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.enableColorMaterial();
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         matrixStack.translate(xPos + 8, yPos + 24, 50F);
         matrixStack.scale(-scale, scale, scale);
         matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(135));
-        net.minecraft.client.renderer.RenderHelper.turnBackOn();
+        Lighting.setupForEntityInInventory();
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-135));
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(rot));
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(0));
 
-        if (!(entity instanceof PlayerEntity)) {
-            entity.xRot = 0.0F;
+        if (!(entity instanceof Player)) {
+            entity.setXRot(0.0F);
             entity.xRotO = 0.0F;
-            entity.yRot = 0.0f;
+            entity.setYRot(0.0f);
             entity.yRotO = 0.0f;
 
             if (entity instanceof LivingEntity) {
@@ -61,44 +60,43 @@ public class RenderHelper {
         }
 
         matrixStack.translate(0.0F, (float) entity.getMyRidingOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
+        RenderSystem.applyModelViewMatrix();
 
         try {
-            IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+            MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
             Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, buffer, 15728880);
             buffer.endBatch();
         } catch (Exception e) {
             TheOneProbe.logger.error("Error rendering entity!", e);
         }
-        net.minecraft.client.renderer.RenderHelper.turnOff();
+        Lighting.setupFor3DItems();
 
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.disableLighting();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableDepthTest();
-        RenderSystem.disableColorMaterial();
         Minecraft.getInstance().gameRenderer.lightTexture().turnOffLightLayer();
         matrixStack.popPose();
+        RenderSystem.applyModelViewMatrix();
     }
 
-    public static void drawHorizontalLine(MatrixStack matrixStack, int x1, int y1, int x2, int color) {
-        AbstractGui.fill(matrixStack, x1, y1, x2, y1 + 1, color);
+    public static void drawHorizontalLine(PoseStack matrixStack, int x1, int y1, int x2, int color) {
+        GuiComponent.fill(matrixStack, x1, y1, x2, y1 + 1, color);
     }
 
-    public static void drawVerticalLine(MatrixStack matrixStack, int x1, int y1, int y2, int color) {
-        AbstractGui.fill(matrixStack, x1, y1, x1 + 1, y2, color);
+    public static void drawVerticalLine(PoseStack matrixStack, int x1, int y1, int y2, int color) {
+        GuiComponent.fill(matrixStack, x1, y1, x1 + 1, y2, color);
     }
 
     /**
      * Draw a thick beveled box. x2 and y2 are not included.
      */
-    public static void drawThickBeveledBox(MatrixStack matrixStack, int x1, int y1, int x2, int y2, int thickness, int topleftcolor, int botrightcolor, int fillcolor) {
+    public static void drawThickBeveledBox(PoseStack matrixStack, int x1, int y1, int x2, int y2, int thickness, int topleftcolor, int botrightcolor, int fillcolor) {
         if (fillcolor != -1) {
-            AbstractGui.fill(matrixStack, x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
+            GuiComponent.fill(matrixStack, x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
         }
-        AbstractGui.fill(matrixStack, x1, y1, x2 - 1, y1 + thickness, topleftcolor);
-        AbstractGui.fill(matrixStack, x1, y1, x1 + thickness, y2 - 1, topleftcolor);
-        AbstractGui.fill(matrixStack, x2 - thickness, y1, x2, y2 - 1, botrightcolor);
-        AbstractGui.fill(matrixStack, x1, y2 - thickness, x2, y2, botrightcolor);
+        GuiComponent.fill(matrixStack, x1, y1, x2 - 1, y1 + thickness, topleftcolor);
+        GuiComponent.fill(matrixStack, x1, y1, x1 + thickness, y2 - 1, topleftcolor);
+        GuiComponent.fill(matrixStack, x2 - thickness, y1, x2, y2 - 1, botrightcolor);
+        GuiComponent.fill(matrixStack, x1, y2 - thickness, x2, y2, botrightcolor);
     }
 
     /**
@@ -108,9 +106,9 @@ public class RenderHelper {
         float zLevel = 0.01f;
         float f = (1.0f / twidth);
         float f1 = (1.0f / theight);
-        Tessellator tessellator = Tessellator.getInstance();
+        Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         buffer.vertex(matrix, (x + 0), (y + height), zLevel).uv(((u + 0) * f), ((v + height) * f1)).endVertex();
         buffer.vertex(matrix, (x + width), (y + height), zLevel).uv(((u + width) * f), ((v + height) * f1)).endVertex();
@@ -126,9 +124,9 @@ public class RenderHelper {
         float zLevel = 0.01f;
         float f = (1 / 256.0f);
         float f1 = (1 / 256.0f);
-        Tessellator tessellator = Tessellator.getInstance();
+        Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         buffer.vertex(matrix, (x + 0), (y + height), zLevel).uv(((u + 0) * f), ((v + height) * f1)).endVertex();
         buffer.vertex(matrix, (x + width), (y + height), zLevel).uv(((u + width) * f), ((v + height) * f1)).endVertex();
@@ -147,9 +145,9 @@ public class RenderHelper {
         float u2 = sprite.getU1();
         float v2 = sprite.getV1();
 
-        Tessellator tessellator = Tessellator.getInstance();
+        Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.vertex(matrix, (x + 0), (y + height), zLevel).uv(u1, v1).endVertex();
         buffer.vertex(matrix, (x + width), (y + height), zLevel).uv(u1, v2).endVertex();
         buffer.vertex(matrix, (x + width), (y + 0), zLevel).uv(u2, v2).endVertex();
@@ -157,36 +155,29 @@ public class RenderHelper {
         tessellator.end();
     }
 
-    public static boolean renderItemStack(Minecraft mc, ItemRenderer itemRender, ItemStack itm, MatrixStack matrixStack, int x, int y, String txt) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0f);
+    public static boolean renderItemStack(Minecraft mc, ItemRenderer itemRender, ItemStack itm, PoseStack matrixStack, int x, int y, String txt) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
 
         boolean rc = true;
         if (!itm.isEmpty() && itm.getItem() != null) {
             matrixStack.pushPose();
             matrixStack.translate(0.0F, 0.0F, 32.0F);
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.enableRescaleNormal();
-            RenderSystem.enableLighting();
+            RenderSystem.applyModelViewMatrix();
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             short short1 = 240;
             short short2 = 240;
-            net.minecraft.client.renderer.RenderHelper.setupFor3DItems();
+            Lighting.setupFor3DItems();
             // @todo 1.15
 //            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             try {
-                //Note: As ItemRenderer#renderItemAndEffectIntoGui still is entirely based on GL states instead of matrix stacks
-                // we need to massage the matrix stack into it
-                RenderSystem.pushMatrix();
-                RenderSystem.multMatrix(matrixStack.last().pose());
                 itemRender.renderAndDecorateItem(itm, x, y);
-                RenderSystem.popMatrix();
                 renderItemStackOverlay(matrixStack, mc.font, itm, x, y, txt, txt.length() - 2);
             } catch (Exception e) {
                 ThrowableIdentity.registerThrowable(e);
                 rc = false; // Report error
             }
             matrixStack.popPose();
-            RenderSystem.disableRescaleNormal();
-            RenderSystem.disableLighting();
+            RenderSystem.applyModelViewMatrix();
         }
 
         return rc;
@@ -195,18 +186,17 @@ public class RenderHelper {
     /**
      * Renders the stack size and/or damage bar for the given ItemStack.
      */
-    public static void renderItemStackOverlay(MatrixStack matrixStack, FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
-                                              int scaled) {
+    public static void renderItemStackOverlay(PoseStack matrixStack, Font fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
+											  int scaled) {
         if (!stack.isEmpty()) {
             if (stack.getCount() != 1 || text != null) {
                 String s = text == null ? String.valueOf(stack.getCount()) : text;
                 if (text == null && stack.getCount() < 1) {
-                    s = TextFormatting.RED + String.valueOf(stack.getCount());
+                    s = ChatFormatting.RED + String.valueOf(stack.getCount());
                 }
 
                 matrixStack.translate(0.0D, 0.0D, (Minecraft.getInstance().getItemRenderer().blitOffset + 200.0F));
 
-                RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableBlend();
                 if (scaled >= 2) {
@@ -222,7 +212,6 @@ public class RenderHelper {
                 } else {
                     fr.drawShadow(matrixStack, s, (xPosition + 19 - 2 - fr.width(s)), (yPosition + 6 + 3), 16777215);
                 }
-                RenderSystem.enableLighting();
                 RenderSystem.enableDepthTest();
                 // Fixes opaque cooldown overlay a bit lower
                 // TODO: check if enabled blending still screws things up down the line.
@@ -233,36 +222,30 @@ public class RenderHelper {
                 double health = stack.getItem().getDurabilityForDisplay(stack);
                 int i = Math.round(13.0F - (float)health * 13.0F);
                 int j = stack.getItem().getRGBDurabilityForDisplay(stack);
-                RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableTexture();
-                RenderSystem.disableAlphaTest();
                 RenderSystem.disableBlend();
-                Tessellator tessellator = Tessellator.getInstance();
+                Tesselator tessellator = Tesselator.getInstance();
                 BufferBuilder vertexbuffer = tessellator.getBuilder();
                 Matrix4f matrix = matrixStack.last().pose();
                 draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
                 draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
                 draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
                 RenderSystem.enableBlend();
-                RenderSystem.enableAlphaTest();
                 RenderSystem.enableTexture();
-                RenderSystem.enableLighting();
                 RenderSystem.enableDepthTest();
             }
 
-            PlayerEntity PlayerEntitysp = Minecraft.getInstance().player;
+            Player PlayerEntitysp = Minecraft.getInstance().player;
             float f = PlayerEntitysp == null ? 0.0F : PlayerEntitysp.getCooldowns().getCooldownPercent(stack.getItem(), Minecraft.getInstance().getFrameTime());
 
             if (f > 0.0F) {
-                RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableTexture();
-                Tessellator tessellator1 = Tessellator.getInstance();
+                Tesselator tessellator1 = Tesselator.getInstance();
                 BufferBuilder vertexbuffer1 = tessellator1.getBuilder();
                 draw(vertexbuffer1, matrixStack.last().pose(), xPosition, yPosition + (int) Math.floor(16.0F * (1.0F - f)), 16, (int) Math.ceil(16.0F * f), 255, 255, 255, 127);
                 RenderSystem.enableTexture();
-                RenderSystem.enableLighting();
                 RenderSystem.enableDepthTest();
             }
         }
@@ -272,31 +255,27 @@ public class RenderHelper {
      * Draw with the WorldRenderer
      */
     private static void draw(BufferBuilder renderer, Matrix4f matrix, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
-        renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        renderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         renderer.vertex(matrix, (x + 0), (y + 0), 0).color(red, green, blue, alpha).endVertex();
         renderer.vertex(matrix, (x + 0), (y + height), 0).color(red, green, blue, alpha).endVertex();
         renderer.vertex(matrix, (x + width), (y + height), 0).color(red, green, blue, alpha).endVertex();
         renderer.vertex(matrix, (x + width), (y + 0), 0).color(red, green, blue, alpha).endVertex();
-        Tessellator.getInstance().end();
+        Tesselator.getInstance().end();
     }
 
 
-    public static int renderText(Minecraft mc, MatrixStack matrixStack, int x, int y, String txt) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0f);
+    public static int renderText(Minecraft mc, PoseStack matrixStack, int x, int y, String txt) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
 
         matrixStack.pushPose();
         matrixStack.translate(0.0F, 0.0F, 32.0F);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.enableLighting();
-        net.minecraft.client.renderer.RenderHelper.setupFor3DItems();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        Lighting.setupFor3DItems();
 
-        RenderSystem.disableLighting();
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
         int width = mc.font.width(txt);
         mc.font.drawShadow(matrixStack, txt, x, y, 16777215);
-        RenderSystem.enableLighting();
         RenderSystem.enableDepthTest();
         // Fixes opaque cooldown overlay a bit lower
         // TODO: check if enabled blending still screws things up down the line.
@@ -304,28 +283,22 @@ public class RenderHelper {
 
 
         matrixStack.popPose();
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.disableLighting();
 
         return width;
     }
 
-    public static int renderText(Minecraft mc, MatrixStack stack, int x, int y, ITextComponent text) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0f);
+    public static int renderText(Minecraft mc, PoseStack stack, int x, int y, Component text) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
 
         stack.pushPose();
         stack.translate(0.0F, 0.0F, 32.0F);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.enableLighting();
-        net.minecraft.client.renderer.RenderHelper.setupFor3DItems();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        Lighting.setupFor3DItems();
 
-        RenderSystem.disableLighting();
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
         int width = mc.font.width(text.getVisualOrderText());//Otherwise it breaks
         mc.font.drawShadow(stack, text.getVisualOrderText(), x, y, 16777215);
-        RenderSystem.enableLighting();
         RenderSystem.enableDepthTest();
         // Fixes opaque cooldown overlay a bit lower
         // TODO: check if enabled blending still screws things up down the line.
@@ -333,8 +306,6 @@ public class RenderHelper {
 
 
         stack.popPose();
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.disableLighting();
 
         return width;
     }

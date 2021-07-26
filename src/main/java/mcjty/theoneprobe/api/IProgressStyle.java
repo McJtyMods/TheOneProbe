@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * Style for the progress bar.
@@ -44,13 +44,13 @@ public interface IProgressStyle {
     /// The number format to use for the text inside the progress bar
     IProgressStyle numberFormat(NumberFormat f);
     
-    IProgressStyle prefix(ITextComponent prefix);
-    IProgressStyle suffix(ITextComponent suffix);
+    IProgressStyle prefix(Component prefix);
+    IProgressStyle suffix(Component suffix);
     
-    default IProgressStyle prefix(String prefix, Object...args) { return prefix(new TranslationTextComponent(prefix, args)); }
-    default IProgressStyle suffix(String suffix, Object...args){ return suffix(new TranslationTextComponent(suffix, args)); }
-    default IProgressStyle prefix(String prefix) { return prefix(new TranslationTextComponent(prefix)); }
-    default IProgressStyle suffix(String suffix){ return suffix(new TranslationTextComponent(suffix)); }
+    default IProgressStyle prefix(String prefix, Object...args) { return prefix(new TranslatableComponent(prefix, args)); }
+    default IProgressStyle suffix(String suffix, Object...args){ return suffix(new TranslatableComponent(suffix, args)); }
+    default IProgressStyle prefix(String prefix) { return prefix(new TranslatableComponent(prefix)); }
+    default IProgressStyle suffix(String suffix){ return suffix(new TranslatableComponent(suffix)); }
     
     /// If the progressbar is a lifebar then this is the maximum width
     default IProgressStyle bounds(int width, int height) { return width(width).height(height); }
@@ -71,8 +71,8 @@ public interface IProgressStyle {
     
     String getPrefix();
     String getSuffix();
-    ITextComponent getPrefixComp();
-    ITextComponent getSuffixComp();
+    Component getPrefixComp();
+    Component getSuffixComp();
     
     int getWidth();
     int getHeight();

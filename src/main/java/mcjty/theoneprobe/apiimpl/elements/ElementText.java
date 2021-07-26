@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
@@ -8,35 +8,35 @@ import mcjty.theoneprobe.api.ITextStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.apiimpl.styles.TextStyle;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class ElementText implements IElement {
 
-    private final ITextComponent text;
+    private final Component text;
     private final ITextStyle style;
     //Compound Text support
     private boolean legacy = false;
 
     public ElementText(String text) {
-        this(new TranslationTextComponent(text), new TextStyle());
+        this(new TranslatableComponent(text), new TextStyle());
     }
 
     public ElementText(String text, ITextStyle style) {
-        this(new TranslationTextComponent(text), style);
+        this(new TranslatableComponent(text), style);
     }
 
-    public ElementText(ITextComponent text) {
+    public ElementText(Component text) {
         this(text, new TextStyle());
     }
 
-    public ElementText(ITextComponent text, ITextStyle style) {
+    public ElementText(Component text, ITextStyle style) {
         this.text = text;
         this.style = style;
     }
 
-    public ElementText(PacketBuffer buf) {
+    public ElementText(FriendlyByteBuf buf) {
         text = buf.readComponent();
         style = new TextStyle().alignment(buf.readEnum(ElementAlignment.class)).topPadding(buf.readInt()).bottomPadding(buf.readInt()).leftPadding(buf.readInt()).rightPadding(buf.readInt());
         if (buf.readBoolean()) {
@@ -60,7 +60,7 @@ public class ElementText implements IElement {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int x, int y) {
+    public void render(PoseStack matrixStack, int x, int y) {
         int width = getTextWidth();
         switch (style.getAlignment()) {
             case ALIGN_BOTTOMRIGHT:
@@ -94,7 +94,7 @@ public class ElementText implements IElement {
     }
 
     @Override
-    public void toBytes(PacketBuffer buffer) {
+    public void toBytes(FriendlyByteBuf buffer) {
         buffer.writeComponent(text);
         buffer.writeEnum(style.getAlignment()).writeInt(style.getTopPadding()).writeInt(style.getBottomPadding()).writeInt(style.getLeftPadding()).writeInt(style.getRightPadding());
         buffer.writeBoolean(style.getWidth() != null);

@@ -2,8 +2,8 @@ package mcjty.theoneprobe.network;
 
 import mcjty.theoneprobe.gui.GuiConfig;
 import mcjty.theoneprobe.gui.GuiNote;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -14,11 +14,11 @@ public class PacketOpenGui {
 
     private int gui;
 
-    public PacketOpenGui(PacketBuffer buf) {
+    public PacketOpenGui(FriendlyByteBuf buf) {
         gui = buf.readInt();
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(gui);
     }
 

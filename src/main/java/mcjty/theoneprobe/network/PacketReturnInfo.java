@@ -2,23 +2,23 @@ package mcjty.theoneprobe.network;
 
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketReturnInfo {
 
-    private RegistryKey<World> dim;
+    private ResourceKey<Level> dim;
     private BlockPos pos;
     private ProbeInfo probeInfo;
 
-    public PacketReturnInfo(PacketBuffer buf) {
-        dim = RegistryKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
+    public PacketReturnInfo(FriendlyByteBuf buf) {
+        dim = ResourceKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
         pos = buf.readBlockPos();
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();
@@ -28,7 +28,7 @@ public class PacketReturnInfo {
         }
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeResourceLocation(dim.location());
         buf.writeBlockPos(pos);
         if (probeInfo != null) {
@@ -42,7 +42,7 @@ public class PacketReturnInfo {
     public PacketReturnInfo() {
     }
 
-    public PacketReturnInfo(RegistryKey<World> dim, BlockPos pos, ProbeInfo probeInfo) {
+    public PacketReturnInfo(ResourceKey<Level> dim, BlockPos pos, ProbeInfo probeInfo) {
         this.dim = dim;
         this.pos = pos;
         this.probeInfo = probeInfo;

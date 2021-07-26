@@ -1,17 +1,17 @@
 package mcjty.theoneprobe.network;
 
 import mcjty.theoneprobe.TheOneProbe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
 
 public class NetworkTools {
 
     /// This function supports itemstacks with more then 64 items.
-    public static ItemStack readItemStack(PacketBuffer buf) {
-        CompoundNBT nbt = buf.readNbt();
+    public static ItemStack readItemStack(FriendlyByteBuf buf) {
+        CompoundTag nbt = buf.readNbt();
         if (nbt == null) {
             return ItemStack.EMPTY;
         }
@@ -21,8 +21,8 @@ public class NetworkTools {
     }
 
     /// This function supports itemstacks with more then 64 items.
-    public static void writeItemStack(PacketBuffer buf, ItemStack itemStack) {
-        CompoundNBT nbt = new CompoundNBT();
+    public static void writeItemStack(FriendlyByteBuf buf, ItemStack itemStack) {
+        CompoundTag nbt = new CompoundTag();
         itemStack.save(nbt);
         try {
             buf.writeNbt(nbt);
@@ -32,7 +32,7 @@ public class NetworkTools {
         }
     }
 
-    public static String readString(PacketBuffer dataIn) {
+    public static String readString(FriendlyByteBuf dataIn) {
         int s = dataIn.readInt();
         if (s == -1) {
             return null;
@@ -45,7 +45,7 @@ public class NetworkTools {
         return new String(dst);
     }
 
-    public static void writeString(PacketBuffer dataOut, String str) {
+    public static void writeString(FriendlyByteBuf dataOut, String str) {
         if (str == null) {
             dataOut.writeInt(-1);
             return;
@@ -57,7 +57,7 @@ public class NetworkTools {
         }
     }
 
-    public static String readStringUTF8(PacketBuffer dataIn) {
+    public static String readStringUTF8(FriendlyByteBuf dataIn) {
         int s = dataIn.readInt();
         if (s == -1) {
             return null;
@@ -70,7 +70,7 @@ public class NetworkTools {
         return new String(dst, java.nio.charset.StandardCharsets.UTF_8);
     }
 
-    public static void writeStringUTF8(PacketBuffer dataOut, String str) {
+    public static void writeStringUTF8(FriendlyByteBuf dataOut, String str) {
         if (str == null) {
             dataOut.writeInt(-1);
             return;
@@ -82,14 +82,14 @@ public class NetworkTools {
         }
     }
 
-    public static <T extends Enum<T>> void writeEnumCollection(PacketBuffer buf, Collection<T> collection) {
+    public static <T extends Enum<T>> void writeEnumCollection(FriendlyByteBuf buf, Collection<T> collection) {
         buf.writeVarInt(collection.size());
         for (T type : collection) {
             buf.writeEnum(type);
         }
     }
 
-    public static <T extends Enum<T>> void readEnumCollection(PacketBuffer buf, Collection<T> collection, Class<T> enumClass) {
+    public static <T extends Enum<T>> void readEnumCollection(FriendlyByteBuf buf, Collection<T> collection, Class<T> enumClass) {
         collection.clear();
         int size = buf.readVarInt();
         for (int i = 0 ; i < size ; i++) {
@@ -97,7 +97,7 @@ public class NetworkTools {
         }
     }
 
-    public static void writeFloat(PacketBuffer buf, Float f) {
+    public static void writeFloat(FriendlyByteBuf buf, Float f) {
         if (f != null) {
             buf.writeBoolean(true);
             buf.writeFloat(f);
@@ -106,7 +106,7 @@ public class NetworkTools {
         }
     }
 
-    public static Float readFloat(PacketBuffer buf) {
+    public static Float readFloat(FriendlyByteBuf buf) {
         if (buf.readBoolean()) {
             return buf.readFloat();
         } else {

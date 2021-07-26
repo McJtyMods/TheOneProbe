@@ -6,12 +6,12 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -22,11 +22,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static mcjty.theoneprobe.api.TextStyleClass.INFO;
-
 public class ChestInfoTools {
 
-    static void showChestInfo(ProbeMode mode, IProbeInfo probeInfo, World world, BlockPos pos, IProbeConfig config) {
+    static void showChestInfo(ProbeMode mode, IProbeInfo probeInfo, Level world, BlockPos pos, IProbeConfig config) {
         List<ItemStack> stacks = null;
         IProbeConfig.ConfigMode chestMode = config.getShowChestContents();
         if (chestMode == IProbeConfig.ConfigMode.EXTENDED && (Config.showSmallChestContentsWithoutSneaking.get() > 0 || !Config.getInventoriesToShow().isEmpty())) {
@@ -77,7 +75,7 @@ public class ChestInfoTools {
         }
     }
 
-    private static void showChestContents(IProbeInfo probeInfo, World world, BlockPos pos, List<ItemStack> stacks, boolean detailed) {
+    private static void showChestContents(IProbeInfo probeInfo, Level world, BlockPos pos, List<ItemStack> stacks, boolean detailed) {
         IProbeInfo vertical = null;
         IProbeInfo horizontal = null;
 
@@ -107,8 +105,8 @@ public class ChestInfoTools {
         }
     }
 
-    private static int getChestContents(World world, BlockPos pos, List<ItemStack> stacks) {
-        TileEntity te = world.getBlockEntity(pos);
+    private static int getChestContents(Level world, BlockPos pos, List<ItemStack> stacks) {
+        BlockEntity te = world.getBlockEntity(pos);
 
         Set<Item> foundItems = Config.compactEqualStacks.get() ? new HashSet<>() : null;
         AtomicInteger maxSlots = new AtomicInteger();
@@ -121,8 +119,8 @@ public class ChestInfoTools {
                     }
 
                 });
-            } else if (te instanceof IInventory) {
-                IInventory inventory = (IInventory) te;
+            } else if (te instanceof Container) {
+                Container inventory = (Container) te;
                 maxSlots.set(inventory.getContainerSize());
                 for (int i = 0; i < maxSlots.get(); i++) {
                     addItemStack(stacks, foundItems, inventory.getItem(i));

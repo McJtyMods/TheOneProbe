@@ -1,8 +1,8 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 /**
  * You can implement IProbeInfoAccessor in your blocks or else you can use
@@ -23,5 +23,5 @@ public interface IProbeInfoProvider {
      * The given probeInfo object represents a vertical layout. So adding elements to that
      * will cause them to be grouped vertically.
      */
-    void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data);
+    void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, Player player, Level world, BlockState blockState, IProbeHitData data);
 }

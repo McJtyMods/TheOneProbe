@@ -1,20 +1,22 @@
 package mcjty.theoneprobe.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import javax.annotation.Nonnull;
+
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 
 import static mcjty.theoneprobe.config.Config.*;
 import static mcjty.theoneprobe.rendering.RenderHelper.drawTexturedModalRect;
-import static net.minecraft.util.text.TextFormatting.BOLD;
-import static net.minecraft.util.text.TextFormatting.GREEN;
+import static net.minecraft.ChatFormatting.BOLD;
+import static net.minecraft.ChatFormatting.GREEN;
 
 public class GuiNote extends Screen {
     private static final int WIDTH = 256;
@@ -30,7 +32,7 @@ public class GuiNote extends Screen {
     private static final ResourceLocation background = new ResourceLocation(TheOneProbe.MODID, "textures/gui/note.png");
 
     public GuiNote() {
-        super(new StringTextComponent("note"));
+        super(new TextComponent("note"));
     }
 
     @Override
@@ -46,13 +48,13 @@ public class GuiNote extends Screen {
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        minecraft.getTextureManager().bind(background);
+        RenderSystem.setShaderTexture(0, background);
         drawTexturedModalRect(matrixStack.last().pose(), guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;
-        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "Things you should know about" + TextFormatting.GOLD + " The One Probe"); y += 10;
+        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, "Things you should know about" + ChatFormatting.GOLD + " The One Probe"); y += 10;
         y += 10;
 
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, BOLD + "This mod can show a tooltip on screen"); y += 10;
@@ -117,7 +119,7 @@ public class GuiNote extends Screen {
         return false;
     }
 
-    private int setInConfig(MatrixStack matrixStack, int x, int y) {
+    private int setInConfig(PoseStack matrixStack, int x, int y) {
         RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, BOLD + "" + GREEN + "You can change this here:");
         y += 10;
 

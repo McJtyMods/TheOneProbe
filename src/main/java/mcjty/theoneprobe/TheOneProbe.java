@@ -13,13 +13,13 @@ import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.proxy.ClientProxy;
 import mcjty.theoneprobe.proxy.IProxy;
 import mcjty.theoneprobe.proxy.ServerProxy;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -58,7 +58,7 @@ public class TheOneProbe {
     public static boolean tesla = false;
     public static boolean redstoneflux = false;
 
-    public static ItemGroup tabProbe = new ItemGroup("Probe") {
+    public static CreativeModeTab tabProbe = new CreativeModeTab("Probe") {
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(ModItems.probe);
@@ -134,7 +134,7 @@ public class TheOneProbe {
     }
 
     @SubscribeEvent
-    public static void registerRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> e) {
+    public static void registerRecipes(final RegistryEvent.Register<RecipeSerializer<?>> e) {
         e.getRegistry().register(new AddProbeTagRecipeSerializer().setRegistryName(new ResourceLocation(TheOneProbe.MODID, "probe_helmet")));
     }
 
@@ -157,21 +157,7 @@ public class TheOneProbe {
 
 
     private static void registerCapabilities(){
-        CapabilityManager.INSTANCE.register(PlayerGotNote.class, new Capability.IStorage<PlayerGotNote>() {
-
-            @Override
-            public void readNBT(Capability<PlayerGotNote> capability, PlayerGotNote playerGotNote, Direction direction, INBT inbt) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public INBT writeNBT(Capability<PlayerGotNote> capability, PlayerGotNote instance, Direction side) {
-                throw new UnsupportedOperationException();
-            }
-
-        }, () -> {
-            throw new UnsupportedOperationException();
-        });
+        CapabilityManager.INSTANCE.register(PlayerGotNote.class);
     }
 
     private void configureProviders() {

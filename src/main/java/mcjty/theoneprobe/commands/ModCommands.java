@@ -3,13 +3,13 @@ package mcjty.theoneprobe.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import mcjty.theoneprobe.TheOneProbe;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 
 public class ModCommands {
 
-    public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        LiteralCommandNode<CommandSource> cmdTop = dispatcher.register(
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        LiteralCommandNode<CommandSourceStack> cmdTop = dispatcher.register(
                 Commands.literal(TheOneProbe.MODID)
                         .then(CommandTopCfg.register(dispatcher))
                         .then(CommandTopNeed.register(dispatcher))

@@ -1,24 +1,24 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementEntityRender;
 import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
 import mcjty.theoneprobe.network.NetworkTools;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ElementEntity implements IElement {
 
     private final String entityName;
     private final Integer playerID;
-    private final CompoundNBT entityNBT;
+    private final CompoundTag entityNBT;
     private final IEntityStyle style;
 
     public ElementEntity(String entityName, IEntityStyle style) {
@@ -29,12 +29,12 @@ public class ElementEntity implements IElement {
     }
 
     public ElementEntity(Entity entity, IEntityStyle style) {
-        if (entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
+        if (entity instanceof Player) {
+            Player player = (Player) entity;
             entityNBT = null;
             playerID = player.getId();
         } else {
-            entityNBT = new CompoundNBT();
+            entityNBT = new CompoundTag();
             entity.saveWithoutId(entityNBT);
 //            entityNBT = entity.serializeNBT();
             playerID = null;
@@ -48,7 +48,7 @@ public class ElementEntity implements IElement {
         this.style = style;
     }
 
-    public ElementEntity(PacketBuffer buf) {
+    public ElementEntity(FriendlyByteBuf buf) {
         entityName = NetworkTools.readString(buf);
         style = new EntityStyle()
                 .width(buf.readInt())
@@ -63,7 +63,7 @@ public class ElementEntity implements IElement {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int x, int y) {
+    public void render(PoseStack matrixStack, int x, int y) {
         if (playerID != null) {
             ElementEntityRender.renderPlayer(entityName, playerID, style, matrixStack, x, y);
         } else {
@@ -82,7 +82,7 @@ public class ElementEntity implements IElement {
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         NetworkTools.writeString(buf, entityName);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());

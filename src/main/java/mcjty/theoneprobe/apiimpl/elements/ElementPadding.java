@@ -1,13 +1,12 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.Color;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
 
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -22,7 +21,7 @@ public class ElementPadding implements IElement
 		this.height = height;
 	}
 	
-	public ElementPadding(PacketBuffer buf) {
+	public ElementPadding(FriendlyByteBuf buf) {
 		width = buf.readInt();
 		height = buf.readInt();
 		color = buf.readInt();
@@ -41,7 +40,7 @@ public class ElementPadding implements IElement
 	
 	@Override
 	@OnlyIn(Dist.CLIENT) //Eh i don't know where to put this? Could you decide where this impl goes? Temp until you found a solution
-	public void render(MatrixStack stack, int x, int y) {
+	public void render(PoseStack stack, int x, int y) {
 		if(color != -1) {
 			Screen.fill(stack, x, y, x + getWidth(), y + getHeight(), color);
 		}
@@ -58,7 +57,7 @@ public class ElementPadding implements IElement
 	}
 	
 	@Override
-	public void toBytes(PacketBuffer buf) {
+	public void toBytes(FriendlyByteBuf buf) {
 		buf.writeInt(width).writeInt(height).writeInt(color);
 	}
 	
