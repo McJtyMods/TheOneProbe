@@ -11,6 +11,7 @@ import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementProgressRender;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 public class ElementTank implements IElement {
 	private final TankReference tank;
@@ -81,7 +82,7 @@ public class ElementTank implements IElement {
 	}
 	
 	@Override
-	public int getID() {
+	public ResourceLocation getID() {
 		return TheOneProbeImp.ELEMENT_TANK;
 	}
 }

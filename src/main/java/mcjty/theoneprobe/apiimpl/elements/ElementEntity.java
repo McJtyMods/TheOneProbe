@@ -97,7 +97,7 @@ public class ElementEntity implements IElement {
     }
 
     @Override
-    public int getID() {
+    public ResourceLocation getID() {
         return TheOneProbeImp.ELEMENT_ENTITY;
     }
 }

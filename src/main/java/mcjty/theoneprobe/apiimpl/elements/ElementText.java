@@ -11,6 +11,7 @@ import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 public class ElementText implements IElement {
 
@@ -109,7 +110,7 @@ public class ElementText implements IElement {
     }
 
     @Override
-    public int getID() {
+    public ResourceLocation getID() {
         return TheOneProbeImp.ELEMENT_TEXT;
     }
 }

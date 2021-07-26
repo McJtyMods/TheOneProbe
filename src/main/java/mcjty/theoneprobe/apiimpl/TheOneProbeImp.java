@@ -1,38 +1,28 @@
 package mcjty.theoneprobe.apiimpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
-import mcjty.theoneprobe.apiimpl.elements.ElementEntity;
-import mcjty.theoneprobe.apiimpl.elements.ElementHorizontal;
-import mcjty.theoneprobe.apiimpl.elements.ElementIcon;
-import mcjty.theoneprobe.apiimpl.elements.ElementItemLabel;
-import mcjty.theoneprobe.apiimpl.elements.ElementItemStack;
-import mcjty.theoneprobe.apiimpl.elements.ElementPadding;
-import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
-import mcjty.theoneprobe.apiimpl.elements.ElementTank;
-import mcjty.theoneprobe.apiimpl.elements.ElementText;
-import mcjty.theoneprobe.apiimpl.elements.ElementVertical;
+import mcjty.theoneprobe.apiimpl.elements.*;
 import mcjty.theoneprobe.apiimpl.styles.StyleManager;
 import mcjty.theoneprobe.config.Config;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.*;
+import java.util.function.Function;
 
 public class TheOneProbeImp implements ITheOneProbe {
 
-    public static int ELEMENT_TEXT;
-    public static int ELEMENT_ITEM;
-    public static int ELEMENT_PROGRESS;
-    public static int ELEMENT_HORIZONTAL;
-    public static int ELEMENT_VERTICAL;
-    public static int ELEMENT_ENTITY;
-    public static int ELEMENT_ICON;
-    public static int ELEMENT_ITEMLABEL;
-    public static int ELEMENT_TANK;
-    public static int ELEMENT_PADDING;
+    public static final ResourceLocation ELEMENT_TEXT = new ResourceLocation(TheOneProbe.MODID, "text");
+    public static final ResourceLocation ELEMENT_ITEM = new ResourceLocation(TheOneProbe.MODID, "item");
+    public static final ResourceLocation ELEMENT_PROGRESS = new ResourceLocation(TheOneProbe.MODID, "progress");
+    public static final ResourceLocation ELEMENT_HORIZONTAL = new ResourceLocation(TheOneProbe.MODID, "hor");
+    public static final ResourceLocation ELEMENT_VERTICAL = new ResourceLocation(TheOneProbe.MODID, "ver");
+    public static final ResourceLocation ELEMENT_ENTITY = new ResourceLocation(TheOneProbe.MODID, "ent");
+    public static final ResourceLocation ELEMENT_ICON = new ResourceLocation(TheOneProbe.MODID, "icon");
+    public static final ResourceLocation ELEMENT_ITEMLABEL = new ResourceLocation(TheOneProbe.MODID, "itemlabel");
+    public static final ResourceLocation ELEMENT_TANK = new ResourceLocation(TheOneProbe.MODID, "tank");
+    public static final ResourceLocation ELEMENT_PADDING = new ResourceLocation(TheOneProbe.MODID, "pad");
 
     private final StyleManager styleManager = new StyleManager();
     private List<IProbeConfigProvider> configProviders = new ArrayList<>();
@@ -41,23 +31,36 @@ public class TheOneProbeImp implements ITheOneProbe {
     private List<IProbeInfoEntityProvider> entityProviders = new ArrayList<>();
     private List<IBlockDisplayOverride> blockOverrides = new ArrayList<>();
     private List<IEntityDisplayOverride> entityOverrides = new ArrayList<>();
-    private Map<Integer, IElementFactory> factories = new HashMap<>();
-    private int lastId = 0;
+    private Map<ResourceLocation, IElementFactory> factories = new HashMap<>();
 
     public TheOneProbeImp() {
     }
 
+    private static IElementFactory create(ResourceLocation id, Function<FriendlyByteBuf, IElement> factory) {
+        return new IElementFactory() {
+            @Override
+            public IElement createElement(FriendlyByteBuf buf) {
+                return factory.apply(buf);
+            }
+
+            @Override
+            public ResourceLocation getId() {
+                return id;
+            }
+        };
+    }
+
     public static void registerElements() {
-        ELEMENT_TEXT = TheOneProbe.theOneProbeImp.registerElementFactory(ElementText::new);
-        ELEMENT_ITEM = TheOneProbe.theOneProbeImp.registerElementFactory(ElementItemStack::new);
-        ELEMENT_PROGRESS = TheOneProbe.theOneProbeImp.registerElementFactory(ElementProgress::new);
-        ELEMENT_HORIZONTAL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementHorizontal::new);
-        ELEMENT_VERTICAL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementVertical::new);
-        ELEMENT_ENTITY = TheOneProbe.theOneProbeImp.registerElementFactory(ElementEntity::new);
-        ELEMENT_ICON = TheOneProbe.theOneProbeImp.registerElementFactory(ElementIcon::new);
-        ELEMENT_ITEMLABEL = TheOneProbe.theOneProbeImp.registerElementFactory(ElementItemLabel::new);
-        ELEMENT_TANK = TheOneProbe.theOneProbeImp.registerElementFactory(ElementTank::new);
-        ELEMENT_PADDING = TheOneProbe.theOneProbeImp.registerElementFactory(ElementPadding::new);
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_TEXT, ElementText::new));
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_ITEM, ElementItemStack::new));
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_PROGRESS, ElementProgress::new));
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_HORIZONTAL, ElementHorizontal::new));
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_VERTICAL, ElementVertical::new));
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_ENTITY, ElementEntity::new));
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_ICON, ElementIcon::new));
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_ITEMLABEL, ElementItemLabel::new));
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_TANK, ElementTank::new));
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_PADDING, ElementPadding::new));
     }
 
     private int findProvider(String id) {
@@ -99,7 +102,7 @@ public class TheOneProbeImp implements ITheOneProbe {
     }
 
     @Override
-    public IElementFactory getElementFactory(int id) {
+    public IElementFactory getElementFactory(ResourceLocation id) {
         return factories.get(id);
     }
 
@@ -178,11 +181,8 @@ public class TheOneProbeImp implements ITheOneProbe {
     }
 
     @Override
-    public int registerElementFactory(IElementFactory factory) {
-        factories.put(lastId, factory);
-        int id = lastId;
-        lastId++;
-        return id;
+    public void registerElementFactory(IElementFactory factory) {
+        factories.put(factory.getId(), factory);
     }
 
     @Override

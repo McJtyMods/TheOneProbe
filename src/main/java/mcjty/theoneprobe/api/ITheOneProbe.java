@@ -1,5 +1,7 @@
 package mcjty.theoneprobe.api;
 
+import net.minecraft.resources.ResourceLocation;
+
 /**
  * Main interface for this mod. Use this to build probe information
  * Get a reference to an implementation of this interface by calling:
@@ -48,14 +50,13 @@ public interface ITheOneProbe {
 
     /**
      * Register an element factory.
-     * @return an id to use when defining elements using this factory
      */
-    int registerElementFactory(IElementFactory factory);
+    void registerElementFactory(IElementFactory factory);
 
     /**
      * Get the element factory for a given ID.
      */
-    IElementFactory getElementFactory(int id);
+    IElementFactory getElementFactory(ResourceLocation id);
 
     /**
      * Get the overlay renderer. You can use this to do your own custom overlay rendering

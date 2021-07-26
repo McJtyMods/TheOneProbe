@@ -7,6 +7,7 @@ import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -62,7 +63,7 @@ public class ElementPadding implements IElement
 	}
 	
 	@Override
-	public int getID() {
+	public ResourceLocation getID() {
 		return TheOneProbeImp.ELEMENT_PADDING;
 	}
 }

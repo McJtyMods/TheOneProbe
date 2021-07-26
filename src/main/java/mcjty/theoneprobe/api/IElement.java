@@ -2,6 +2,7 @@ package mcjty.theoneprobe.api;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * An element in the probe gui.
@@ -30,7 +31,7 @@ public interface IElement {
     void toBytes(FriendlyByteBuf buf);
 
     /**
-     * Get the identifier for this element (as returned by ITheOneProbe.registerElementFactory()
+     * Get the identifier for this element (as specified by IElementFactory)
      */
-    int getID();
+    ResourceLocation getID();
 }

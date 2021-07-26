@@ -7,6 +7,7 @@ import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementItemStackRender;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.network.NetworkTools;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -59,7 +60,7 @@ public class ElementItemStack implements IElement {
     }
 
     @Override
-    public int getID() {
+    public ResourceLocation getID() {
         return TheOneProbeImp.ELEMENT_ITEM;
     }
 }

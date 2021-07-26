@@ -11,6 +11,7 @@ import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.text.DecimalFormat;
 
@@ -125,7 +126,7 @@ public class ElementProgress implements IElement {
     }
 
     @Override
-    public int getID() {
+    public ResourceLocation getID() {
         return TheOneProbeImp.ELEMENT_PROGRESS;
     }
 }

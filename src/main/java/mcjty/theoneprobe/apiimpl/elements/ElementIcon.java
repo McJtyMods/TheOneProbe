@@ -75,7 +75,7 @@ public class ElementIcon implements IElement {
     }
 
     @Override
-    public int getID() {
+    public ResourceLocation getID() {
         return TheOneProbeImp.ELEMENT_ICON;
     }
 }
