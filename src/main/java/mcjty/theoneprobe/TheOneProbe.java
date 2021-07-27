@@ -157,7 +157,7 @@ public class TheOneProbe {
 
     private void configureProviders() {
         List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
-        String[] defaultValues = new String[providers.size()];
+        ResourceLocation[] defaultValues = new ResourceLocation[providers.size()];
         int i = 0;
         for (IProbeInfoProvider provider : providers) {
             defaultValues[i++] = provider.getID();

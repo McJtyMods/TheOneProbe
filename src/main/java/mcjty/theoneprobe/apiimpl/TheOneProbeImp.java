@@ -63,7 +63,7 @@ public class TheOneProbeImp implements ITheOneProbe {
         TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_PADDING, ElementPadding::new));
     }
 
-    private int findProvider(String id) {
+    private int findProvider(ResourceLocation id) {
         for (int i = 0 ; i < providers.size() ; i++) {
             if (id.equals(providers.get(i).getID())) {
                 return i;
@@ -118,7 +118,7 @@ public class TheOneProbeImp implements ITheOneProbe {
         return entityProviders;
     }
 
-    private IProbeInfoProvider getProviderByID(String id) {
+    private IProbeInfoProvider getProviderByID(ResourceLocation id) {
         for (IProbeInfoProvider provider : providers) {
             if (provider.getID().equals(id)) {
                 return provider;
@@ -136,9 +136,9 @@ public class TheOneProbeImp implements ITheOneProbe {
         return null;
     }
 
-    public void configureProviders(String[] sortedProviders, Set<String> excludedProviders) {
+    public void configureProviders(ResourceLocation[] sortedProviders, Set<String> excludedProviders) {
         List<IProbeInfoProvider> newProviders = new ArrayList<>();
-        for (String id : sortedProviders) {
+        for (ResourceLocation id : sortedProviders) {
             if (!excludedProviders.contains(id)) {
                 IProbeInfoProvider provider = getProviderByID(id);
                 if (provider != null) {

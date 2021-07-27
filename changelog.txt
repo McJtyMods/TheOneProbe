@@ -1,3 +1,6 @@
+Upcoming:
+- Fixed another API problem with String -> ResourceLocation
+
 1.17-4.0.0:
 - First port to 1.17
 

@@ -12,6 +12,7 @@ import mcjty.theoneprobe.config.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -45,8 +46,8 @@ import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
-    public String getID() {
-        return TheOneProbe.MODID + ":default";
+    public ResourceLocation getID() {
+        return new ResourceLocation(TheOneProbe.MODID, "default");
     }
 
     @Override

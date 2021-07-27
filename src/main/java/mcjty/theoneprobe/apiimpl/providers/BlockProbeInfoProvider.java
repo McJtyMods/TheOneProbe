@@ -2,6 +2,7 @@ package mcjty.theoneprobe.apiimpl.providers;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
@@ -10,8 +11,8 @@ import net.minecraft.world.level.Level;
 public class BlockProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
-    public String getID() {
-        return TheOneProbe.MODID + ":block";
+    public ResourceLocation getID() {
+        return new ResourceLocation(TheOneProbe.MODID, "block");
     }
 
     @Override
