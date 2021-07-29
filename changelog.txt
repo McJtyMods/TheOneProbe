@@ -1,3 +1,6 @@
+Upcoming:
+- Fixed the configs for showContentsWithoutSneaking, dontShowContentsUnlessSneaking, and dontSendNBT
+
 1.16-3.1.4:
 - Compatibility fix with IProbeInfo.text()
 - Speiger fixed a problem with infinite recursion and invalid values for fluid rendering

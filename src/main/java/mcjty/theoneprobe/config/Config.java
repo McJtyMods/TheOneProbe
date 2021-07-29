@@ -50,9 +50,9 @@ public class Config {
     // Chest related settings
     public static IntValue showSmallChestContentsWithoutSneaking;
     public static IntValue showItemDetailThresshold;
-    private static ConfigValue<List<String>> showContentsWithoutSneaking;
-    private static ConfigValue<List<String>> dontShowContentsUnlessSneaking;
-    private static ConfigValue<List<String>> dontSendNBT;
+    private static ConfigValue<List<? extends String>> showContentsWithoutSneaking;
+    private static ConfigValue<List<? extends String>> dontShowContentsUnlessSneaking;
+    private static ConfigValue<List<? extends String>> dontSendNBT;
     private static Set<ResourceLocation> inventoriesToShow = null;
     private static Set<ResourceLocation> inventoriesToNotShow = null;
     private static Set<ResourceLocation> dontSendNBTSet = null;
@@ -249,14 +249,17 @@ public class Config {
                 .defineInRange("showSmallChestContentsWithoutSneaking", 0, 0, 1000);
         showContentsWithoutSneaking = COMMON_BUILDER
                 .comment("A list of blocks for which we automatically show chest contents even if not sneaking")
-                .define("showContentsWithoutSneaking", new ArrayList<>(Arrays.asList("storagedrawers:basicdrawers", "storagedrawersextra:extra_drawers")));
+                .defineList("showContentsWithoutSneaking", new ArrayList<>(Arrays.asList("storagedrawers:basicdrawers", "storagedrawersextra:extra_drawers")),
+                        s -> s instanceof String);
         dontShowContentsUnlessSneaking = COMMON_BUILDER
                 .comment("A list of blocks for which we don't show chest contents automatically except if sneaking")
-                .define("dontShowContentsUnlessSneaking", new ArrayList<>());
+                .defineList("dontShowContentsUnlessSneaking", new ArrayList<>(),
+                        s -> s instanceof String);
 
         dontSendNBT = COMMON_BUILDER
                 .comment("A list of blocks for which we don't send NBT over the network. This is mostly useful for blocks that have HUGE NBT in their pickblock (itemstack)")
-                .define("dontSendNBT", new ArrayList<>());
+                .defineList("dontSendNBT", new ArrayList<>(),
+                        s -> s instanceof String);
 
         setupStyleConfig();
 
