@@ -1,6 +1,7 @@
 1.17-4.0.2:
 - Fixed TOP for the latest Harvestability changes
 - Fixed icon rendering
+- Added two new configs (tooltypeTags and harvestabilityTags) that you can use to configure new tooltypes and harevestability levels
 
 1.17-4.0.1:
 - Fixed another API problem with String -> ResourceLocation
