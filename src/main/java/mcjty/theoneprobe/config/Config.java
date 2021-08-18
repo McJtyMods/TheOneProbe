@@ -53,9 +53,13 @@ public class Config {
     private static ConfigValue<List<? extends String>> showContentsWithoutSneaking;
     private static ConfigValue<List<? extends String>> dontShowContentsUnlessSneaking;
     private static ConfigValue<List<? extends String>> dontSendNBT;
+    private static ConfigValue<List<? extends String>> tooltypeTags;
+    private static ConfigValue<List<? extends String>> harvestabilityTags;
     private static Set<ResourceLocation> inventoriesToShow = null;
     private static Set<ResourceLocation> inventoriesToNotShow = null;
     private static Set<ResourceLocation> dontSendNBTSet = null;
+    private static Map<ResourceLocation, String> tooltypeTagsSet = null;
+    private static Map<ResourceLocation, String> harvestabilityTagsSet = null;
 
     public static DoubleValue probeDistance;        // Client-side
     public static BooleanValue showLiquids;
@@ -259,6 +263,16 @@ public class Config {
         dontSendNBT = COMMON_BUILDER
                 .comment("A list of blocks for which we don't send NBT over the network. This is mostly useful for blocks that have HUGE NBT in their pickblock (itemstack)")
                 .defineList("dontSendNBT", new ArrayList<>(),
+                        s -> s instanceof String);
+        tooltypeTags = COMMON_BUILDER
+                .comment("A list of <tag>=<name> containing all tooltype tags with their associated name to display")
+                .defineList("tooltypeTags", List.of("minecraft:mineable/axe=Axe", "minecraft:mineable/pickaxe=Pickaxe", "minecraft:mineable/shovel=Shovel", "minecraft:mineable/hoe=Hoe"),
+                        s -> s instanceof String);
+        harvestabilityTags = COMMON_BUILDER
+                .comment("A list of <tag>=<name> containing all harvestability tags with their associated name to display")
+                .defineList("harvestabilityTags", List.of("forge:needs_wood_tool=Wood", "forge:needs_gold_tool=Gold",
+                        "minecraft:needs_stone_tool=Stone", "minecraft:needs_iron_tool=Iron", "minecraft:needs_diamond_tool=Diamond",
+                        "forge:needs_netherite_tool=Netherite"),
                         s -> s instanceof String);
 
         setupStyleConfig();
@@ -486,6 +500,28 @@ public class Config {
             }
         }
         return inventoriesToShow;
+    }
+
+    public static Map<ResourceLocation, String> getTooltypeTags() {
+        if (tooltypeTagsSet == null) {
+            tooltypeTagsSet = new HashMap<>();
+            for (String s : tooltypeTags.get()) {
+                String[] splitted = StringUtils.split(s, '=');
+                tooltypeTagsSet.put(new ResourceLocation(splitted[0]), splitted[1]);
+            }
+        }
+        return tooltypeTagsSet;
+    }
+
+    public static Map<ResourceLocation, String> getHarvestabilityTags() {
+        if (harvestabilityTagsSet == null) {
+            harvestabilityTagsSet = new HashMap<>();
+            for (String s : harvestabilityTags.get()) {
+                String[] splitted = StringUtils.split(s, '=');
+                harvestabilityTagsSet.put(new ResourceLocation(splitted[0]), splitted[1]);
+            }
+        }
+        return harvestabilityTagsSet;
     }
 
     public static Set<ResourceLocation> getInventoriesToNotShow() {

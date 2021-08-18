@@ -1,3 +1,7 @@
+1.17-4.0.2:
+- Fixed TOP for the latest Harvestability changes
+- Fixed icon rendering
+
 1.17-4.0.1:
 - Fixed another API problem with String -> ResourceLocation
 

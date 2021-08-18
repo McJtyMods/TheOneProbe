@@ -77,9 +77,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (showHarvested && showHarvestLevel) {
             HarvestInfoTools.showHarvestInfo(probeInfo, world, pos, block, blockState, player);
         } else if (showHarvestLevel) {
-            HarvestInfoTools.showHarvestLevel(probeInfo, blockState, block);
+            HarvestInfoTools.showHarvestLevel(probeInfo, blockState);
         } else if (showHarvested) {
-            HarvestInfoTools.showCanBeHarvested(probeInfo, world, pos, block, player);
+            HarvestInfoTools.showCanBeHarvested(probeInfo, world, pos, blockState, player);
         }
 
         if (Tools.show(mode, config.getShowRedstone())) {
