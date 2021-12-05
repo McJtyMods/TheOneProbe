@@ -152,7 +152,7 @@ public class TheOneProbe {
 
 
     private static void registerCapabilities(){
-        CapabilityManager.INSTANCE.register(PlayerGotNote.class);
+//        CapabilityManager.INSTANCE.register(PlayerGotNote.class);
     }
 
     private void configureProviders() {

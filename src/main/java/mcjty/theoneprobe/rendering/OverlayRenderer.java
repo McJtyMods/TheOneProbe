@@ -294,7 +294,7 @@ public class OverlayRenderer {
         Level world = player.getCommandSenderWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
+        ItemStack pickBlock = block.getCloneItemStack(blockState, mouseOver, world, blockPos, player);
         IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getLocation(), ((BlockHitResult)mouseOver).getDirection(), pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
@@ -329,7 +329,7 @@ public class OverlayRenderer {
         Level world = player.getCommandSenderWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getPickBlock(blockState, mouseOver, world, blockPos, player);
+        ItemStack pickBlock = block.getCloneItemStack(blockState, mouseOver, world, blockPos, player);
         if (pickBlock == null) {
             // Should not be needed but you never know... (bad mods)
             pickBlock = ItemStack.EMPTY;

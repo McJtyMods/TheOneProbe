@@ -174,7 +174,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             BlockEntity te = world.getBlockEntity(data.getPos());
             if (te instanceof SpawnerBlockEntity spawnerBlock) {
                 BaseSpawner logic = spawnerBlock.getSpawner();
-                EntityType<?> type = ForgeRegistries.ENTITIES.getValue(logic.getEntityId(world, data.getPos()));
+                EntityType<?> type = logic.getSpawnerEntity().getType();
                 if (type != null) {
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                             .alignment(ElementAlignment.ALIGN_CENTER))

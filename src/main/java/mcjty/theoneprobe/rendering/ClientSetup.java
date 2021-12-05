@@ -13,8 +13,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,10 +34,10 @@ public class ClientSetup {
     public static boolean ignoreNextGuiClose = false;
 
     @SubscribeEvent
-    public void onGuiOpen(GuiOpenEvent event) {
+    public void onGuiOpen(ScreenOpenEvent event) {
         if (ignoreNextGuiClose) {
             Screen current = Minecraft.getInstance().screen;
-            if (event.getGui() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
+            if (event.getScreen() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
                 ignoreNextGuiClose = false;
                 // We don't want our gui to be closed for a new 'null' guil
                 event.setCanceled(true);

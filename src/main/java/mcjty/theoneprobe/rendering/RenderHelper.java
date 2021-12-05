@@ -216,10 +216,10 @@ public class RenderHelper {
                 RenderSystem.enableBlend();
             }
 
-            if (stack.getItem().showDurabilityBar(stack)) {
-                double health = stack.getItem().getDurabilityForDisplay(stack);
+            if (stack.getItem().isBarVisible(stack)) {
+                double health = stack.getItem().getBarWidth(stack);
                 int i = Math.round(13.0F - (float)health * 13.0F);
-                int j = stack.getItem().getRGBDurabilityForDisplay(stack);
+                int j = stack.getItem().getBarColor(stack);
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableTexture();
                 RenderSystem.disableBlend();

@@ -20,8 +20,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
 import javax.annotation.Nonnull;
 import java.util.List;
