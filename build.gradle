@@ -131,24 +131,44 @@ artifacts {
 }
 
 publishing {
-    tasks.publish.dependsOn 'build'
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact apiJar
-            pom.withXml {
-                def node = asNode()
-                if(node.dependencies.size() > 0)
-                    node.remove(node.dependencies) // Remove deps, as they are all mappings-dependent and/or forge
+    publications.create('mavenJava', MavenPublication) {
+        from components.java
+        artifact apiJar
+
+        artifactId = project.archivesBaseName
+        pom {
+            name = 'TheOneProbe'
+            description = 'What is this block?'
+            scm {
+                url = 'https://github.com/McJtyMods/TheOneProbe'
+                connection = 'scm:git:git@github.com:McJtyMods/TheOneProbe.git'
+                developerConnection = 'scm:git:git@github.com:McJtyMods/TheOneProbe.git'
+            }
+            issueManagement {
+                system = 'github'
+                url = 'https://github.com/McJtyMods/TheOneProbe/issues'
+            }
+            licenses {
+                license {
+                    name = 'MIT'
+                    distribution = 'repo'
+                }
+            }
+            developers {
+                developer {
+                    id = 'McJty'
+                    name = 'McJty'
+                    roles = ['developer']
+                }
             }
         }
     }
-
     repositories {
-        if (project.hasProperty('mavendir')) {
-            maven { url mavendir }
-        } else {
-            mavenLocal()
+        if (System.getenv('local_maven') != null) {
+            maven {
+                name = 'local'
+                url = 'file://' + System.getenv('local_maven')
+            }
         }
     }
 }
