@@ -131,24 +131,44 @@ artifacts {
 }
 
 publishing {
-    tasks.publish.dependsOn 'build'
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact apiJar
-            pom.withXml {
-                def node = asNode()
-                if(node.dependencies.size() > 0)
-                    node.remove(node.dependencies) // Remove deps, as they are all mappings-dependent and/or forge
+    publications.create('mavenJava', MavenPublication) {
+        from components.java
+        artifact apiJar
+
+        artifactId = project.archivesBaseName
+        pom {
+            name = 'RFToolsBase'
+            description = 'Base mod for all McJty tech mods'
+            scm {
+                url = 'https://github.com/McJtyMods/RFToolsBase'
+                connection = 'scm:git:git@github.com:McJtyMods/RFToolsBase.git'
+                developerConnection = 'scm:git:git@github.com:McJtyMods/RFToolsBase.git'
+            }
+            issueManagement {
+                system = 'github'
+                url = 'https://github.com/McJtyMods/RFToolsBase/issues'
+            }
+            licenses {
+                license {
+                    name = 'MIT'
+                    distribution = 'repo'
+                }
+            }
+            developers {
+                developer {
+                    id = 'McJty'
+                    name = 'McJty'
+                    roles = ['developer']
+                }
             }
         }
     }
-
     repositories {
-        if (project.hasProperty('mavendir')) {
-            maven { url mavendir }
-        } else {
-            mavenLocal()
+        if (System.getenv('local_maven') != null) {
+            maven {
+                name = 'local'
+                url = 'file://' + System.getenv('local_maven')
+            }
         }
     }
 }
