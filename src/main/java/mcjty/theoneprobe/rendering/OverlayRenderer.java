@@ -34,6 +34,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.ForgeHooksClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -128,10 +129,10 @@ public class OverlayRenderer {
 
     private static void setupOverlayRendering(float sw, float sh) {
         RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0, sw, 0, sh, 1000.0f, 3000.0f));
+        RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0, sw, 0, sh, 1000.0f, ForgeHooksClient.getGuiFarPlane()));
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.setIdentity();
-        posestack.translate(0.0F, 0.0F, -2000.0F);
+        posestack.translate(0.0F, 0.0F, 1000.0F - ForgeHooksClient.getGuiFarPlane());
         RenderSystem.applyModelViewMatrix();
     }
 
