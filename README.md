@@ -18,12 +18,11 @@ This mod also has a flexible API that other mods can use to add more information
 
     repositories {
         maven { // TOP
-            name 'tterrag maven'
-            url "https://maven.tterrag.com/"
+            url "https://maven.k-4u.nl"
         }
 
     dependencies {
-        deobfCompile "mcjty.theoneprobe:TheOneProbe-${top_version}"
+        implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
     }
 
 ## Licence
