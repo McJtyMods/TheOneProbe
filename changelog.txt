@@ -1,3 +1,6 @@
+1.18-5.0.1:
+- Fix from mysticdrew improving compatibility with other mods
+
 1.18-5.0.0:
 - Ported to 1.18
 
