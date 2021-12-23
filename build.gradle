@@ -44,7 +44,7 @@ java {
 }
 
 minecraft {
-    mappings channel: 'official', version: "1.18"
+    mappings channel: 'official', version: "1.18.1"
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     //runDir = "run"
