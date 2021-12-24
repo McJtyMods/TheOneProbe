@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
 import com.mojang.authlib.GameProfile;
-import mcjty.lib.api.power.IBigPower;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
@@ -35,7 +34,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -279,10 +277,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             long energy = TeslaTools.getEnergy(te);
             long maxEnergy = TeslaTools.getMaxEnergy(te);
             addEnergyInfo(probeInfo, config, energy, maxEnergy);
-        } else if (te instanceof IBigPower bigPower) {
-            long energy = bigPower.getStoredPower();
-            long maxEnergy = bigPower.getCapacity();
-            addEnergyInfo(probeInfo, config, energy, maxEnergy);
+//        } else if (te instanceof IBigPower bigPower) {
+//            long energy = bigPower.getStoredPower();
+//            long maxEnergy = bigPower.getCapacity();
+//            addEnergyInfo(probeInfo, config, energy, maxEnergy);
         } else if (te != null && te.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
             te.getCapability(CapabilityEnergy.ENERGY).ifPresent(handler -> {
                 addEnergyInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
