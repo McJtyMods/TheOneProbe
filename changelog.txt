@@ -1,5 +1,6 @@
 Upcoming:
 - Removed support for IBigPower. This is better handled by McJtyLib
+- Fixed rendering of the life bar for mobs
 
 1.18-5.0.1:
 - Fix from mysticdrew improving compatibility with other mods

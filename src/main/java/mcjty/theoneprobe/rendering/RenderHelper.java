@@ -1,9 +1,10 @@
 package mcjty.theoneprobe.rendering;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.ChatFormatting;
@@ -14,13 +15,12 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import com.mojang.math.Vector3f;
 
 import javax.annotation.Nullable;
 
@@ -103,6 +103,7 @@ public class RenderHelper {
         float zLevel = 0.01f;
         float f = (1.0f / twidth);
         float f1 = (1.0f / theight);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -122,6 +123,7 @@ public class RenderHelper {
         float zLevel = 0.01f;
         float f = (1 / 256.0f);
         float f1 = (1 / 256.0f);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -143,6 +145,7 @@ public class RenderHelper {
         float u2 = sprite.getU1();
         float v2 = sprite.getV1();
 
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);

@@ -67,6 +67,7 @@ public class ElementProgressRender {
     }
 
     private static void renderLifeBar(long current, PoseStack matrixStack, int x, int y, int w, int h) {
+
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, ICONS);
         Matrix4f matrix = matrixStack.last().pose();
