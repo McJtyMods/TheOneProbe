@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -62,13 +63,16 @@ public class RenderHelper {
 
         matrixStack.translate(0.0F, (float) entity.getMyRidingOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
 
+        EntityRendererManager dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         try {
             IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-            Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, buffer, 15728880);
+            dispatcher.setRenderShadow(false);
+            dispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, buffer, 15728880);
             buffer.endBatch();
         } catch (Exception e) {
             TheOneProbe.logger.error("Error rendering entity!", e);
         }
+        dispatcher.setRenderShadow(true);
         net.minecraft.client.renderer.RenderHelper.turnOff();
 
         RenderSystem.disableRescaleNormal();
