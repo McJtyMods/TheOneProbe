@@ -1,3 +1,6 @@
+Upcoming:
+- Fixed a problem with mob spawners causing an error in TOP
+
 1.18-5.0.2:
 - Removed support for IBigPower. This is better handled by McJtyLib
 - Fixed rendering of the life bar for mobs

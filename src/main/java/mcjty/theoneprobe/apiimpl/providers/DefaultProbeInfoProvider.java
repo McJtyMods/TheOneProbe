@@ -9,6 +9,7 @@ import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -37,6 +38,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
@@ -172,12 +174,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             BlockEntity te = world.getBlockEntity(data.getPos());
             if (te instanceof SpawnerBlockEntity spawnerBlock) {
                 BaseSpawner logic = spawnerBlock.getSpawner();
-                EntityType<?> type = logic.getSpawnerEntity().getType();
-                if (type != null) {
-                    probeInfo.horizontal(probeInfo.defaultLayoutStyle()
-                            .alignment(ElementAlignment.ALIGN_CENTER))
-                            .text(CompoundText.create().style(LABEL).text("Mob: ").info(type.getDescriptionId()));
-                }
+                CompoundTag tag = logic.nextSpawnData.getEntityToSpawn();
+                Optional<EntityType<?>> optional = EntityType.by(tag);
+                optional.ifPresent(type -> probeInfo.horizontal(probeInfo.defaultLayoutStyle()
+                        .alignment(ElementAlignment.ALIGN_CENTER))
+                        .text(CompoundText.create().style(LABEL).text("Mob: ").info(type.getDescriptionId())));
             }
         }
     }
