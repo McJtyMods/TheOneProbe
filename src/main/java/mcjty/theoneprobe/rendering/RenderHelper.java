@@ -13,6 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
@@ -58,13 +59,16 @@ public class RenderHelper {
         matrixStack.translate(0.0F, (float) entity.getMyRidingOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
         RenderSystem.applyModelViewMatrix();
 
+        EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         try {
             MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-            Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, buffer, 15728880);
+            dispatcher.setRenderShadow(false);
+            dispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, buffer, 15728880);
             buffer.endBatch();
         } catch (Exception e) {
             TheOneProbe.logger.error("Error rendering entity!", e);
         }
+        dispatcher.setRenderShadow(true);
         Lighting.setupFor3DItems();
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
