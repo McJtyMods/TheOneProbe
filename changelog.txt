@@ -1,6 +1,6 @@
 Upcoming:
 - Fixed a problem with mob spawners causing an error in TOP
-- Small optimization from GreenDex to disable shadow rendering for entities in the gui
+- Small optimization from DreenDex to disable shadow rendering for entities in the gui
 
 1.18-5.0.2:
 - Removed support for IBigPower. This is better handled by McJtyLib
