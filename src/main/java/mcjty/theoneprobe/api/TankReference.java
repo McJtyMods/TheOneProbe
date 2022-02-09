@@ -1,16 +1,16 @@
 package mcjty.theoneprobe.api;
 
+import mcjty.theoneprobe.lib.transfer.fluid.FluidStack;
+import mcjty.theoneprobe.lib.transfer.fluid.FluidTank;
+import mcjty.theoneprobe.lib.transfer.fluid.IFluidHandler;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public final class TankReference {
-    private final int capacity;
-    private final int stored;
+    private final long capacity;
+    private final long stored;
     private final FluidStack[] fluids;
 
-    public TankReference(int capacity, int stored, FluidStack... fluids) {
+    public TankReference(long capacity, long stored, FluidStack... fluids) {
         this.capacity = capacity;
         this.stored = stored;
         this.fluids = fluids;
@@ -21,15 +21,15 @@ public final class TankReference {
         stored = buffer.readInt();
         fluids = new FluidStack[buffer.readInt()];
         for (int i = 0; i < fluids.length; i++) {
-            fluids[i] = buffer.readFluidStack();
+            fluids[i] = FluidStack.fromBuffer(buffer);
         }
     }
 
-    public int getCapacity() {
+    public long getCapacity() {
         return capacity;
     }
 
-    public int getStored() {
+    public long getStored() {
         return stored;
     }
 
@@ -38,12 +38,12 @@ public final class TankReference {
     }
 
     /// Simple Self Simulated Tank or just a fluid display
-    public static TankReference createSimple(int capacity, FluidStack fluid) {
+    public static TankReference createSimple(long capacity, FluidStack fluid) {
         return new TankReference(capacity, fluid.getAmount(), fluid);
     }
 
     /// Simple Tank like FluidTank
-    public static TankReference createTank(IFluidTank tank) {
+    public static TankReference createTank(FluidTank tank) {
         return new TankReference(tank.getCapacity(), tank.getFluidAmount(), tank.getFluid());
     }
 
@@ -72,11 +72,11 @@ public final class TankReference {
     }
 
     public void toBytes(FriendlyByteBuf buffer) {
-        buffer.writeInt(capacity);
-        buffer.writeInt(stored);
+        buffer.writeLong(capacity);
+        buffer.writeLong(stored);
         buffer.writeInt(fluids.length);
 		for (FluidStack fluid : fluids) {
-			buffer.writeFluidStack(fluid);
+			fluid.toBuffer(buffer);
 		}
     }
 }

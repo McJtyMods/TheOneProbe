@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.rendering;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.gui.GuiConfig;
@@ -7,50 +8,47 @@ import mcjty.theoneprobe.gui.GuiNote;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.keys.KeyBindings;
 import mcjty.theoneprobe.keys.KeyInputHandler;
+import mcjty.theoneprobe.lib.FluidTileDataHandler;
+import mcjty.theoneprobe.lib.KeyInputCallback;
+import mcjty.theoneprobe.network.PacketHandler;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.ScreenOpenEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import static mcjty.theoneprobe.config.Config.*;
 
-public class ClientSetup {
+public class ClientSetup implements ClientModInitializer {
 
-    public static void onClientSetup(FMLClientSetupEvent event) {
-        MinecraftForge.EVENT_BUS.register(new ClientSetup());
-
-        MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
+    @Override
+    public void onInitializeClient() {
+        HudRenderCallback.EVENT.register(this::renderGameOverlayEvent);
+        ScreenEvents.BEFORE_INIT.register(this::onGuiOpen);
+        KeyInputCallback.EVENT.register(KeyInputHandler::onKeyInput);
         KeyBindings.init();
+        FluidTileDataHandler.initClient();
+        PacketHandler.registerMessagesClient();
     }
 
     public static boolean ignoreNextGuiClose = false;
 
-    @SubscribeEvent
-    public void onGuiOpen(ScreenOpenEvent event) {
+    public void onGuiOpen(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
         if (ignoreNextGuiClose) {
             Screen current = Minecraft.getInstance().screen;
-            if (event.getScreen() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
+            if (screen == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
                 ignoreNextGuiClose = false;
                 // We don't want our gui to be closed for a new 'null' guil
-                event.setCanceled(true);
+                ScreenEvents.remove(screen);
             }
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
-    public void renderGameOverlayEvent(RenderGameOverlayEvent.Pre event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.TEXT) {
-            return;
-        }
-
+    public void renderGameOverlayEvent(PoseStack matrixStack, float tickDelta) {
         if (Config.holdKeyToMakeVisible.get()) {
             if (!KeyBindings.toggleVisible.isDown()) {
                 return;
@@ -62,17 +60,17 @@ public class ClientSetup {
         }
 
         if (hasItemInEitherHand(ModItems.CREATIVE_PROBE)) {
-            OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getMatrixStack(), event.getPartialTicks());
+            OverlayRenderer.renderHUD(ProbeMode.DEBUG, matrixStack, tickDelta);
         } else {
             switch (Config.needsProbe.get()) {
                 case PROBE_NOTNEEDED:
                 case PROBE_NEEDEDFOREXTENDED:
-                    OverlayRenderer.renderHUD(getModeForPlayer(), event.getMatrixStack(), event.getPartialTicks());
+                    OverlayRenderer.renderHUD(getModeForPlayer(), matrixStack, tickDelta);
                     break;
                 case PROBE_NEEDED:
                 case PROBE_NEEDEDHARD:
                     if (ModItems.hasAProbeSomewhere(Minecraft.getInstance().player)) {
-                        OverlayRenderer.renderHUD(getModeForPlayer(), event.getMatrixStack(), event.getPartialTicks());
+                        OverlayRenderer.renderHUD(getModeForPlayer(), matrixStack, tickDelta);
                     }
                     break;
             }

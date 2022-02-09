@@ -2,8 +2,9 @@ package mcjty.theoneprobe.network;
 
 import mcjty.theoneprobe.gui.GuiConfig;
 import mcjty.theoneprobe.gui.GuiNote;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -18,20 +19,21 @@ public class PacketOpenGui {
         gui = buf.readInt();
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
+    public FriendlyByteBuf toBytes() {
+        FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeInt(gui);
+        return buf;
     }
 
     public PacketOpenGui(int gui) {
         this.gui = gui;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
+    public void handle(Minecraft client) {
         if (gui == GUI_CONFIG) {
-            ctx.get().enqueueWork(GuiConfig::open);
+            client.execute(GuiConfig::open);
         } else {
-            ctx.get().enqueueWork(GuiNote::open);
+           client.execute(GuiNote::open);
         }
-        ctx.get().setPacketHandled(true);
     }
 }

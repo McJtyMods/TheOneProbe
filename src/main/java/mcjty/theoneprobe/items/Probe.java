@@ -16,7 +16,6 @@ public class Probe extends Item {
         super(new Properties()
                 .stacksTo(1)
                 .tab(TheOneProbe.tabProbe));
-        setRegistryName("probe");
     }
 
     @Override

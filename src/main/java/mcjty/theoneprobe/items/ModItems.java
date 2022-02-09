@@ -2,6 +2,7 @@ package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
+import net.minecraft.core.Registry;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -23,8 +24,8 @@ public class ModItems {
     public static final String PROBETAG_HAND = "theoneprobe_hand";
 
     public static void init() {
-        PROBE = new Probe();
-        CREATIVE_PROBE = new CreativeProbe();
+        PROBE = Registry.register(Registry.ITEM, TheOneProbe.asResource("probe"), new Probe());
+        CREATIVE_PROBE = Registry.register(Registry.ITEM, TheOneProbe.asResource("creativeprobe"), new CreativeProbe());
 
         TopArmorMaterial materialDiamondHelmet = new TopArmorMaterial("diamond_helmet_probe", 33, new int[]{3, 6, 8, 3}, 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0F, null);
         TopArmorMaterial materialGoldHelmet = new TopArmorMaterial("gold_helmet_probe", 7, new int[]{1, 3, 5, 2}, 25, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, null);
@@ -34,7 +35,7 @@ public class ModItems {
         GOLD_HELMET_PROBE = makeHelmet(materialGoldHelmet, 4, "gold_helmet_probe");
         IRON_HELMET_PROBE = makeHelmet(materialIronHelmet, 2, "iron_helmet_probe");
 
-        PROBE_NOTE = new ProbeNote();
+        PROBE_NOTE = Registry.register(Registry.ITEM, TheOneProbe.asResource("probenote"), new ProbeNote());
 
         if (TheOneProbe.baubles) {
             PROBE_GOGGLES = BaubleTools.initProbeGoggle();
@@ -61,8 +62,8 @@ public class ModItems {
 //                }
 //            }
         };
-        item.setRegistryName(name);
-        return item;
+
+        return Registry.register(Registry.ITEM, TheOneProbe.asResource(name), item);
     }
 
     public static boolean isProbeInHand(ItemStack stack) {

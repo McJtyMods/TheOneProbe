@@ -5,14 +5,15 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.lib.transfer.TransferUtil;
+import mcjty.theoneprobe.lib.transfer.item.ItemHandlerHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class ChestInfoTools {
         List<ItemStack> stacks = null;
         IProbeConfig.ConfigMode chestMode = config.getShowChestContents();
         if (chestMode == IProbeConfig.ConfigMode.EXTENDED && (Config.showSmallChestContentsWithoutSneaking.get() > 0 || !Config.getInventoriesToShow().isEmpty())) {
-            if (Config.getInventoriesToShow().contains(world.getBlockState(pos).getBlock().getRegistryName())) {
+            if (Config.getInventoriesToShow().contains(Registry.BLOCK.getKey(world.getBlockState(pos).getBlock()))) {
                 chestMode = IProbeConfig.ConfigMode.NORMAL;
             } else if (Config.showSmallChestContentsWithoutSneaking.get() > 0) {
                 stacks = new ArrayList<>();
@@ -37,7 +38,7 @@ public class ChestInfoTools {
                 }
             }
         } else if (chestMode == IProbeConfig.ConfigMode.NORMAL && !Config.getInventoriesToNotShow().isEmpty()) {
-            if (Config.getInventoriesToNotShow().contains(world.getBlockState(pos).getBlock().getRegistryName())) {
+            if (Config.getInventoriesToNotShow().contains(Registry.BLOCK.getKey(world.getBlockState(pos).getBlock()))) {
                 chestMode = IProbeConfig.ConfigMode.EXTENDED;
             }
         }
@@ -108,8 +109,8 @@ public class ChestInfoTools {
         Set<Item> foundItems = Config.compactEqualStacks.get() ? new HashSet<>() : null;
         AtomicInteger maxSlots = new AtomicInteger();
         try {
-            if (te != null && te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-                te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(capability -> {
+            if (te != null && TransferUtil.getItemHandler(te).isPresent()) {
+               TransferUtil.getItemHandler(te).ifPresent(capability -> {
                     maxSlots.set(capability.getSlots());
                     for (int i = 0; i < maxSlots.get(); i++) {
                         addItemStack(stacks, foundItems, capability.getStackInSlot(i));
@@ -123,7 +124,7 @@ public class ChestInfoTools {
                 }
             }
         } catch (RuntimeException e) {
-            throw new RuntimeException("Getting the contents of a " + world.getBlockState(pos).getBlock().getRegistryName() + " (" + te.getClass().getName() + ")", e);
+            throw new RuntimeException("Getting the contents of a " + Registry.BLOCK.getKey(world.getBlockState(pos).getBlock()) + " (" + te.getClass().getName() + ")", e);
         }
         return maxSlots.get();
     }

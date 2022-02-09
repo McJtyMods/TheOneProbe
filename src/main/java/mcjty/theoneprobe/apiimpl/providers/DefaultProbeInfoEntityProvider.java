@@ -22,7 +22,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.UsernameCache;
 
 import java.text.DecimalFormat;
 import java.util.Collection;
@@ -127,7 +126,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             }
 
             if (ownerId != null) {
-                String username = UsernameCache.getLastKnownUsername(ownerId);
+                String username = world.getPlayerByUUID(ownerId) != null ? world.getPlayerByUUID(ownerId).getGameProfile().getName() : null;
                 if (username == null) {
                     probeInfo.text(CompoundText.create().style(WARNING).text("Unknown owner"));
                 } else {

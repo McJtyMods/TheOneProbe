@@ -1,9 +1,8 @@
 package mcjty.theoneprobe.keys;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.client.settings.KeyConflictContext;
 
 public class KeyBindings {
 
@@ -11,9 +10,9 @@ public class KeyBindings {
     public static KeyMapping toggleVisible;
 
     public static void init() {
-        toggleLiquids = new KeyMapping("key.toggleLiquids", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, "key.categories.theoneprobe");
-        toggleVisible = new KeyMapping("key.toggleVisible", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, "key.categories.theoneprobe");
-        ClientRegistry.registerKeyBinding(toggleLiquids);
-        ClientRegistry.registerKeyBinding(toggleVisible);
+        toggleLiquids = new KeyMapping("key.toggleLiquids", InputConstants.UNKNOWN.getValue(), "key.categories.theoneprobe");
+        toggleVisible = new KeyMapping("key.toggleVisible", InputConstants.UNKNOWN.getValue(), "key.categories.theoneprobe");
+        KeyBindingHelper.registerKeyBinding(toggleLiquids);
+        KeyBindingHelper.registerKeyBinding(toggleVisible);
     }
 }

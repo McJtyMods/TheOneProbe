@@ -10,7 +10,9 @@ import com.mojang.math.Matrix4f;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.TankReference;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
+import mcjty.theoneprobe.lib.transfer.fluid.FluidStack;
 import mcjty.theoneprobe.rendering.RenderHelper;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -19,9 +21,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.FluidStack;
-
 public class ElementProgressRender {
 
     private static final ResourceLocation ICONS = new ResourceLocation("textures/gui/icons.png");
@@ -120,19 +119,18 @@ public class ElementProgressRender {
         FluidStack[] fluids = tank.getFluids();
         int start = 1;
         int tanks = fluids.length;
-        int max = tank.getCapacity();
+        long max = tank.getCapacity();
         Matrix4f matrix = matrixStack.last().pose();
         for (FluidStack stack : fluids) {
             int lvl = (int) (stack == null ? 0 : (((double) stack.getAmount() / max) * width));
             if (lvl <= 0) {
                 continue;
             }
-            FluidAttributes attr = stack.getFluid().getAttributes();
-            TextureAtlasSprite liquidIcon = map.apply(attr.getStillTexture(stack));
+            TextureAtlasSprite liquidIcon = map.apply(FluidVariantRendering.getSprite(stack.getType()).getName());
             if (Objects.equals(liquidIcon, map.apply(MissingTextureAtlasSprite.getLocation()))) {
                 continue;
             }
-            int color = attr.getColor(stack);
+            int color = FluidVariantRendering.getColor(stack.getType());
             RenderSystem.setShaderColor(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
             while (lvl > 0) {
                 int maxX = Math.min(16, lvl);

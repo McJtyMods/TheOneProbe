@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
-public abstract class AbstractRecipeAdaptor implements CraftingRecipe, net.minecraftforge.common.crafting.IShapedRecipe<CraftingContainer> {
+public abstract class AbstractRecipeAdaptor implements CraftingRecipe {
 
     protected final ShapedRecipe recipe;
 
@@ -50,16 +50,6 @@ public abstract class AbstractRecipeAdaptor implements CraftingRecipe, net.minec
 
     public ShapedRecipe getRecipe() {
         return recipe;
-    }
-
-    @Override
-    public int getRecipeWidth() {
-        return recipe.getRecipeWidth();
-    }
-
-    @Override
-    public int getRecipeHeight() {
-        return recipe.getRecipeHeight();
     }
 
     @Override

@@ -7,10 +7,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.network.PacketOpenGui;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
 
 public class CommandTopNeed implements Command<CommandSourceStack> {
 
@@ -26,7 +26,7 @@ public class CommandTopNeed implements Command<CommandSourceStack> {
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        PacketHandler.INSTANCE.sendTo(new PacketOpenGui(PacketOpenGui.GUI_NOTE), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+        ServerPlayNetworking.send(player, PacketHandler.PACKET_OPEN_GUI, new PacketOpenGui(PacketOpenGui.GUI_NOTE).toBytes());
         return 0;
     }
 }

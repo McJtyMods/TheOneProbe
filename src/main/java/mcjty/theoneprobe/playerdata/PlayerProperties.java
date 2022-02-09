@@ -1,11 +1,11 @@
 package mcjty.theoneprobe.playerdata;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
+import mcjty.theoneprobe.lib.PlayerGotNoteExtension;
+import net.minecraft.world.entity.player.Player;
 
 public class PlayerProperties {
 
-    public static Capability<PlayerGotNote> PLAYER_GOT_NOTE
-            = CapabilityManager.get(new CapabilityToken<>(){});
+    public static PlayerGotNote getPlayerGotNote(Player player) {
+        return ((PlayerGotNoteExtension)player).getPlayerGotNote();
+    }
 }

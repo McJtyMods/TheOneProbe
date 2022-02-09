@@ -6,6 +6,7 @@ import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -35,13 +36,13 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
         Block block = blockState.getBlock();
         String simpleName = block.getClass().getSimpleName();
         IProbeInfo vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2))
-                .text(CompoundText.createLabelInfo("Reg Name: ", block.getRegistryName().toString()))
+                .text(CompoundText.createLabelInfo("Reg Name: ", Registry.BLOCK.getKey(block).toString()))
                 .text(CompoundText.createLabelInfo("Unlocname: ", block.getDescriptionId()))
                 .text(CompoundText.createLabelInfo("Class: ", simpleName))
                 .text(CompoundText.createLabelInfo("Hardness: ", blockState.getDestroySpeed(world, pos)))
                 .text(CompoundText.createLabelInfo("Power W: ",+ blockState.getSignal(world, pos, side.getOpposite()))
                         .style(LABEL).text(", S: ").style(INFO).text(String.valueOf(blockState.getDirectSignal(world, pos, side.getOpposite()))))
-                .text(CompoundText.createLabelInfo("Light: ", block.getLightEmission(blockState, world, pos)));
+                .text(CompoundText.createLabelInfo("Light: ", block.defaultBlockState().getLightEmission()));
         BlockEntity te = world.getBlockEntity(pos);
         if (te != null) {
             vertical.text(CompoundText.createLabelInfo("TE: ", te.getClass().getSimpleName()));

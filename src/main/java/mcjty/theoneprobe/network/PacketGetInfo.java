@@ -7,25 +7,26 @@ import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.Registry;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
@@ -57,7 +58,8 @@ public class PacketGetInfo  {
         pickBlock = buf.readItem();
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
+    public FriendlyByteBuf toBytes() {
+        FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeResourceLocation(dim.location());
         buf.writeBlockPos(pos);
         buf.writeByte(mode.ordinal());
@@ -79,6 +81,7 @@ public class PacketGetInfo  {
             ItemStack copy = new ItemStack(pickBlock.getItem(), pickBlock.getCount());
             buf.writeItem(copy);
         }
+        return buf;
     }
 
     public PacketGetInfo() {
@@ -93,16 +96,15 @@ public class PacketGetInfo  {
         this.pickBlock = pickBlock;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerLevel world = ctx.get().getSender().server.getLevel(dim);
+    public void handle(MinecraftServer server, ServerPlayer sender) {
+        server.execute(() -> {
+            ServerLevel world = sender.server.getLevel(dim);
             if (world != null) {
-                ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(),
+                ProbeInfo probeInfo = getProbeInfo(sender,
                         mode, world, pos, sideHit, hitVec, pickBlock);
-                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(dim, pos, probeInfo), ctx.get().getSender().connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                ServerPlayNetworking.send(sender, PacketHandler.PACKET_RETURN_INFO, new PacketReturnInfo(dim, pos, probeInfo).toBytes());
             }
         });
-        ctx.get().setPacketHandled(true);
     }
 
     private static ProbeInfo getProbeInfo(Player player, ProbeMode mode, Level world, BlockPos blockPos, Direction sideHit, Vec3 hitVec, @Nonnull ItemStack pickBlock) {

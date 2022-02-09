@@ -3,14 +3,14 @@ package mcjty.theoneprobe.api;
 import java.util.Collection;
 import java.util.List;
 
+import mcjty.theoneprobe.lib.transfer.fluid.FluidStack;
+import mcjty.theoneprobe.lib.transfer.fluid.FluidTank;
+import mcjty.theoneprobe.lib.transfer.fluid.IFluidHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
  * Information to return to the probe. Most methods here return the same probe info
@@ -114,13 +114,13 @@ public interface IProbeInfo {
     /**
      * This creates a Tank Progress bar of 100 width with Fluid Icon Rendering
      */
-    default IProbeInfo tankSimple(int capacity, FluidStack fluid) { return tank(TankReference.createSimple(capacity, fluid));}
-    default IProbeInfo tank(IFluidTank tank) { return tank(TankReference.createTank(tank));}
+    default IProbeInfo tankSimple(long capacity, FluidStack fluid) { return tank(TankReference.createSimple(capacity, fluid));}
+    default IProbeInfo tank(FluidTank tank) { return tank(TankReference.createTank(tank));}
     default IProbeInfo tankHandler(IFluidHandler handler) { return tank(TankReference.createHandler(handler));}
     IProbeInfo tank(TankReference tank);
     
-    default IProbeInfo tankSimple(int capacity, FluidStack fluid, IProgressStyle style) { return tank(TankReference.createSimple(capacity, fluid), style);}
-    default IProbeInfo tank(IFluidTank tank, IProgressStyle style) { return tank(TankReference.createTank(tank), style);}
+    default IProbeInfo tankSimple(long capacity, FluidStack fluid, IProgressStyle style) { return tank(TankReference.createSimple(capacity, fluid), style);}
+    default IProbeInfo tank(FluidTank tank, IProgressStyle style) { return tank(TankReference.createTank(tank), style);}
     default IProbeInfo tankHandler(IFluidHandler handler, IProgressStyle style) { return tank(TankReference.createHandler(handler), style);}
     IProbeInfo tank(TankReference tank, IProgressStyle style);
     

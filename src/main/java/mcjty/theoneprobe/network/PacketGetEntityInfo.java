@@ -6,7 +6,11 @@ import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -15,8 +19,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,7 +45,8 @@ public class PacketGetEntityInfo {
         }
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
+    public FriendlyByteBuf toBytes() {
+        FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeResourceLocation(dim.location());
         buf.writeUUID(uuid);
         buf.writeByte(mode.ordinal());
@@ -55,6 +58,7 @@ public class PacketGetEntityInfo {
             buf.writeDouble(hitVec.y);
             buf.writeDouble(hitVec.z);
         }
+        return buf;
     }
 
     public PacketGetEntityInfo() {
@@ -67,19 +71,17 @@ public class PacketGetEntityInfo {
         this.hitVec = mouseOver.getLocation();
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerLevel world = ctx.get().getSender().server.getLevel(dim);
+    public void handle(MinecraftServer server, ServerPlayer sender) {
+        server.execute(() -> {
+            ServerLevel world = sender.server.getLevel(dim);
             if (world != null) {
                 Entity entity = world.getEntity(uuid);
                 if (entity != null) {
-                    ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(), mode, world, entity, hitVec);
-                    PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(uuid, probeInfo),
-                            ctx.get().getSender().connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                    ProbeInfo probeInfo = getProbeInfo(sender, mode, world, entity, hitVec);
+                    ServerPlayNetworking.send(sender, PacketHandler.PACKET_RETURN_ENTITY_INFO, new PacketReturnEntityInfo(uuid, probeInfo).toBytes());
                 }
             }
         });
-        ctx.get().setPacketHandled(true);
     }
 
     private static ProbeInfo getProbeInfo(Player player, ProbeMode mode, Level world, Entity entity, Vec3 hitVec) {

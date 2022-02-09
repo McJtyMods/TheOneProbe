@@ -18,9 +18,11 @@ import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.network.ThrowableIdentity;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
@@ -34,7 +36,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.ForgeHooksClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -129,10 +130,10 @@ public class OverlayRenderer {
 
     private static void setupOverlayRendering(float sw, float sh) {
         RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0, sw, 0, sh, 1000.0f, ForgeHooksClient.getGuiFarPlane()));
+        RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0, sw, 0, sh, 1000.0f, 3000.0F));
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.setIdentity();
-        posestack.translate(0.0F, 0.0F, 1000.0F - ForgeHooksClient.getGuiFarPlane());
+        posestack.translate(0.0F, 0.0F, 1000.0F - 3000.0F);
         RenderSystem.applyModelViewMatrix();
     }
 
@@ -210,7 +211,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, Player player) {
-        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity));
+        ClientPlayNetworking.send(PacketHandler.PACKET_GET_ENTITY_INFO, new PacketGetEntityInfo(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity).toBytes());
     }
 
     private static void renderHUDBlock(PoseStack matrixStack, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
@@ -295,7 +296,7 @@ public class OverlayRenderer {
         Level world = player.getCommandSenderWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getCloneItemStack(blockState, mouseOver, world, blockPos, player);
+        ItemStack pickBlock = block.getCloneItemStack(world, blockPos, blockState);
         IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getLocation(), ((BlockHitResult)mouseOver).getDirection(), pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
@@ -330,16 +331,16 @@ public class OverlayRenderer {
         Level world = player.getCommandSenderWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getCloneItemStack(blockState, mouseOver, world, blockPos, player);
+        ItemStack pickBlock = block.getCloneItemStack(world, blockPos, blockState);
         if (pickBlock == null) {
             // Should not be needed but you never know... (bad mods)
             pickBlock = ItemStack.EMPTY;
         }
-        if (!pickBlock.isEmpty() && Config.getDontSendNBTSet().contains(pickBlock.getItem().getRegistryName())) {
+        if (!pickBlock.isEmpty() && Config.getDontSendNBTSet().contains(Registry.ITEM.getKey(pickBlock.getItem()))) {
             pickBlock = pickBlock.copy();
             pickBlock.setTag(null);
         }
-        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.dimension(), blockPos, mode, mouseOver, pickBlock));
+        ClientPlayNetworking.send(PacketHandler.PACKET_GET_INFO, new PacketGetInfo(world.dimension(), blockPos, mode, mouseOver, pickBlock).toBytes());
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, PoseStack matrixStack) {

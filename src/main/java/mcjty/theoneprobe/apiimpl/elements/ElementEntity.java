@@ -7,12 +7,12 @@ import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementEntityRender;
 import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
 import mcjty.theoneprobe.network.NetworkTools;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class ElementEntity implements IElement {
 
@@ -38,9 +38,9 @@ public class ElementEntity implements IElement {
 //            entityNBT = entity.serializeNBT();
             playerID = null;
         }
-        ResourceLocation registryName = entity.getType().getRegistryName();
+        ResourceLocation registryName = Registry.ENTITY_TYPE.getKey(entity.getType());
         if (registryName == null) {
-            registryName = ForgeRegistries.ENTITIES.getKey(entity.getType());
+            registryName = Registry.ENTITY_TYPE.getKey(entity.getType());
         }
         this.entityName = registryName == null ? "<null>" : registryName.toString();
 //        this.entityName = EntityList.getEntityString(entity);

@@ -8,7 +8,7 @@ import net.minecraft.commands.Commands;
 
 public class ModCommands {
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
         LiteralCommandNode<CommandSourceStack> cmdTop = dispatcher.register(
                 Commands.literal(TheOneProbe.MODID)
                         .then(CommandTopCfg.register(dispatcher))

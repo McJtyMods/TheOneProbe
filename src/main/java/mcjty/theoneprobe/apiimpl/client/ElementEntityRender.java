@@ -7,6 +7,7 @@ import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -14,7 +15,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
 
@@ -35,7 +35,7 @@ public class ElementEntityRender {
             if (!Config.isBlacklistForRendering(id)) {
                 Entity entity = null;
                 if (entityNBT != null) {
-                    EntityType<?> value = ForgeRegistries.ENTITIES.getValue(id);
+                    EntityType<?> value = Registry.ENTITY_TYPE.get(id);
                     if (value != null) {
                         try {
                             Level world = Minecraft.getInstance().level;
@@ -56,7 +56,7 @@ public class ElementEntityRender {
                         }
                     }
                 } else {
-                    EntityType<?> value = ForgeRegistries.ENTITIES.getValue(id);
+                    EntityType<?> value = Registry.ENTITY_TYPE.get(id);
                     if (value != null) {
                         try {
                             entity = value.create(Minecraft.getInstance().level);

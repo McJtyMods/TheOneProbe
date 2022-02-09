@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "theoneprobe",
+  "version": "${version}",
+
+  "name": "The One Probe",
+  "description": "The One Probe lets you examine the block that you are looking at. Having a\nprobe in your hand lets you examine it better but you can also make this\nprobe required if you so desire.",
+  "authors": [
+    "McJty",
+    "AlphaMode"
+  ],
+  "contact": {
+    "issues": "http://github.com/McJtyMods/TheOneProbe/issues",
+    "sources": "http://github.com/McJtyMods/TheOneProbe/",
+    "homepage": "http://github.com/McJtyMods/TheOneProbe/"
+  },
+
+  "license": "MIT",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mcjty.theoneprobe.TheOneProbe"
+    ],
+    "client": [
+      "mcjty.theoneprobe.rendering.ClientSetup"
+    ]
+  },
+  "mixins": [
+    "theoneprobe.mixin.json"
+  ],
+  "accessWidener": "theoneprobe.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=0.13.1",
+    "fabric": ">=0.46.0"
+  }
+}

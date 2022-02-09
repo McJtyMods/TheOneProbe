@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "mcjty.theoneprobe.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "common.PlayerListMixin",
+    "common.PlayerMixin"
+  ],
+  "client": [
+    "client.HumanoidArmorLayerMixin",
+    "client.KeyboardHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

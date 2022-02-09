@@ -4,6 +4,7 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import mcjty.theoneprobe.lib.tag.TagHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +25,7 @@ public class HarvestInfoTools {
     private static final ResourceLocation ICONS = new ResourceLocation(TheOneProbe.MODID, "textures/gui/icons.png");
 
     private static String getTools(BlockState state) {
-        Set<ResourceLocation> tags = state.getBlock().getTags();
+        Set<ResourceLocation> tags = TagHelper.getTags(state.getBlock());
         Map<ResourceLocation, String> tooltypes = Config.getTooltypeTags();
         String tools = "";
         for (ResourceLocation tag : tags) {
@@ -40,7 +41,7 @@ public class HarvestInfoTools {
     }
 
     private static String getLevels(BlockState state) {
-        Set<ResourceLocation> tags = state.getBlock().getTags();
+        Set<ResourceLocation> tags = TagHelper.getTags(state.getBlock());
         Map<ResourceLocation, String> harvestability = Config.getHarvestabilityTags();
         String levels = "";
         for (ResourceLocation tag : tags) {
@@ -75,7 +76,7 @@ public class HarvestInfoTools {
         }
 
         ItemStack stack = player.getMainHandItem();
-        boolean harvestable = stack.getItem().isCorrectToolForDrops(stack, state);
+        boolean harvestable = stack.getItem().isCorrectToolForDrops(state);
         if (harvestable) {
             probeInfo.text(CompoundText.create().style(OK).text("Harvestable"));
         } else {
@@ -85,7 +86,7 @@ public class HarvestInfoTools {
 
     static void showHarvestInfo(IProbeInfo probeInfo, Level world, BlockPos pos, Block block, BlockState blockState, Player player) {
         ItemStack stack = player.getMainHandItem();
-        boolean harvestable = stack.getItem().isCorrectToolForDrops(stack, blockState);
+        boolean harvestable = stack.getItem().isCorrectToolForDrops(blockState);
         String tools = getTools(blockState);
         String levels = getLevels(blockState);
 

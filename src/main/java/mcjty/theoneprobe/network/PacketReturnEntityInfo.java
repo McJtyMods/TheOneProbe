@@ -2,8 +2,9 @@ package mcjty.theoneprobe.network;
 
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -23,7 +24,8 @@ public class PacketReturnEntityInfo {
         }
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
+    public FriendlyByteBuf toBytes() {
+        FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeUUID(uuid);
         if (probeInfo != null) {
             buf.writeBoolean(true);
@@ -31,6 +33,7 @@ public class PacketReturnEntityInfo {
         } else {
             buf.writeBoolean(false);
         }
+        return buf;
     }
 
     public PacketReturnEntityInfo() {
@@ -41,11 +44,10 @@ public class PacketReturnEntityInfo {
         this.probeInfo = probeInfo;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
+    public void handle(Minecraft client) {
+        client.execute(() -> {
             OverlayRenderer.registerProbeInfo(uuid, probeInfo);
         });
-        ctx.get().setPacketHandled(true);
     }
 
 }

@@ -1,0 +1,6 @@
+accessWidener v2 named
+transitive-accessible method net/minecraft/world/entity/Entity getEncodeId ()Ljava/lang/String;
+transitive-accessible field net/minecraft/client/multiplayer/MultiPlayerGameMode destroyProgress F
+transitive-accessible field net/minecraft/world/level/block/entity/BrewingStandBlockEntity brewTime I
+transitive-accessible field net/minecraft/world/level/block/entity/BrewingStandBlockEntity fuel I
+transitive-accessible field net/minecraft/world/level/BaseSpawner nextSpawnData Lnet/minecraft/world/level/SpawnData;

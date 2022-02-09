@@ -8,6 +8,12 @@ import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
 import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.lib.transfer.TransferUtil;
+import mcjty.theoneprobe.lib.transfer.fluid.FluidStack;
+import mcjty.theoneprobe.lib.transfer.fluid.FluidUtil;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
@@ -31,17 +37,12 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
-import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -223,11 +224,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showTankInfo(IProbeInfo probeInfo, Level world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
         BlockEntity te = world.getBlockEntity(pos);
-        if (te != null && te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).isPresent()) {
-            te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
+        if (te != null && TransferUtil.getFluidHandler(te).isPresent()) {
+            TransferUtil.getFluidHandler(te).ifPresent(handler -> {
                 for (int i = 0; i < handler.getTanks(); i++) {
                     FluidStack fluidStack = handler.getFluidInTank(i);
-                    int maxContents = handler.getTankCapacity(i);
+                    long maxContents = handler.getTankCapacity(i);
                     if (!fluidStack.isEmpty()) {
                         addFluidInfo(probeInfo, config, fluidStack, maxContents);
                     }
@@ -236,10 +237,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         }
     }
 
-    private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
-        int contents = fluidStack.getAmount();
+    private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, long maxContents) {
+        long contents = fluidStack.getAmount();
     	if(config.getTankMode() == 1) {
-        	Color color = new Color(fluidStack.getFluid().getAttributes().getColor(fluidStack));
+        	Color color = new Color(FluidVariantRendering.getColor(fluidStack.getType()));
         	if (Objects.equals(fluidStack.getFluid(), Fluids.LAVA)) {
     			color = new Color(255, 139, 27);
         	}
@@ -251,11 +252,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         			probeInfo.defaultProgressStyle()
         			.numberFormat(NumberFormat.NONE)
         			.borderlessColor(color, color.darker().darker())
-        			.prefix(((MutableComponent)fluidStack.getDisplayName()).append(": "))
+        			.prefix(((MutableComponent)FluidVariantRendering.getName(fluidStack.getType())).append(": "))
         			.suffix(text));
         } else {
             if (!fluidStack.isEmpty()) {
-                probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(fluidStack.getTranslationKey()));
+                probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(FluidVariantRendering.getName(fluidStack.getType())));
             }
             if (config.getTankMode() == 2) {
                 probeInfo.progress(contents, maxContents,
@@ -282,11 +283,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 //            long energy = bigPower.getStoredPower();
 //            long maxEnergy = bigPower.getCapacity();
 //            addEnergyInfo(probeInfo, config, energy, maxEnergy);
-        } else if (te != null && te.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+        }/* else if (te != null && te.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
             te.getCapability(CapabilityEnergy.ENERGY).ifPresent(handler -> {
                 addEnergyInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
             });
-        }
+        }*/
     }
 
     private void addEnergyInfo(IProbeInfo probeInfo, ProbeConfig config, long energy, long maxEnergy) {
@@ -339,8 +340,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             Fluid fluid = fluidState.getType();
             if (!Objects.equals(fluid, Fluids.EMPTY)) {
                 IProbeInfo horizontal = probeInfo.horizontal();
-                FluidStack fluidStack = new FluidStack(fluid, BUCKET_VOLUME);
-                horizontal.icon(fluid.getAttributes().getStillTexture(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20).color(fluid.getAttributes().getColor(fluidStack)));
+                FluidStack fluidStack = new FluidStack(fluid, FluidConstants.BUCKET);
+                horizontal.icon(FluidVariantRendering.getSprite(FluidVariant.of(fluid)).getName(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20).color(FluidVariantRendering.getColor(fluidStack.getType())));
                 //Proposal Fluids should look at the icon only not buckets of it. Dunno you have to decide. I just fixed the fluid color bug
                 ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
                 FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {
@@ -350,7 +351,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 });
 
                 horizontal.vertical()
-                        .text(CompoundText.create().name(fluidStack.getTranslationKey()))
+                        .text(CompoundText.create().name(FluidUtil.getTranslationKey(fluidStack.getFluid())))
                         .text(CompoundText.create().style(MODNAME).text(modName));
                 return;
             }
