@@ -1,5 +1,6 @@
 Upcoming:
 - Fixed a lag problem with the shulker
+- Optimized itemstack propagation a bit
 
 1.18-5.0.3:
 - Fixed a problem with mob spawners causing an error in TOP

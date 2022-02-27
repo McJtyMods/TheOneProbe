@@ -1,7 +1,5 @@
 package mcjty.theoneprobe.network;
 
-import mcjty.theoneprobe.TheOneProbe;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 
@@ -11,25 +9,15 @@ public class NetworkTools {
 
     /// This function supports itemstacks with more then 64 items.
     public static ItemStack readItemStack(FriendlyByteBuf buf) {
-        CompoundTag nbt = buf.readNbt();
-        if (nbt == null) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack stack = ItemStack.of(nbt);
+        ItemStack stack = buf.readItem();
         stack.setCount(buf.readInt());
         return stack;
     }
 
     /// This function supports itemstacks with more then 64 items.
     public static void writeItemStack(FriendlyByteBuf buf, ItemStack itemStack) {
-        CompoundTag nbt = new CompoundTag();
-        itemStack.save(nbt);
-        try {
-            buf.writeNbt(nbt);
-            buf.writeInt(itemStack.getCount());
-        } catch (Exception e) {
-            TheOneProbe.logger.error(e);
-        }
+        buf.writeItemStack(itemStack, false);
+        buf.writeInt(itemStack.getCount());
     }
 
     public static String readString(FriendlyByteBuf dataIn) {
