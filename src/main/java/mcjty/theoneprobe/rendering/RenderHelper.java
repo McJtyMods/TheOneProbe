@@ -56,7 +56,14 @@ public class RenderHelper {
             }
         }
 
-        matrixStack.translate(0.0F, (float) entity.getMyRidingOffset() + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
+        float ridingOffset;
+        if (entity.getVehicle() == null) {
+            // Protection for the shulker
+            ridingOffset = 0.0f;
+        } else {
+            ridingOffset = (float) entity.getMyRidingOffset();
+        }
+        matrixStack.translate(0.0F, ridingOffset + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
         RenderSystem.applyModelViewMatrix();
 
         EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();

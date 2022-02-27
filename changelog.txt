@@ -1,3 +1,6 @@
+Upcoming:
+- Fixed a lag problem with the shulker
+
 1.18-5.0.3:
 - Fixed a problem with mob spawners causing an error in TOP
 - Small optimization from DreenDex to disable shadow rendering for entities in the gui
