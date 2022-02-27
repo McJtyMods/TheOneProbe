@@ -1,8 +1,6 @@
 package mcjty.theoneprobe.network;
 
-import mcjty.theoneprobe.TheOneProbe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 
 import java.util.Collection;
@@ -11,25 +9,15 @@ public class NetworkTools {
 
     /// This function supports itemstacks with more then 64 items.
     public static ItemStack readItemStack(PacketBuffer buf) {
-        CompoundNBT nbt = buf.readNbt();
-        if (nbt == null) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack stack = ItemStack.of(nbt);
+        ItemStack stack = buf.readItem();
         stack.setCount(buf.readInt());
         return stack;
     }
 
     /// This function supports itemstacks with more then 64 items.
     public static void writeItemStack(PacketBuffer buf, ItemStack itemStack) {
-        CompoundNBT nbt = new CompoundNBT();
-        itemStack.save(nbt);
-        try {
-            buf.writeNbt(nbt);
-            buf.writeInt(itemStack.getCount());
-        } catch (Exception e) {
-            TheOneProbe.logger.error(e);
-        }
+        buf.writeItemStack(itemStack, false);
+        buf.writeInt(itemStack.getCount());
     }
 
     public static String readString(PacketBuffer dataIn) {
