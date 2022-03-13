@@ -1,0 +1,14 @@
+{
+    "key.toggleLiquids": "Przełącz tryb widzenia cieczy",
+    "key.toggleVisible": "Przełącz widoczność",
+    "key.categories.theoneprobe": "The One Probe",
+    "item.theoneprobe.probe": "Sonda",
+    "item.theoneprobe.probe_goggles": "Sonda (Bauble)",
+    "item.theoneprobe.diamond_helmet_probe": "Diamentowy hełm z sondą",
+    "item.theoneprobe.gold_helmet_probe": "Złoty hełm z sondą",
+    "item.theoneprobe.iron_helmet_probe": "Żelazny hełm z sondą",
+    "item.theoneprobe.creativeprobe": "Kreatywna sonda",
+    "item.theoneprobe.probenote": "Przeczytaj mnie - The One Probe",
+
+    "itemGroup.Probe": "The One Probe"
+}
