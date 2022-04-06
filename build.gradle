@@ -5,7 +5,6 @@ buildscript {
         maven { url = 'https://maven.minecraftforge.net/' }
         maven { url = 'https://maven.parchmentmc.org' }
         maven { url 'https://plugins.gradle.org/m2/' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -34,7 +33,7 @@ repositories {
     }
 }
 
-group= "mcjty.theoneprobe" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "mcjty" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "theoneprobe"
 
 if (System.getenv('BUILD_NUMBER') != null) {
@@ -44,7 +43,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official' , version: '1.19.2'
+    mappings channel: 'official' , version: project.minecraft_version
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     //runDir = "run"
@@ -93,7 +92,7 @@ jar {
         "Specification-Vendor": "McJty",
         "Specification-Version": "1",
         "Implementation-Title": project.name,
-        "Implementation-Version": "${version}",
+        "Implementation-Version": project.version.toString(),
         "Implementation-Vendor" :"McJty",
         "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
     }
@@ -120,33 +119,48 @@ jar {
 //}
 
 task apiJar(type: Jar) {
-    classifier = "api"
+    archiveClassifier.set("api")
     from(sourceSets.main.output) {
         include "mcjty/theoneprobe/api/**"
     }
 }
 
+task sourceJar(type: Jar) {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.allSource)
+}
+
+task deobfJar(type: Jar) {
+    archiveClassifier.set("deobf")
+    from(sourceSets.main.output)
+}
+
 artifacts {
     archives apiJar
+    archives deobfJar
+    archives sourceJar
 }
 
 publishing {
     publications.create('mavenJava', MavenPublication) {
-        from components.java
+        artifact jar
         artifact apiJar
+        artifact sourceJar
+        artifact deobfJar
 
         artifactId = project.archivesBaseName
+		
         pom {
-            name = 'RFToolsBase'
-            description = 'Base mod for all McJty tech mods'
+            name = project.modname
+            description = 'More immersive alternative for WAILA'
             scm {
-                url = 'https://github.com/McJtyMods/RFToolsBase'
-                connection = 'scm:git:git@github.com:McJtyMods/RFToolsBase.git'
-                developerConnection = 'scm:git:git@github.com:McJtyMods/RFToolsBase.git'
+                url = 'https://github.com/McJtyMods/TheOneProbe'
+                connection = 'scm:git:git@github.com:McJtyMods/TheOneProbe.git'
+                developerConnection = 'scm:git:git@github.com:McJtyMods/TheOneProbe.git'
             }
             issueManagement {
                 system = 'github'
-                url = 'https://github.com/McJtyMods/RFToolsBase/issues'
+                url = 'https://github.com/McJtyMods/TheOneProbe/issues'
             }
             licenses {
                 license {
@@ -163,6 +177,7 @@ publishing {
             }
         }
     }
+
     repositories {
         if (System.getenv('local_maven') != null) {
             maven {
