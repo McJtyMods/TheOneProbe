@@ -29,6 +29,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ForgeHooksClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -125,7 +126,7 @@ public class OverlayRenderer {
         RenderSystem.clear(256, true);
         RenderSystem.matrixMode(GL11.GL_PROJECTION);
         RenderSystem.loadIdentity();
-        RenderSystem.ortho(0.0D, sw, sh, 0.0D, 1000.0D, 3000.0D);
+        RenderSystem.ortho(0.0D, sw, sh, 0.0D, 1000.0D, ForgeHooksClient.getGuiFarPlane());
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
         RenderSystem.loadIdentity();
         RenderSystem.translatef(0.0F, 0.0F, -2000.0F);
