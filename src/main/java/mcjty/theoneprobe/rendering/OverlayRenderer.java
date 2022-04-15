@@ -129,7 +129,7 @@ public class OverlayRenderer {
         RenderSystem.ortho(0.0D, sw, sh, 0.0D, 1000.0D, ForgeHooksClient.getGuiFarPlane());
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
         RenderSystem.loadIdentity();
-        RenderSystem.translatef(0.0F, 0.0F, -2000.0F);
+        RenderSystem.translatef(0.0F, 0.0F, 1000.0F - ForgeHooksClient.getGuiFarPlane());
     }
 
     private static void checkCleanup() {

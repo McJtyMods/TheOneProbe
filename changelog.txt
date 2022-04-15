@@ -1,3 +1,6 @@
+Upcoming:
+- Fully fixed the bug now
+
 1.16-3.1.6:
 - Fixed a bug in recent versions of forge in relation to the new stacking gui's feature
 
