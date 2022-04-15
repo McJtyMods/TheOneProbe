@@ -1,4 +1,4 @@
-Upcoming:
+1.16-3.1.7:
 - Fully fixed the bug now
 
 1.16-3.1.6:
