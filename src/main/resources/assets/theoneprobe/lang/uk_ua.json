@@ -1,0 +1,14 @@
+{
+    "key.toggleLiquids": "Переключити перегляд рідин",
+    "key.toggleVisible": "Переключити видимість",
+    "key.categories.theoneprobe": "The One Probe",
+    "item.theoneprobe.probe": "Датчик",
+    "item.theoneprobe.probe_goggles": "Датчик (Амулет)",
+    "item.theoneprobe.diamond_helmet_probe": "Діамантовий шолом із датчиком",
+    "item.theoneprobe.gold_helmet_probe": "Золотий шолом.",
+    "item.theoneprobe.iron_helmet_probe": "Залізний шолом із датчиком",
+    "item.theoneprobe.creativeprobe": "Творчий датчик",
+    "item.theoneprobe.probenote": "The One Probe прочитай мене ",
+    
+    "itemGroup.Probe": "The One Probe"
+}
