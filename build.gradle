@@ -44,7 +44,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official' , version: '1.18.2'
+    mappings channel: 'official' , version: '1.19'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     //runDir = "run"
@@ -78,8 +78,8 @@ minecraft {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
+    //compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
+    //runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
 }
 
 jar {

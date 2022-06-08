@@ -61,7 +61,6 @@ public class ModItems {
 //                }
 //            }
         };
-        item.setRegistryName(name);
         return item;
     }
 

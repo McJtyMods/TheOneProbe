@@ -2,8 +2,6 @@ package mcjty.theoneprobe.api;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class CompoundText {
 
@@ -23,7 +21,7 @@ public class CompoundText {
 
     /// Use this to set a style that the player can configure client-side. This is the recommended way to do text formatting
     public CompoundText style(TextStyleClass style) {
-        Component cmp = new TextComponent(style.toString());
+        Component cmp = Component.literal(style.toString());
         return newComponent(cmp);
     }
 
@@ -34,7 +32,7 @@ public class CompoundText {
 
     /// Only use this for small strings or numbers for which no translation is useful
     public CompoundText text(String text) {
-        return newComponent(new TextComponent(text));
+        return newComponent(Component.literal(text));
     }
 
     /// A common usage: label + info
@@ -44,7 +42,7 @@ public class CompoundText {
 
     /// Shorthand for style(TextStyleClass.INFO).text(new TranslationTextComponent(translationKey):
     public CompoundText info(String translationKey) {
-        return info(new TranslatableComponent(translationKey));
+        return info(Component.translatable(translationKey));
     }
 
     /// Shorthand for style(TextStyleClass.INFO).text(cmp):
@@ -54,7 +52,7 @@ public class CompoundText {
 
     /// Shorthand for style(TextStyleClass.INFOIMP).text(new TranslationTextComponent(translationKey):
     public CompoundText important(String translationKey) {
-        return important(new TranslatableComponent(translationKey));
+        return important(Component.translatable(translationKey));
     }
 
     /// Shorthand for style(TextStyleClass.INFOIMP).text(cmp):
@@ -64,7 +62,7 @@ public class CompoundText {
 
     /// Shorthand for style(TextStyleClass.WARNING).text(new TranslationTextComponent(translationKey):
     public CompoundText warning(String translationKey) {
-        return warning(new TranslatableComponent(translationKey));
+        return warning(Component.translatable(translationKey));
     }
 
     /// Shorthand for style(TextStyleClass.WARNING).text(cmp):
@@ -74,7 +72,7 @@ public class CompoundText {
 
     /// Shorthand for style(TextStyleClass.ERROR).text(new TranslationTextComponent(translationKey):
     public CompoundText error(String translationKey) {
-        return error(new TranslatableComponent(translationKey));
+        return error(Component.translatable(translationKey));
     }
 
     /// Shorthand for style(TextStyleClass.ERROR).text(cmp):
@@ -84,7 +82,7 @@ public class CompoundText {
 
     /// Shorthand for style(TextStyleClass.LABEL).text(new TranslationTextComponent(translationKey):
     public CompoundText label(String translationKey) {
-        return label(new TranslatableComponent(translationKey));
+        return label(Component.translatable(translationKey));
     }
 
     /// Shorthand for style(TextStyleClass.LABEL).text(cmp):
@@ -94,7 +92,7 @@ public class CompoundText {
 
     /// Shorthand for style(TextStyleClass.OK).text(new TranslationTextComponent(translationKey):
     public CompoundText ok(String translationKey) {
-        return ok(new TranslatableComponent(translationKey));
+        return ok(Component.translatable(translationKey));
     }
 
     /// Shorthand for style(TextStyleClass.OK).text(cmp):
@@ -104,7 +102,7 @@ public class CompoundText {
 
     /// Shorthand for style(TextStyleClass.NAME).text(new TranslationTextComponent(translationKey):
     public CompoundText name(String translationKey) {
-        return name(new TranslatableComponent(translationKey));
+        return name(Component.translatable(translationKey));
     }
 
     /// Shorthand for style(TextStyleClass.NAME).text(cmp):
@@ -114,7 +112,7 @@ public class CompoundText {
 
     /// Shorthand for style(TextStyleClass.PROGRESS).text(new TranslationTextComponent(translationKey):
     public CompoundText progress(String translationKey) {
-        return progress(new TranslatableComponent(translationKey));
+        return progress(Component.translatable(translationKey));
     }
 
     /// Shorthand for style(TextStyleClass.PROGRESS).text(cmp):

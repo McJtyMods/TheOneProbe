@@ -9,17 +9,12 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.AddProbeTagRecipeSerializer;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
-import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.rendering.ClientSetup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -30,6 +25,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -129,25 +126,25 @@ public class TheOneProbe {
     }
 
     @SubscribeEvent
-    public static void registerRecipes(final RegistryEvent.Register<RecipeSerializer<?>> e) {
-        e.getRegistry().register(new AddProbeTagRecipeSerializer().setRegistryName(new ResourceLocation(TheOneProbe.MODID, "probe_helmet")));
-    }
+    public static void onRegisterEvent(RegisterEvent event) {
+        event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, helper -> {
+            helper.register(new ResourceLocation(TheOneProbe.MODID, "probe_helmet"), new AddProbeTagRecipeSerializer());
+        });
+        event.register(ForgeRegistries.Keys.ITEMS, helper -> {
+            ModItems.init();
 
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event) {
-        ModItems.init();
+            helper.register(new ResourceLocation(TheOneProbe.MODID, "probe"), ModItems.PROBE);
+            helper.register(new ResourceLocation(TheOneProbe.MODID, "creativeprobe"), ModItems.CREATIVE_PROBE);
+            helper.register(new ResourceLocation(TheOneProbe.MODID, "probenote"), ModItems.PROBE_NOTE);
 
-        event.getRegistry().register(ModItems.PROBE);
-        event.getRegistry().register(ModItems.CREATIVE_PROBE);
-        event.getRegistry().register(ModItems.PROBE_NOTE);
+            helper.register(new ResourceLocation(TheOneProbe.MODID, "diamond_helmet_probe"), ModItems.DIAMOND_HELMET_PROBE);
+            helper.register(new ResourceLocation(TheOneProbe.MODID, "gold_helmet_probe"), ModItems.GOLD_HELMET_PROBE);
+            helper.register(new ResourceLocation(TheOneProbe.MODID, "iron_helmet_probe"), ModItems.IRON_HELMET_PROBE);
 
-        event.getRegistry().register(ModItems.DIAMOND_HELMET_PROBE);
-        event.getRegistry().register(ModItems.GOLD_HELMET_PROBE);
-        event.getRegistry().register(ModItems.IRON_HELMET_PROBE);
-
-        if (TheOneProbe.baubles) {
-            event.getRegistry().register(ModItems.PROBE_GOGGLES);
-        }
+//            if (TheOneProbe.baubles) {
+//                helper.register(ModItems.PROBE_GOGGLES);
+//            }
+        });
     }
 
 

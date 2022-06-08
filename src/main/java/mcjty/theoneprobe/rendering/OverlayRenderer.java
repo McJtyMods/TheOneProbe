@@ -21,7 +21,7 @@ import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -35,6 +35,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -233,7 +234,7 @@ public class OverlayRenderer {
             float damage = Minecraft.getInstance().gameMode.destroyProgress;
             if (damage > 0) {
                 if (Config.showBreakProgress.get() == 2) {
-                    damageElement = new ElementText(new TextComponent("Progress " + (int) (damage * 100) + "%").withStyle(ChatFormatting.RED));
+                    damageElement = new ElementText(Component.literal("Progress " + (int) (damage * 100) + "%").withStyle(ChatFormatting.RED));
                 } else {
                     damageElement = new ElementProgress((long) (damage * 100), 100, new ProgressStyle()
                             .prefix("Progress ")
@@ -335,7 +336,7 @@ public class OverlayRenderer {
             // Should not be needed but you never know... (bad mods)
             pickBlock = ItemStack.EMPTY;
         }
-        if (!pickBlock.isEmpty() && Config.getDontSendNBTSet().contains(pickBlock.getItem().getRegistryName())) {
+        if (!pickBlock.isEmpty() && Config.getDontSendNBTSet().contains(ForgeRegistries.ITEMS.getKey(pickBlock.getItem()))) {
             pickBlock = pickBlock.copy();
             pickBlock.setTag(null);
         }

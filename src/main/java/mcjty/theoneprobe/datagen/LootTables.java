@@ -10,7 +10,7 @@ public class LootTables extends LootTableProvider {
         super(dataGeneratorIn);
     }
 
-    @Override
-    public void run(HashCache cache) {
-    }
+//    @Override
+//    public void run(HashCache cache) {
+//    }
 }

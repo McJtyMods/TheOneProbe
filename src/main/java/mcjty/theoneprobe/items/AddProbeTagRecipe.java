@@ -7,11 +7,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 public class AddProbeTagRecipe extends AbstractRecipeAdaptor {
 
-    @ObjectHolder(TheOneProbe.MODID + ":probe_helmet")
-    public static AddProbeTagRecipeSerializer HELMET_SERIALIZER;
+    public static RegistryObject<RecipeSerializer> HELMET_SERIALIZER;
 
     public AddProbeTagRecipe(ShapedRecipe recipe) {
         super(recipe);
@@ -28,6 +28,6 @@ public class AddProbeTagRecipe extends AbstractRecipeAdaptor {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return HELMET_SERIALIZER;
+        return HELMET_SERIALIZER.get();
     }
 }

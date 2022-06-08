@@ -4,8 +4,8 @@ import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.NumberFormat;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import java.awt.*;
 
 /**
  * Style for the progress bar.
@@ -21,8 +21,8 @@ public class ProgressStyle implements IProgressStyle {
     private boolean lifeBar = false;
     private boolean armorBar = false;
 	private ElementAlignment alignment = ElementAlignment.ALIGN_TOPLEFT;
-	private Component prefix = TextComponent.EMPTY;
-	private Component suffix = TextComponent.EMPTY;
+	private Component prefix = Component.empty();
+	private Component suffix = Component.empty();
 
     private NumberFormat numberFormat = NumberFormat.FULL;
     
@@ -79,12 +79,12 @@ public class ProgressStyle implements IProgressStyle {
 
     @Override
     public ProgressStyle prefix(String prefix) {
-        return prefix(new TranslatableComponent(prefix));
+        return prefix(Component.translatable(prefix));
     }
 
     @Override
     public ProgressStyle suffix(String suffix) {
-        return suffix(new TranslatableComponent(suffix));
+        return suffix(Component.translatable(suffix));
     }
     
     @Override

@@ -10,7 +10,6 @@ import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class ElementText implements IElement {
@@ -21,11 +20,11 @@ public class ElementText implements IElement {
     private boolean legacy = false;
 
     public ElementText(String text) {
-        this(new TranslatableComponent(text), new TextStyle());
+        this(Component.translatable(text), new TextStyle());
     }
 
     public ElementText(String text, ITextStyle style) {
-        this(new TranslatableComponent(text), style);
+        this(Component.translatable(text), style);
     }
 
     public ElementText(Component text) {

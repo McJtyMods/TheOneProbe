@@ -9,8 +9,8 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.ChatFormatting;
 
 import static mcjty.theoneprobe.config.Config.*;
@@ -32,7 +32,7 @@ public class GuiNote extends Screen {
     private static final ResourceLocation background = new ResourceLocation(TheOneProbe.MODID, "textures/gui/note.png");
 
     public GuiNote() {
-        super(new TextComponent("note"));
+        super(Component.literal("note"));
     }
 
     @Override

@@ -10,7 +10,6 @@ public class CreativeProbe extends Item {
                 .stacksTo(1)
                 .tab(TheOneProbe.tabProbe)
         );
-        setRegistryName("creativeprobe");
     }
 
 }

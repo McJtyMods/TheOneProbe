@@ -10,7 +10,6 @@ import mcjty.theoneprobe.apiimpl.client.ElementProgressRender;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.DecimalFormat;
@@ -59,10 +58,10 @@ public class ElementProgress implements IElement {
 	public static Component format(long in, NumberFormat style, Component suffix) {
 		switch (style) {
 			case FULL:
-				return new TextComponent(Long.toString(in)).append(suffix);
+				return Component.literal(Long.toString(in)).append(suffix);
 			case COMPACT:
 				if (in < 1000) {
-                    return new TextComponent(Long.toString(in) + " ").append(suffix);
+                    return Component.literal(Long.toString(in) + " ").append(suffix);
                 }
 				int unit = 1000;
 				int exp = (int) (Math.log(in) / Math.log(unit));
@@ -71,17 +70,17 @@ public class ElementProgress implements IElement {
 					s = s.substring(1);
 					if (exp - 2 >= 0) {
 						char pre = "kMGTPE".charAt(exp - 2);
-						return new TextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).append(new TextComponent(s).withStyle(suffix.getStyle()));
+						return Component.literal(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).append(Component.literal(s).withStyle(suffix.getStyle()));
 					}
-					return new TextComponent(String.format("%.1f", Double.valueOf(in / Math.pow(unit, exp)))).append(new TextComponent(s).withStyle(suffix.getStyle()));
+					return Component.literal(String.format("%.1f", Double.valueOf(in / Math.pow(unit, exp)))).append(Component.literal(s).withStyle(suffix.getStyle()));
 				}
 				char pre = "kMGTPE".charAt(exp - 1);
-				return new TextComponent(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).append(suffix);
+				return Component.literal(String.format("%.1f %s", Double.valueOf(in / Math.pow(unit, exp)), Character.valueOf(pre))).append(suffix);
 			case COMMAS:
-				return new TextComponent(dfCommas.format(in)).append(suffix);
+				return Component.literal(dfCommas.format(in)).append(suffix);
 			case NONE: return suffix;
 		}
-		return new TextComponent(Long.toString(in));
+		return Component.literal(Long.toString(in));
 	}
 
     @Override

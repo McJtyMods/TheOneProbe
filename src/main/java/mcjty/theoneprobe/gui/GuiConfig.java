@@ -14,13 +14,13 @@ import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class GuiConfig extends Screen {
     private static final List<Preset> presets = new ArrayList<>();
 
     public GuiConfig() {
-        super(new TextComponent("TOP Config"));
+        super(Component.literal("TOP Config"));
     }
 
     private List<HitBox> hitboxes = Collections.emptyList();

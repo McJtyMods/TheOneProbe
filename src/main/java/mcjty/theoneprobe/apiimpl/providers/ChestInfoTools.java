@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class ChestInfoTools {
         List<ItemStack> stacks = null;
         IProbeConfig.ConfigMode chestMode = config.getShowChestContents();
         if (chestMode == IProbeConfig.ConfigMode.EXTENDED && (Config.showSmallChestContentsWithoutSneaking.get() > 0 || !Config.getInventoriesToShow().isEmpty())) {
-            if (Config.getInventoriesToShow().contains(world.getBlockState(pos).getBlock().getRegistryName())) {
+            if (Config.getInventoriesToShow().contains(ForgeRegistries.BLOCKS.getKey(world.getBlockState(pos).getBlock()))) {
                 chestMode = IProbeConfig.ConfigMode.NORMAL;
             } else if (Config.showSmallChestContentsWithoutSneaking.get() > 0) {
                 stacks = new ArrayList<>();
@@ -37,7 +38,7 @@ public class ChestInfoTools {
                 }
             }
         } else if (chestMode == IProbeConfig.ConfigMode.NORMAL && !Config.getInventoriesToNotShow().isEmpty()) {
-            if (Config.getInventoriesToNotShow().contains(world.getBlockState(pos).getBlock().getRegistryName())) {
+            if (Config.getInventoriesToNotShow().contains(ForgeRegistries.BLOCKS.getKey(world.getBlockState(pos).getBlock()))) {
                 chestMode = IProbeConfig.ConfigMode.EXTENDED;
             }
         }
@@ -123,7 +124,7 @@ public class ChestInfoTools {
                 }
             }
         } catch (RuntimeException e) {
-            throw new RuntimeException("Getting the contents of a " + world.getBlockState(pos).getBlock().getRegistryName() + " (" + te.getClass().getName() + ")", e);
+            throw new RuntimeException("Getting the contents of a " + ForgeRegistries.BLOCKS.getKey(world.getBlockState(pos).getBlock()) + " (" + te.getClass().getName() + ")", e);
         }
         return maxSlots.get();
     }
