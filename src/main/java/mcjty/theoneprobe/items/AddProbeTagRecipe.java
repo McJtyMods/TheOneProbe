@@ -1,12 +1,10 @@
 package mcjty.theoneprobe.items;
 
-import mcjty.theoneprobe.TheOneProbe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraftforge.registries.ObjectHolder;
 import net.minecraftforge.registries.RegistryObject;
 
 public class AddProbeTagRecipe extends AbstractRecipeAdaptor {
