@@ -1,4 +1,4 @@
-Upcoming:
+1.19-6.0.1:
 - Fixed the probe helmet recipes
 
 1.19-6.0.0:
