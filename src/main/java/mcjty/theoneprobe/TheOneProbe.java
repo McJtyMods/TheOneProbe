@@ -6,6 +6,7 @@ import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.config.Config;
+import mcjty.theoneprobe.items.AddProbeTagRecipe;
 import mcjty.theoneprobe.items.AddProbeTagRecipeSerializer;
 import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
@@ -128,7 +129,8 @@ public class TheOneProbe {
     @SubscribeEvent
     public static void onRegisterEvent(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, helper -> {
-            helper.register(new ResourceLocation(TheOneProbe.MODID, "probe_helmet"), new AddProbeTagRecipeSerializer());
+            AddProbeTagRecipe.HELMET_SERIALIZER = new AddProbeTagRecipeSerializer();
+            helper.register(new ResourceLocation(TheOneProbe.MODID, "probe_helmet"), AddProbeTagRecipe.HELMET_SERIALIZER);
         });
         event.register(ForgeRegistries.Keys.ITEMS, helper -> {
             ModItems.init();

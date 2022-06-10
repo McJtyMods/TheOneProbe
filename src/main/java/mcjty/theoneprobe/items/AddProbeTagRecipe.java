@@ -5,11 +5,10 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraftforge.registries.RegistryObject;
 
 public class AddProbeTagRecipe extends AbstractRecipeAdaptor {
 
-    public static RegistryObject<RecipeSerializer> HELMET_SERIALIZER;
+    public static RecipeSerializer HELMET_SERIALIZER;
 
     public AddProbeTagRecipe(ShapedRecipe recipe) {
         super(recipe);
@@ -26,6 +25,6 @@ public class AddProbeTagRecipe extends AbstractRecipeAdaptor {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return HELMET_SERIALIZER.get();
+        return HELMET_SERIALIZER;
     }
 }
