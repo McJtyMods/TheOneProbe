@@ -1,11 +1,7 @@
 package mcjty.theoneprobe.apiimpl.client;
 
-import java.util.Objects;
-import java.util.function.Function;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.TankReference;
@@ -19,8 +15,11 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.Objects;
+import java.util.function.Function;
 
 public class ElementProgressRender {
 
@@ -127,12 +126,11 @@ public class ElementProgressRender {
             if (lvl <= 0) {
                 continue;
             }
-            FluidAttributes attr = stack.getFluid().getAttributes();
-            TextureAtlasSprite liquidIcon = map.apply(attr.getStillTexture(stack));
+            TextureAtlasSprite liquidIcon = map.apply(RenderProperties.get(stack.getFluid()).getStillTexture(stack));
             if (Objects.equals(liquidIcon, map.apply(MissingTextureAtlasSprite.getLocation()))) {
                 continue;
             }
-            int color = attr.getColor(stack);
+            int color = RenderProperties.get(stack.getFluid()).getColorTint(stack);
             RenderSystem.setShaderColor(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
             while (lvl > 0) {
                 int maxX = Math.min(16, lvl);

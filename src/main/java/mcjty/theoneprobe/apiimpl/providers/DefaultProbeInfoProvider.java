@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -41,7 +42,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
-import static net.minecraftforge.fluids.FluidAttributes.BUCKET_VOLUME;
+import static net.minecraftforge.fluids.FluidType.BUCKET_VOLUME;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -239,7 +240,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
         int contents = fluidStack.getAmount();
     	if(config.getTankMode() == 1) {
-        	Color color = new Color(fluidStack.getFluid().getAttributes().getColor(fluidStack));
+            Color color = new Color(RenderProperties.get(fluidStack.getFluid()).getColorTint(fluidStack));
         	if (Objects.equals(fluidStack.getFluid(), Fluids.LAVA)) {
     			color = new Color(255, 139, 27);
         	}
@@ -340,7 +341,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             if (!Objects.equals(fluid, Fluids.EMPTY)) {
                 IProbeInfo horizontal = probeInfo.horizontal();
                 FluidStack fluidStack = new FluidStack(fluid, BUCKET_VOLUME);
-                horizontal.icon(fluid.getAttributes().getStillTexture(), -1, -1, 16, 16, probeInfo.defaultIconStyle().width(20).color(fluid.getAttributes().getColor(fluidStack)));
+
+                Color color = new Color(RenderProperties.get(fluid).getColorTint(fluidStack));
+                horizontal.icon(RenderProperties.get(fluid).getStillTexture(), -1, -1, 16, 16,
+                        probeInfo.defaultIconStyle().width(20).color(color));
                 //Proposal Fluids should look at the icon only not buckets of it. Dunno you have to decide. I just fixed the fluid color bug
                 ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
                 FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {

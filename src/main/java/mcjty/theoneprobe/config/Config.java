@@ -291,14 +291,28 @@ public class Config {
     private static <T extends Enum<T>> IEnumConfig<T> addEnumConfig(Builder builder, String path, String comment,
                                                                     T def, T... values) {
         ConfigValue<String> configValue = builder.comment(comment).define(path, def.name());
-        return () -> {
-            String s = configValue.get();
-            for (T value : values) {
-                if (value.name().equals(s)) {
-                    return value;
+        return new IEnumConfig<T>() {
+            @Override
+            public T get() {
+                String s = configValue.get();
+                for (T value : values) {
+                    if (value.name().equals(s)) {
+                        return value;
+                    }
                 }
+                return null;
             }
-            return null;
+
+            @Override
+            public T getDefault() {
+                String s = configValue.getDefault();
+                for (T value : values) {
+                    if (value.name().equals(s)) {
+                        return value;
+                    }
+                }
+                return null;
+            }
         };
     }
 
@@ -544,37 +558,53 @@ public class Config {
         return dontSendNBTSet;
     }
 
+    private static <T> T getOrDefault(ForgeConfigSpec spec, ConfigValue<T> config) {
+        if (spec.isLoaded()) {
+            return config.get();
+        } else {
+            return config.getDefault();
+        }
+    }
+
+    private static IProbeConfig.ConfigMode getOrDefault(ForgeConfigSpec spec, IEnumConfig<IProbeConfig.ConfigMode> config) {
+        if (spec.isLoaded()) {
+            return config.get();
+        } else {
+            return config.getDefault();
+        }
+    }
+
     public static void resolveConfigs() {
-        DEFAULT_CONFIG.setRFMode(defaultRFMode.get());
-        DEFAULT_CONFIG.setTankMode(defaultTankMode.get());
-        rfbarFilledColor = parseColor(cfgRfbarFilledColor.get());
-        rfbarAlternateFilledColor = parseColor(cfgRfbarAlternateFilledColor.get());
-        rfbarBorderColor = parseColor(cfgRfbarBorderColor.get());
-        tankbarFilledColor = parseColor(cfgTankbarFilledColor.get());
-        tankbarAlternateFilledColor = parseColor(cfgTankbarAlternateFilledColor.get());
-        tankbarBorderColor = parseColor(cfgTankbarBorderColor.get());
+        DEFAULT_CONFIG.setRFMode(getOrDefault(COMMON_CONFIG, defaultRFMode));
+        DEFAULT_CONFIG.setTankMode(getOrDefault(COMMON_CONFIG, defaultTankMode));
+        rfbarFilledColor = parseColor(getOrDefault(COMMON_CONFIG, cfgRfbarFilledColor));
+        rfbarAlternateFilledColor = parseColor(getOrDefault(COMMON_CONFIG, cfgRfbarAlternateFilledColor));
+        rfbarBorderColor = parseColor(getOrDefault(COMMON_CONFIG, cfgRfbarBorderColor));
+        tankbarFilledColor = parseColor(getOrDefault(COMMON_CONFIG, cfgTankbarFilledColor));
+        tankbarAlternateFilledColor = parseColor(getOrDefault(COMMON_CONFIG, cfgTankbarAlternateFilledColor));
+        tankbarBorderColor = parseColor(getOrDefault(COMMON_CONFIG, cfgTankbarBorderColor));
 
-        boxBorderColor = parseColor(cfgboxBorderColor.get());
-        boxFillColor = parseColor(cfgboxFillColor.get());
-        chestContentsBorderColor = parseColor(cfgchestContentsBorderColor.get());
+        boxBorderColor = parseColor(getOrDefault(COMMON_CONFIG, cfgboxBorderColor));
+        boxFillColor = parseColor(getOrDefault(COMMON_CONFIG, cfgboxFillColor));
+        chestContentsBorderColor = parseColor(getOrDefault(COMMON_CONFIG, cfgchestContentsBorderColor));
 
-        DEFAULT_CONFIG.showModName(cfgshowModName.get());
-        DEFAULT_CONFIG.showHarvestLevel(cfgshowHarvestLevel.get());
-        DEFAULT_CONFIG.showCanBeHarvested(cfgshowCanBeHarvested.get());
-        DEFAULT_CONFIG.showCropPercentage(cfgshowCropPercentage.get());
-        DEFAULT_CONFIG.showChestContents(cfgshowChestContents.get());
-        DEFAULT_CONFIG.showChestContentsDetailed(cfgshowChestContentsDetailed.get());
-        DEFAULT_CONFIG.showRedstone(cfgshowRedstone.get());
-        DEFAULT_CONFIG.showMobHealth(cfgshowMobHealth.get());
-        DEFAULT_CONFIG.showMobGrowth(cfgshowMobGrowth.get());
-        DEFAULT_CONFIG.showMobPotionEffects(cfgshowMobPotionEffects.get());
-        DEFAULT_CONFIG.showLeverSetting(cfgshowLeverSetting.get());
-        DEFAULT_CONFIG.showTankSetting(cfgshowTankSetting.get());
-        DEFAULT_CONFIG.showBrewStandSetting(cfgshowBrewStandSetting.get());
-        DEFAULT_CONFIG.showMobSpawnerSetting(cfgshowMobSpawnerSetting.get());
-        DEFAULT_CONFIG.showAnimalOwnerSetting(cfgshowAnimalOwnerSetting.get());
-        DEFAULT_CONFIG.showHorseStatSetting(cfgshowHorseStatSetting.get());
-        DEFAULT_CONFIG.showSilverfish(cfgshowSilverfish.get());
+        DEFAULT_CONFIG.showModName(getOrDefault(COMMON_CONFIG, cfgshowModName));
+        DEFAULT_CONFIG.showHarvestLevel(getOrDefault(COMMON_CONFIG, cfgshowHarvestLevel));
+        DEFAULT_CONFIG.showCanBeHarvested(getOrDefault(COMMON_CONFIG, cfgshowCanBeHarvested));
+        DEFAULT_CONFIG.showCropPercentage(getOrDefault(COMMON_CONFIG, cfgshowCropPercentage));
+        DEFAULT_CONFIG.showChestContents(getOrDefault(COMMON_CONFIG, cfgshowChestContents));
+        DEFAULT_CONFIG.showChestContentsDetailed(getOrDefault(COMMON_CONFIG, cfgshowChestContentsDetailed));
+        DEFAULT_CONFIG.showRedstone(getOrDefault(COMMON_CONFIG, cfgshowRedstone));
+        DEFAULT_CONFIG.showMobHealth(getOrDefault(COMMON_CONFIG, cfgshowMobHealth));
+        DEFAULT_CONFIG.showMobGrowth(getOrDefault(COMMON_CONFIG, cfgshowMobGrowth));
+        DEFAULT_CONFIG.showMobPotionEffects(getOrDefault(COMMON_CONFIG, cfgshowMobPotionEffects));
+        DEFAULT_CONFIG.showLeverSetting(getOrDefault(COMMON_CONFIG, cfgshowLeverSetting));
+        DEFAULT_CONFIG.showTankSetting(getOrDefault(COMMON_CONFIG, cfgshowTankSetting));
+        DEFAULT_CONFIG.showBrewStandSetting(getOrDefault(COMMON_CONFIG, cfgshowBrewStandSetting));
+        DEFAULT_CONFIG.showMobSpawnerSetting(getOrDefault(COMMON_CONFIG, cfgshowMobSpawnerSetting));
+        DEFAULT_CONFIG.showAnimalOwnerSetting(getOrDefault(COMMON_CONFIG, cfgshowAnimalOwnerSetting));
+        DEFAULT_CONFIG.showHorseStatSetting(getOrDefault(COMMON_CONFIG, cfgshowHorseStatSetting));
+        DEFAULT_CONFIG.showSilverfish(getOrDefault(COMMON_CONFIG, cfgshowSilverfish));
 
         inventoriesToShow = null;
         inventoriesToNotShow = null;
