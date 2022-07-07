@@ -584,34 +584,38 @@ public class Config {
         tankbarAlternateFilledColor = parseColor(getOrDefault(COMMON_CONFIG, cfgTankbarAlternateFilledColor));
         tankbarBorderColor = parseColor(getOrDefault(COMMON_CONFIG, cfgTankbarBorderColor));
 
-        boxBorderColor = parseColor(getOrDefault(COMMON_CONFIG, cfgboxBorderColor));
-        boxFillColor = parseColor(getOrDefault(COMMON_CONFIG, cfgboxFillColor));
-        chestContentsBorderColor = parseColor(getOrDefault(COMMON_CONFIG, cfgchestContentsBorderColor));
+        boxBorderColor = parseColor(getOrDefault(CLIENT_CONFIG, cfgboxBorderColor));
+        boxFillColor = parseColor(getOrDefault(CLIENT_CONFIG, cfgboxFillColor));
+        chestContentsBorderColor = parseColor(getOrDefault(CLIENT_CONFIG, cfgchestContentsBorderColor));
 
-        DEFAULT_CONFIG.showModName(getOrDefault(COMMON_CONFIG, cfgshowModName));
-        DEFAULT_CONFIG.showHarvestLevel(getOrDefault(COMMON_CONFIG, cfgshowHarvestLevel));
-        DEFAULT_CONFIG.showCanBeHarvested(getOrDefault(COMMON_CONFIG, cfgshowCanBeHarvested));
-        DEFAULT_CONFIG.showCropPercentage(getOrDefault(COMMON_CONFIG, cfgshowCropPercentage));
-        DEFAULT_CONFIG.showChestContents(getOrDefault(COMMON_CONFIG, cfgshowChestContents));
-        DEFAULT_CONFIG.showChestContentsDetailed(getOrDefault(COMMON_CONFIG, cfgshowChestContentsDetailed));
-        DEFAULT_CONFIG.showRedstone(getOrDefault(COMMON_CONFIG, cfgshowRedstone));
-        DEFAULT_CONFIG.showMobHealth(getOrDefault(COMMON_CONFIG, cfgshowMobHealth));
-        DEFAULT_CONFIG.showMobGrowth(getOrDefault(COMMON_CONFIG, cfgshowMobGrowth));
-        DEFAULT_CONFIG.showMobPotionEffects(getOrDefault(COMMON_CONFIG, cfgshowMobPotionEffects));
-        DEFAULT_CONFIG.showLeverSetting(getOrDefault(COMMON_CONFIG, cfgshowLeverSetting));
-        DEFAULT_CONFIG.showTankSetting(getOrDefault(COMMON_CONFIG, cfgshowTankSetting));
-        DEFAULT_CONFIG.showBrewStandSetting(getOrDefault(COMMON_CONFIG, cfgshowBrewStandSetting));
-        DEFAULT_CONFIG.showMobSpawnerSetting(getOrDefault(COMMON_CONFIG, cfgshowMobSpawnerSetting));
-        DEFAULT_CONFIG.showAnimalOwnerSetting(getOrDefault(COMMON_CONFIG, cfgshowAnimalOwnerSetting));
-        DEFAULT_CONFIG.showHorseStatSetting(getOrDefault(COMMON_CONFIG, cfgshowHorseStatSetting));
-        DEFAULT_CONFIG.showSilverfish(getOrDefault(COMMON_CONFIG, cfgshowSilverfish));
+        DEFAULT_CONFIG.showModName(getOrDefault(CLIENT_CONFIG, cfgshowModName));
+        DEFAULT_CONFIG.showHarvestLevel(getOrDefault(CLIENT_CONFIG, cfgshowHarvestLevel));
+        DEFAULT_CONFIG.showCanBeHarvested(getOrDefault(CLIENT_CONFIG, cfgshowCanBeHarvested));
+        DEFAULT_CONFIG.showCropPercentage(getOrDefault(CLIENT_CONFIG, cfgshowCropPercentage));
+        DEFAULT_CONFIG.showChestContents(getOrDefault(CLIENT_CONFIG, cfgshowChestContents));
+        DEFAULT_CONFIG.showChestContentsDetailed(getOrDefault(CLIENT_CONFIG, cfgshowChestContentsDetailed));
+        DEFAULT_CONFIG.showRedstone(getOrDefault(CLIENT_CONFIG, cfgshowRedstone));
+        DEFAULT_CONFIG.showMobHealth(getOrDefault(CLIENT_CONFIG, cfgshowMobHealth));
+        DEFAULT_CONFIG.showMobGrowth(getOrDefault(CLIENT_CONFIG, cfgshowMobGrowth));
+        DEFAULT_CONFIG.showMobPotionEffects(getOrDefault(CLIENT_CONFIG, cfgshowMobPotionEffects));
+        DEFAULT_CONFIG.showLeverSetting(getOrDefault(CLIENT_CONFIG, cfgshowLeverSetting));
+        DEFAULT_CONFIG.showTankSetting(getOrDefault(CLIENT_CONFIG, cfgshowTankSetting));
+        DEFAULT_CONFIG.showBrewStandSetting(getOrDefault(CLIENT_CONFIG, cfgshowBrewStandSetting));
+        DEFAULT_CONFIG.showMobSpawnerSetting(getOrDefault(CLIENT_CONFIG, cfgshowMobSpawnerSetting));
+        DEFAULT_CONFIG.showAnimalOwnerSetting(getOrDefault(CLIENT_CONFIG, cfgshowAnimalOwnerSetting));
+        DEFAULT_CONFIG.showHorseStatSetting(getOrDefault(CLIENT_CONFIG, cfgshowHorseStatSetting));
+        DEFAULT_CONFIG.showSilverfish(getOrDefault(CLIENT_CONFIG, cfgshowSilverfish));
 
         inventoriesToShow = null;
         inventoriesToNotShow = null;
         dontSendNBTSet = null;
 
         for (Map.Entry<TextStyleClass, ConfigValue<String>> entry : cfgtextStyleClasses.entrySet()) {
-            textStyleClasses.put(entry.getKey(), entry.getValue().get());
+            if (CLIENT_CONFIG.isLoaded()) {
+                textStyleClasses.put(entry.getKey(), entry.getValue().get());
+            } else {
+                textStyleClasses.put(entry.getKey(), entry.getValue().getDefault());
+            }
         }
 
     }
