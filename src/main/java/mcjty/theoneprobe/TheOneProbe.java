@@ -75,6 +75,7 @@ public class TheOneProbe {
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             bus.addListener(ClientSetup::onClientSetup);
+            bus.addListener(ClientSetup::onRegisterKeyMappings);
         });
     }
 

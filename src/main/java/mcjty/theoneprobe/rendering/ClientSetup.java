@@ -13,8 +13,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.ScreenOpenEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,7 +36,7 @@ public class ClientSetup {
     public static boolean ignoreNextGuiClose = false;
 
     @SubscribeEvent
-    public void onGuiOpen(ScreenOpenEvent event) {
+    public void onGuiOpen(ScreenEvent.Opening event) {
         if (ignoreNextGuiClose) {
             Screen current = Minecraft.getInstance().screen;
             if (event.getScreen() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
@@ -45,11 +47,20 @@ public class ClientSetup {
         }
     }
 
+    public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+        KeyBindings.init();
+        event.register(KeyBindings.toggleVisible);
+        event.register(KeyBindings.toggleLiquids);
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
-    public void renderGameOverlayEvent(RenderGameOverlayEvent.Pre event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.TEXT) {
+    public void renderGameOverlayEvent(RenderGuiOverlayEvent.Pre event) {
+        if (!event.getOverlay().id().equals(VanillaGuiOverlay.TITLE_TEXT.id())) {
             return;
         }
+//        if (event.getType() != RenderGuiOverlayEvent.ElementType.TEXT) {
+//            return;
+//        }
 
         if (Config.holdKeyToMakeVisible.get()) {
             if (!KeyBindings.toggleVisible.isDown()) {

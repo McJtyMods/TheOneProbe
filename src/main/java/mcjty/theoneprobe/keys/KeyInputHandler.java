@@ -7,7 +7,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class KeyInputHandler {
 
     @SubscribeEvent
-    public void onKeyInput(InputEvent.KeyInputEvent event) {
+    public void onKeyInput(InputEvent.Key event) {
         if (KeyBindings.toggleLiquids.consumeClick()) {
             Config.setLiquids(!Config.showLiquids.get());
         } else if (KeyBindings.toggleVisible.consumeClick()) {

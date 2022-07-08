@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Objects;
@@ -126,11 +126,12 @@ public class ElementProgressRender {
             if (lvl <= 0) {
                 continue;
             }
-            TextureAtlasSprite liquidIcon = map.apply(RenderProperties.get(stack.getFluid()).getStillTexture(stack));
+            ResourceLocation stillTexture = IClientFluidTypeExtensions.of(stack.getFluid()).getStillTexture(stack);
+            TextureAtlasSprite liquidIcon = map.apply(stillTexture);
             if (Objects.equals(liquidIcon, map.apply(MissingTextureAtlasSprite.getLocation()))) {
                 continue;
             }
-            int color = RenderProperties.get(stack.getFluid()).getColorTint(stack);
+            int color = IClientFluidTypeExtensions.of(stack.getFluid()).getTintColor(stack);
             RenderSystem.setShaderColor(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
             while (lvl > 0) {
                 int maxX = Math.min(16, lvl);

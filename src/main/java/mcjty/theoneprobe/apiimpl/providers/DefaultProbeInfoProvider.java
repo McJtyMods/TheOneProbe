@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -240,7 +240,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void addFluidInfo(IProbeInfo probeInfo, ProbeConfig config, FluidStack fluidStack, int maxContents) {
         int contents = fluidStack.getAmount();
     	if(config.getTankMode() == 1) {
-            Color color = new Color(RenderProperties.get(fluidStack.getFluid()).getColorTint(fluidStack));
+
+            int tintColor = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack);
+            Color color = new Color(tintColor);
         	if (Objects.equals(fluidStack.getFluid(), Fluids.LAVA)) {
     			color = new Color(255, 139, 27);
         	}
@@ -342,8 +344,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 IProbeInfo horizontal = probeInfo.horizontal();
                 FluidStack fluidStack = new FluidStack(fluid, BUCKET_VOLUME);
 
-                Color color = new Color(RenderProperties.get(fluid).getColorTint(fluidStack));
-                horizontal.icon(RenderProperties.get(fluid).getStillTexture(), -1, -1, 16, 16,
+                int tintColor = IClientFluidTypeExtensions.of(fluid).getTintColor(fluidStack);
+                ResourceLocation stillTexture = IClientFluidTypeExtensions.of(fluid).getStillTexture();
+                Color color = new Color(tintColor);
+                horizontal.icon(stillTexture, -1, -1, 16, 16,
                         probeInfo.defaultIconStyle().width(20).color(color));
                 //Proposal Fluids should look at the icon only not buckets of it. Dunno you have to decide. I just fixed the fluid color bug
                 ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
