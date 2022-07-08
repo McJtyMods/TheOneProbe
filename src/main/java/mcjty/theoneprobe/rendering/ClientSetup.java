@@ -28,9 +28,7 @@ public class ClientSetup {
 
     public static void onClientSetup(FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(new ClientSetup());
-
         MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
-        KeyBindings.init();
     }
 
     public static boolean ignoreNextGuiClose = false;
