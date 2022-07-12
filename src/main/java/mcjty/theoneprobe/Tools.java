@@ -16,7 +16,7 @@ public class Tools {
 
 
     public static String getModName(EntityType<?> entry) {
-        ResourceLocation registryName = ForgeRegistries.ENTITIES.getKey(entry);
+        ResourceLocation registryName = ForgeRegistries.ENTITY_TYPES.getKey(entry);
         String modId = registryName == null ? "minecraft" : registryName.getNamespace();
         return ModList.get().getModContainerById(modId)
                 .map(mod -> mod.getModInfo().getDisplayName())

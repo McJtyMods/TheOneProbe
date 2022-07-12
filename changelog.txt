@@ -1,3 +1,6 @@
+Upcoming:
+- Updated to the latest (breaking-94) forge
+
 1.19-6.1.0:
 - Config fixes on dedicated servers in dev
 - Updated to the latest (breaking-64) forge

@@ -45,7 +45,7 @@ public class ForgeEventHandlers {
         if (event.isWasDeath()) {
             // We need to copyFrom the capabilities
             event.getOriginal().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(oldStore -> {
-                event.getPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(newStore -> {
+                event.getEntity().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
             });
@@ -55,9 +55,9 @@ public class ForgeEventHandlers {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (Config.spawnNote.get()) {
-            event.getPlayer().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(note -> {
+            event.getEntity().getCapability(PlayerProperties.PLAYER_GOT_NOTE).ifPresent(note -> {
                 if (!note.isPlayerGotNote()) {
-                    if (event.getPlayer().getInventory().add(new ItemStack(ModItems.PROBE_NOTE))) {
+                    if (event.getEntity().getInventory().add(new ItemStack(ModItems.PROBE_NOTE))) {
                         note.setPlayerGotNote(true);
                     }
                 }

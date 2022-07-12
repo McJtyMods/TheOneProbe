@@ -38,9 +38,9 @@ public class ElementEntity implements IElement {
 //            entityNBT = entity.serializeNBT();
             playerID = null;
         }
-        ResourceLocation registryName = ForgeRegistries.ENTITIES.getKey(entity.getType());
+        ResourceLocation registryName = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
         if (registryName == null) {
-            registryName = ForgeRegistries.ENTITIES.getKey(entity.getType());
+            registryName = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
         }
         this.entityName = registryName == null ? "<null>" : registryName.toString();
 //        this.entityName = EntityList.getEntityString(entity);

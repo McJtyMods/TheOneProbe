@@ -35,7 +35,7 @@ public class ElementEntityRender {
             if (!Config.isBlacklistForRendering(id)) {
                 Entity entity = null;
                 if (entityNBT != null) {
-                    EntityType<?> value = ForgeRegistries.ENTITIES.getValue(id);
+                    EntityType<?> value = ForgeRegistries.ENTITY_TYPES.getValue(id);
                     if (value != null) {
                         try {
                             Level world = Minecraft.getInstance().level;
@@ -56,7 +56,7 @@ public class ElementEntityRender {
                         }
                     }
                 } else {
-                    EntityType<?> value = ForgeRegistries.ENTITIES.getValue(id);
+                    EntityType<?> value = ForgeRegistries.ENTITY_TYPES.getValue(id);
                     if (value != null) {
                         try {
                             entity = value.create(Minecraft.getInstance().level);
