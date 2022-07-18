@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[38,)"
+loaderVersion="[41,)"
 license="MIT License https://github.com/McJtyMods/TheOneProbe/blob/1.16/LICENCE"
 issueTrackerURL="http://github.com/McJtyMods/TheOneProbe/issues"
 displayURL="http://github.com/McJtyMods/TheOneProbe/"
@@ -20,6 +20,6 @@ probe required if you so desire.
 [[dependencies.theoneprobe]]
     modId="forge"
     mandatory=true
-    versionRange="[38,)"
+    versionRange="[41.0.99,)"
     ordering="NONE"
     side="BOTH"
