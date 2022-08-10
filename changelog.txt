@@ -1,3 +1,6 @@
+Upcoming:
+- New 'blacklistEntities' config (common type). This is a list of entities that will be blacklisted from showing the TOP tooltip. You can specify an entire mod here as well and you can also specify '*' for all entities. Server side this will prevent sending over the needed information for the entity. Client side this will prevent showing the tooltip in the first place
+
 1.19-6.2.0:
 - Updated to the latest (breaking-94) forge
 
