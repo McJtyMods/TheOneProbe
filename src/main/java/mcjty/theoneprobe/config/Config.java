@@ -16,6 +16,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
 
@@ -55,9 +56,11 @@ public class Config {
     private static ConfigValue<List<? extends String>> dontSendNBT;
     private static ConfigValue<List<? extends String>> tooltypeTags;
     private static ConfigValue<List<? extends String>> harvestabilityTags;
+    private static ConfigValue<List<? extends String>> blacklistEntities;
     private static Set<ResourceLocation> inventoriesToShow = null;
     private static Set<ResourceLocation> inventoriesToNotShow = null;
     private static Set<ResourceLocation> dontSendNBTSet = null;
+    private static Set<Predicate<ResourceLocation>> blacklistEntitiesSet = null;
     private static Map<ResourceLocation, String> tooltypeTagsSet = null;
     private static Map<ResourceLocation, String> harvestabilityTagsSet = null;
 
@@ -263,6 +266,10 @@ public class Config {
         dontSendNBT = COMMON_BUILDER
                 .comment("A list of blocks for which we don't send NBT over the network. This is mostly useful for blocks that have HUGE NBT in their pickblock (itemstack)")
                 .defineList("dontSendNBT", new ArrayList<>(),
+                        s -> s instanceof String);
+        blacklistEntities = COMMON_BUILDER
+                .comment("A list of either <modid>:<entityid> to disable the tooltip for specific entities. Can also be a single <modid> to disable an entire mod. Or it can also be '*' to disable everything")
+                .defineList("blacklistEntities", new ArrayList<>(),
                         s -> s instanceof String);
         tooltypeTags = COMMON_BUILDER
                 .comment("A list of <tag>=<name> containing all tooltype tags with their associated name to display")
@@ -532,6 +539,23 @@ public class Config {
             }
         }
         return inventoriesToNotShow;
+    }
+
+    public static Set<Predicate<ResourceLocation>> getEntityBlacklist() {
+        if (blacklistEntitiesSet == null) {
+            blacklistEntitiesSet = new HashSet<>();
+            for (String s : blacklistEntities.get()) {
+                if ("*".equals(s)) {
+                    blacklistEntitiesSet.add(rl -> true);
+                } else if (s.contains(":")) {
+                    ResourceLocation wanted = new ResourceLocation(s);
+                    blacklistEntitiesSet.add(rl -> rl.equals(wanted));
+                } else {
+                    blacklistEntitiesSet.add(rl -> rl.getNamespace().equals(s));
+                }
+            }
+        }
+        return blacklistEntitiesSet;
     }
 
     public static Set<ResourceLocation> getDontSendNBTSet() {
