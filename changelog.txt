@@ -1,4 +1,4 @@
-Upcoming:
+1.19-6.2.2:
 - Test if the player profile is complete to avoid a crash with some playerheads
 
 1.19-6.2.1:
