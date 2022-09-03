@@ -160,7 +160,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             BlockEntity te = world.getBlockEntity(data.getPos());
             if (te instanceof SkullBlockEntity skullBlockEntity) {
                 GameProfile profile = skullBlockEntity.getOwnerProfile();
-                if (profile != null) {
+                if (profile != null && profile.isComplete()) {
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                             .alignment(ElementAlignment.ALIGN_CENTER))
                             .text(CompoundText.create().style(LABEL).text("Player: ")
