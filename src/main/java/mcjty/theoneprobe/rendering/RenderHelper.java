@@ -3,8 +3,7 @@ package mcjty.theoneprobe.rendering;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.ChatFormatting;
@@ -22,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4f;
 
 import javax.annotation.Nullable;
 
@@ -34,12 +34,12 @@ public class RenderHelper {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         matrixStack.translate(xPos + 8, yPos + 24, 50F);
         matrixStack.scale(-scale, scale, scale);
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(135));
+        matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(135));
         Lighting.setupForEntityInInventory();
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-135));
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(rot));
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(0));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-135));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(rot));
+        matrixStack.mulPose(Axis.XP.rotationDegrees(0));
 
         if (!(entity instanceof Player)) {
             entity.setXRot(0.0F);

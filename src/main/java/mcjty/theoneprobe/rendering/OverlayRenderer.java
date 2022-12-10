@@ -2,7 +2,6 @@ package mcjty.theoneprobe.rendering;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -38,6 +37,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -132,7 +132,8 @@ public class OverlayRenderer {
 
     private static void setupOverlayRendering(float sw, float sh) {
         RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0, sw, 0, sh, 1000.0f, ForgeHooksClient.getGuiFarPlane()));
+        Matrix4f ortho = (new Matrix4f()).setOrtho(0.0F, (float)sw, (float)sh, 0.0F, 1000.0F, ForgeHooksClient.getGuiFarPlane());
+        RenderSystem.setProjectionMatrix(ortho);
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.setIdentity();
         posestack.translate(0.0F, 0.0F, 1000.0F - ForgeHooksClient.getGuiFarPlane());

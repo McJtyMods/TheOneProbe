@@ -6,16 +6,16 @@ import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.items.AddProbeTagRecipe;
-import mcjty.theoneprobe.items.AddProbeTagRecipeSerializer;
-import mcjty.theoneprobe.items.ModItems;
+import mcjty.theoneprobe.items.*;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.rendering.ClientSetup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -52,12 +52,7 @@ public class TheOneProbe {
     public static boolean tesla = false;
     public static boolean redstoneflux = false;
 
-    public static CreativeModeTab tabProbe = new CreativeModeTab("Probe") {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(ModItems.PROBE);
-        }
-    };
+    public static CreativeModeTab tabProbe;
 
 
     public TheOneProbe() {
@@ -68,6 +63,7 @@ public class TheOneProbe {
         bus.addListener(this::init);
         bus.addListener(Config::onLoad);
         bus.addListener(Config::onReload);
+        bus.addListener(this::registerTabs);
 
         bus.addListener(this::processIMC);
 
@@ -78,6 +74,36 @@ public class TheOneProbe {
             bus.addListener(ClientSetup::onRegisterKeyMappings);
         });
     }
+
+    private void registerTabs(CreativeModeTabEvent.Register event) {
+        tabProbe = event.registerCreativeModeTab(new ResourceLocation(TheOneProbe.MODID, "probe"), builder -> builder
+                .icon(() -> new ItemStack(ModItems.PROBE))
+                .displayItems((featureFlags, output, hasOp) -> {
+                    if (ModItems.CREATIVE_PROBE != null) {
+                        output.accept(ModItems.CREATIVE_PROBE);
+                    }
+                    if (ModItems.PROBE != null) {
+                        output.accept(ModItems.PROBE);
+                    }
+                    if (ModItems.DIAMOND_HELMET_PROBE != null) {
+                        output.accept(ModItems.DIAMOND_HELMET_PROBE);
+                    }
+                    if (ModItems.GOLD_HELMET_PROBE != null) {
+                        output.accept(ModItems.GOLD_HELMET_PROBE);
+                    }
+                    if (ModItems.IRON_HELMET_PROBE != null) {
+                        output.accept(ModItems.IRON_HELMET_PROBE);
+                    }
+                    if (ModItems.PROBE_GOGGLES != null) {
+                        output.accept(ModItems.PROBE_GOGGLES);
+                    }
+                    if (ModItems.PROBE_NOTE != null) {
+                        output.accept(ModItems.PROBE_NOTE);
+                    }
+                })
+        );
+    }
+
 
     private void init(final FMLCommonSetupEvent event) {
 
@@ -151,7 +177,7 @@ public class TheOneProbe {
     }
 
 
-    private static void registerCapabilities(){
+    private static void registerCapabilities() {
 //        CapabilityManager.INSTANCE.register(PlayerGotNote.class);
     }
 
@@ -163,7 +189,7 @@ public class TheOneProbe {
             defaultValues[i++] = provider.getID();
         }
 
-        String[] excludedProviders = new String[] {}; // @todo TheOneProbe.config.getStringList("excludedProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Providers that should be excluded");
+        String[] excludedProviders = new String[]{}; // @todo TheOneProbe.config.getStringList("excludedProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Providers that should be excluded");
         Set<String> excluded = new HashSet<>();
         Collections.addAll(excluded, excludedProviders);
 
@@ -178,7 +204,7 @@ public class TheOneProbe {
             defaultValues[i++] = provider.getID();
         }
 
-        String[] excludedProviders = new String[] {}; // @todo TheOneProbe.config.getStringList("excludedEntityProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Entity providers that should be excluded");
+        String[] excludedProviders = new String[]{}; // @todo TheOneProbe.config.getStringList("excludedEntityProviders", Config.CATEGORY_PROVIDERS, new String[] {}, "Entity providers that should be excluded");
         Set<String> excluded = new HashSet<>();
         Collections.addAll(excluded, excludedProviders);
 

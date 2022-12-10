@@ -8,6 +8,7 @@ import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -42,7 +43,7 @@ public class PacketGetInfo  {
     @Nonnull private ItemStack pickBlock;
 
     public PacketGetInfo(FriendlyByteBuf buf) {
-        dim = ResourceKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
+        dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
         pos = buf.readBlockPos();
         mode = ProbeMode.values()[buf.readByte()];
         byte sideByte = buf.readByte();

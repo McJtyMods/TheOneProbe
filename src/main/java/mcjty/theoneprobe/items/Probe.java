@@ -14,8 +14,7 @@ public class Probe extends Item {
 
     public Probe() {
         super(new Properties()
-                .stacksTo(1)
-                .tab(TheOneProbe.tabProbe));
+                .stacksTo(1));
     }
 
     @Override

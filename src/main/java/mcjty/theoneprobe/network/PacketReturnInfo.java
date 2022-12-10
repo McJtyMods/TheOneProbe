@@ -2,10 +2,10 @@ package mcjty.theoneprobe.network;
 
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
-import net.minecraft.core.Registry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -18,7 +18,7 @@ public class PacketReturnInfo {
     private ProbeInfo probeInfo;
 
     public PacketReturnInfo(FriendlyByteBuf buf) {
-        dim = ResourceKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
+        dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
         pos = buf.readBlockPos();
         if (buf.readBoolean()) {
             probeInfo = new ProbeInfo();

@@ -23,7 +23,6 @@ public class ForgeEventHandlers {
         ModCommands.register(event.getDispatcher());
     }
 
-
     // @todo 1.15
 //    @SubscribeEvent
 //    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import javax.annotation.Nonnull;
 
-import com.mojang.math.Matrix4f;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.CompoundText;
@@ -22,6 +21,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.Collections;

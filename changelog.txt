@@ -1,3 +1,6 @@
+1.19.3-7.0.0:
+- Ported to 1.19.3
+
 1.19-6.2.2:
 - Test if the player profile is complete to avoid a crash with some playerheads
 

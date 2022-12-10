@@ -6,7 +6,7 @@ import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +38,7 @@ public class PacketGetEntityInfo {
     private Vec3 hitVec;
 
     public PacketGetEntityInfo(FriendlyByteBuf buf) {
-        dim = ResourceKey.create(Registry.DIMENSION_REGISTRY, buf.readResourceLocation());
+        dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
         uuid = buf.readUUID();
         mode = ProbeMode.values()[buf.readByte()];
         if (buf.readBoolean()) {

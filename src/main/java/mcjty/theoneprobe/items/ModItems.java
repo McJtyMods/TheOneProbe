@@ -4,8 +4,8 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,8 +42,7 @@ public class ModItems {
     }
 
     private static Item makeHelmet(TopArmorMaterial material, int renderIndex, String name) {
-        Item item = new ArmorItem(material, EquipmentSlot.HEAD, new Item.Properties()
-            .tab(TheOneProbe.tabProbe)) {
+        Item item = new ArmorItem(material, EquipmentSlot.HEAD, new Item.Properties()) {
 
 //            @Override
 //            public boolean getHasSubtypes() {
