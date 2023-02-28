@@ -255,11 +255,11 @@ public class Config {
                 .comment("The maximum amount of slots (empty or not) to show without sneaking")
                 .defineInRange("showSmallChestContentsWithoutSneaking", 0, 0, 1000);
         showContentsWithoutSneaking = COMMON_BUILDER
-                .comment("A list of blocks for which we automatically show chest contents even if not sneaking")
+                .comment("A list of blocks and entities for which we automatically show contents even if not sneaking")
                 .defineList("showContentsWithoutSneaking", new ArrayList<>(Arrays.asList("storagedrawers:basicdrawers", "storagedrawersextra:extra_drawers")),
                         s -> s instanceof String);
         dontShowContentsUnlessSneaking = COMMON_BUILDER
-                .comment("A list of blocks for which we don't show chest contents automatically except if sneaking")
+                .comment("A list of blocks and entities for which we don't show contents automatically except if sneaking")
                 .defineList("dontShowContentsUnlessSneaking", new ArrayList<>(),
                         s -> s instanceof String);
 
