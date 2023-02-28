@@ -19,6 +19,7 @@ import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -155,6 +156,10 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                 DyeColor collarColor = wolf.getCollarColor();
                 probeInfo.text(CompoundText.createLabelInfo("Collar: ", collarColor.getSerializedName()));
             }
+        }
+
+        if (entity instanceof ContainerEntity) {
+            ChestInfoTools.showChestInfo(mode, probeInfo, entity, config);
         }
     }
 
