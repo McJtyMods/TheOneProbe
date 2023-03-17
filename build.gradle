@@ -228,3 +228,15 @@ curseforge {
     }
 }
 
+tasks.modrinth.enabled = project.hasProperty('modrinth_token')
+modrinth {
+    if (project.hasProperty('modrinth_token')) {
+        token = project.modrinth_token
+    }
+    projectId = project.projectSlug
+    versionType = project.curse_type
+    versionName = "${modname} - ${version}"
+    uploadFile = jar
+    gameVersions = [project.minecraft_version] + versions
+    changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
+}
