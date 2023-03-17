@@ -78,7 +78,7 @@ public class TheOneProbe {
     private void registerTabs(CreativeModeTabEvent.Register event) {
         tabProbe = event.registerCreativeModeTab(new ResourceLocation(TheOneProbe.MODID, "probe"), builder -> builder
                 .icon(() -> new ItemStack(ModItems.PROBE))
-                .displayItems((featureFlags, output, hasOp) -> {
+                .displayItems((featureFlags, output) -> {
                     if (ModItems.CREATIVE_PROBE != null) {
                         output.accept(ModItems.CREATIVE_PROBE);
                     }

@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.items;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -68,13 +69,13 @@ public abstract class AbstractRecipeAdaptor implements CraftingRecipe, net.minec
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
-        return recipe.assemble(inv);
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
+        return recipe.assemble(inv, access);
     }
 
     @Override
-    public ItemStack getResultItem() {
-        return recipe.getResultItem();
+    public ItemStack getResultItem(RegistryAccess access) {
+        return recipe.getResultItem(access);
     }
 
     @Override

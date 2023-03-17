@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.items;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -16,8 +17,8 @@ public class AddProbeTagRecipe extends AbstractRecipeAdaptor {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
-        ItemStack result = recipe.assemble(inv);
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
+        ItemStack result = recipe.assemble(inv, access);
         CompoundTag tc = new CompoundTag();
         tc.putInt(ModItems.PROBETAG, 1);
         result.setTag(tc);

@@ -78,7 +78,7 @@ public class PacketGetEntityInfo {
                 if (entity != null) {
                     ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(), mode, world, entity, hitVec);
                     PacketHandler.INSTANCE.sendTo(new PacketReturnEntityInfo(uuid, probeInfo),
-                            ctx.get().getSender().connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                            ctx.get().getSender().connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                 }
             }
         });

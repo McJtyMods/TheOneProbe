@@ -182,7 +182,7 @@ public class RenderHelper {
             // @todo 1.15
 //            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             try {
-                itemRender.renderAndDecorateItem(itm, x, y);
+                itemRender.renderAndDecorateItem(matrixStack, itm, x, y);
                 renderItemStackOverlay(matrixStack, mc.font, itm, x, y, txt, txt.length() - 2);
             } catch (Exception e) {
                 ThrowableIdentity.registerThrowable(e);
@@ -207,7 +207,7 @@ public class RenderHelper {
                     s = ChatFormatting.RED + String.valueOf(stack.getCount());
                 }
 
-                matrixStack.translate(0.0D, 0.0D, (Minecraft.getInstance().getItemRenderer().blitOffset + 200.0F));
+                matrixStack.translate(0.0D, 0.0D, 200.0F);
 
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableBlend();
@@ -235,7 +235,6 @@ public class RenderHelper {
                 int i = Math.round(13.0F - (float)health * 13.0F);
                 int j = stack.getItem().getBarColor(stack);
                 RenderSystem.disableDepthTest();
-                RenderSystem.disableTexture();
                 RenderSystem.disableBlend();
                 Tesselator tessellator = Tesselator.getInstance();
                 BufferBuilder vertexbuffer = tessellator.getBuilder();
@@ -244,7 +243,6 @@ public class RenderHelper {
                 draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
                 draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
                 RenderSystem.enableBlend();
-                RenderSystem.enableTexture();
                 RenderSystem.enableDepthTest();
             }
 
@@ -253,11 +251,9 @@ public class RenderHelper {
 
             if (f > 0.0F) {
                 RenderSystem.disableDepthTest();
-                RenderSystem.disableTexture();
                 Tesselator tessellator1 = Tesselator.getInstance();
                 BufferBuilder vertexbuffer1 = tessellator1.getBuilder();
                 draw(vertexbuffer1, matrixStack.last().pose(), xPosition, yPosition + (int) Math.floor(16.0F * (1.0F - f)), 16, (int) Math.ceil(16.0F * f), 255, 255, 255, 127);
-                RenderSystem.enableTexture();
                 RenderSystem.enableDepthTest();
             }
         }

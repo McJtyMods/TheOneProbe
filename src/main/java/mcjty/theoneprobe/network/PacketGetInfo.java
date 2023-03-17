@@ -100,7 +100,7 @@ public class PacketGetInfo  {
             if (world != null) {
                 ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(),
                         mode, world, pos, sideHit, hitVec, pickBlock);
-                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(dim, pos, probeInfo), ctx.get().getSender().connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(dim, pos, probeInfo), ctx.get().getSender().connection.connection, NetworkDirection.PLAY_TO_CLIENT);
             }
         });
         ctx.get().setPacketHandled(true);

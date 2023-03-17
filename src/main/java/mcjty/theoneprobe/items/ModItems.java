@@ -42,7 +42,7 @@ public class ModItems {
     }
 
     private static Item makeHelmet(TopArmorMaterial material, int renderIndex, String name) {
-        Item item = new ArmorItem(material, EquipmentSlot.HEAD, new Item.Properties()) {
+        Item item = new ArmorItem(material, ArmorItem.Type.HELMET, new Item.Properties()) {
 
 //            @Override
 //            public boolean getHasSubtypes() {
