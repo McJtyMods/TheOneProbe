@@ -238,6 +238,6 @@ modrinth {
     versionType = project.curse_type
     versionName = "${modname} - ${version}"
     uploadFile = jar
-    gameVersions = [project.minecraft_version] + versions
+    gameVersions = [project.minecraft_version]
     changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
 }
