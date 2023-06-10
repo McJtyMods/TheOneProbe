@@ -1,13 +1,12 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.ITextStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.apiimpl.styles.TextStyle;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -60,12 +59,12 @@ public class ElementText implements IElement {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int x, int y) {
+    public void render(GuiGraphics graphics, int x, int y) {
         int width = getTextWidth();
         switch (style.getAlignment()) {
-            case ALIGN_BOTTOMRIGHT -> ElementTextRender.render(text, matrixStack, (x + getInternalWidth() - width) + style.getLeftPadding(), y + style.getTopPadding(), legacy);
-            case ALIGN_CENTER -> ElementTextRender.render(text, matrixStack, ((x + (getInternalWidth() / 2)) - (width / 2)) + style.getLeftPadding(), y + style.getTopPadding(), legacy);
-            case ALIGN_TOPLEFT -> ElementTextRender.render(text, matrixStack, x + style.getLeftPadding(), y + style.getTopPadding(), legacy);
+            case ALIGN_BOTTOMRIGHT -> ElementTextRender.render(text, graphics, (x + getInternalWidth() - width) + style.getLeftPadding(), y + style.getTopPadding(), legacy);
+            case ALIGN_CENTER -> ElementTextRender.render(text, graphics, ((x + (getInternalWidth() / 2)) - (width / 2)) + style.getLeftPadding(), y + style.getTopPadding(), legacy);
+            case ALIGN_TOPLEFT -> ElementTextRender.render(text, graphics, x + style.getLeftPadding(), y + style.getTopPadding(), legacy);
         }
     }
 

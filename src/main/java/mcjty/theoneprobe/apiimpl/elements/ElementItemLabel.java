@@ -1,10 +1,10 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.network.NetworkTools;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -26,9 +26,9 @@ public class ElementItemLabel implements IElement {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int x, int y) {
+    public void render(GuiGraphics graphics, int x, int y) {
         if (!itemStack.isEmpty()) {
-            ElementTextRender.render(itemStack.getHoverName(), matrixStack, x, y);
+            ElementTextRender.render(itemStack.getHoverName(), graphics, x, y);
         }
     }
 

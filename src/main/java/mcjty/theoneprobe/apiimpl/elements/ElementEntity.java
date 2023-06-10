@@ -1,12 +1,12 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementEntityRender;
 import mcjty.theoneprobe.apiimpl.styles.EntityStyle;
 import mcjty.theoneprobe.network.NetworkTools;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -62,11 +62,11 @@ public class ElementEntity implements IElement {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int x, int y) {
+    public void render(GuiGraphics graphics, int x, int y) {
         if (playerID != null) {
-            ElementEntityRender.renderPlayer(entityName, playerID, style, matrixStack, x, y);
+            ElementEntityRender.renderPlayer(entityName, playerID, style, graphics, x, y);
         } else {
-            ElementEntityRender.render(entityName, entityNBT, style, matrixStack, x, y);
+            ElementEntityRender.render(entityName, entityNBT, style, graphics, x, y);
         }
     }
 

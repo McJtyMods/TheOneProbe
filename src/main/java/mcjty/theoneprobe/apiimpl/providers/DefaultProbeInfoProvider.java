@@ -32,10 +32,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -224,8 +223,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showTankInfo(IProbeInfo probeInfo, Level world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
         BlockEntity te = world.getBlockEntity(pos);
-        if (te != null && te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).isPresent()) {
-            te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
+        if (te != null && te.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent()) {
+            te.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(handler -> {
                 for (int i = 0; i < handler.getTanks(); i++) {
                     FluidStack fluidStack = handler.getFluidInTank(i);
                     int maxContents = handler.getTankCapacity(i);
@@ -285,8 +284,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 //            long energy = bigPower.getStoredPower();
 //            long maxEnergy = bigPower.getCapacity();
 //            addEnergyInfo(probeInfo, config, energy, maxEnergy);
-        } else if (te != null && te.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-            te.getCapability(CapabilityEnergy.ENERGY).ifPresent(handler -> {
+        } else if (te != null && te.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
+            te.getCapability(ForgeCapabilities.ENERGY).ifPresent(handler -> {
                 addEnergyInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
             });
         }

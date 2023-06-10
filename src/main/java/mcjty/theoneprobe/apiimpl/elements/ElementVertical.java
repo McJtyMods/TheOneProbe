@@ -1,11 +1,11 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.ILayoutStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -31,8 +31,8 @@ public class ElementVertical extends AbstractElementPanel {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int x, int y) {
-        super.render(matrixStack, x, y);
+    public void render(GuiGraphics graphics, int x, int y) {
+        super.render(graphics, x, y);
         if (layout.getBorderColor() != null) {
             x += 3;
             y += 3;
@@ -52,7 +52,7 @@ public class ElementVertical extends AbstractElementPanel {
                     cx = x + totWidth - w;
                     break;
             }
-            element.render(matrixStack, cx + layout.getLeftPadding(), y);
+            element.render(graphics, cx + layout.getLeftPadding(), y);
             y += element.getHeight() + layout.getSpacing();
         }
     }

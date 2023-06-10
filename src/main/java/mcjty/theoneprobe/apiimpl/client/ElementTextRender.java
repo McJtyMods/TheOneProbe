@@ -5,6 +5,7 @@ import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
@@ -16,16 +17,16 @@ import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 
 public class ElementTextRender {
 
-	public static void render(Component text, PoseStack matrixStack, int x, int y, boolean legacy) {
+	public static void render(Component text, GuiGraphics graphics, int x, int y, boolean legacy) {
 		if (legacy) {
-            render(text, matrixStack, x, y);
+            render(text, graphics, x, y);
         } else {
-            RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, text);
+            RenderHelper.renderText(Minecraft.getInstance(), graphics, x, y, text);
         }
 	}
 	
-    public static void render(Component text, PoseStack matrixStack, int x, int y) {
-        RenderHelper.renderText(Minecraft.getInstance(), matrixStack, x, y, stylifyString(text));
+    public static void render(Component text, GuiGraphics graphics, int x, int y) {
+        RenderHelper.renderText(Minecraft.getInstance(), graphics, x, y, stylifyString(text));
     }
 
     private static String stylifyString(Component text) {

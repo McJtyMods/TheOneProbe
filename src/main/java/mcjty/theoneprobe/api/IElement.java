@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.api;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -12,7 +12,7 @@ public interface IElement {
     /**
      * Render this element at the location given by the location
      */
-    void render(PoseStack matrixStack, int x, int y);
+    void render(GuiGraphics graphics, int x, int y);
 
     /**
      * Get the width of this element

@@ -15,7 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -75,33 +75,34 @@ public class TheOneProbe {
         });
     }
 
-    private void registerTabs(CreativeModeTabEvent.Register event) {
-        tabProbe = event.registerCreativeModeTab(new ResourceLocation(TheOneProbe.MODID, "probe"), builder -> builder
-                .icon(() -> new ItemStack(ModItems.PROBE))
-                .displayItems((featureFlags, output) -> {
-                    if (ModItems.CREATIVE_PROBE != null) {
-                        output.accept(ModItems.CREATIVE_PROBE);
-                    }
-                    if (ModItems.PROBE != null) {
-                        output.accept(ModItems.PROBE);
-                    }
-                    if (ModItems.DIAMOND_HELMET_PROBE != null) {
-                        output.accept(ModItems.DIAMOND_HELMET_PROBE);
-                    }
-                    if (ModItems.GOLD_HELMET_PROBE != null) {
-                        output.accept(ModItems.GOLD_HELMET_PROBE);
-                    }
-                    if (ModItems.IRON_HELMET_PROBE != null) {
-                        output.accept(ModItems.IRON_HELMET_PROBE);
-                    }
-                    if (ModItems.PROBE_GOGGLES != null) {
-                        output.accept(ModItems.PROBE_GOGGLES);
-                    }
-                    if (ModItems.PROBE_NOTE != null) {
-                        output.accept(ModItems.PROBE_NOTE);
-                    }
-                })
-        );
+    // @todo 1.20
+    private void registerTabs(BuildCreativeModeTabContentsEvent event) {
+//        tabProbe = event.registerCreativeModeTab(new ResourceLocation(TheOneProbe.MODID, "probe"), builder -> builder
+//                .icon(() -> new ItemStack(ModItems.PROBE))
+//                .displayItems((featureFlags, output) -> {
+//                    if (ModItems.CREATIVE_PROBE != null) {
+//                        output.accept(ModItems.CREATIVE_PROBE);
+//                    }
+//                    if (ModItems.PROBE != null) {
+//                        output.accept(ModItems.PROBE);
+//                    }
+//                    if (ModItems.DIAMOND_HELMET_PROBE != null) {
+//                        output.accept(ModItems.DIAMOND_HELMET_PROBE);
+//                    }
+//                    if (ModItems.GOLD_HELMET_PROBE != null) {
+//                        output.accept(ModItems.GOLD_HELMET_PROBE);
+//                    }
+//                    if (ModItems.IRON_HELMET_PROBE != null) {
+//                        output.accept(ModItems.IRON_HELMET_PROBE);
+//                    }
+//                    if (ModItems.PROBE_GOGGLES != null) {
+//                        output.accept(ModItems.PROBE_GOGGLES);
+//                    }
+//                    if (ModItems.PROBE_NOTE != null) {
+//                        output.accept(ModItems.PROBE_NOTE);
+//                    }
+//                })
+//        );
     }
 
 

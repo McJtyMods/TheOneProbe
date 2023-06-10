@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.api;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 
 /**
  * Using this interface (that you can get from ITheOneProbe) you can
@@ -35,5 +35,5 @@ public interface IOverlayRenderer {
      * Note that calling this does not prevent the normal overlay from
      * rendering.
      */
-    void render(IOverlayStyle style, IProbeInfo probeInfo, PoseStack matrixStack);
+    void render(IOverlayStyle style, IProbeInfo probeInfo, GuiGraphics graphics);
 }

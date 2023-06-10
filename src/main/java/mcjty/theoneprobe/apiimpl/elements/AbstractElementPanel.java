@@ -3,8 +3,6 @@ package mcjty.theoneprobe.apiimpl.elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
@@ -25,6 +23,7 @@ import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -38,15 +37,15 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     protected IProbeConfig overriddenConfig;
 
     @Override
-    public void render(PoseStack matrixStack, int x, int y) {
+    public void render(GuiGraphics graphics, int x, int y) {
         Integer borderColor = layout.getBorderColor();
         if (borderColor != null) {
             int w = getWidth();
             int h = getHeight();
-            RenderHelper.drawHorizontalLine(matrixStack, x, y, x + w - 1, borderColor);
-            RenderHelper.drawHorizontalLine(matrixStack, x, y + h - 1, x + w - 1, borderColor);
-            RenderHelper.drawVerticalLine(matrixStack, x, y, y + h - 1, borderColor);
-            RenderHelper.drawVerticalLine(matrixStack, x + w - 1, y, y + h, borderColor);
+            RenderHelper.drawHorizontalLine(graphics, x, y, x + w - 1, borderColor);
+            RenderHelper.drawHorizontalLine(graphics, x, y + h - 1, x + w - 1, borderColor);
+            RenderHelper.drawVerticalLine(graphics, x, y, y + h - 1, borderColor);
+            RenderHelper.drawVerticalLine(graphics, x + w - 1, y, y + h, borderColor);
         }
     }
 

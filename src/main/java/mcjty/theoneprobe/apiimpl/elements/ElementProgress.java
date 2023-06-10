@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IProgressStyle;
@@ -8,6 +7,7 @@ import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementProgressRender;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -84,8 +84,8 @@ public class ElementProgress implements IElement {
 	}
 
     @Override
-    public void render(PoseStack matrixStack, int x, int y) {
-        ElementProgressRender.render(style, current, max, matrixStack, x, y, getWidth(), getHeight());
+    public void render(GuiGraphics graphics, int x, int y) {
+        ElementProgressRender.render(style, current, max, graphics, x, y, getWidth(), getHeight());
     }
 
     @Override

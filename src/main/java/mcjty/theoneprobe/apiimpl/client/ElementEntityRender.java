@@ -7,6 +7,7 @@ import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -20,14 +21,14 @@ import java.util.Map;
 
 public class ElementEntityRender {
 
-    public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, PoseStack matrixStack, int x, int y) {
+    public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, GuiGraphics graphics, int x, int y) {
         Entity entity = Minecraft.getInstance().level.getEntity(playerID);
         if (entity != null) {
-            renderEntity(style, matrixStack, x, y, entity);
+            renderEntity(style, graphics, x, y, entity);
         }
     }
 
-    public static void render(String entityName, CompoundTag entityNBT, IEntityStyle style, PoseStack matrixStack, int x, int y) {
+    public static void render(String entityName, CompoundTag entityNBT, IEntityStyle style, GuiGraphics graphics, int x, int y) {
         if (entityName != null && !entityName.isEmpty()) {
             String fixed = fixEntityId(entityName);
             ResourceLocation id = new ResourceLocation(fixed);
@@ -66,7 +67,7 @@ public class ElementEntityRender {
                     }
                 }
                 if (entity != null) {
-                    renderEntity(style, matrixStack, x, y, entity);
+                    renderEntity(style, graphics, x, y, entity);
                 }
             }
         }
@@ -173,12 +174,12 @@ public class ElementEntityRender {
         return id;
     }
 
-    private static void renderEntity(IEntityStyle style, PoseStack matrixStack, int x, int y, Entity entity) {
+    private static void renderEntity(IEntityStyle style, GuiGraphics graphics, int x, int y, Entity entity) {
         float height = entity.getBbHeight();
         height = (float) ((height - 1) * .7 + 1);
         float s = style.getScale() * ((style.getHeight() * 14.0f / 25) / height);
 
-        RenderHelper.renderEntity(entity, matrixStack, x, y, s);
+        RenderHelper.renderEntity(entity, graphics.pose(), x, y, s);
     }
 
 }

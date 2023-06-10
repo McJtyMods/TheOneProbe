@@ -9,6 +9,7 @@ import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -84,25 +85,25 @@ public class RenderHelper {
         RenderSystem.applyModelViewMatrix();
     }
 
-    public static void drawHorizontalLine(PoseStack matrixStack, int x1, int y1, int x2, int color) {
-        GuiComponent.fill(matrixStack, x1, y1, x2, y1 + 1, color);
+    public static void drawHorizontalLine(GuiGraphics graphics, int x1, int y1, int x2, int color) {
+        graphics.fill(x1, y1, x2, y1 + 1, color);
     }
 
-    public static void drawVerticalLine(PoseStack matrixStack, int x1, int y1, int y2, int color) {
-        GuiComponent.fill(matrixStack, x1, y1, x1 + 1, y2, color);
+    public static void drawVerticalLine(GuiGraphics graphics, int x1, int y1, int y2, int color) {
+        graphics.fill(x1, y1, x1 + 1, y2, color);
     }
 
     /**
      * Draw a thick beveled box. x2 and y2 are not included.
      */
-    public static void drawThickBeveledBox(PoseStack matrixStack, int x1, int y1, int x2, int y2, int thickness, int topleftcolor, int botrightcolor, int fillcolor) {
+    public static void drawThickBeveledBox(GuiGraphics graphics, int x1, int y1, int x2, int y2, int thickness, int topleftcolor, int botrightcolor, int fillcolor) {
         if (fillcolor != -1) {
-            GuiComponent.fill(matrixStack, x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
+            graphics.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillcolor);
         }
-        GuiComponent.fill(matrixStack, x1, y1, x2 - 1, y1 + thickness, topleftcolor);
-        GuiComponent.fill(matrixStack, x1, y1, x1 + thickness, y2 - 1, topleftcolor);
-        GuiComponent.fill(matrixStack, x2 - thickness, y1, x2, y2 - 1, botrightcolor);
-        GuiComponent.fill(matrixStack, x1, y2 - thickness, x2, y2, botrightcolor);
+        graphics.fill(x1, y1, x2 - 1, y1 + thickness, topleftcolor);
+        graphics.fill(x1, y1, x1 + thickness, y2 - 1, topleftcolor);
+        graphics.fill(x2 - thickness, y1, x2, y2 - 1, botrightcolor);
+        graphics.fill(x1, y2 - thickness, x2, y2, botrightcolor);
     }
 
     /**
@@ -166,8 +167,9 @@ public class RenderHelper {
         tessellator.end();
     }
 
-    public static boolean renderItemStack(Minecraft mc, ItemRenderer itemRender, ItemStack itm, PoseStack matrixStack, int x, int y, String txt) {
+    public static boolean renderItemStack(Minecraft mc, ItemRenderer itemRender, ItemStack itm, GuiGraphics graphics, int x, int y, String txt) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
+        PoseStack matrixStack = graphics.pose();
 
         boolean rc = true;
         if (!itm.isEmpty() && itm.getItem() != null) {
@@ -181,8 +183,10 @@ public class RenderHelper {
             // @todo 1.15
 //            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             try {
-                itemRender.renderAndDecorateItem(matrixStack, itm, x, y);
-                renderItemStackOverlay(matrixStack, mc.font, itm, x, y, txt, txt.length() - 2);
+                graphics.renderItem(itm, x, y, x * y * 31);
+                graphics.renderItemDecorations(mc.font, itm, x, y, txt);
+//                itemRender.renderAndDecorateItem(matrixStack, itm, x, y);
+                renderItemStackOverlay(graphics, mc.font, itm, x, y, txt, txt.length() - 2);
             } catch (Exception e) {
                 ThrowableIdentity.registerThrowable(e);
                 rc = false; // Report error
@@ -197,8 +201,9 @@ public class RenderHelper {
     /**
      * Renders the stack size and/or damage bar for the given ItemStack.
      */
-    public static void renderItemStackOverlay(PoseStack matrixStack, Font fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
+    public static void renderItemStackOverlay(GuiGraphics graphics, Font fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text,
 											  int scaled) {
+        PoseStack matrixStack = graphics.pose();
         if (!stack.isEmpty()) {
             if (stack.getCount() != 1 || text != null) {
                 String s = text == null ? String.valueOf(stack.getCount()) : text;
@@ -213,15 +218,15 @@ public class RenderHelper {
                 if (scaled >= 2) {
                     matrixStack.pushPose();
                     matrixStack.scale(.5f, .5f, .5f);
-                    fr.drawShadow(matrixStack, s, ((xPosition + 19 - 2) * 2 - 1 - fr.width(s)), yPosition * 2 + 24, 16777215);
+                    graphics.drawString(fr, s, ((xPosition + 19 - 2) * 2 - fr.width(s)), yPosition * 2 + 24, 16777215);
                     matrixStack.popPose();
                 } else if (scaled == 1) {
                     matrixStack.pushPose();
                     matrixStack.scale(.75f, .75f, .75f);
-                    fr.drawShadow(matrixStack, s, ((xPosition - 2) * 1.34f + 24 - fr.width(s)), yPosition * 1.34f + 14, 16777215);
+                    graphics.drawString(fr, s, (int) ((xPosition - 2) * 1.34f + 24 - fr.width(s)), (int) (yPosition * 1.34f + 14), 16777215);
                     matrixStack.popPose();
                 } else {
-                    fr.drawShadow(matrixStack, s, (xPosition + 19 - 2 - fr.width(s)), (yPosition + 6 + 3), 16777215);
+                    graphics.drawString(fr, s, (xPosition + 19 - 2 - fr.width(s)), (yPosition + 6 + 3), 16777215);
                 }
                 RenderSystem.enableDepthTest();
                 // Fixes opaque cooldown overlay a bit lower
@@ -271,7 +276,8 @@ public class RenderHelper {
     }
 
 
-    public static int renderText(Minecraft mc, PoseStack matrixStack, int x, int y, String txt) {
+    public static int renderText(Minecraft mc, GuiGraphics graphics, int x, int y, String txt) {
+        PoseStack matrixStack = graphics.pose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
 
         matrixStack.pushPose();
@@ -282,7 +288,7 @@ public class RenderHelper {
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
         int width = mc.font.width(txt);
-        mc.font.drawShadow(matrixStack, txt, x, y, 16777215);
+        graphics.drawString(mc.font, txt, x - width, y, 16777215);
         RenderSystem.enableDepthTest();
         // Fixes opaque cooldown overlay a bit lower
         // TODO: check if enabled blending still screws things up down the line.
@@ -294,7 +300,8 @@ public class RenderHelper {
         return width;
     }
 
-    public static int renderText(Minecraft mc, PoseStack stack, int x, int y, Component text) {
+    public static int renderText(Minecraft mc, GuiGraphics graphics, int x, int y, Component text) {
+        PoseStack stack = graphics.pose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
 
         stack.pushPose();
@@ -305,7 +312,7 @@ public class RenderHelper {
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
         int width = mc.font.width(text.getVisualOrderText());//Otherwise it breaks
-        mc.font.drawShadow(stack, text.getVisualOrderText(), x, y, 16777215);
+        graphics.drawString(mc.font, text, x - width, y, 16777215);
         RenderSystem.enableDepthTest();
         // Fixes opaque cooldown overlay a bit lower
         // TODO: check if enabled blending still screws things up down the line.

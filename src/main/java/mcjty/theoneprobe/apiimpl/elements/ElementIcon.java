@@ -1,11 +1,11 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IIconStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementIconRender;
 import mcjty.theoneprobe.apiimpl.styles.IconStyle;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -46,8 +46,8 @@ public class ElementIcon implements IElement {
     }
     
     @Override
-    public void render(PoseStack matrixStack, int x, int y) {
-        ElementIconRender.render(icon, matrixStack, x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight(), style.getColor());
+    public void render(GuiGraphics graphics, int x, int y) {
+        ElementIconRender.render(icon, graphics.pose(), x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight(), style.getColor());
     }
 
     @Override

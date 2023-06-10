@@ -1,10 +1,10 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.Color;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementPaddingRender;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -36,7 +36,7 @@ public class ElementPadding implements IElement {
 	}
 	
 	@Override
-	public void render(PoseStack stack, int x, int y) {
+	public void render(GuiGraphics stack, int x, int y) {
 		if (color != -1) {
 			ElementPaddingRender.renderPadding(stack, x, y, getWidth(), getHeight(), color);
 		}
