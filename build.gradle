@@ -1,26 +1,11 @@
-
-// For those who want the bleeding edge
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net/' }
-        maven { url = 'https://maven.parchmentmc.org' }
-        maven { url 'https://plugins.gradle.org/m2/' }
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.parchmentmc:librarian:1.+'
-        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
-    }
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id "com.modrinth.minotaur" version "2.+"
+    id "com.matthewprenger.cursegradle" version "1.4.0"
 }
-
-plugins { id "com.modrinth.minotaur" version "2.+" }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'eclipse'
-apply plugin: 'com.matthewprenger.cursegradle'
-apply plugin: 'maven-publish'
 
 repositories {
     maven { url 'https://www.dogforce-games.com/maven/' }
@@ -121,7 +106,7 @@ jar {
 //}
 
 task apiJar(type: Jar) {
-    classifier = "api"
+//    classifier = "api"
     from(sourceSets.main.output) {
         include "mcjty/theoneprobe/api/**"
     }
