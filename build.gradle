@@ -32,6 +32,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 minecraft {
     mappings channel: 'official' , version: '1.20'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    copyIdeResources = true
 
     //runDir = "run"
     runs {
@@ -106,7 +107,7 @@ jar {
 //}
 
 task apiJar(type: Jar) {
-//    classifier = "api"
+    archiveClassifier = "api"
     from(sourceSets.main.output) {
         include "mcjty/theoneprobe/api/**"
     }
