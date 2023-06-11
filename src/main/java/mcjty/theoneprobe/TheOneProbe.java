@@ -6,16 +6,17 @@ import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.items.*;
+import mcjty.theoneprobe.items.AddProbeTagRecipe;
+import mcjty.theoneprobe.items.AddProbeTagRecipeSerializer;
+import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.rendering.ClientSetup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -26,8 +27,10 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +55,33 @@ public class TheOneProbe {
     public static boolean tesla = false;
     public static boolean redstoneflux = false;
 
-    public static CreativeModeTab tabProbe;
+    public static DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static RegistryObject<CreativeModeTab> TAB_PROBE = TABS.register("probe", () -> CreativeModeTab.builder()
+            .icon(() -> new ItemStack(ModItems.PROBE))
+            .displayItems((featureFlags, output) -> {
+                if (ModItems.CREATIVE_PROBE != null) {
+                    output.accept(ModItems.CREATIVE_PROBE);
+                }
+                if (ModItems.PROBE != null) {
+                    output.accept(ModItems.PROBE);
+                }
+                if (ModItems.DIAMOND_HELMET_PROBE != null) {
+                    output.accept(ModItems.DIAMOND_HELMET_PROBE);
+                }
+                if (ModItems.GOLD_HELMET_PROBE != null) {
+                    output.accept(ModItems.GOLD_HELMET_PROBE);
+                }
+                if (ModItems.IRON_HELMET_PROBE != null) {
+                    output.accept(ModItems.IRON_HELMET_PROBE);
+                }
+                if (ModItems.PROBE_GOGGLES != null) {
+                    output.accept(ModItems.PROBE_GOGGLES);
+                }
+                if (ModItems.PROBE_NOTE != null) {
+                    output.accept(ModItems.PROBE_NOTE);
+                }
+            })
+            .build());
 
 
     public TheOneProbe() {
@@ -63,9 +92,10 @@ public class TheOneProbe {
         bus.addListener(this::init);
         bus.addListener(Config::onLoad);
         bus.addListener(Config::onReload);
-        bus.addListener(this::registerTabs);
 
         bus.addListener(this::processIMC);
+
+        TABS.register(bus);
 
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -74,37 +104,6 @@ public class TheOneProbe {
             bus.addListener(ClientSetup::onRegisterKeyMappings);
         });
     }
-
-    // @todo 1.20
-    private void registerTabs(BuildCreativeModeTabContentsEvent event) {
-//        tabProbe = event.registerCreativeModeTab(new ResourceLocation(TheOneProbe.MODID, "probe"), builder -> builder
-//                .icon(() -> new ItemStack(ModItems.PROBE))
-//                .displayItems((featureFlags, output) -> {
-//                    if (ModItems.CREATIVE_PROBE != null) {
-//                        output.accept(ModItems.CREATIVE_PROBE);
-//                    }
-//                    if (ModItems.PROBE != null) {
-//                        output.accept(ModItems.PROBE);
-//                    }
-//                    if (ModItems.DIAMOND_HELMET_PROBE != null) {
-//                        output.accept(ModItems.DIAMOND_HELMET_PROBE);
-//                    }
-//                    if (ModItems.GOLD_HELMET_PROBE != null) {
-//                        output.accept(ModItems.GOLD_HELMET_PROBE);
-//                    }
-//                    if (ModItems.IRON_HELMET_PROBE != null) {
-//                        output.accept(ModItems.IRON_HELMET_PROBE);
-//                    }
-//                    if (ModItems.PROBE_GOGGLES != null) {
-//                        output.accept(ModItems.PROBE_GOGGLES);
-//                    }
-//                    if (ModItems.PROBE_NOTE != null) {
-//                        output.accept(ModItems.PROBE_NOTE);
-//                    }
-//                })
-//        );
-    }
-
 
     private void init(final FMLCommonSetupEvent event) {
 

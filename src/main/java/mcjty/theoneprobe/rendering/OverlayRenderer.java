@@ -136,7 +136,7 @@ public class OverlayRenderer {
     private static void setupOverlayRendering(float sw, float sh) {
         RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
         Matrix4f ortho = (new Matrix4f()).setOrtho(0.0F, sw, sh, 0.0F, 1000.0F, ForgeHooksClient.getGuiFarPlane());
-        RenderSystem.setProjectionMatrix(ortho, VertexSorting.DISTANCE_TO_ORIGIN);  // @todo 1.20 is this right?
+        RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);  // @todo 1.20 is this right?
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.setIdentity();
         posestack.translate(0.0F, 0.0F, 1000.0F - ForgeHooksClient.getGuiFarPlane());
