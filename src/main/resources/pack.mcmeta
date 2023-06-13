@@ -1,6 +1,8 @@
 {
   "pack": {
-    "pack_format": 6,
-    "description": "Resources used for The One Probe"
+    "description": {
+      "text": "The One Probe resource pack"
+    },
+    "pack_format": 15
   }
 }
