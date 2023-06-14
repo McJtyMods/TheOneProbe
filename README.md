@@ -1,4 +1,4 @@
-![The One Probe (TOP) Logo](https://media-elerium.cursecdn.com/avatars/41/170/635991514554675962.png)
+![The One Probe (TOP) Logo](https://media.forgecdn.net/avatars/41/170/635991514554675962.png)
 # The One Probe (TOP) - Minecraft Mod
 _More immersive alternative for WAILA_
 
@@ -29,7 +29,7 @@ This mod also has a flexible API that other mods can use to add more information
 
 #### MIT
 
-This mod is licenced under the MIT licence. To see the full terms of the licence click [here](https://github.com/McJty/TheOneProbe/blob/1.10/LICENCE).
+This mod is licenced under the MIT licence. To see the full terms of the licence click [here](https://github.com/McJty/TheOneProbe/blob/1.20/LICENCE).
 
 #### Modpack Permission
 
@@ -41,4 +41,4 @@ You're free to use the mod in your modpack.
 
 - [McJty](https://twitter.com/McJty) - Project Owner
 
-**Copyright © 2016 McJty**
+**Copyright © 2023 McJty**

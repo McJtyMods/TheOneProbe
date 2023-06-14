@@ -12,8 +12,10 @@ import mcjty.theoneprobe.items.ModItems;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.rendering.ClientSetup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -57,7 +59,9 @@ public class TheOneProbe {
 
     public static DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static RegistryObject<CreativeModeTab> TAB_PROBE = TABS.register("probe", () -> CreativeModeTab.builder()
+            .title(Component.literal("The One Probe"))
             .icon(() -> new ItemStack(ModItems.PROBE))
+            .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             .displayItems((featureFlags, output) -> {
                 if (ModItems.CREATIVE_PROBE != null) {
                     output.accept(ModItems.CREATIVE_PROBE);
