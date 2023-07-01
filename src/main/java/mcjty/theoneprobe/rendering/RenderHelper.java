@@ -184,7 +184,7 @@ public class RenderHelper {
 //            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
             try {
                 graphics.renderItem(itm, x, y, x * y * 31);
-                graphics.renderItemDecorations(mc.font, itm, x, y, txt);
+//                graphics.renderItemDecorations(mc.font, itm, x, y, txt);
 //                itemRender.renderAndDecorateItem(matrixStack, itm, x, y);
                 renderItemStackOverlay(graphics, mc.font, itm, x, y, txt, txt.length() - 2);
             } catch (Exception e) {
