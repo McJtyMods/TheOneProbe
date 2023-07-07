@@ -312,7 +312,7 @@ public class RenderHelper {
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
         int width = mc.font.width(text.getVisualOrderText());//Otherwise it breaks
-        graphics.drawString(mc.font, text, x - width, y, 16777215);
+        graphics.drawString(mc.font, text, x, y, 16777215);
         RenderSystem.enableDepthTest();
         // Fixes opaque cooldown overlay a bit lower
         // TODO: check if enabled blending still screws things up down the line.
