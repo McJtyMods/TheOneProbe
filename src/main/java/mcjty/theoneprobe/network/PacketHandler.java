@@ -3,8 +3,6 @@ package mcjty.theoneprobe.network;
 
 import mcjty.theoneprobe.TheOneProbe;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
 
 public class PacketHandler {
     public static SimpleChannel INSTANCE;

@@ -22,8 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.UsernameCache;
-
+import net.neoforged.neoforge.common.UsernameCache;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.UUID;

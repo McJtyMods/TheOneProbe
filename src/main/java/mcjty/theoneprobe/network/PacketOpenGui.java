@@ -3,8 +3,7 @@ package mcjty.theoneprobe.network;
 import mcjty.theoneprobe.gui.GuiConfig;
 import mcjty.theoneprobe.gui.GuiNote;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
-
+import net.neoforged.neoforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class PacketOpenGui {

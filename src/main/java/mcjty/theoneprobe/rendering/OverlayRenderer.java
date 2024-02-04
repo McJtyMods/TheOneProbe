@@ -36,8 +36,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.ClientHooks;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
@@ -135,11 +135,11 @@ public class OverlayRenderer {
 
     private static void setupOverlayRendering(float sw, float sh) {
         RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        Matrix4f ortho = (new Matrix4f()).setOrtho(0.0F, sw, sh, 0.0F, 1000.0F, ForgeHooksClient.getGuiFarPlane());
+        Matrix4f ortho = (new Matrix4f()).setOrtho(0.0F, sw, sh, 0.0F, 1000.0F, ClientHooks.getGuiFarPlane());
         RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);  // @todo 1.20 is this right?
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.setIdentity();
-        posestack.translate(0.0F, 0.0F, 1000.0F - ForgeHooksClient.getGuiFarPlane());
+        posestack.translate(0.0F, 0.0F, 1000.0F - ClientHooks.getGuiFarPlane());
         RenderSystem.applyModelViewMatrix();
     }
 

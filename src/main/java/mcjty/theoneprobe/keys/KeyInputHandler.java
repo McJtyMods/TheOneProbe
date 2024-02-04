@@ -1,8 +1,8 @@
 package mcjty.theoneprobe.keys;
 
 import mcjty.theoneprobe.config.Config;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
 
 public class KeyInputHandler {
 

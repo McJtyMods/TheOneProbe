@@ -15,8 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
-
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import java.util.Map;
 
 public class ElementEntityRender {

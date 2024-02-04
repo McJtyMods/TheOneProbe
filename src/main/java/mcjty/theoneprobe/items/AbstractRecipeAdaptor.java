@@ -11,7 +11,7 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
-public abstract class AbstractRecipeAdaptor implements CraftingRecipe, net.minecraftforge.common.crafting.IShapedRecipe<CraftingContainer> {
+public abstract class AbstractRecipeAdaptor implements CraftingRecipe, net.neoforged.neoforge.common.crafting.IShapedRecipe<CraftingContainer> {
 
     protected final ShapedRecipe recipe;
 

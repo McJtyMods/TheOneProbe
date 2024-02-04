@@ -2,11 +2,11 @@ package mcjty.theoneprobe;
 
 import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.ProbeMode;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 
 import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.EXTENDED;
@@ -16,7 +16,7 @@ public class Tools {
 
 
     public static String getModName(EntityType<?> entry) {
-        ResourceLocation registryName = ForgeRegistries.ENTITY_TYPES.getKey(entry);
+        ResourceLocation registryName = BuiltInRegistries.ENTITY_TYPE.getKey(entry);
         String modId = registryName == null ? "minecraft" : registryName.getNamespace();
         return ModList.get().getModContainerById(modId)
                 .map(mod -> mod.getModInfo().getDisplayName())

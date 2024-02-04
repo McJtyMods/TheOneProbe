@@ -2,11 +2,11 @@ package mcjty.theoneprobe.config;
 
 
 import mcjty.theoneprobe.TheOneProbe;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.config.ModConfigEvent;
 
-import static net.minecraftforge.fml.Logging.CORE;
+import static net.neoforged.fml.Logging.CORE;
 
 @Mod.EventBusSubscriber(modid = TheOneProbe.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ConfigReload {

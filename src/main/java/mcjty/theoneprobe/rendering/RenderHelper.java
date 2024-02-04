@@ -22,7 +22,6 @@ import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
-
 import javax.annotation.Nullable;
 
 public class RenderHelper {
@@ -61,7 +60,7 @@ public class RenderHelper {
             // Protection for the shulker
             ridingOffset = 0.0f;
         } else {
-            ridingOffset = (float) entity.getMyRidingOffset();
+            ridingOffset = entity.getMyRidingOffset(entity.getVehicle());
         }
         matrixStack.translate(0.0F, ridingOffset + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
         RenderSystem.applyModelViewMatrix();

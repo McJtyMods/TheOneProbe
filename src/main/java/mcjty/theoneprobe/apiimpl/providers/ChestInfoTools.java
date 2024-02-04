@@ -11,10 +11,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.registries.ForgeRegistries;
-
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -109,8 +108,8 @@ public class ChestInfoTools {
         Set<Item> foundItems = Config.compactEqualStacks.get() ? new HashSet<>() : null;
         AtomicInteger maxSlots = new AtomicInteger();
         try {
-            if (te != null && te.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
-                te.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(capability -> {
+            if (te != null && te.getCapability(Capabilities.ITEM_HANDLER).isPresent()) {
+                te.getCapability(Capabilities.ITEM_HANDLER).ifPresent(capability -> {
                     maxSlots.set(capability.getSlots());
                     for (int i = 0; i < maxSlots.get(); i++) {
                         addItemStack(stacks, foundItems, capability.getStackInSlot(i));

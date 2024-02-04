@@ -10,9 +10,9 @@ import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import mcjty.theoneprobe.items.IEnumConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.*;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -25,8 +25,8 @@ public class Config {
     private static final Builder COMMON_BUILDER = new Builder();
     private static final Builder CLIENT_BUILDER = new Builder();
 
-    public static final ForgeConfigSpec COMMON_CONFIG;
-    public static final ForgeConfigSpec CLIENT_CONFIG;
+    public static final ModConfigSpec COMMON_CONFIG;
+    public static final ModConfigSpec CLIENT_CONFIG;
 
 
     public static final int PROBE_NOTNEEDED = 0;
@@ -125,7 +125,7 @@ public class Config {
     private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowHorseStatSetting;
     private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowSilverfish;
 
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> renderBlacklist;
+    private static ConfigValue<List<? extends String>> renderBlacklist;
     private static Set<ResourceLocation> renderBlacklistSet = null;
 
 
@@ -582,7 +582,7 @@ public class Config {
         return dontSendNBTSet;
     }
 
-    private static <T> T getOrDefault(ForgeConfigSpec spec, ConfigValue<T> config) {
+    private static <T> T getOrDefault(ModConfigSpec spec, ConfigValue<T> config) {
         if (spec.isLoaded()) {
             return config.get();
         } else {
@@ -590,7 +590,7 @@ public class Config {
         }
     }
 
-    private static IProbeConfig.ConfigMode getOrDefault(ForgeConfigSpec spec, IEnumConfig<IProbeConfig.ConfigMode> config) {
+    private static IProbeConfig.ConfigMode getOrDefault(ModConfigSpec spec, IEnumConfig<IProbeConfig.ConfigMode> config) {
         if (spec.isLoaded()) {
             return config.get();
         } else {

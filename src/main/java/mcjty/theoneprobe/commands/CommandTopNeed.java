@@ -10,7 +10,6 @@ import mcjty.theoneprobe.network.PacketOpenGui;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
 
 public class CommandTopNeed implements Command<CommandSourceStack> {
 

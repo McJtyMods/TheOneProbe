@@ -13,22 +13,22 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.common.NeoForge;
 
 import static mcjty.theoneprobe.config.Config.*;
 
 public class ClientSetup {
 
     public static void onClientSetup(FMLClientSetupEvent event) {
-        MinecraftForge.EVENT_BUS.register(new ClientSetup());
-        MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
+        NeoForge.EVENT_BUS.register(new ClientSetup());
+        NeoForge.EVENT_BUS.register(new KeyInputHandler());
     }
 
     public static boolean ignoreNextGuiClose = false;

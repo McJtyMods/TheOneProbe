@@ -3,6 +3,7 @@ package mcjty.theoneprobe;
 import mcjty.theoneprobe.commands.ModCommands;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.playerdata.PlayerProperties;
 import mcjty.theoneprobe.playerdata.PropertiesDispatcher;
@@ -10,11 +11,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 
 public class ForgeEventHandlers {
 
@@ -67,5 +69,14 @@ public class ForgeEventHandlers {
     @SubscribeEvent
     public void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
         event.register(PlayerGotNote.class);
+    }
+
+    @SubscribeEvent
+    public void onRegisterPayloadHandler(RegisterPayloadHandlerEvent event) {
+        final IPayloadRegistrar registrar = event.registrar(TheOneProbe.MODID)
+                .versioned("1.0")
+                .optional();
+        registrar.play(PacketGetEntityInfo.ID, PacketGetEntityInfo::create, handler -> handler
+                .server(PacketGetEntityInfo::handle));
     }
 }

@@ -31,17 +31,16 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
-import static net.minecraftforge.fluids.FluidType.BUCKET_VOLUME;
+import static net.neoforged.neoforge.fluids.FluidType.BUCKET_VOLUME;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -223,8 +222,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showTankInfo(IProbeInfo probeInfo, Level world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
         BlockEntity te = world.getBlockEntity(pos);
-        if (te != null && te.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent()) {
-            te.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(handler -> {
+        if (te != null && te.getCapability(Capabilities.FLUID_HANDLER).isPresent()) {
+            te.getCapability(Capabilities.FLUID_HANDLER).ifPresent(handler -> {
                 for (int i = 0; i < handler.getTanks(); i++) {
                     FluidStack fluidStack = handler.getFluidInTank(i);
                     int maxContents = handler.getTankCapacity(i);
@@ -284,8 +283,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 //            long energy = bigPower.getStoredPower();
 //            long maxEnergy = bigPower.getCapacity();
 //            addEnergyInfo(probeInfo, config, energy, maxEnergy);
-        } else if (te != null && te.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
-            te.getCapability(ForgeCapabilities.ENERGY).ifPresent(handler -> {
+        } else if (te != null && te.getCapability(Capabilities.ENERGY).isPresent()) {
+            te.getCapability(Capabilities.ENERGY).ifPresent(handler -> {
                 addEnergyInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
             });
         }

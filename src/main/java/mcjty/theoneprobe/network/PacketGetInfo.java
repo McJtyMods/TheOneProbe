@@ -19,11 +19,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
-
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Supplier;

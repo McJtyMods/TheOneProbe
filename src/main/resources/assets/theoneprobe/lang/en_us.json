@@ -1,4 +1,5 @@
 {
+    "theoneprobe.networking.failed": "The One Probe: Networking failed! Check log for details",
     "key.toggleLiquids": "Toggle Liquid View",
     "key.toggleVisible": "Visibility Toggle",
     "key.categories.theoneprobe": "The One Probe",
