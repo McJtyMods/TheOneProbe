@@ -3,7 +3,7 @@ package mcjty.theoneprobe;
 import mcjty.theoneprobe.commands.ModCommands;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import mcjty.theoneprobe.network.PacketGetEntityInfo;
+import mcjty.theoneprobe.network.*;
 import mcjty.theoneprobe.playerdata.PlayerGotNote;
 import mcjty.theoneprobe.playerdata.PlayerProperties;
 import mcjty.theoneprobe.playerdata.PropertiesDispatcher;
@@ -78,5 +78,13 @@ public class ForgeEventHandlers {
                 .optional();
         registrar.play(PacketGetEntityInfo.ID, PacketGetEntityInfo::create, handler -> handler
                 .server(PacketGetEntityInfo::handle));
+        registrar.play(PacketReturnEntityInfo.ID, PacketReturnEntityInfo::create, handler -> handler
+                .client(PacketReturnEntityInfo::handle));
+        registrar.play(PacketGetInfo.ID, PacketGetInfo::create, handler -> handler
+                .server(PacketGetInfo::handle));
+        registrar.play(PacketOpenGui.ID, PacketOpenGui::create, handler -> handler
+                .client(PacketOpenGui::handle));
+        registrar.play(PacketReturnInfo.ID, PacketReturnInfo::create, handler -> handler
+                .client(PacketReturnInfo::handle));
     }
 }

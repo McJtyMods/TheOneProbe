@@ -7,45 +7,44 @@ import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.NetworkDirection;
-import net.neoforged.neoforge.network.NetworkEvent;
-import net.minecraft.core.Registry;
-import net.minecraft.server.level.ServerLevel;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
-public class PacketGetInfo  {
+public record PacketGetInfo(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode, Direction sideHit, Vec3 hitVec, @Nonnull ItemStack pickBlock) implements CustomPacketPayload {
 
-    private ResourceKey<Level> dim;
-    private BlockPos pos;
-    private ProbeMode mode;
-    private Direction sideHit;
-    private Vec3 hitVec;
-    @Nonnull private ItemStack pickBlock;
+    public static final ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "getinfo");
 
-    public PacketGetInfo(FriendlyByteBuf buf) {
-        dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
-        pos = buf.readBlockPos();
-        mode = ProbeMode.values()[buf.readByte()];
+    public static PacketGetInfo create(FriendlyByteBuf buf) {
+        ResourceKey<Level> dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
+        BlockPos pos = buf.readBlockPos();
+        ProbeMode mode = ProbeMode.values()[buf.readByte()];
         byte sideByte = buf.readByte();
+        Direction sideHit;
+        Vec3 hitVec = null;
         if (sideByte == 127) {
             sideHit = null;
         } else {
@@ -54,10 +53,18 @@ public class PacketGetInfo  {
         if (buf.readBoolean()) {
             hitVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         }
-        pickBlock = buf.readItem();
+        ItemStack pickBlock = buf.readItem();
+        return new PacketGetInfo(dim, pos, mode, sideHit, hitVec, pickBlock);
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
+    public static PacketGetInfo create(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode, HitResult mouseOver, @Nonnull ItemStack pickBlock) {
+        Direction sideHit = ((BlockHitResult)mouseOver).getDirection();
+        return new PacketGetInfo(dim, pos, mode, sideHit, mouseOver.getLocation(), pickBlock);
+    }
+
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
         buf.writeResourceLocation(dim.location());
         buf.writeBlockPos(pos);
         buf.writeByte(mode.ordinal());
@@ -81,28 +88,21 @@ public class PacketGetInfo  {
         }
     }
 
-    public PacketGetInfo() {
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 
-    public PacketGetInfo(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode, HitResult mouseOver, @Nonnull ItemStack pickBlock) {
-        this.dim = dim;
-        this.pos = pos;
-        this.mode = mode;
-        this.sideHit = ((BlockHitResult)mouseOver).getDirection();
-        this.hitVec = mouseOver.getLocation();
-        this.pickBlock = pickBlock;
-    }
-
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerLevel world = ctx.get().getSender().server.getLevel(dim);
-            if (world != null) {
-                ProbeInfo probeInfo = getProbeInfo(ctx.get().getSender(),
-                        mode, world, pos, sideHit, hitVec, pickBlock);
-                PacketHandler.INSTANCE.sendTo(new PacketReturnInfo(dim, pos, probeInfo), ctx.get().getSender().connection.connection, NetworkDirection.PLAY_TO_CLIENT);
-            }
+    public void handle(PlayPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            ctx.level().ifPresent(level -> {
+                ctx.player().ifPresent(player -> {
+                    ServerLevel world = (ServerLevel) level;
+                    ProbeInfo probeInfo = getProbeInfo(player, mode, world, pos, sideHit, hitVec, pickBlock);
+                    PacketDistributor.PLAYER.with((ServerPlayer) player).send(PacketReturnInfo.create(dim, pos, probeInfo));
+                });
+            });
         });
-        ctx.get().setPacketHandled(true);
     }
 
     private static ProbeInfo getProbeInfo(Player player, ProbeMode mode, Level world, BlockPos blockPos, Direction sideHit, Vec3 hitVec, @Nonnull ItemStack pickBlock) {

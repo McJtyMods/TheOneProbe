@@ -5,12 +5,11 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.network.PacketOpenGui;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class CommandTopCfg implements Command<CommandSourceStack> {
 
@@ -25,7 +24,7 @@ public class CommandTopCfg implements Command<CommandSourceStack> {
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        PacketHandler.INSTANCE.sendTo(new PacketOpenGui(PacketOpenGui.GUI_CONFIG), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+        PacketDistributor.PLAYER.with(player).send(new PacketOpenGui(PacketOpenGui.GUI_CONFIG));
         return 0;
     }
 }

@@ -6,6 +6,7 @@ import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -21,7 +22,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.UUID;
@@ -79,7 +79,7 @@ public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode m
                     Entity entity = world.getEntity(uuid);
                     if (entity != null) {
                         ProbeInfo probeInfo = getProbeInfo(player, mode, world, entity, hitVec);
-                        PacketDistributor.PLAYER.with((ServerPlayer) player).send(new PacketReturnEntityInfo(uuid, probeInfo));
+                        PacketDistributor.PLAYER.with((ServerPlayer) player).send(PacketReturnEntityInfo.create(uuid, probeInfo));
                     }
                 });
             });
@@ -105,7 +105,7 @@ public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode m
         }
 
         if (!Config.getEntityBlacklist().isEmpty()) {
-            ResourceLocation rl = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+            ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
             for (Predicate<ResourceLocation> predicate : Config.getEntityBlacklist()) {
                 if (predicate.test(rl)) {
                     return null;

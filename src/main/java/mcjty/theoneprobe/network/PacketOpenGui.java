@@ -1,36 +1,45 @@
 package mcjty.theoneprobe.network;
 
+import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.gui.GuiConfig;
 import mcjty.theoneprobe.gui.GuiNote;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
-import java.util.function.Supplier;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-public class PacketOpenGui {
+public record PacketOpenGui(int gui) implements CustomPacketPayload {
+
+    public static final ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "opengui");
 
     public static final int GUI_CONFIG = 0;
     public static final int GUI_NOTE = 1;
 
-    private int gui;
-
-    public PacketOpenGui(FriendlyByteBuf buf) {
-        gui = buf.readInt();
+    public static PacketOpenGui create(FriendlyByteBuf buf) {
+        return new PacketOpenGui(buf.readInt());
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
+    public static PacketOpenGui create(int gui) {
+        return new PacketOpenGui(gui);
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
         buf.writeInt(gui);
     }
 
-    public PacketOpenGui(int gui) {
-        this.gui = gui;
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        if (gui == GUI_CONFIG) {
-            ctx.get().enqueueWork(GuiConfig::open);
-        } else {
-            ctx.get().enqueueWork(GuiNote::open);
-        }
-        ctx.get().setPacketHandled(true);
+    public void handle(PlayPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            if (gui == GUI_CONFIG) {
+                GuiConfig.open();
+            } else {
+                GuiNote.open();
+            }
+        });
     }
 }

@@ -9,7 +9,6 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.AddProbeTagRecipe;
 import mcjty.theoneprobe.items.AddProbeTagRecipeSerializer;
 import mcjty.theoneprobe.items.ModItems;
-import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.rendering.ClientSetup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
