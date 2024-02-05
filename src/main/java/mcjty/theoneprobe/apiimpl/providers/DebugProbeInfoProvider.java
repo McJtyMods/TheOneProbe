@@ -6,13 +6,13 @@ import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import static mcjty.theoneprobe.api.TextStyleClass.INFO;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
@@ -36,7 +36,7 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
         Block block = blockState.getBlock();
         String simpleName = block.getClass().getSimpleName();
         IProbeInfo vertical = probeInfo.vertical(new LayoutStyle().borderColor(0xffff4444).spacing(2))
-                .text(CompoundText.createLabelInfo("Reg Name: ", ForgeRegistries.BLOCKS.getKey(block).toString()))
+                .text(CompoundText.createLabelInfo("Reg Name: ", BuiltInRegistries.BLOCK.getKey(block).toString()))
                 .text(CompoundText.createLabelInfo("Unlocname: ", block.getDescriptionId()))
                 .text(CompoundText.createLabelInfo("Class: ", simpleName))
                 .text(CompoundText.createLabelInfo("Hardness: ", blockState.getDestroySpeed(world, pos)))

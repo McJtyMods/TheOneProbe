@@ -1,37 +1,38 @@
 package mcjty.theoneprobe;
 
+import com.mojang.serialization.Codec;
 import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.config.Config;
-import mcjty.theoneprobe.items.AddProbeTagRecipe;
-import mcjty.theoneprobe.items.AddProbeTagRecipeSerializer;
 import mcjty.theoneprobe.items.ModItems;
+import mcjty.theoneprobe.network.*;
 import mcjty.theoneprobe.rendering.ClientSetup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.DistExecutor;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
-import net.neoforged.neoforge.registries.RegistryObject;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +45,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Mod("theoneprobe")
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
 
@@ -56,8 +56,17 @@ public class TheOneProbe {
     public static boolean tesla = false;
     public static boolean redstoneflux = false;
 
-    public static DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-    public static RegistryObject<CreativeModeTab> TAB_PROBE = TABS.register("probe", () -> CreativeModeTab.builder()
+    public static final ResourceLocation HASPROBE = new ResourceLocation(MODID, "hasprobe");
+    public static final TagKey<Item> HASPROBE_TAG = TagKey.create(Registries.ITEM, HASPROBE);
+
+    private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MODID);
+    public static final Supplier<AttachmentType<Boolean>> ATTACHMENT_TYPE_PLAYER_GOT_NOTE = ATTACHMENT_TYPES.register("playergotnote", () -> AttachmentType.builder(() -> false)
+            .serialize(Codec.BOOL)
+            .copyOnDeath()
+            .build());
+
+    private static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static final Supplier<CreativeModeTab> TAB_PROBE = TABS.register("probe", () -> CreativeModeTab.builder()
             .title(Component.literal("The One Probe"))
             .icon(() -> new ItemStack(ModItems.PROBE))
             .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
@@ -87,11 +96,12 @@ public class TheOneProbe {
             .build());
 
 
-    public TheOneProbe() {
+    public TheOneProbe(IEventBus bus, Dist dist) {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
 
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        bus.addListener(this::onRegisterEvent);
+        bus.addListener(this::onRegisterPayloadHandler);
         bus.addListener(this::init);
         bus.addListener(Config::onLoad);
         bus.addListener(Config::onReload);
@@ -99,13 +109,12 @@ public class TheOneProbe {
         bus.addListener(this::processIMC);
 
         TABS.register(bus);
+        ATTACHMENT_TYPES.register(bus);
 
-        NeoForge.EVENT_BUS.register(this);
-
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+        if (dist.isClient()) {
             bus.addListener(ClientSetup::onClientSetup);
             bus.addListener(ClientSetup::onRegisterKeyMappings);
-        });
+        }
     }
 
     private void init(final FMLCommonSetupEvent event) {
@@ -141,8 +150,6 @@ public class TheOneProbe {
         TheOneProbe.theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
         TheOneProbe.theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
 
-        PacketHandler.registerMessages("theoneprobe");
-
         configureProviders();
         configureEntityProviders();
     }
@@ -156,13 +163,24 @@ public class TheOneProbe {
         });
     }
 
-    @SubscribeEvent
-    public static void onRegisterEvent(RegisterEvent event) {
-        event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, helper -> {
-            AddProbeTagRecipe.HELMET_SERIALIZER = new AddProbeTagRecipeSerializer();
-            helper.register(new ResourceLocation(TheOneProbe.MODID, "probe_helmet"), AddProbeTagRecipe.HELMET_SERIALIZER);
-        });
-        event.register(ForgeRegistries.Keys.ITEMS, helper -> {
+    public void onRegisterPayloadHandler(RegisterPayloadHandlerEvent event) {
+        final IPayloadRegistrar registrar = event.registrar(TheOneProbe.MODID)
+                .versioned("1.0")
+                .optional();
+        registrar.play(PacketGetEntityInfo.ID, PacketGetEntityInfo::create, handler -> handler
+                .server(PacketGetEntityInfo::handle));
+        registrar.play(PacketReturnEntityInfo.ID, PacketReturnEntityInfo::create, handler -> handler
+                .client(PacketReturnEntityInfo::handle));
+        registrar.play(PacketGetInfo.ID, PacketGetInfo::create, handler -> handler
+                .server(PacketGetInfo::handle));
+        registrar.play(PacketOpenGui.ID, PacketOpenGui::create, handler -> handler
+                .client(PacketOpenGui::handle));
+        registrar.play(PacketReturnInfo.ID, PacketReturnInfo::create, handler -> handler
+                .client(PacketReturnInfo::handle));
+    }
+
+    public void onRegisterEvent(RegisterEvent event) {
+        event.register(Registries.ITEM, helper -> {
             ModItems.init();
 
             helper.register(new ResourceLocation(TheOneProbe.MODID, "probe"), ModItems.PROBE);

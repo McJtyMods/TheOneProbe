@@ -6,14 +6,16 @@ import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,7 +29,7 @@ public class ChestInfoTools {
         List<ItemStack> stacks = null;
         IProbeConfig.ConfigMode chestMode = config.getShowChestContents();
         if (chestMode == IProbeConfig.ConfigMode.EXTENDED && (Config.showSmallChestContentsWithoutSneaking.get() > 0 || !Config.getInventoriesToShow().isEmpty())) {
-            if (Config.getInventoriesToShow().contains(ForgeRegistries.BLOCKS.getKey(world.getBlockState(pos).getBlock()))) {
+            if (Config.getInventoriesToShow().contains(BuiltInRegistries.BLOCK.getKey(world.getBlockState(pos).getBlock()))) {
                 chestMode = IProbeConfig.ConfigMode.NORMAL;
             } else if (Config.showSmallChestContentsWithoutSneaking.get() > 0) {
                 stacks = new ArrayList<>();
@@ -37,7 +39,7 @@ public class ChestInfoTools {
                 }
             }
         } else if (chestMode == IProbeConfig.ConfigMode.NORMAL && !Config.getInventoriesToNotShow().isEmpty()) {
-            if (Config.getInventoriesToNotShow().contains(ForgeRegistries.BLOCKS.getKey(world.getBlockState(pos).getBlock()))) {
+            if (Config.getInventoriesToNotShow().contains(BuiltInRegistries.BLOCK.getKey(world.getBlockState(pos).getBlock()))) {
                 chestMode = IProbeConfig.ConfigMode.EXTENDED;
             }
         }
@@ -108,14 +110,12 @@ public class ChestInfoTools {
         Set<Item> foundItems = Config.compactEqualStacks.get() ? new HashSet<>() : null;
         AtomicInteger maxSlots = new AtomicInteger();
         try {
-            if (te != null && te.getCapability(Capabilities.ITEM_HANDLER).isPresent()) {
-                te.getCapability(Capabilities.ITEM_HANDLER).ifPresent(capability -> {
-                    maxSlots.set(capability.getSlots());
-                    for (int i = 0; i < maxSlots.get(); i++) {
-                        addItemStack(stacks, foundItems, capability.getStackInSlot(i));
-                    }
-
-                });
+            IItemHandler capability = world.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+            if (capability != null) {
+                maxSlots.set(capability.getSlots());
+                for (int i = 0; i < maxSlots.get(); i++) {
+                    addItemStack(stacks, foundItems, capability.getStackInSlot(i));
+                }
             } else if (te instanceof Container inventory) {
                 maxSlots.set(inventory.getContainerSize());
                 for (int i = 0; i < maxSlots.get(); i++) {
@@ -123,7 +123,7 @@ public class ChestInfoTools {
                 }
             }
         } catch (RuntimeException e) {
-            throw new RuntimeException("Getting the contents of a " + ForgeRegistries.BLOCKS.getKey(world.getBlockState(pos).getBlock()) + " (" + te.getClass().getName() + ")", e);
+            throw new RuntimeException("Getting the contents of a " + BuiltInRegistries.BLOCK.getKey(world.getBlockState(pos).getBlock()) + " (" + te.getClass().getName() + ")", e);
         }
         return maxSlots.get();
     }

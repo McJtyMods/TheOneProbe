@@ -4,11 +4,12 @@ import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+
+import static mcjty.theoneprobe.TheOneProbe.HASPROBE_TAG;
 
 public class ModItems {
     public static CreativeProbe CREATIVE_PROBE;
@@ -18,9 +19,6 @@ public class ModItems {
     public static Item IRON_HELMET_PROBE;
     public static Item PROBE_GOGGLES;
     public static ProbeNote PROBE_NOTE;
-
-    public static final String PROBETAG = "theoneprobe";
-    public static final String PROBETAG_HAND = "theoneprobe_hand";
 
     public static void init() {
         PROBE = new Probe();
@@ -73,7 +71,7 @@ public class ModItems {
         if (stack.getTag() == null) {
             return false;
         }
-        return stack.getTag().contains(PROBETAG_HAND);
+        return stack.is(HASPROBE_TAG);
     }
 
     private static boolean isProbeHelmet(ItemStack stack) {
@@ -83,7 +81,7 @@ public class ModItems {
         if (stack.getTag() == null) {
             return false;
         }
-        return stack.getTag().contains(PROBETAG);
+        return stack.is(HASPROBE_TAG);
     }
 
     public static boolean hasAProbeSomewhere(Player player) {

@@ -31,10 +31,13 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
@@ -158,7 +161,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             BlockEntity te = world.getBlockEntity(data.getPos());
             if (te instanceof SkullBlockEntity skullBlockEntity) {
                 GameProfile profile = skullBlockEntity.getOwnerProfile();
-                if (profile != null && profile.isComplete()) {
+                if (profile != null) {
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                             .alignment(ElementAlignment.ALIGN_CENTER))
                             .text(CompoundText.create().style(LABEL).text("Player: ")
@@ -222,16 +225,15 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showTankInfo(IProbeInfo probeInfo, Level world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
         BlockEntity te = world.getBlockEntity(pos);
-        if (te != null && te.getCapability(Capabilities.FLUID_HANDLER).isPresent()) {
-            te.getCapability(Capabilities.FLUID_HANDLER).ifPresent(handler -> {
-                for (int i = 0; i < handler.getTanks(); i++) {
-                    FluidStack fluidStack = handler.getFluidInTank(i);
-                    int maxContents = handler.getTankCapacity(i);
-                    if (!fluidStack.isEmpty()) {
-                        addFluidInfo(probeInfo, config, fluidStack, maxContents);
-                    }
+        IFluidHandler handler = world.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+        if (handler != null) {
+            for (int i = 0; i < handler.getTanks(); i++) {
+                FluidStack fluidStack = handler.getFluidInTank(i);
+                int maxContents = handler.getTankCapacity(i);
+                if (!fluidStack.isEmpty()) {
+                    addFluidInfo(probeInfo, config, fluidStack, maxContents);
                 }
-            });
+            }
         }
     }
 
@@ -283,10 +285,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 //            long energy = bigPower.getStoredPower();
 //            long maxEnergy = bigPower.getCapacity();
 //            addEnergyInfo(probeInfo, config, energy, maxEnergy);
-        } else if (te != null && te.getCapability(Capabilities.ENERGY).isPresent()) {
-            te.getCapability(Capabilities.ENERGY).ifPresent(handler -> {
+        } else{
+            IEnergyStorage handler = world.getCapability(Capabilities.EnergyStorage.BLOCK, pos, null);
+            if (handler != null) {
                 addEnergyInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
-            });
+            }
         }
     }
 

@@ -24,7 +24,7 @@ public class Tools {
     }
 
     public static String getModName(Block entry) {
-        ResourceLocation registryName = ForgeRegistries.BLOCKS.getKey(entry);
+        ResourceLocation registryName = BuiltInRegistries.BLOCK.getKey(entry);
         String modId = registryName == null ? "minecraft" : registryName.getNamespace();
         return ModList.get().getModContainerById(modId)
                 .map(mod -> mod.getModInfo().getDisplayName())

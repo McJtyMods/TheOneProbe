@@ -1,11 +1,14 @@
 modLoader="javafml"
-loaderVersion="[47,)"
+loaderVersion="[2,)"
 license="MIT License https://github.com/McJtyMods/TheOneProbe/blob/1.16/LICENCE"
 issueTrackerURL="http://github.com/McJtyMods/TheOneProbe/issues"
 displayURL="http://github.com/McJtyMods/TheOneProbe/"
 #logoFile="examplemod.png" #optional
 #credits="Thanks for this example mod goes to Java" #optional
 authors="McJty"
+
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
 
 [[mods]]
 modId="theoneprobe"
@@ -18,8 +21,8 @@ probe in your hand lets you examine it better but you can also make this
 probe required if you so desire.
 '''
 [[dependencies.theoneprobe]]
-    modId="forge"
-    mandatory=true
-    versionRange="[47.0.0,)"
+    modId="neoforge"
+    type="required"
+    versionRange="[20.4,)"
     ordering="NONE"
     side="BOTH"

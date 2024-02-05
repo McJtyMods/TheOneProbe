@@ -21,6 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +37,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.ClientHooks;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
@@ -158,7 +159,7 @@ public class OverlayRenderer {
         Entity entity = ((EntityHitResult) mouseOver).getEntity();
 
         if (!Config.getEntityBlacklist().isEmpty()) {
-            ResourceLocation rl = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+            ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
             for (Predicate<ResourceLocation> predicate : Config.getEntityBlacklist()) {
                 if (predicate.test(rl)) {
                     return;
@@ -225,7 +226,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, Player player) {
-        PacketHandler.INSTANCE.sendToServer(new PacketGetEntityInfo(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity));
+        PacketDistributor.SERVER.noArg().send(PacketGetEntityInfo.create(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(GuiGraphics graphics, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
@@ -350,11 +351,11 @@ public class OverlayRenderer {
             // Should not be needed but you never know... (bad mods)
             pickBlock = ItemStack.EMPTY;
         }
-        if (!pickBlock.isEmpty() && Config.getDontSendNBTSet().contains(ForgeRegistries.ITEMS.getKey(pickBlock.getItem()))) {
+        if (!pickBlock.isEmpty() && Config.getDontSendNBTSet().contains(BuiltInRegistries.ITEM.getKey(pickBlock.getItem()))) {
             pickBlock = pickBlock.copy();
             pickBlock.setTag(null);
         }
-        PacketHandler.INSTANCE.sendToServer(new PacketGetInfo(world.dimension(), blockPos, mode, mouseOver, pickBlock));
+        PacketDistributor.SERVER.noArg().send(PacketGetInfo.create(world.dimension(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, GuiGraphics graphics) {

@@ -16,7 +16,7 @@ public class NetworkTools {
 
     /// This function supports itemstacks with more then 64 items.
     public static void writeItemStack(FriendlyByteBuf buf, ItemStack itemStack) {
-        buf.writeItemStack(itemStack, false);
+        buf.writeItem(itemStack);
         buf.writeInt(itemStack.getCount());
     }
 

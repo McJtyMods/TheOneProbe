@@ -14,5 +14,5 @@
       "item": "minecraft:diamond_helmet"
     }
   },
-  "type": "theoneprobe:probe_helmet"
+  "type": "minecraft:crafting_shaped"
 }
