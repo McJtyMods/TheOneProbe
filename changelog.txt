@@ -1,3 +1,6 @@
+1.20.4-11.0.0:
+- Fist release of TOP for 1.20.4/NeoForge
+
 1.20.1-10.0.1:
 - Fixed a bug with rendering amounts of items in an inventory
 - Fixed a bug with rendering text in other places too
