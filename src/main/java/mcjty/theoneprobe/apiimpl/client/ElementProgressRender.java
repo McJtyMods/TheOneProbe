@@ -2,6 +2,7 @@ package mcjty.theoneprobe.apiimpl.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.TankReference;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
@@ -24,7 +25,7 @@ import java.util.function.Function;
 
 public class ElementProgressRender {
 
-    private static final ResourceLocation ICONS = new ResourceLocation("textures/gui/icons.png");
+    private static final ResourceLocation ICONS = new ResourceLocation(TheOneProbe.MODID, "textures/gui/icons.png");
 
     public static void render(IProgressStyle style, long current, long max, GuiGraphics graphics, int x, int y, int w, int h) {
         if (style.isLifeBar()) {
