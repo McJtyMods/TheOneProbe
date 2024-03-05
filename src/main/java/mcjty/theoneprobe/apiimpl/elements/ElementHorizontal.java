@@ -37,8 +37,8 @@ public class ElementHorizontal extends AbstractElementPanel {
             x += 3;
             y += 3;
         }
-		x += layout.getLeftPadding();
-		int totHeight = getHeight() - getYPadding();
+        x += layout.getLeftPadding();
+        int totHeight = getHeight() - getYPadding();
         for (IElement element : children) {
             int h = element.getHeight();
             int cy = y;

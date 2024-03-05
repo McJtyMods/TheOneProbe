@@ -37,7 +37,12 @@ public class ElementText implements IElement {
 
     public ElementText(FriendlyByteBuf buf) {
         text = buf.readComponent();
-        style = new TextStyle().alignment(buf.readEnum(ElementAlignment.class)).topPadding(buf.readInt()).bottomPadding(buf.readInt()).leftPadding(buf.readInt()).rightPadding(buf.readInt());
+        style = new TextStyle()
+            .alignment(buf.readEnum(ElementAlignment.class))
+            .topPadding(buf.readInt())
+            .bottomPadding(buf.readInt())
+            .leftPadding(buf.readInt())
+            .rightPadding(buf.readInt());
         if (buf.readBoolean()) {
             style.width(buf.readInt());
         }
@@ -90,14 +95,8 @@ public class ElementText implements IElement {
     public void toBytes(FriendlyByteBuf buffer) {
         buffer.writeComponent(text);
         buffer.writeEnum(style.getAlignment()).writeInt(style.getTopPadding()).writeInt(style.getBottomPadding()).writeInt(style.getLeftPadding()).writeInt(style.getRightPadding());
-        buffer.writeBoolean(style.getWidth() != null);
-        if (style.getWidth() != null) {
-            buffer.writeInt(style.getWidth());
-        }
-        buffer.writeBoolean(style.getHeight() != null);
-        if (style.getHeight() != null) {
-            buffer.writeInt(style.getHeight());
-        }
+        buffer.writeNullable(style.getWidth(), FriendlyByteBuf::writeInt);
+        buffer.writeNullable(style.getHeight(), FriendlyByteBuf::writeInt);
         buffer.writeBoolean(legacy);
     }
 

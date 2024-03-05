@@ -44,7 +44,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Mod("theoneprobe")
+@Mod(TheOneProbe.MODID)
 public class TheOneProbe {
     public static final String MODID = "theoneprobe";
 
@@ -167,13 +167,13 @@ public class TheOneProbe {
         final IPayloadRegistrar registrar = event.registrar(TheOneProbe.MODID)
                 .versioned("1.0")
                 .optional();
-        registrar.play(PacketGetEntityInfo.ID, PacketGetEntityInfo::create, handler -> handler
+        registrar.play(PacketGetEntityInfo.ID, PacketGetEntityInfo::read, handler -> handler
                 .server(PacketGetEntityInfo::handle));
-        registrar.play(PacketReturnEntityInfo.ID, PacketReturnEntityInfo::create, handler -> handler
+        registrar.play(PacketReturnEntityInfo.ID, PacketReturnEntityInfo::read, handler -> handler
                 .client(PacketReturnEntityInfo::handle));
-        registrar.play(PacketGetInfo.ID, PacketGetInfo::create, handler -> handler
+        registrar.play(PacketGetInfo.ID, PacketGetInfo::read, handler -> handler
                 .server(PacketGetInfo::handle));
-        registrar.play(PacketOpenGui.ID, PacketOpenGui::create, handler -> handler
+        registrar.play(PacketOpenGui.ID, PacketOpenGui::read, handler -> handler
                 .client(PacketOpenGui::handle));
         registrar.play(PacketReturnInfo.ID, PacketReturnInfo::create, handler -> handler
                 .client(PacketReturnInfo::handle));

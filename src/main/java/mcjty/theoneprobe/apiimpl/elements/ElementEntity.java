@@ -48,17 +48,13 @@ public class ElementEntity implements IElement {
     }
 
     public ElementEntity(FriendlyByteBuf buf) {
-        entityName = NetworkTools.readString(buf);
+        entityName = buf.readUtf();
         style = new EntityStyle()
                 .width(buf.readInt())
                 .height(buf.readInt())
                 .scale(buf.readFloat());
         entityNBT = buf.readNbt();
-        if (buf.readBoolean()) {
-            playerID = buf.readInt();
-        } else {
-            playerID = null;
-        }
+        playerID = buf.readNullable(FriendlyByteBuf::readInt);
     }
 
     @Override
@@ -82,17 +78,12 @@ public class ElementEntity implements IElement {
 
     @Override
     public void toBytes(FriendlyByteBuf buf) {
-        NetworkTools.writeString(buf, entityName);
+        buf.writeUtf(entityName);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
         buf.writeFloat(style.getScale());
         buf.writeNbt(entityNBT);
-        if (playerID != null) {
-            buf.writeBoolean(true);
-            buf.writeInt(playerID);
-        } else {
-            buf.writeBoolean(false);
-        }
+        buf.writeNullable(playerID, FriendlyByteBuf::writeInt);
     }
 
     @Override

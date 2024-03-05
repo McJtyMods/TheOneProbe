@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.network;
 
-import io.netty.buffer.Unpooled;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -14,7 +13,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -34,58 +32,35 @@ import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
 import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
-public record PacketGetInfo(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode, Direction sideHit, Vec3 hitVec, @Nonnull ItemStack pickBlock) implements CustomPacketPayload {
+import org.jetbrains.annotations.NotNull;
+
+public record PacketGetInfo(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode, Direction sideHit, Vec3 hitVec, @NotNull ItemStack pickBlock) implements CustomPacketPayload {
 
     public static final ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "getinfo");
 
-    public static PacketGetInfo create(FriendlyByteBuf buf) {
-        ResourceKey<Level> dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
-        BlockPos pos = buf.readBlockPos();
-        ProbeMode mode = ProbeMode.values()[buf.readByte()];
-        byte sideByte = buf.readByte();
-        Direction sideHit;
-        Vec3 hitVec = null;
-        if (sideByte == 127) {
-            sideHit = null;
-        } else {
-            sideHit = Direction.values()[sideByte];
-        }
-        if (buf.readBoolean()) {
-            hitVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-        }
-        ItemStack pickBlock = buf.readItem();
-        return new PacketGetInfo(dim, pos, mode, sideHit, hitVec, pickBlock);
-    }
-
-    public static PacketGetInfo create(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode, HitResult mouseOver, @Nonnull ItemStack pickBlock) {
-        Direction sideHit = ((BlockHitResult)mouseOver).getDirection();
+    public static PacketGetInfo create(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode, HitResult mouseOver, @NotNull ItemStack pickBlock) {
+        var sideHit = ((BlockHitResult)mouseOver).getDirection();
         return new PacketGetInfo(dim, pos, mode, sideHit, mouseOver.getLocation(), pickBlock);
     }
 
+    public static PacketGetInfo read(FriendlyByteBuf buf) {
+        var dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
+        var pos = buf.readBlockPos();
+        var mode = buf.readEnum(ProbeMode.class);
+        var sideHit = buf.readNullable(buf1 -> buf1.readEnum(Direction.class));
+        var hitVec = buf.readNullable(FriendlyByteBuf::readVec3);
+        var pickBlock = buf.readItem();
+        return new PacketGetInfo(dim, pos, mode, sideHit, hitVec, pickBlock);
+    }
 
     @Override
     public void write(FriendlyByteBuf buf) {
         buf.writeResourceLocation(dim.location());
         buf.writeBlockPos(pos);
-        buf.writeByte(mode.ordinal());
-        buf.writeByte(sideHit == null ? 127 : sideHit.ordinal());
-        if (hitVec == null) {
-            buf.writeBoolean(false);
-        } else {
-            buf.writeBoolean(true);
-            buf.writeDouble(hitVec.x);
-            buf.writeDouble(hitVec.y);
-            buf.writeDouble(hitVec.z);
-        }
-
-        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-        buffer.writeItem(pickBlock);
-        if (buffer.writerIndex() <= Config.maxPacketToServer.get()) {
-            buf.writeBytes(buffer);
-        } else {
-            ItemStack copy = new ItemStack(pickBlock.getItem(), pickBlock.getCount());
-            buf.writeItem(copy);
-        }
+        buf.writeEnum(mode);
+        buf.writeNullable(sideHit, FriendlyByteBuf::writeEnum);
+        buf.writeNullable(hitVec, FriendlyByteBuf::writeVec3);
+        buf.writeItem(pickBlock);
     }
 
     @Override
@@ -95,12 +70,10 @@ public record PacketGetInfo(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode
 
     public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().submitAsync(() -> {
-            ctx.level().ifPresent(level -> {
-                ctx.player().ifPresent(player -> {
-                    ServerLevel world = (ServerLevel) level;
-                    ProbeInfo probeInfo = getProbeInfo(player, mode, world, pos, sideHit, hitVec, pickBlock);
-                    PacketDistributor.PLAYER.with((ServerPlayer) player).send(PacketReturnInfo.create(dim, pos, probeInfo));
-                });
+            ctx.player().ifPresent(player -> {
+                var level = player.level();
+                var probeInfo = getProbeInfo(player, mode, level, pos, sideHit, hitVec, pickBlock);
+                PacketDistributor.PLAYER.with((ServerPlayer) player).send(new PacketReturnInfo(dim, pos, probeInfo));
             });
         });
     }
