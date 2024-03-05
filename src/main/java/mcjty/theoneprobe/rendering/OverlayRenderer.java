@@ -226,7 +226,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, Player player) {
-        PacketDistributor.SERVER.noArg().send(PacketGetEntityInfo.create(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity));
+        PacketDistributor.SERVER.noArg().send(PacketGetEntityInfo.create(player.getCommandSenderWorld().dimension(), entity, mode, mouseOver));
     }
 
     private static void renderHUDBlock(GuiGraphics graphics, ProbeMode mode, HitResult mouseOver, double sw, double sh) {

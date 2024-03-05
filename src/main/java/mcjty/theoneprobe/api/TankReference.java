@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.api;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.neoforged.neoforge.common.extensions.IFriendlyByteBufExtension;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -19,10 +20,7 @@ public final class TankReference {
     public TankReference(FriendlyByteBuf buffer) {
         capacity = buffer.readInt();
         stored = buffer.readInt();
-        fluids = new FluidStack[buffer.readInt()];
-        for (int i = 0; i < fluids.length; i++) {
-            fluids[i] = buffer.readFluidStack();
-        }
+        fluids = buffer.readArray(FluidStack[]::new, IFriendlyByteBufExtension::readFluidStack);
     }
 
     public int getCapacity() {
@@ -74,9 +72,6 @@ public final class TankReference {
     public void toBytes(FriendlyByteBuf buffer) {
         buffer.writeInt(capacity);
         buffer.writeInt(stored);
-        buffer.writeInt(fluids.length);
-		for (FluidStack fluid : fluids) {
-			buffer.writeFluidStack(fluid);
-		}
+        buffer.writeArray(fluids, IFriendlyByteBufExtension::writeFluidStack);
     }
 }

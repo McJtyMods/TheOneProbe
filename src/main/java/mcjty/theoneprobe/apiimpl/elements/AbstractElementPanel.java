@@ -62,20 +62,24 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         children = ProbeInfo.createElements(buf);
         this.layout = new LayoutStyle();
         layout.alignment(buf.readEnum(ElementAlignment.class));
-        if (buf.readBoolean()) {
-            layout.borderColor(buf.readInt());
-        }
-        layout.spacing(buf.readInt()).topPadding(buf.readInt()).bottomPadding(buf.readInt()).leftPadding(buf.readInt()).rightPadding(buf.readInt());
+        buf.readNullable(buf1 -> layout.borderColor(buf1.readInt()));
+        layout.spacing(buf.readInt())
+            .topPadding(buf.readInt())
+            .bottomPadding(buf.readInt())
+            .leftPadding(buf.readInt())
+            .rightPadding(buf.readInt());
     }
 
     @Override
     public void toBytes(FriendlyByteBuf buf) {
         ProbeInfo.writeElements(children, buf);
-        buf.writeEnum(layout.getAlignment()).writeBoolean(layout.getBorderColor() != null);
-        if (layout.getBorderColor() != null) {
-            buf.writeInt(layout.getBorderColor());
-        }
-        buf.writeInt(layout.getSpacing()).writeInt(layout.getTopPadding()).writeInt(layout.getBottomPadding()).writeInt(layout.getLeftPadding()).writeInt(layout.getRightPadding());
+        buf.writeEnum(layout.getAlignment());
+        buf.writeNullable(layout.getBorderColor(), FriendlyByteBuf::writeInt);
+        buf.writeInt(layout.getSpacing());
+        buf.writeInt(layout.getTopPadding());
+        buf.writeInt(layout.getBottomPadding());
+        buf.writeInt(layout.getLeftPadding());
+        buf.writeInt(layout.getRightPadding());
     }
 
     public ILayoutStyle getStyle() {

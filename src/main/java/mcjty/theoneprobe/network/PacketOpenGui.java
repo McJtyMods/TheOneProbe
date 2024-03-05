@@ -15,17 +15,13 @@ public record PacketOpenGui(int gui) implements CustomPacketPayload {
     public static final int GUI_CONFIG = 0;
     public static final int GUI_NOTE = 1;
 
-    public static PacketOpenGui create(FriendlyByteBuf buf) {
-        return new PacketOpenGui(buf.readInt());
-    }
-
-    public static PacketOpenGui create(int gui) {
-        return new PacketOpenGui(gui);
+    public static PacketOpenGui read(FriendlyByteBuf buf) {
+        return new PacketOpenGui(buf.readVarInt());
     }
 
     @Override
     public void write(FriendlyByteBuf buf) {
-        buf.writeInt(gui);
+        buf.writeVarInt(gui);
     }
 
     @Override

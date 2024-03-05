@@ -14,30 +14,16 @@ public record PacketReturnEntityInfo(UUID uuid, ProbeInfo probeInfo) implements 
 
     public static final ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "returnentityinfo");
 
-    public static PacketReturnEntityInfo create(FriendlyByteBuf buf) {
-        UUID uuid = buf.readUUID();
-        ProbeInfo probeInfo;
-        if (buf.readBoolean()) {
-            probeInfo = new ProbeInfo(buf);
-        } else {
-            probeInfo = null;
-        }
-        return new PacketReturnEntityInfo(uuid, probeInfo);
-    }
-
-    public static PacketReturnEntityInfo create(UUID uuid, ProbeInfo probeInfo) {
+    public static PacketReturnEntityInfo read(FriendlyByteBuf buf) {
+        var uuid = buf.readUUID();
+        var probeInfo = buf.readNullable(ProbeInfo::new);
         return new PacketReturnEntityInfo(uuid, probeInfo);
     }
 
     @Override
     public void write(FriendlyByteBuf buf) {
         buf.writeUUID(uuid);
-        if (probeInfo != null) {
-            buf.writeBoolean(true);
-            probeInfo.toBytes(buf);
-        } else {
-            buf.writeBoolean(false);
-        }
+        buf.writeNullable(probeInfo, (buf1, probeInfo1) -> probeInfo1.toBytes(buf1));
     }
 
     @Override
@@ -50,5 +36,4 @@ public record PacketReturnEntityInfo(UUID uuid, ProbeInfo probeInfo) implements 
             OverlayRenderer.registerProbeInfo(uuid, probeInfo);
         });
     }
-
 }

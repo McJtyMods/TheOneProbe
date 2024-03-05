@@ -37,8 +37,8 @@ public class ElementVertical extends AbstractElementPanel {
             x += 3;
             y += 3;
         }
-		y += layout.getTopPadding();
-		int totWidth = getWidth() - getXPadding();
+        y += layout.getTopPadding();
+        int totWidth = getWidth() - getXPadding();
         for (IElement element : children) {
             int w = element.getWidth();
             int cx = x;
@@ -74,7 +74,7 @@ public class ElementVertical extends AbstractElementPanel {
     public int getWidth() {
         int w = 0;
         for (IElement element : children) {
-        	w = Math.max(w, element.getWidth());
+            w = Math.max(w, element.getWidth());
         }
         return w + getBorderSpacing() + getXPadding();
     }

@@ -17,18 +17,9 @@ public record PacketReturnInfo(ResourceKey<Level> dim, BlockPos pos, ProbeInfo p
     public static ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "returninfo");
 
     public static PacketReturnInfo create(FriendlyByteBuf buf) {
-        ResourceKey<Level> dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
-        BlockPos pos = buf.readBlockPos();
-        ProbeInfo probeInfo;
-        if (buf.readBoolean()) {
-            probeInfo = new ProbeInfo(buf);
-        } else {
-            probeInfo = null;
-        }
-        return new PacketReturnInfo(dim, pos, probeInfo);
-    }
-
-    public static PacketReturnInfo create(ResourceKey<Level> dim, BlockPos pos, ProbeInfo probeInfo) {
+        var dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
+        var pos = buf.readBlockPos();
+        var probeInfo = buf.readNullable(ProbeInfo::new);
         return new PacketReturnInfo(dim, pos, probeInfo);
     }
 
@@ -36,12 +27,7 @@ public record PacketReturnInfo(ResourceKey<Level> dim, BlockPos pos, ProbeInfo p
     public void write(FriendlyByteBuf buf) {
         buf.writeResourceLocation(dim.location());
         buf.writeBlockPos(pos);
-        if (probeInfo != null) {
-            buf.writeBoolean(true);
-            probeInfo.toBytes(buf);
-        } else {
-            buf.writeBoolean(false);
-        }
+        buf.writeNullable(probeInfo, (buf1, probeInfo1) -> probeInfo1.toBytes(buf1));
     }
 
     @Override

@@ -23,9 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
@@ -36,34 +34,24 @@ public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode m
 
     public static final ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "getentityinfo");
 
-    public static PacketGetEntityInfo create(FriendlyByteBuf buf) {
-        ResourceKey<Level> dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
-        UUID uuid = buf.readUUID();
-        ProbeMode mode = ProbeMode.values()[buf.readByte()];
-        Vec3 hitVec = null;
-        if (buf.readBoolean()) {
-            hitVec = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-        }
-        return new PacketGetEntityInfo(dim, uuid, mode, hitVec);
+    public static PacketGetEntityInfo create(ResourceKey<Level> dim, Entity entity, ProbeMode mode, HitResult mouseOver) {
+        return new PacketGetEntityInfo(dim, entity.getUUID(), mode, mouseOver.getLocation());
     }
 
-    public static PacketGetEntityInfo create(ResourceKey<Level> dim, ProbeMode mode, HitResult mouseOver, Entity entity) {
-        return new PacketGetEntityInfo(dim, entity.getUUID(), mode, mouseOver.getLocation());
+    public static PacketGetEntityInfo read(FriendlyByteBuf buf) {
+        var dim = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation());
+        var uuid = buf.readUUID();
+        var mode = buf.readEnum(ProbeMode.class);
+        var hitVec = buf.readNullable(FriendlyByteBuf::readVec3);
+        return new PacketGetEntityInfo(dim, uuid, mode, hitVec);
     }
 
     @Override
     public void write(FriendlyByteBuf buf) {
         buf.writeResourceLocation(dim.location());
         buf.writeUUID(uuid);
-        buf.writeByte(mode.ordinal());
-        if (hitVec == null) {
-            buf.writeBoolean(false);
-        } else {
-            buf.writeBoolean(true);
-            buf.writeDouble(hitVec.x);
-            buf.writeDouble(hitVec.y);
-            buf.writeDouble(hitVec.z);
-        }
+        buf.writeEnum(mode);
+        buf.writeNullable(hitVec, FriendlyByteBuf::writeVec3);
     }
 
     @Override
@@ -73,15 +61,13 @@ public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode m
 
     public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().submitAsync(() -> {
-            ctx.level().ifPresent(level -> {
-                ctx.player().ifPresent(player -> {
-                    ServerLevel world = (ServerLevel) level;
-                    Entity entity = world.getEntity(uuid);
-                    if (entity != null) {
-                        ProbeInfo probeInfo = getProbeInfo(player, mode, world, entity, hitVec);
-                        PacketDistributor.PLAYER.with((ServerPlayer) player).send(PacketReturnEntityInfo.create(uuid, probeInfo));
-                    }
-                });
+            ctx.player().ifPresent(player -> {
+                var level = (ServerLevel)player.level();
+                var entity = level.getEntity(uuid);
+                if (entity != null) {
+                    ProbeInfo probeInfo = getProbeInfo(player, mode, level, entity, hitVec);
+                    PacketDistributor.PLAYER.with((ServerPlayer) player).send(new PacketReturnEntityInfo(uuid, probeInfo));
+                }
             });
         })
         .exceptionally(e -> {
@@ -105,26 +91,26 @@ public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode m
         }
 
         if (!Config.getEntityBlacklist().isEmpty()) {
-            ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
-            for (Predicate<ResourceLocation> predicate : Config.getEntityBlacklist()) {
+            var rl = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+            for (var predicate : Config.getEntityBlacklist()) {
                 if (predicate.test(rl)) {
                     return null;
                 }
             }
         }
 
-        ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
-        IProbeHitEntityData data = new ProbeHitEntityData(hitVec);
+        var probeInfo = TheOneProbe.theOneProbeImp.create();
+        var data = new ProbeHitEntityData(hitVec);
 
-        IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
-        List<IProbeConfigProvider> configProviders = TheOneProbe.theOneProbeImp.getConfigProviders();
-        for (IProbeConfigProvider configProvider : configProviders) {
+        var probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
+        var configProviders = TheOneProbe.theOneProbeImp.getConfigProviders();
+        for (var configProvider : configProviders) {
             configProvider.getProbeConfig(probeConfig, player, world, entity, data);
         }
         Config.setRealConfig(probeConfig);
 
-        List<IProbeInfoEntityProvider> entityProviders = TheOneProbe.theOneProbeImp.getEntityProviders();
-        for (IProbeInfoEntityProvider provider : entityProviders) {
+        var entityProviders = TheOneProbe.theOneProbeImp.getEntityProviders();
+        for (var provider : entityProviders) {
             try {
                 provider.addProbeEntityInfo(mode, probeInfo, player, world, entity, data);
             } catch (Throwable e) {
@@ -134,5 +120,4 @@ public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode m
         }
         return probeInfo;
     }
-
 }

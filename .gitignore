@@ -36,6 +36,7 @@
 logs/
 
 run/
+runs/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
