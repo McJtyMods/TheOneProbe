@@ -281,6 +281,9 @@ public class Config {
                         "minecraft:needs_stone_tool=Stone", "minecraft:needs_iron_tool=Iron", "minecraft:needs_diamond_tool=Diamond",
                         "forge:needs_netherite_tool=Netherite"),
                         s -> s instanceof String);
+        harvestStyleVanilla = COMMON_BUILDER
+                .comment("true means shows harvestability with vanilla style icons")
+                .define("harvestStyleVanilla", true);
 
         setupStyleConfig();
 
@@ -401,9 +404,6 @@ public class Config {
         showBreakProgress = CLIENT_BUILDER
                 .comment("0 means don't show break progress, 1 is show as bar, 2 is show as text")
                 .defineInRange("showBreakProgress", 1, 0, 2);
-        harvestStyleVanilla = CLIENT_BUILDER
-                .comment("true means shows harvestability with vanilla style icons")
-                .define("harvestStyleVanilla", true);
 
         CLIENT_BUILDER.push("style");
 

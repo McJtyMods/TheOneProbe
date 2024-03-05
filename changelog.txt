@@ -1,3 +1,6 @@
+Upcoming:
+- The 'harvestStyleVanilla' config option was incorrectly set on the client config. It's now in common config
+
 1.20.1-10.0.1:
 - Fixed a bug with rendering amounts of items in an inventory
 - Fixed a bug with rendering text in other places too
@@ -67,8 +70,6 @@
 
 1.17-4.0.0:
 - First port to 1.17
-
-Upcoming:
 - Fixed the configs for showContentsWithoutSneaking, dontShowContentsUnlessSneaking, and dontSendNBT
 
 1.16-3.1.4:
