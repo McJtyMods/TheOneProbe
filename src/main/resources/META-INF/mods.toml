@@ -1,28 +1,22 @@
-modLoader="javafml"
-loaderVersion="[2,)"
-license="MIT License https://github.com/McJtyMods/TheOneProbe/blob/1.16/LICENCE"
-issueTrackerURL="http://github.com/McJtyMods/TheOneProbe/issues"
-displayURL="http://github.com/McJtyMods/TheOneProbe/"
-#logoFile="examplemod.png" #optional
-#credits="Thanks for this example mod goes to Java" #optional
-authors="McJty"
-
-[[accessTransformers]]
-file="META-INF/accesstransformer.cfg"
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "MIT License https://github.com/McJtyMods/TheOneProbe/blob/1.20.4_neo/LICENCE"
+issueTrackerURL = "http://github.com/McJtyMods/TheOneProbe/issues"
+displayURL = "http://github.com/McJtyMods/TheOneProbe/"
+authors = "McJty"
 
 [[mods]]
-modId="theoneprobe"
-version="${file.jarVersion}"
-displayName="The One Probe"
-#updateJSONURL="http://myurl.me/" #optional
-description='''
-The One Probe lets you examine the block that you are looking at. Having a
-probe in your hand lets you examine it better but you can also make this
-probe required if you so desire.
-'''
+    modId = "theoneprobe"
+    version = "${mod_version}"
+    displayName = "The One Probe"
+    description='''
+    The One Probe lets you examine the block that you are looking at. Having a
+    probe in your hand lets you examine it better but you can also make this
+    probe required if you so desire.
+    '''
 [[dependencies.theoneprobe]]
-    modId="neoforge"
-    type="required"
-    versionRange="[20.4,)"
-    ordering="NONE"
-    side="BOTH"
+    modId = "neoforge"
+    type = "required"
+    versionRange = "${neo_version_range}"
+    ordering = "NONE"
+    side = "BOTH"

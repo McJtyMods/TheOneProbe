@@ -2,26 +2,13 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id "com.modrinth.minotaur" version "2.+"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-    id 'net.neoforged.gradle.userdev' version '7.0.80'
+    id 'com.modrinth.minotaur' version '2.+'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'net.neoforged.gradle.userdev' version "$neo_gradle_version"
 }
 
-repositories {
-    maven { url 'https://www.dogforce-games.com/maven/' }
-    maven { // JEI
-        url "https://dvs1.progwml6.com/files/maven"
-    }
-    maven { // Patchouli
-        url "https://maven.blamejared.com"
-    }
-    maven { // CompatLayer
-        url "https://maven.k-4u.nl"
-    }
-}
-
-group= "mcjty.theoneprobe" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-base.archivesName = "theoneprobe"
+group = 'mcjty.theoneprobe'
+base.archivesName = 'theoneprobe'
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "-${System.getenv('BUILD_NUMBER')}"
@@ -39,21 +26,15 @@ runs {
     configureEach {
         systemProperty 'forge.logging.markers', 'REGISTRIES'
         systemProperty 'forge.logging.console.level', 'debug'
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         modSource project.sourceSets.main
     }
 
     client {
-        // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
     }
 
     server {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         programArgument '--nogui'
-    }
-
-    gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
     }
 
     data {
@@ -61,35 +42,60 @@ runs {
     }
 }
 
-jar {
-  duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-
-dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
-
-    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
-    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
-    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
-}
-
-jar {
-    manifest {
-        attributes 'FMLAT': 'accesstransformer.cfg',
-        "Specification-Title": "theoneprobe",
-        "Specification-Vendor": "McJty",
-        "Specification-Version": "1",
-        "Implementation-Title": project.name,
-        "Implementation-Version": "${version}",
-        "Implementation-Vendor" :"McJty",
-        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+repositories {
+    maven {
+        name 'JEI/Patchouli'
+        url 'https://maven.blamejared.com'
     }
 }
 
-task apiJar(type: Jar) {
-    archiveClassifier = "api"
+dependencies {
+    implementation "net.neoforged:neoforge:$neo_version"
+
+    compileOnly "mezz.jei:jei-$minecraft_version-common-api:$jei_version"
+    compileOnly "mezz.jei:jei-$minecraft_version-neoforge-api:$jei_version"
+    runtimeOnly "mezz.jei:jei-$minecraft_version-neoforge:$jei_version"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs.addAll(['-Xmaxerrs', '100000'])
+}
+
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+        minecraft_version       : minecraft_version,
+        minecraft_version_range : minecraft_version_range,
+        neo_version             : neo_version,
+        neo_version_range       : neo_version_range,
+        loader_version_range    : loader_version_range,
+        mod_version             : mod_version,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+            'Specification-Title'       : 'theoneprobe',
+            'Specification-Vendor'      : 'McJty',
+            'Specification-Version'     : '1',
+            'Implementation-Title'      : project.name,
+            'Implementation-Version'    : project.version,
+            'Implementation-Vendor'     : 'McJty',
+        ])
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+tasks.register('apiJar', Jar) {
+    archiveClassifier = 'api'
     from(sourceSets.main.output) {
-        include "mcjty/theoneprobe/api/**"
+        include 'mcjty/theoneprobe/api/**'
     }
 }
 
@@ -152,7 +158,7 @@ String getChangelogText() {
         if (it.size() > 1) {
             def temp = it
             if (lineCount == 0) {
-                temp = "${modname} ${version}"
+                temp = "${mod_name} ${mod_version}"
                 temp = "<h2>$temp</h2>"
             } else if (it.startsWith('-')) {
                 temp = "&nbsp;&nbsp;&nbsp;$temp"
@@ -185,12 +191,12 @@ curseforge {
         releaseType = project.curse_type
         addGameVersion project.minecraft_version
         mainArtifact(jar) {
-            displayName = "${modname} - ${version}"
+            displayName = "${mod_name} - ${mod_version}"
         }
         relations {
-            optionalLibrary 'baubles'
-            optionalLibrary 'tesla'
-            optionalLibrary 'redstone-flux'
+            optionalDependency 'baubles'
+            optionalDependency 'tesla'
+            optionalDependency 'redstone-flux'
         }
     }
 }
@@ -202,7 +208,7 @@ modrinth {
     }
     projectId = project.projectSlug
     versionType = project.curse_type
-    versionName = "${modname} - ${version}"
+    versionName = "${mod_name} - ${mod_version}"
     uploadFile = jar
     gameVersions = [project.minecraft_version]
     changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
