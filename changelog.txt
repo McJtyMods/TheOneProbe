@@ -1,4 +1,4 @@
-Upcoming:
+1.20.1-10.0.2:
 - The 'harvestStyleVanilla' config option was incorrectly set on the client config. It's now in common config
 
 1.20.1-10.0.1:
