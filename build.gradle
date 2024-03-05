@@ -7,6 +7,7 @@ plugins {
     id 'net.neoforged.gradle.userdev' version "$neo_gradle_version"
 }
 
+version = mod_version
 group = 'mcjty.theoneprobe'
 base.archivesName = 'theoneprobe'
 
