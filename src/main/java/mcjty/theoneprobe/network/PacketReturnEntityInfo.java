@@ -18,8 +18,7 @@ public record PacketReturnEntityInfo(UUID uuid, ProbeInfo probeInfo) implements 
         UUID uuid = buf.readUUID();
         ProbeInfo probeInfo;
         if (buf.readBoolean()) {
-            probeInfo = new ProbeInfo();
-            probeInfo.fromBytes(buf);
+            probeInfo = new ProbeInfo(buf);
         } else {
             probeInfo = null;
         }

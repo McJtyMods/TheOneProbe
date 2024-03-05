@@ -1,7 +1,9 @@
 package mcjty.theoneprobe.apiimpl;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.api.ElementAlignment;
+import mcjty.theoneprobe.api.IElement;
+import mcjty.theoneprobe.api.IElementFactory;
 import mcjty.theoneprobe.apiimpl.elements.ElementVertical;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,8 +14,8 @@ import java.util.List;
 
 public class ProbeInfo extends ElementVertical {
 
-    public void fromBytes(FriendlyByteBuf buf) {
-        children = createElements(buf);
+    public ProbeInfo(FriendlyByteBuf buf) {
+        super(buf);
     }
 
     public ProbeInfo() {

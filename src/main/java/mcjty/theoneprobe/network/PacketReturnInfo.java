@@ -21,8 +21,7 @@ public record PacketReturnInfo(ResourceKey<Level> dim, BlockPos pos, ProbeInfo p
         BlockPos pos = buf.readBlockPos();
         ProbeInfo probeInfo;
         if (buf.readBoolean()) {
-            probeInfo = new ProbeInfo();
-            probeInfo.fromBytes(buf);
+            probeInfo = new ProbeInfo(buf);
         } else {
             probeInfo = null;
         }
