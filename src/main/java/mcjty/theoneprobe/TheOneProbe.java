@@ -13,23 +13,23 @@ import mcjty.theoneprobe.rendering.ClientSetup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -37,10 +37,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -58,6 +55,38 @@ public class TheOneProbe {
 
     public static final ResourceLocation HASPROBE = new ResourceLocation(MODID, "hasprobe");
     public static final TagKey<Item> HASPROBE_TAG = TagKey.create(Registries.ITEM, HASPROBE);
+
+    private static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, MODID);
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> MATERIAL_DIAMOND_HELMET = ARMOR_MATERIALS.register("diamond_helmet_probe", () -> new ArmorMaterial(
+            Map.of(
+                    ArmorItem.Type.HELMET, 3,
+                    ArmorItem.Type.CHESTPLATE, 8,
+                    ArmorItem.Type.LEGGINGS, 6,
+                    ArmorItem.Type.BOOTS, 3,
+                    ArmorItem.Type.BODY, 11
+            ),
+            10, SoundEvents.ARMOR_EQUIP_DIAMOND, () -> Ingredient.of(new ItemStack(Items.DIAMOND)),
+            Collections.emptyList(),  2.0f, 0.0f));
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> MATERIAL_IRON_HELMET = ARMOR_MATERIALS.register("iron_helmet_probe", () -> new ArmorMaterial(
+            Map.of(
+                    ArmorItem.Type.HELMET, 2,
+                    ArmorItem.Type.CHESTPLATE, 6,
+                    ArmorItem.Type.LEGGINGS, 5,
+                    ArmorItem.Type.BOOTS, 2,
+                    ArmorItem.Type.BODY, 5
+            ),
+            10, SoundEvents.ARMOR_EQUIP_IRON, () -> Ingredient.of(new ItemStack(Items.IRON_INGOT)),
+            Collections.emptyList(),  0.0f, 0.0f));
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> MATERIAL_GOLD_HELMET = ARMOR_MATERIALS.register("gold_helmet_probe", () -> new ArmorMaterial(
+            Map.of(
+                    ArmorItem.Type.HELMET, 1,
+                    ArmorItem.Type.CHESTPLATE, 5,
+                    ArmorItem.Type.LEGGINGS, 3,
+                    ArmorItem.Type.BOOTS, 1,
+                    ArmorItem.Type.BODY, 7
+            ),
+            10, SoundEvents.ARMOR_EQUIP_GOLD, () -> Ingredient.of(new ItemStack(Items.GOLD_INGOT)),
+            Collections.emptyList(),  0.0f, 0.0f));
 
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MODID);
     public static final Supplier<AttachmentType<Boolean>> ATTACHMENT_TYPE_PLAYER_GOT_NOTE = ATTACHMENT_TYPES.register("playergotnote", () -> AttachmentType.builder(() -> false)
@@ -96,9 +125,9 @@ public class TheOneProbe {
             .build());
 
 
-    public TheOneProbe(IEventBus bus, Dist dist) {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
+    public TheOneProbe(ModContainer container, IEventBus bus, Dist dist) {
+        container.registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
+        container.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
 
         bus.addListener(this::onRegisterEvent);
         bus.addListener(this::onRegisterPayloadHandler);
@@ -163,20 +192,15 @@ public class TheOneProbe {
         });
     }
 
-    public void onRegisterPayloadHandler(RegisterPayloadHandlerEvent event) {
-        final IPayloadRegistrar registrar = event.registrar(TheOneProbe.MODID)
+    public void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar(TheOneProbe.MODID)
                 .versioned("1.0")
                 .optional();
-        registrar.play(PacketGetEntityInfo.ID, PacketGetEntityInfo::create, handler -> handler
-                .server(PacketGetEntityInfo::handle));
-        registrar.play(PacketReturnEntityInfo.ID, PacketReturnEntityInfo::create, handler -> handler
-                .client(PacketReturnEntityInfo::handle));
-        registrar.play(PacketGetInfo.ID, PacketGetInfo::create, handler -> handler
-                .server(PacketGetInfo::handle));
-        registrar.play(PacketOpenGui.ID, PacketOpenGui::create, handler -> handler
-                .client(PacketOpenGui::handle));
-        registrar.play(PacketReturnInfo.ID, PacketReturnInfo::create, handler -> handler
-                .client(PacketReturnInfo::handle));
+        registrar.playToServer(PacketGetEntityInfo.TYPE, PacketGetEntityInfo.CODEC, PacketGetEntityInfo::handle);
+        registrar.playToClient(PacketReturnEntityInfo.TYPE, PacketReturnEntityInfo.CODEC, PacketReturnEntityInfo::handle);
+        registrar.playToServer(PacketGetInfo.TYPE, PacketGetInfo.CODEC, PacketGetInfo::handle);
+        registrar.playToClient(PacketOpenGui.TYPE, PacketOpenGui.CODEC, PacketOpenGui::handle);
+        registrar.playToClient(PacketReturnInfo.TYPE, PacketReturnInfo.CODEC, PacketReturnInfo::handle);
     }
 
     public void onRegisterEvent(RegisterEvent event) {

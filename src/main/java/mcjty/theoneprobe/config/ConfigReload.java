@@ -3,12 +3,12 @@ package mcjty.theoneprobe.config;
 
 import mcjty.theoneprobe.TheOneProbe;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 
 import static net.neoforged.fml.Logging.CORE;
 
-@Mod.EventBusSubscriber(modid = TheOneProbe.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = TheOneProbe.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ConfigReload {
 
 
