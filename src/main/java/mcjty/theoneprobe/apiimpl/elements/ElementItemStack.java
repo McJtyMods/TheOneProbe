@@ -7,6 +7,7 @@ import mcjty.theoneprobe.apiimpl.client.ElementItemStackRender;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,7 +22,7 @@ public class ElementItemStack implements IElement {
         this.style = style;
     }
 
-    public ElementItemStack(FriendlyByteBuf buf) {
+    public ElementItemStack(RegistryFriendlyByteBuf buf) {
         if (buf.readBoolean()) {
             itemStack = NetworkTools.readItemStack(buf);
         } else {
@@ -48,7 +49,7 @@ public class ElementItemStack implements IElement {
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         if (!itemStack.isEmpty()) {
             buf.writeBoolean(true);
             NetworkTools.writeItemStack(buf, itemStack);

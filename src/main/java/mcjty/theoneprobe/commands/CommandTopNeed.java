@@ -25,7 +25,7 @@ public class CommandTopNeed implements Command<CommandSourceStack> {
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        PacketDistributor.PLAYER.with(player).send(new PacketOpenGui(PacketOpenGui.GUI_NOTE));
+        PacketDistributor.sendToPlayer(player, new PacketOpenGui(PacketOpenGui.GUI_NOTE));
         return 0;
     }
 }

@@ -40,6 +40,7 @@ import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fStack;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -137,8 +138,8 @@ public class OverlayRenderer {
         RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
         Matrix4f ortho = (new Matrix4f()).setOrtho(0.0F, sw, sh, 0.0F, 1000.0F, ClientHooks.getGuiFarPlane());
         RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);  // @todo 1.20 is this right?
-        PoseStack posestack = RenderSystem.getModelViewStack();
-        posestack.setIdentity();
+        Matrix4fStack posestack = RenderSystem.getModelViewStack();
+        posestack.clear();
         posestack.translate(0.0F, 0.0F, 1000.0F - ClientHooks.getGuiFarPlane());
         RenderSystem.applyModelViewMatrix();
     }
@@ -226,7 +227,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, Player player) {
-        PacketDistributor.SERVER.noArg().send(PacketGetEntityInfo.create(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity));
+        PacketDistributor.sendToServer(PacketGetEntityInfo.create(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(GuiGraphics graphics, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
@@ -352,10 +353,10 @@ public class OverlayRenderer {
             pickBlock = ItemStack.EMPTY;
         }
         if (!pickBlock.isEmpty() && Config.getDontSendNBTSet().contains(BuiltInRegistries.ITEM.getKey(pickBlock.getItem()))) {
-            pickBlock = pickBlock.copy();
-            pickBlock.setTag(null);
+            // @todo 1.20.5_Neo is this right?
+            pickBlock = new ItemStack(pickBlock.getItem(), pickBlock.getCount());
         }
-        PacketDistributor.SERVER.noArg().send(PacketGetInfo.create(world.dimension(), blockPos, mode, mouseOver, pickBlock));
+        PacketDistributor.sendToServer(PacketGetInfo.create(world.dimension(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, GuiGraphics graphics) {

@@ -1,6 +1,7 @@
 package mcjty.theoneprobe.network;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
@@ -8,15 +9,15 @@ import java.util.Collection;
 public class NetworkTools {
 
     /// This function supports itemstacks with more then 64 items.
-    public static ItemStack readItemStack(FriendlyByteBuf buf) {
-        ItemStack stack = buf.readItem();
+    public static ItemStack readItemStack(RegistryFriendlyByteBuf buf) {
+        ItemStack stack = ItemStack.STREAM_CODEC.decode(buf);
         stack.setCount(buf.readInt());
         return stack;
     }
 
     /// This function supports itemstacks with more then 64 items.
-    public static void writeItemStack(FriendlyByteBuf buf, ItemStack itemStack) {
-        buf.writeItem(itemStack);
+    public static void writeItemStack(RegistryFriendlyByteBuf buf, ItemStack itemStack) {
+        ItemStack.STREAM_CODEC.encode(buf, itemStack);
         buf.writeInt(itemStack.getCount());
     }
 

@@ -24,7 +24,7 @@ public class CommandTopCfg implements Command<CommandSourceStack> {
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        PacketDistributor.PLAYER.with(player).send(new PacketOpenGui(PacketOpenGui.GUI_CONFIG));
+        PacketDistributor.sendToPlayer(player, new PacketOpenGui(PacketOpenGui.GUI_CONFIG));
         return 0;
     }
 }

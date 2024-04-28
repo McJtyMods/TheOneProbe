@@ -55,12 +55,12 @@ public class RenderHelper {
             }
         }
 
-        float ridingOffset;
+        double ridingOffset;
         if (entity.getVehicle() == null) {
             // Protection for the shulker
-            ridingOffset = 0.0f;
+            ridingOffset = 0.0;
         } else {
-            ridingOffset = entity.getMyRidingOffset(entity.getVehicle());
+            ridingOffset = entity.getVehicleAttachmentPoint(entity.getVehicle()).y;
         }
         matrixStack.translate(0.0F, ridingOffset + (entity instanceof HangingEntity ? 0.5F : 0.0F), 0.0F);
         RenderSystem.applyModelViewMatrix();

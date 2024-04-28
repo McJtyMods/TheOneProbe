@@ -10,7 +10,11 @@ import mcjty.theoneprobe.apiimpl.client.ElementProgressRender;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public class ElementTank implements IElement {
 	private final TankReference tank;
@@ -25,13 +29,13 @@ public class ElementTank implements IElement {
 		this.style = style;
 	}
 	
-	public ElementTank(FriendlyByteBuf buffer) {
+	public ElementTank(RegistryFriendlyByteBuf buffer) {
 		tank = new TankReference(buffer);
         style = new ProgressStyle()
                 .width(buffer.readInt())
                 .height(buffer.readInt())
-                .prefix(buffer.readComponent())
-                .suffix(buffer.readComponent())
+				.prefix(ComponentSerialization.STREAM_CODEC.decode(buffer))
+				.suffix(ComponentSerialization.STREAM_CODEC.decode(buffer))
                 .borderColor(buffer.readInt())
                 .filledColor(buffer.readInt())
                 .alternateFilledColor(buffer.readInt())
@@ -63,12 +67,12 @@ public class ElementTank implements IElement {
 	}
 	
 	@Override
-	public void toBytes(FriendlyByteBuf buf) {
+	public void toBytes(RegistryFriendlyByteBuf buf) {
 		tank.toBytes(buf);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
-        buf.writeComponent(style.getPrefixComp());
-        buf.writeComponent(style.getSuffixComp());
+		ComponentSerialization.STREAM_CODEC.encode(buf, style.getPrefixComp());
+		ComponentSerialization.STREAM_CODEC.encode(buf, style.getSuffixComp());
         buf.writeInt(style.getBorderColor());
         buf.writeInt(style.getFilledColor());
         buf.writeInt(style.getAlternatefilledColor());

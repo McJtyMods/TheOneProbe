@@ -25,6 +25,7 @@ import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -58,7 +59,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
         this(new LayoutStyle().borderColor(borderColor).spacing(spacing).alignment(alignment));
     }
 
-    public AbstractElementPanel(FriendlyByteBuf buf) {
+    public AbstractElementPanel(RegistryFriendlyByteBuf buf) {
         children = ProbeInfo.createElements(buf);
         this.layout = new LayoutStyle();
         layout.alignment(buf.readEnum(ElementAlignment.class));
@@ -69,7 +70,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         ProbeInfo.writeElements(children, buf);
         buf.writeEnum(layout.getAlignment()).writeBoolean(layout.getBorderColor() != null);
         if (layout.getBorderColor() != null) {

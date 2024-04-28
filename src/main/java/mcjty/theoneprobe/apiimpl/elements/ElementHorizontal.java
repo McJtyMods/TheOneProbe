@@ -7,6 +7,7 @@ import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class ElementHorizontal extends AbstractElementPanel {
@@ -26,7 +27,7 @@ public class ElementHorizontal extends AbstractElementPanel {
         super(borderColor, spacing, alignment);
     }
 
-    public ElementHorizontal(FriendlyByteBuf buf) {
+    public ElementHorizontal(RegistryFriendlyByteBuf buf) {
         super(buf);
     }
 

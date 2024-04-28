@@ -66,17 +66,11 @@ public class ModItems {
         if (stack.getItem() == PROBE || stack.getItem() == CREATIVE_PROBE) {
             return true;
         }
-        if (stack.getTag() == null) {
-            return false;
-        }
         return stack.is(HASPROBE_TAG);
     }
 
     private static boolean isProbeHelmet(ItemStack stack) {
         if (stack.isEmpty()) {
-            return false;
-        }
-        if (stack.getTag() == null) {
             return false;
         }
         return stack.is(HASPROBE_TAG);

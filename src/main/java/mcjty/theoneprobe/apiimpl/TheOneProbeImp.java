@@ -5,7 +5,7 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.*;
 import mcjty.theoneprobe.apiimpl.styles.StyleManager;
 import mcjty.theoneprobe.config.Config;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
@@ -36,10 +36,10 @@ public class TheOneProbeImp implements ITheOneProbe {
     public TheOneProbeImp() {
     }
 
-    private static IElementFactory create(ResourceLocation id, Function<FriendlyByteBuf, IElement> factory) {
+    private static IElementFactory create(ResourceLocation id, Function<RegistryFriendlyByteBuf, IElement> factory) {
         return new IElementFactory() {
             @Override
-            public IElement createElement(FriendlyByteBuf buf) {
+            public IElement createElement(RegistryFriendlyByteBuf buf) {
                 return factory.apply(buf);
             }
 

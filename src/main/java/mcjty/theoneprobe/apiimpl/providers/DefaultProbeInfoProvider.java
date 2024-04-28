@@ -17,6 +17,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -160,12 +161,12 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         if (blockState.getBlock() instanceof SkullBlock) {
             BlockEntity te = world.getBlockEntity(data.getPos());
             if (te instanceof SkullBlockEntity skullBlockEntity) {
-                GameProfile profile = skullBlockEntity.getOwnerProfile();
+                ResolvableProfile profile = skullBlockEntity.getOwnerProfile();
                 if (profile != null) {
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                             .alignment(ElementAlignment.ALIGN_CENTER))
                             .text(CompoundText.create().style(LABEL).text("Player: ")
-                                    .info(profile.getName()));
+                                    .info(profile.name().orElse("???")));
                 }
             }
         }

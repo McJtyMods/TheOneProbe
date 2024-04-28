@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.api;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -28,7 +28,7 @@ public interface IElement {
      * Persist this element to the given network buffer. This should be symmetrical to
      * what IElementFactory.createElement() expects.
      */
-    void toBytes(FriendlyByteBuf buf);
+    void toBytes(RegistryFriendlyByteBuf buf);
 
     /**
      * Get the identifier for this element (as specified by IElementFactory)

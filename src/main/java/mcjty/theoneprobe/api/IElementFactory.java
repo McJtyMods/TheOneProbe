@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -12,7 +12,7 @@ public interface IElementFactory {
      * Create an element from a network buffer. This should be
      * symmetrical to what IElement.toBytes() creates.
      */
-    IElement createElement(FriendlyByteBuf buf);
+    IElement createElement(RegistryFriendlyByteBuf buf);
 
     /**
      * Return a unique resource location that identifies this element factory

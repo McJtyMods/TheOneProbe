@@ -7,6 +7,7 @@ import mcjty.theoneprobe.api.IElementFactory;
 import mcjty.theoneprobe.apiimpl.elements.ElementVertical;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
@@ -16,9 +17,9 @@ import java.util.List;
 
 public class ProbeInfo extends ElementVertical {
 
-    public static final StreamCodec<FriendlyByteBuf, ProbeInfo> STREAM_CODEC = new StreamCodec<>() {
+    public static final StreamCodec<RegistryFriendlyByteBuf, ProbeInfo> STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public ProbeInfo decode(FriendlyByteBuf buf) {
+        public ProbeInfo decode(RegistryFriendlyByteBuf buf) {
             if (buf.readBoolean()) {
                 return new ProbeInfo(buf);
             } else {
@@ -27,7 +28,7 @@ public class ProbeInfo extends ElementVertical {
         }
 
         @Override
-        public void encode(FriendlyByteBuf buf, ProbeInfo info) {
+        public void encode(RegistryFriendlyByteBuf buf, ProbeInfo info) {
             if (info == null) {
                 buf.writeBoolean(false);
             } else {
@@ -37,7 +38,7 @@ public class ProbeInfo extends ElementVertical {
         }
     };
 
-    public ProbeInfo(FriendlyByteBuf buf) {
+    public ProbeInfo(RegistryFriendlyByteBuf buf) {
         super(buf);
     }
 
@@ -45,7 +46,7 @@ public class ProbeInfo extends ElementVertical {
         super(new LayoutStyle().spacing(2).alignment(ElementAlignment.ALIGN_TOPLEFT));
     }
 
-    public static List<IElement> createElements(FriendlyByteBuf buf) {
+    public static List<IElement> createElements(RegistryFriendlyByteBuf buf) {
         int size = buf.readVarInt();
         List<IElement> elements = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
@@ -56,7 +57,7 @@ public class ProbeInfo extends ElementVertical {
         return elements;
     }
 
-    public static void writeElements(List<IElement> elements, FriendlyByteBuf buf) {
+    public static void writeElements(List<IElement> elements, RegistryFriendlyByteBuf buf) {
         buf.writeVarInt(elements.size());
         for (IElement element : elements) {
             buf.writeResourceLocation(element.getID());

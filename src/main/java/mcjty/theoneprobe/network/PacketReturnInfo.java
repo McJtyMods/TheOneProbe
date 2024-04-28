@@ -6,6 +6,7 @@ import mcjty.theoneprobe.rendering.OverlayRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
@@ -18,7 +19,7 @@ public record PacketReturnInfo(ResourceKey<Level> dim, BlockPos pos, ProbeInfo p
     public static ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "returninfo");
     public static CustomPacketPayload.Type<PacketReturnInfo> TYPE = new Type<>(ID);
 
-    public static final StreamCodec<FriendlyByteBuf, PacketReturnInfo> CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketReturnInfo> CODEC = StreamCodec.composite(
             ResourceKey.streamCodec(Registries.DIMENSION), PacketReturnInfo::dim,
             BlockPos.STREAM_CODEC, PacketReturnInfo::pos,
             ProbeInfo.STREAM_CODEC, PacketReturnInfo::probeInfo,

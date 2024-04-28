@@ -8,8 +8,9 @@ import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementProgressRender;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.DecimalFormat;
@@ -26,14 +27,14 @@ public class ElementProgress implements IElement {
         this.style = style;
     }
 
-    public ElementProgress(FriendlyByteBuf buf) {
+    public ElementProgress(RegistryFriendlyByteBuf buf) {
         current = buf.readLong();
         max = buf.readLong();
         style = new ProgressStyle()
                 .width(buf.readInt())
                 .height(buf.readInt())
-                .prefix(buf.readComponent())
-                .suffix(buf.readComponent())
+                .prefix(ComponentSerialization.STREAM_CODEC.decode(buf))
+                .suffix(ComponentSerialization.STREAM_CODEC.decode(buf))
                 .borderColor(buf.readInt())
                 .filledColor(buf.readInt())
                 .alternateFilledColor(buf.readInt())
@@ -106,13 +107,13 @@ public class ElementProgress implements IElement {
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeLong(current);
         buf.writeLong(max);
         buf.writeInt(style.getWidth());
         buf.writeInt(style.getHeight());
-        buf.writeComponent(style.getPrefixComp());
-        buf.writeComponent(style.getSuffixComp());
+        ComponentSerialization.STREAM_CODEC.encode(buf, style.getPrefixComp());
+        ComponentSerialization.STREAM_CODEC.encode(buf, style.getSuffixComp());
         buf.writeInt(style.getBorderColor());
         buf.writeInt(style.getFilledColor());
         buf.writeInt(style.getAlternatefilledColor());

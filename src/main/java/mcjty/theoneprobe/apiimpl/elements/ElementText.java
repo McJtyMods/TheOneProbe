@@ -8,7 +8,9 @@ import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 
 public class ElementText implements IElement {
@@ -35,8 +37,8 @@ public class ElementText implements IElement {
         this.style = style;
     }
 
-    public ElementText(FriendlyByteBuf buf) {
-        text = buf.readComponent();
+    public ElementText(RegistryFriendlyByteBuf buf) {
+        text = ComponentSerialization.STREAM_CODEC.decode(buf);
         style = new TextStyle().alignment(buf.readEnum(ElementAlignment.class)).topPadding(buf.readInt()).bottomPadding(buf.readInt()).leftPadding(buf.readInt()).rightPadding(buf.readInt());
         if (buf.readBoolean()) {
             style.width(buf.readInt());
@@ -87,8 +89,8 @@ public class ElementText implements IElement {
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buffer) {
-        buffer.writeComponent(text);
+    public void toBytes(RegistryFriendlyByteBuf buffer) {
+        ComponentSerialization.STREAM_CODEC.encode(buffer, text);
         buffer.writeEnum(style.getAlignment()).writeInt(style.getTopPadding()).writeInt(style.getBottomPadding()).writeInt(style.getLeftPadding()).writeInt(style.getRightPadding());
         buffer.writeBoolean(style.getWidth() != null);
         if (style.getWidth() != null) {

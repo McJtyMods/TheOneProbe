@@ -6,6 +6,7 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -85,7 +86,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
                     float durationFactor = 1.0f;
                     for (MobEffectInstance effect : effects) {
                         CompoundText text = CompoundText.create().info(effect.getDescriptionId());
-                        MobEffect potion = effect.getEffect();
+                        MobEffect potion = effect.getEffect().value();
                         if (!potion.isBeneficial()) {
                             text.style(ERROR);
                         } else {
@@ -139,7 +140,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
 
         if (Tools.show(mode, config.getHorseStatSetting())) {
             if (entity instanceof Horse horse) {
-                double jumpStrength = horse.getCustomJump();
+                double jumpStrength = horse.getAttributeValue(Attributes.JUMP_STRENGTH);
                 double jumpHeight = -0.1817584952 * jumpStrength * jumpStrength * jumpStrength + 3.689713992 * jumpStrength * jumpStrength + 2.128599134 * jumpStrength - 0.343930367;
                 probeInfo.text(CompoundText.createLabelInfo("Jump height: ", dfCommas.format(jumpHeight)));
                 AttributeInstance attribute = horse.getAttribute(Attributes.MOVEMENT_SPEED);

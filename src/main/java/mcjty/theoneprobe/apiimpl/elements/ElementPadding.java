@@ -6,6 +6,7 @@ import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementPaddingRender;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class ElementPadding implements IElement {
@@ -53,7 +54,7 @@ public class ElementPadding implements IElement {
 	}
 	
 	@Override
-	public void toBytes(FriendlyByteBuf buf) {
+	public void toBytes(RegistryFriendlyByteBuf buf) {
 		buf.writeInt(width).writeInt(height).writeInt(color);
 	}
 	
