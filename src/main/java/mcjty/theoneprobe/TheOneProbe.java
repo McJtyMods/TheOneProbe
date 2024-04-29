@@ -139,6 +139,7 @@ public class TheOneProbe {
 
         TABS.register(bus);
         ATTACHMENT_TYPES.register(bus);
+        ARMOR_MATERIALS.register(bus);
 
         if (dist.isClient()) {
             bus.addListener(ClientSetup::onClientSetup);
