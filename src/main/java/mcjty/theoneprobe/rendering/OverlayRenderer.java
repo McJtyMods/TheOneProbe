@@ -139,7 +139,7 @@ public class OverlayRenderer {
         Matrix4f ortho = (new Matrix4f()).setOrtho(0.0F, sw, sh, 0.0F, 1000.0F, ClientHooks.getGuiFarPlane());
         RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);  // @todo 1.20 is this right?
         Matrix4fStack posestack = RenderSystem.getModelViewStack();
-        posestack.clear();
+        posestack.identity();
         posestack.translate(0.0F, 0.0F, 1000.0F - ClientHooks.getGuiFarPlane());
         RenderSystem.applyModelViewMatrix();
     }
