@@ -53,31 +53,22 @@ public class Tools {
         private static final StreamCodec<RegistryFriendlyByteBuf, Holder<Item>> ITEM_STREAM_CODEC = ByteBufCodecs.holderRegistry(Registries.ITEM);
 
         public ItemStack decode(RegistryFriendlyByteBuf buf) {
-            ItemStack itemstack = ItemStack.OPTIONAL_STREAM_CODEC.decode(buf);
-            if (itemstack.isEmpty()) {
-                throw new DecoderException("Empty ItemStack not allowed");
-            } else {
-                return itemstack;
-            }
+            return ItemStack.OPTIONAL_STREAM_CODEC.decode(buf);
         }
 
         public void encode(RegistryFriendlyByteBuf buf, ItemStack stack) {
             if (stack.isEmpty()) {
-                throw new EncoderException("Empty ItemStack not allowed");
+                buf.writeVarInt(0);
             } else {
-                if (stack.isEmpty()) {
-                    buf.writeVarInt(0);
+                buf.writeVarInt(stack.getCount());
+                ITEM_STREAM_CODEC.encode(buf, stack.getItemHolder());
+                RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), buf.registryAccess());
+                DataComponentPatch.STREAM_CODEC.encode(buffer, stack.getComponentsPatch());
+                if (buffer.writerIndex() <= Config.maxPacketToServer.get()) {
+                    DataComponentPatch.STREAM_CODEC.encode(buf, stack.getComponentsPatch());
                 } else {
-                    buf.writeVarInt(stack.getCount());
-                    ITEM_STREAM_CODEC.encode(buf, stack.getItemHolder());
-                    RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), buf.registryAccess());
-                    DataComponentPatch.STREAM_CODEC.encode(buffer, stack.getComponentsPatch());
-                    if (buffer.writerIndex() <= Config.maxPacketToServer.get()) {
-                        DataComponentPatch.STREAM_CODEC.encode(buf, stack.getComponentsPatch());
-                    } else {
-                        ItemStack copy = new ItemStack(stack.getItem(), stack.getCount());
-                        DataComponentPatch.STREAM_CODEC.encode(buf, copy.getComponentsPatch());
-                    }
+                    ItemStack copy = new ItemStack(stack.getItem(), stack.getCount());
+                    DataComponentPatch.STREAM_CODEC.encode(buf, copy.getComponentsPatch());
                 }
             }
         }
