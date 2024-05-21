@@ -9,10 +9,7 @@ plugins {
 
 repositories {
     maven { url 'https://www.dogforce-games.com/maven/' }
-    maven { // JEI
-        url "https://dvs1.progwml6.com/files/maven"
-    }
-    maven { // Patchouli
+    maven { // Patchouli and JEI
         url "https://maven.blamejared.com"
     }
     maven { // CompatLayer
@@ -68,9 +65,9 @@ jar {
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    compileOnly "mezz.jei:jei-1.20.4-common-api:${jei_version}"
-    compileOnly "mezz.jei:jei-1.20.4-neoforge-api:${jei_version}"
-    runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
+//    compileOnly "mezz.jei:jei-1.20.4-common-api:${jei_version}"
+//    compileOnly "mezz.jei:jei-1.20.4-neoforge-api:${jei_version}"
+//    runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
 }
 
 jar {
