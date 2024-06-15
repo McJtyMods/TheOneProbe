@@ -38,7 +38,7 @@ import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
 public record PacketGetInfo(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode, Direction sideHit, Vec3 hitVec, @Nonnull ItemStack pickBlock) implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "getinfo");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "getinfo");
     public static final CustomPacketPayload.Type<PacketGetInfo> TYPE = new Type<>(ID);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketGetInfo> CODEC = StreamCodec.composite(

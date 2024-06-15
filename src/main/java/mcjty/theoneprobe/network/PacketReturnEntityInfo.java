@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public record PacketReturnEntityInfo(UUID uuid, ProbeInfo probeInfo) implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "returnentityinfo");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "returnentityinfo");
     public static final CustomPacketPayload.Type<PacketReturnEntityInfo> TYPE = new Type<>(ID);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketReturnEntityInfo> CODEC = StreamCodec.composite(

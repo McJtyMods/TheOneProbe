@@ -38,7 +38,7 @@ import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode mode,
                                   Vec3 hitVec) implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "getentityinfo");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "getentityinfo");
     public static final CustomPacketPayload.Type<PacketGetEntityInfo> TYPE = new Type<>(ID);
 
     public static final StreamCodec<FriendlyByteBuf, PacketGetEntityInfo> CODEC = StreamCodec.composite(

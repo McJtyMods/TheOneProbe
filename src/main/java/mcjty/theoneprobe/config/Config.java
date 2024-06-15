@@ -517,7 +517,7 @@ public class Config {
         if (inventoriesToShow == null) {
             inventoriesToShow = new HashSet<>();
             for (String s : showContentsWithoutSneaking.get()) {
-                inventoriesToShow.add(new ResourceLocation(s));
+                inventoriesToShow.add(ResourceLocation.parse(s));
             }
         }
         return inventoriesToShow;
@@ -528,7 +528,7 @@ public class Config {
             tooltypeTagsSet = new HashMap<>();
             for (String s : tooltypeTags.get()) {
                 String[] splitted = StringUtils.split(s, '=');
-                tooltypeTagsSet.put(new ResourceLocation(splitted[0]), splitted[1]);
+                tooltypeTagsSet.put(ResourceLocation.parse(splitted[0]), splitted[1]);
             }
         }
         return tooltypeTagsSet;
@@ -539,7 +539,7 @@ public class Config {
             harvestabilityTagsSet = new HashMap<>();
             for (String s : harvestabilityTags.get()) {
                 String[] splitted = StringUtils.split(s, '=');
-                harvestabilityTagsSet.put(new ResourceLocation(splitted[0]), splitted[1]);
+                harvestabilityTagsSet.put(ResourceLocation.parse(splitted[0]), splitted[1]);
             }
         }
         return harvestabilityTagsSet;
@@ -549,7 +549,7 @@ public class Config {
         if (inventoriesToNotShow == null) {
             inventoriesToNotShow = new HashSet<>();
             for (String s : dontShowContentsUnlessSneaking.get()) {
-                inventoriesToNotShow.add(new ResourceLocation(s));
+                inventoriesToNotShow.add(ResourceLocation.parse(s));
             }
         }
         return inventoriesToNotShow;
@@ -562,7 +562,7 @@ public class Config {
                 if ("*".equals(s)) {
                     blacklistEntitiesSet.add(rl -> true);
                 } else if (s.contains(":")) {
-                    ResourceLocation wanted = new ResourceLocation(s);
+                    ResourceLocation wanted = ResourceLocation.parse(s);
                     blacklistEntitiesSet.add(rl -> rl.equals(wanted));
                 } else {
                     blacklistEntitiesSet.add(rl -> rl.getNamespace().equals(s));
@@ -576,7 +576,7 @@ public class Config {
         if (dontSendNBTSet == null) {
             dontSendNBTSet = new HashSet<>();
             for (String s : dontSendNBT.get()) {
-                dontSendNBTSet.add(new ResourceLocation(s));
+                dontSendNBTSet.add(ResourceLocation.parse(s));
             }
         }
         return dontSendNBTSet;
@@ -648,7 +648,7 @@ public class Config {
         if (renderBlacklistSet == null) {
             renderBlacklistSet = new HashSet<>();
             for (String s : renderBlacklist.get()) {
-                renderBlacklistSet.add(new ResourceLocation(s));
+                renderBlacklistSet.add(ResourceLocation.parse(s));
             }
         }
         return renderBlacklistSet.contains(id);

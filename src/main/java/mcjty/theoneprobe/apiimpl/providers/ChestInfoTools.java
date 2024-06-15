@@ -63,7 +63,7 @@ public class ChestInfoTools {
         }
         if (foundItems != null && foundItems.contains(stack.getItem())) {
             for (ItemStack s : stacks) {
-                if (ItemHandlerHelper.canItemStacksStack(s, stack)) {
+                if (ItemStack.isSameItemSameComponents(s, stack)) {
                     s.grow(stack.getCount());
                     return;
                 }

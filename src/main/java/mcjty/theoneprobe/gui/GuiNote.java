@@ -30,7 +30,7 @@ public class GuiNote extends Screen {
     private int guiLeft;
     private int guiTop;
 
-    private static final ResourceLocation background = new ResourceLocation(TheOneProbe.MODID, "textures/gui/note.png");
+    private static final ResourceLocation background = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/note.png");
 
     public GuiNote() {
         super(Component.literal("note"));
@@ -49,11 +49,18 @@ public class GuiNote extends Screen {
     }
 
     @Override
+    protected void renderMenuBackground(GuiGraphics graphics, int x, int y, int width, int height) {
+        RenderSystem.enableBlend();
+        graphics.blit(background, guiLeft, guiTop,  0.0f, 0.0f, 256, 256, 256, 256);
+        RenderSystem.disableBlend();
+    }
+
+    @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        PoseStack matrixStack = graphics.pose();
-        RenderSystem.setShaderTexture(0, background);
-        drawTexturedModalRect(matrixStack.last().pose(), guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
+//        PoseStack matrixStack = graphics.pose();
+//        RenderSystem.setShaderTexture(0, background);
+//        drawTexturedModalRect(matrixStack.last().pose(), guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
         int x = guiLeft+5;
         int y = guiTop+8;
         RenderHelper.renderText(Minecraft.getInstance(), graphics, x, y, "Things you should know about" + ChatFormatting.GOLD + " The One Probe"); y += 10;

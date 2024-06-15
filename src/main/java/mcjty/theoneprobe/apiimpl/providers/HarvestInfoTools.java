@@ -22,7 +22,7 @@ import static mcjty.theoneprobe.api.TextStyleClass.WARNING;
 
 public class HarvestInfoTools {
 
-    private static final ResourceLocation ICONS = new ResourceLocation(TheOneProbe.MODID, "textures/gui/icons.png");
+    private static final ResourceLocation ICONS = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/icons.png");
 
     private static String getTools(BlockState state) {
         Set<TagKey<Block>> tags = state.getBlock().builtInRegistryHolder().tags().collect(Collectors.toSet());

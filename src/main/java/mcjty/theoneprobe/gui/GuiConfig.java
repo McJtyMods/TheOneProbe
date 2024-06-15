@@ -39,8 +39,8 @@ public class GuiConfig extends Screen {
     private int guiLeft;
     private int guiTop;
 
-    private static final ResourceLocation background = new ResourceLocation(TheOneProbe.MODID, "textures/gui/config.png");
-    private static final ResourceLocation scene = new ResourceLocation(TheOneProbe.MODID, "textures/gui/scene.png");
+    private static final ResourceLocation background = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/config.png");
+    private static final ResourceLocation scene = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/scene.png");
 
     private static final List<Preset> presets = new ArrayList<>();
 
@@ -81,22 +81,17 @@ public class GuiConfig extends Screen {
         guiTop = (this.height - HEIGHT) / 2;
     }
 
-//    @Override
-//    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-//
-//    }
-
+    @Override
+    protected void renderMenuBackground(GuiGraphics graphics, int x, int y, int width, int height) {
+        RenderSystem.enableBlend();
+        graphics.blit(background, guiLeft+WIDTH, y,  0.0f, 0.0f, 256, 256, 256, 256);
+        graphics.blit(scene, x, y,  guiLeft, 0.0f, 256, 256, 256, 256);
+        RenderSystem.disableBlend();
+    }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        RenderSystem.setShaderTexture(0, background);
-        PoseStack matrixStack = graphics.pose();
-        Matrix4f matrix = matrixStack.last().pose();
-        drawTexturedModalRect(matrix, guiLeft + WIDTH, guiTop, 0, 0, WIDTH, HEIGHT);
-        RenderSystem.setShaderTexture(0, scene);
-        drawTexturedModalRect(matrix, guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
-
         renderProbe(graphics);
 
         int x = WIDTH + guiLeft + 10;

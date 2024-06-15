@@ -13,16 +13,16 @@ import java.util.function.Function;
 
 public class TheOneProbeImp implements ITheOneProbe {
 
-    public static final ResourceLocation ELEMENT_TEXT = new ResourceLocation(TheOneProbe.MODID, "text");
-    public static final ResourceLocation ELEMENT_ITEM = new ResourceLocation(TheOneProbe.MODID, "item");
-    public static final ResourceLocation ELEMENT_PROGRESS = new ResourceLocation(TheOneProbe.MODID, "progress");
-    public static final ResourceLocation ELEMENT_HORIZONTAL = new ResourceLocation(TheOneProbe.MODID, "hor");
-    public static final ResourceLocation ELEMENT_VERTICAL = new ResourceLocation(TheOneProbe.MODID, "ver");
-    public static final ResourceLocation ELEMENT_ENTITY = new ResourceLocation(TheOneProbe.MODID, "ent");
-    public static final ResourceLocation ELEMENT_ICON = new ResourceLocation(TheOneProbe.MODID, "icon");
-    public static final ResourceLocation ELEMENT_ITEMLABEL = new ResourceLocation(TheOneProbe.MODID, "itemlabel");
-    public static final ResourceLocation ELEMENT_TANK = new ResourceLocation(TheOneProbe.MODID, "tank");
-    public static final ResourceLocation ELEMENT_PADDING = new ResourceLocation(TheOneProbe.MODID, "pad");
+    public static final ResourceLocation ELEMENT_TEXT = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "text");
+    public static final ResourceLocation ELEMENT_ITEM = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "item");
+    public static final ResourceLocation ELEMENT_PROGRESS = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "progress");
+    public static final ResourceLocation ELEMENT_HORIZONTAL = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "hor");
+    public static final ResourceLocation ELEMENT_VERTICAL = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "ver");
+    public static final ResourceLocation ELEMENT_ENTITY = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "ent");
+    public static final ResourceLocation ELEMENT_ICON = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "icon");
+    public static final ResourceLocation ELEMENT_ITEMLABEL = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "itemlabel");
+    public static final ResourceLocation ELEMENT_TANK = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "tank");
+    public static final ResourceLocation ELEMENT_PADDING = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "pad");
 
     private final StyleManager styleManager = new StyleManager();
     private List<IProbeConfigProvider> configProviders = new ArrayList<>();

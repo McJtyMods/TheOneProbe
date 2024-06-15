@@ -30,7 +30,7 @@ public class ElementEntityRender {
     public static void render(String entityName, CompoundTag entityNBT, IEntityStyle style, GuiGraphics graphics, int x, int y) {
         if (entityName != null && !entityName.isEmpty()) {
             String fixed = fixEntityId(entityName);
-            ResourceLocation id = new ResourceLocation(fixed);
+            ResourceLocation id = ResourceLocation.parse(fixed);
 
             if (!Config.isBlacklistForRendering(id)) {
                 Entity entity = null;

@@ -21,7 +21,7 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
     public ResourceLocation getID() {
-        return new ResourceLocation(TheOneProbe.MODID, "debug");
+        return ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "debug");
     }
 
     @Override

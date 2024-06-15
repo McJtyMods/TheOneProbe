@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record PacketOpenGui(int gui) implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "opengui");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "opengui");
     public static final CustomPacketPayload.Type<PacketOpenGui> TYPE = new Type<>(ID);
 
     public static final StreamCodec<FriendlyByteBuf, PacketOpenGui> CODEC = StreamCodec.composite(

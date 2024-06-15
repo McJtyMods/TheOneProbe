@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
     id "com.matthewprenger.cursegradle" version "1.4.0"
-    id 'net.neoforged.gradle.userdev' version '7.0.105'
+    id 'net.neoforged.gradle.userdev' version '7.0.142'
 }
 
 repositories {
@@ -80,6 +80,13 @@ jar {
         "Implementation-Version": "${version}",
         "Implementation-Vendor" :"McJty",
         "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+    }
+}
+
+subsystems {
+    parchment {
+        minecraftVersion = "1.20.6"
+        mappingsVersion = "2024.06.02"
     }
 }
 

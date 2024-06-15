@@ -71,17 +71,17 @@ public class ClientSetup {
         }
 
         if (hasItemInEitherHand(ModItems.CREATIVE_PROBE)) {
-            OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getGuiGraphics(), event.getPartialTick());
+            OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getGuiGraphics(), event.getPartialTick().getGameTimeDeltaPartialTick(true));
         } else {
             switch (Config.needsProbe.get()) {
                 case PROBE_NOTNEEDED:
                 case PROBE_NEEDEDFOREXTENDED:
-                    OverlayRenderer.renderHUD(getModeForPlayer(), event.getGuiGraphics(), event.getPartialTick());
+                    OverlayRenderer.renderHUD(getModeForPlayer(), event.getGuiGraphics(), event.getPartialTick().getGameTimeDeltaPartialTick(true));
                     break;
                 case PROBE_NEEDED:
                 case PROBE_NEEDEDHARD:
                     if (ModItems.hasAProbeSomewhere(Minecraft.getInstance().player)) {
-                        OverlayRenderer.renderHUD(getModeForPlayer(), event.getGuiGraphics(), event.getPartialTick());
+                        OverlayRenderer.renderHUD(getModeForPlayer(), event.getGuiGraphics(), event.getPartialTick().getGameTimeDeltaPartialTick(true));
                     }
                     break;
             }

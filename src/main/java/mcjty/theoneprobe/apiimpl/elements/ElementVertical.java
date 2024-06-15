@@ -53,6 +53,7 @@ public class ElementVertical extends AbstractElementPanel {
                     cx = x + totWidth - w;
                     break;
             }
+//            System.out.println("element.getClass() = " + element.getClass());
             element.render(graphics, cx + layout.getLeftPadding(), y);
             y += element.getHeight() + layout.getSpacing();
         }

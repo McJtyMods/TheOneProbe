@@ -12,7 +12,7 @@ public class BlockProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
     public ResourceLocation getID() {
-        return new ResourceLocation(TheOneProbe.MODID, "block");
+        return ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "block");
     }
 
     @Override

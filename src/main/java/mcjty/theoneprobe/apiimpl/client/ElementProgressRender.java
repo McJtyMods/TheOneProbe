@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 public class ElementProgressRender {
 
-    private static final ResourceLocation ICONS = new ResourceLocation(TheOneProbe.MODID, "textures/gui/icons.png");
+    private static final ResourceLocation ICONS = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/icons.png");
 
     public static void render(IProgressStyle style, long current, long max, GuiGraphics graphics, int x, int y, int w, int h) {
         if (style.isLifeBar()) {

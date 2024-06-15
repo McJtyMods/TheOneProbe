@@ -16,7 +16,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record PacketReturnInfo(ResourceKey<Level> dim, BlockPos pos, ProbeInfo probeInfo) implements CustomPacketPayload {
 
-    public static ResourceLocation ID = new ResourceLocation(TheOneProbe.MODID, "returninfo");
+    public static ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "returninfo");
     public static CustomPacketPayload.Type<PacketReturnInfo> TYPE = new Type<>(ID);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketReturnInfo> CODEC = StreamCodec.composite(

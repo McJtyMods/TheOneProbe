@@ -53,7 +53,7 @@ public class TheOneProbe {
     public static boolean tesla = false;
     public static boolean redstoneflux = false;
 
-    public static final ResourceLocation HASPROBE = new ResourceLocation(MODID, "hasprobe");
+    public static final ResourceLocation HASPROBE = ResourceLocation.fromNamespaceAndPath(MODID, "hasprobe");
     public static final TagKey<Item> HASPROBE_TAG = TagKey.create(Registries.ITEM, HASPROBE);
 
     private static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, MODID);
@@ -208,13 +208,13 @@ public class TheOneProbe {
         event.register(Registries.ITEM, helper -> {
             ModItems.init();
 
-            helper.register(new ResourceLocation(TheOneProbe.MODID, "probe"), ModItems.PROBE);
-            helper.register(new ResourceLocation(TheOneProbe.MODID, "creativeprobe"), ModItems.CREATIVE_PROBE);
-            helper.register(new ResourceLocation(TheOneProbe.MODID, "probenote"), ModItems.PROBE_NOTE);
+            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "probe"), ModItems.PROBE);
+            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "creativeprobe"), ModItems.CREATIVE_PROBE);
+            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "probenote"), ModItems.PROBE_NOTE);
 
-            helper.register(new ResourceLocation(TheOneProbe.MODID, "diamond_helmet_probe"), ModItems.DIAMOND_HELMET_PROBE);
-            helper.register(new ResourceLocation(TheOneProbe.MODID, "gold_helmet_probe"), ModItems.GOLD_HELMET_PROBE);
-            helper.register(new ResourceLocation(TheOneProbe.MODID, "iron_helmet_probe"), ModItems.IRON_HELMET_PROBE);
+            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "diamond_helmet_probe"), ModItems.DIAMOND_HELMET_PROBE);
+            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "gold_helmet_probe"), ModItems.GOLD_HELMET_PROBE);
+            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "iron_helmet_probe"), ModItems.IRON_HELMET_PROBE);
 
 //            if (TheOneProbe.baubles) {
 //                helper.register(ModItems.PROBE_GOGGLES);

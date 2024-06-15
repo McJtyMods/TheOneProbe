@@ -50,7 +50,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
     public ResourceLocation getID() {
-        return new ResourceLocation(TheOneProbe.MODID, "default");
+        return ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "default");
     }
 
     @Override
