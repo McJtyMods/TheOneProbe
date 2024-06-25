@@ -22,6 +22,7 @@ import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
+
 import javax.annotation.Nullable;
 
 public class RenderHelper {
@@ -236,12 +237,10 @@ public class RenderHelper {
                 int j = stack.getItem().getBarColor(stack);
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableBlend();
-                Tesselator tessellator = Tesselator.getInstance();
-                BufferBuilder vertexbuffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
                 Matrix4f matrix = matrixStack.last().pose();
-                draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
-                draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
-                draw(vertexbuffer, matrix, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
+                draw(matrix, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
+                draw(matrix, xPosition + 2, yPosition + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
+                draw(matrix, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
                 RenderSystem.enableBlend();
                 RenderSystem.enableDepthTest();
             }
@@ -251,9 +250,7 @@ public class RenderHelper {
 
             if (f > 0.0F) {
                 RenderSystem.disableDepthTest();
-                Tesselator tessellator1 = Tesselator.getInstance();
-                BufferBuilder vertexbuffer1 = tessellator1.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-                draw(vertexbuffer1, matrixStack.last().pose(), xPosition, yPosition + (int) Math.floor(16.0F * (1.0F - f)), 16, (int) Math.ceil(16.0F * f), 255, 255, 255, 127);
+                draw(matrixStack.last().pose(), xPosition, yPosition + (int) Math.floor(16.0F * (1.0F - f)), 16, (int) Math.ceil(16.0F * f), 255, 255, 255, 127);
                 RenderSystem.enableDepthTest();
             }
         }
@@ -262,7 +259,9 @@ public class RenderHelper {
     /**
      * Draw with the WorldRenderer
      */
-    private static void draw(BufferBuilder buffer, Matrix4f matrix, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
+    private static void draw(Matrix4f matrix, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         buffer.addVertex(matrix, (x), (y), 0).setColor(red, green, blue, alpha);
         buffer.addVertex(matrix, (x), (y + height), 0).setColor(red, green, blue, alpha);
         buffer.addVertex(matrix, (x + width), (y + height), 0).setColor(red, green, blue, alpha);
