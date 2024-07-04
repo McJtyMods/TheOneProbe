@@ -77,7 +77,7 @@ public final class TankReference {
         buffer.writeInt(stored);
         buffer.writeInt(fluids.length);
 		for (FluidStack fluid : fluids) {
-            FluidStack.STREAM_CODEC.encode(buffer, fluid);
+            FluidStack.OPTIONAL_STREAM_CODEC.encode(buffer, fluid);
 		}
     }
 }
