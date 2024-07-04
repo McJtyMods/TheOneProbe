@@ -22,7 +22,7 @@ public final class TankReference {
         stored = buffer.readInt();
         fluids = new FluidStack[buffer.readInt()];
         for (int i = 0; i < fluids.length; i++) {
-            fluids[i] = FluidStack.STREAM_CODEC.decode(buffer);
+            fluids[i] = FluidStack.OPTIONAL_STREAM_CODEC.decode(buffer);
         }
     }
 
