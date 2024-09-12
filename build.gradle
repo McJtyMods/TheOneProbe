@@ -4,89 +4,43 @@ plugins {
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
     id "com.matthewprenger.cursegradle" version "1.4.0"
-    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id 'net.neoforged.gradle.userdev' version '7.0.163'
 }
 
-repositories {
-    maven { url 'https://www.dogforce-games.com/maven/' }
-    maven { // Patchouli and JEI
-        url "https://maven.blamejared.com"
-    }
-    maven { // CompatLayer
-        url "https://maven.k-4u.nl"
-    }
+if (project.file('../gradletools.gradle').exists()) {
+    apply from: '../gradletools.gradle'
+} else {
+    apply from: 'https://raw.githubusercontent.com/McJtyMods/MultiWorkspace/1.21_neo/gradletools.gradle'
 }
 
 group= "mcjty.theoneprobe" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 base.archivesName = "theoneprobe"
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "-${System.getenv('BUILD_NUMBER')}"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+repos()
+runs()
+jars()
 
-minecraft {
-    accessTransformers {
-        file('src/main/resources/META-INF/accesstransformer.cfg')
-    }
-}
-
-runs {
-    configureEach {
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'debug'
-        modSource project.sourceSets.main
-    }
-
-    client {
-        // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    server {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        programArgument '--nogui'
-    }
-
-    gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
-    }
-}
-
-jar {
-  duplicatesStrategy = DuplicatesStrategy.INCLUDE
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
-
-//    compileOnly "mezz.jei:jei-1.20.4-common-api:${jei_version}"
-//    compileOnly "mezz.jei:jei-1.20.4-neoforge-api:${jei_version}"
-//    runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
+    mc()
+    jei()
 }
 
-jar {
-    manifest {
-        attributes 'FMLAT': 'accesstransformer.cfg',
-        "Specification-Title": "theoneprobe",
-        "Specification-Vendor": "McJty",
-        "Specification-Version": "1",
-        "Implementation-Title": project.name,
-        "Implementation-Version": "${version}",
-        "Implementation-Vendor" :"McJty",
-        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-    }
-}
+cfdeps([], [], [])
+modrinth([], [], [])
 
 subsystems {
     parchment {
-        minecraftVersion = "1.20.6"
-        mappingsVersion = "2024.06.02"
+        minecraftVersion = "${parchment_minecraft_version}"
+        mappingsVersion = "${parchment_version}"
     }
 }
 
@@ -142,72 +96,4 @@ publishing {
             }
         }
     }
-}
-
-String getChangelogText() {
-    def changelogFile = file('changelog.txt')
-    String str = ''
-    int lineCount = 0
-    boolean done = false
-    changelogFile.eachLine {
-        if (done || it == null) {
-            return
-        }
-        if (it.size() > 1) {
-            def temp = it
-            if (lineCount == 0) {
-                temp = "${modname} ${version}"
-                temp = "<h2>$temp</h2>"
-            } else if (it.startsWith('-')) {
-                temp = "&nbsp;&nbsp;&nbsp;$temp"
-                temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>");
-                temp = temp.replaceAll("#([0-9]+)\\b(?!<\\/a>)", "<a href=\"https://github.com/$github_project/issues/\$1\">\$0</a>");
-            } else {
-                temp = "<h4>$temp</h4>"
-            }
-            str += "$temp<br/>"
-            lineCount++
-            return
-        } else {
-            done = true
-        }
-    }
-    return str
-}
-
-tasks.curseforge.enabled = project.hasProperty('curseforge_key')
-
-curseforge {
-    if (project.hasProperty('curseforge_key')) {
-        apiKey = project.curseforge_key
-    }
-
-    project {
-        id = project.projectId
-        changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
-        changelogType = 'html'
-        releaseType = project.curse_type
-        addGameVersion project.minecraft_version
-        mainArtifact(jar) {
-            displayName = "${modname} - ${version}"
-        }
-        relations {
-            optionalLibrary 'baubles'
-            optionalLibrary 'tesla'
-            optionalLibrary 'redstone-flux'
-        }
-    }
-}
-
-tasks.modrinth.enabled = project.hasProperty('modrinth_token')
-modrinth {
-    if (project.hasProperty('modrinth_token')) {
-        token = project.modrinth_token
-    }
-    projectId = project.projectSlug
-    versionType = project.curse_type
-    versionName = "${modname} - ${version}"
-    uploadFile = jar
-    gameVersions = [project.minecraft_version]
-    changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
 }
