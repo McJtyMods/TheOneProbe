@@ -7,7 +7,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class BaublesContainer extends ItemStackHandler implements IBaublesItemHandler {
 
-	private final static int BAUBLE_SLOTS = 7;
+	private static final int BAUBLE_SLOTS = 7;
 	private boolean[] changed = new boolean[BAUBLE_SLOTS];
 	private boolean blockEvents=false;	
 	private EntityLivingBase player;
