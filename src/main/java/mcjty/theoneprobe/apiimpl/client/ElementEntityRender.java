@@ -157,7 +157,7 @@ public class ElementEntityRender {
 
     /**
      * This method attempts to fix an old-style (1.10.2) entity Id and convert it to the
-     * string representation of the new ResourceLocation.
+     * string representation of the ResourceLocation.fromNamespaceAndPath.
      * This does not work for modded entities.
      * @param id an old-style entity id as used in 1.10
      * @return
