@@ -354,7 +354,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 //Proposal Fluids should look at the icon only not buckets of it. Dunno you have to decide. I just fixed the fluid color bug
                 ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
                 FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {
-                    if (fluidStack.isFluidEqual(fc)) {
+                    if (FluidStack.isSameFluidSameComponents(fluidStack, fc)) {
                         horizontal.item(bucketStack);
                     }
                 });
