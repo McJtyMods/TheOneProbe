@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
-import com.mojang.authlib.GameProfile;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
@@ -346,11 +345,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 IProbeInfo horizontal = probeInfo.horizontal();
                 FluidStack fluidStack = new FluidStack(fluid, BUCKET_VOLUME);
 
-                int tintColor = IClientFluidTypeExtensions.of(fluid).getTintColor(fluidStack);
-                ResourceLocation stillTexture = IClientFluidTypeExtensions.of(fluid).getStillTexture();
-                Color color = new Color(tintColor);
-                horizontal.icon(stillTexture, -1, -1, 16, 16,
-                        probeInfo.defaultIconStyle().width(20).color(color));
+                horizontal.fluid(fluidStack, probeInfo.defaultIconStyle().width(20));
                 //Proposal Fluids should look at the icon only not buckets of it. Dunno you have to decide. I just fixed the fluid color bug
                 ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
                 FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {

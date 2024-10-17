@@ -20,6 +20,7 @@ public class TheOneProbeImp implements ITheOneProbe {
     public static final ResourceLocation ELEMENT_VERTICAL = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "ver");
     public static final ResourceLocation ELEMENT_ENTITY = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "ent");
     public static final ResourceLocation ELEMENT_ICON = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "icon");
+    public static final ResourceLocation ELEMENT_FLUID = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "fluid");
     public static final ResourceLocation ELEMENT_ITEMLABEL = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "itemlabel");
     public static final ResourceLocation ELEMENT_TANK = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "tank");
     public static final ResourceLocation ELEMENT_PADDING = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "pad");
@@ -58,6 +59,7 @@ public class TheOneProbeImp implements ITheOneProbe {
         TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_VERTICAL, ElementVertical::new));
         TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_ENTITY, ElementEntity::new));
         TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_ICON, ElementIcon::new));
+        TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_FLUID, ElementFluid::new));
         TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_ITEMLABEL, ElementItemLabel::new));
         TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_TANK, ElementTank::new));
         TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_PADDING, ElementPadding::new));

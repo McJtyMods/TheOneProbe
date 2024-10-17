@@ -68,6 +68,11 @@ public interface IProbeInfo {
     IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h);
 
     /**
+     * A fluid icon. This will render the fluid icon for the given fluidstack
+     */
+    IProbeInfo fluid(FluidStack fluid, IIconStyle style);
+
+    /**
      * entityName can be an old-style entity name (like 'Zombie') or the string
      * representation of a resourcelocation (like 'minecraft:zombie')
      */

@@ -30,6 +30,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 
@@ -104,6 +105,12 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     @Override
     public IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h, IIconStyle style) {
         children.add(new ElementIcon(icon, u, v, w, h, style));
+        return this;
+    }
+
+    @Override
+    public IProbeInfo fluid(FluidStack fluid, IIconStyle style) {
+        children.add(new ElementFluid(fluid, style));
         return this;
     }
 
