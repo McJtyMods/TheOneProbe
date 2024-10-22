@@ -29,7 +29,11 @@ public class ElementIcon implements IElement {
     }
 
     public ElementIcon(FriendlyByteBuf buf) {
-        icon = buf.readResourceLocation();
+        if (buf.readBoolean()) {
+            icon = buf.readResourceLocation();
+        } else {
+            icon = null;
+        }
         u = buf.readInt();
         v = buf.readInt();
         w = buf.readInt();
@@ -63,7 +67,12 @@ public class ElementIcon implements IElement {
 
     @Override
     public void toBytes(RegistryFriendlyByteBuf buf) {
-        buf.writeResourceLocation(icon);
+        if (icon != null) {
+            buf.writeBoolean(true);
+            buf.writeResourceLocation(icon);
+        } else {
+            buf.writeBoolean(false);
+        }
         buf.writeInt(u);
         buf.writeInt(v);
         buf.writeInt(w);
