@@ -64,16 +64,16 @@ publishing {
 
         artifactId = project.archivesBaseName
         pom {
-            name = 'RFToolsBase'
-            description = 'Base mod for all McJty tech mods'
+            name = 'TheOneProbe'
+            description = 'What am I looking at?'
             scm {
-                url = 'https://github.com/McJtyMods/RFToolsBase'
-                connection = 'scm:git:git@github.com:McJtyMods/RFToolsBase.git'
-                developerConnection = 'scm:git:git@github.com:McJtyMods/RFToolsBase.git'
+                url = 'https://github.com/McJtyMods/TheOneProbe'
+                connection = 'scm:git:git@github.com:McJtyMods/TheOneProbe.git'
+                developerConnection = 'scm:git:git@github.com:McJtyMods/TheOneProbe.git'
             }
             issueManagement {
                 system = 'github'
-                url = 'https://github.com/McJtyMods/RFToolsBase/issues'
+                url = 'https://github.com/McJtyMods/TheOneProbe/issues'
             }
             licenses {
                 license {
