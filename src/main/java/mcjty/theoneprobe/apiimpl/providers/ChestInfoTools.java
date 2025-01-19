@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -25,6 +26,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ChestInfoTools {
 
     static void showChestInfo(ProbeMode mode, IProbeInfo probeInfo, Level world, BlockPos pos, IProbeConfig config) {
+        if (world.getBlockEntity(pos) instanceof RandomizableContainerBlockEntity randomizable) {
+            if (randomizable.lootTable != null) {
+                // Loottable hasn't been resolved yet
+                if (mode == ProbeMode.DEBUG) {
+                    probeInfo.horizontal().text("Loot table: " + randomizable.lootTable.toString());
+                } else {
+                    probeInfo.horizontal().text(CompoundText.create().style(TextStyleClass.WARNING).text("Loot hasn't resolved yet!"));
+                }
+                return;
+            }
+        }
+
         List<ItemStack> stacks = null;
         IProbeConfig.ConfigMode chestMode = config.getShowChestContents();
         if (chestMode == IProbeConfig.ConfigMode.EXTENDED && (Config.showSmallChestContentsWithoutSneaking.get() > 0 || !Config.getInventoriesToShow().isEmpty())) {
