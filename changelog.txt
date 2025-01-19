@@ -1,3 +1,6 @@
+Upcoming:
+- TOP will now no longer try to resolve the contents of a lootbox. Instead it will show that the loot hasn't been resolved yet. With the debug probe you can now also see the name of the loot table
+
 1.21_neo-12.0.5:
 - Fixed a bug on servers with the display of kelp
 
@@ -24,6 +27,8 @@
 
 1.20.4_neo-11.0.2:
 - Fixed a bug on servers
+
+1.20.1-10.0.2:
 - The 'harvestStyleVanilla' config option was incorrectly set on the client config. It's now in common config
 
 1.20.4_neo-11.0.1:
