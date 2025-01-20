@@ -1,4 +1,4 @@
-Upcoming:
+1.21_neo-12.0.6:
 - TOP will now no longer try to resolve the contents of a lootbox. Instead it will show that the loot hasn't been resolved yet. With the debug probe you can now also see the name of the loot table
 
 1.21_neo-12.0.5:
