@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.rendering;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexSorting;
@@ -91,8 +92,9 @@ public class OverlayRenderer {
 
                 float scale = Config.tooltipScale.get().floatValue();
 
-                float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-                float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+                Window window = Minecraft.getInstance().getWindow();
+                float sw = (float) (window.getWidth() / window.getGuiScale());
+                float sh = (float) (window.getHeight() / window.getGuiScale());
 
                 setupOverlayRendering(sw * scale, sh * scale);
                 renderHUDEntity(graphics, mode, mouseOver, sw * scale, sh * scale);
@@ -120,8 +122,9 @@ public class OverlayRenderer {
 
             float scale = Config.tooltipScale.get().floatValue();
 
-            float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-            float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+            Window window = Minecraft.getInstance().getWindow();
+            float sw = (float) (window.getWidth() / window.getGuiScale());
+            float sh = (float) (window.getHeight() / window.getGuiScale());
 
             setupOverlayRendering(sw * scale, sh * scale);
             renderHUDBlock(graphics, mode, mouseOver, sw * scale, sh * scale);
@@ -364,8 +367,9 @@ public class OverlayRenderer {
 
         float scale = Config.tooltipScale.get().floatValue();
 
-        float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        Window window = Minecraft.getInstance().getWindow();
+        float sw = (float) (window.getWidth() / window.getGuiScale());
+        float sh = (float) (window.getHeight() / window.getGuiScale());
 
         setupOverlayRendering(sw * scale, sh * scale);
         renderElements(graphics, (ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
