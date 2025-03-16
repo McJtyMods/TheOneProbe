@@ -107,7 +107,7 @@
 1.17-4.0.0:
 - First port to 1.17
 
-Upcoming:
+1.16-3.1.5:
 - Fixed the configs for showContentsWithoutSneaking, dontShowContentsUnlessSneaking, and dontSendNBT
 
 1.16-3.1.4:
