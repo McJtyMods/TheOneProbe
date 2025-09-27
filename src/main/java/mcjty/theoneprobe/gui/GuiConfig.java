@@ -85,7 +85,7 @@ public class GuiConfig extends Screen {
     protected void renderMenuBackground(GuiGraphics graphics, int x, int y, int width, int height) {
         RenderSystem.enableBlend();
         graphics.blit(background, guiLeft+WIDTH, y,  0.0f, 0.0f, 256, 256, 256, 256);
-        graphics.blit(scene, x, y,  guiLeft, 0.0f, 256, 256, 256, 256);
+        graphics.blit(scene, guiLeft, y,  0.0f, 0.0f, 256, 256, 256, 256);
         RenderSystem.disableBlend();
     }
 
