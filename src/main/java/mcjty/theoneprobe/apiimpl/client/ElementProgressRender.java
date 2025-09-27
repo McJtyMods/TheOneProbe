@@ -25,7 +25,10 @@ import java.util.function.Function;
 
 public class ElementProgressRender {
 
-    private static final ResourceLocation ICONS = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/icons.png");
+    private static final ResourceLocation HEARTH_FULL = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/heart/full.png");
+    private static final ResourceLocation HEARTH_HALF = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/heart/half.png");
+    private static final ResourceLocation ARMOR_FULL = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/armor_full.png");
+    private static final ResourceLocation ARMOR_HALF = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/armor_half.png");
 
     public static void render(IProgressStyle style, long current, long max, GuiGraphics graphics, int x, int y, int w, int h) {
         if (style.isLifeBar()) {
@@ -68,9 +71,7 @@ public class ElementProgressRender {
     }
 
     private static void renderLifeBar(long current, GuiGraphics graphics, int x, int y, int w, int h) {
-
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ICONS);
         PoseStack matrixStack = graphics.pose();
         Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
@@ -78,19 +79,20 @@ public class ElementProgressRender {
             RenderHelper.drawTexturedModalRect(matrix, x, y, 52, 0, 9, 9);
             RenderHelper.renderText(Minecraft.getInstance(), graphics, x + 12, y, ChatFormatting.WHITE + String.valueOf((current / 2)));
         } else {
+            RenderSystem.setShaderTexture(0, HEARTH_FULL);
             for (int i = 0; i < current / 2; i++) {
-                RenderHelper.drawTexturedModalRect(matrix, x, y, 52, 0, 9, 9);
+                RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
                 x += 8;
             }
             if (current % 2 != 0) {
-                RenderHelper.drawTexturedModalRect(matrix, x, y, 61, 0, 9, 9);
+                RenderSystem.setShaderTexture(0, HEARTH_HALF);
+                RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
             }
         }
     }
 
     private static void renderArmorBar(long current, GuiGraphics graphics, int x, int y, int w, int h) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ICONS);
         PoseStack matrixStack = graphics.pose();
         Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
@@ -98,11 +100,13 @@ public class ElementProgressRender {
             RenderHelper.drawTexturedModalRect(matrix, x, y, 43, 9, 9, 9);
             RenderHelper.renderText(Minecraft.getInstance(), graphics, x + 12, y, ChatFormatting.WHITE + String.valueOf((current / 2)));
         } else {
+            RenderSystem.setShaderTexture(0, ARMOR_FULL);
             for (int i = 0; i < current / 2; i++) {
                 RenderHelper.drawTexturedModalRect(matrix, x, y, 43, 9, 9, 9);
                 x += 8;
             }
             if (current % 2 != 0) {
+                RenderSystem.setShaderTexture(0, ARMOR_HALF);
                 RenderHelper.drawTexturedModalRect(matrix, x, y, 25, 9, 9, 9);
             }
         }
