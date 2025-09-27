@@ -352,6 +352,7 @@ public class Config {
 
     public static void setProbeNeeded(int probeNeeded) {
         Config.needsProbe.set(probeNeeded);
+        Config.needsProbe.save();
     }
 
 
@@ -426,22 +427,27 @@ public class Config {
     public static void setTextStyle(TextStyleClass styleClass, String style) {
         Config.textStyleClasses.put(styleClass, style);
         cfgtextStyleClasses.get(styleClass).set(style);
+        cfgtextStyleClasses.get(styleClass).save();
     }
 
     public static void setExtendedInMain(boolean extendedInMain) {
         Config.extendedInMain.set(extendedInMain);
+        Config.extendedInMain.save();
     }
 
     public static void setLiquids(boolean liquids) {
         Config.showLiquids.set(liquids);
+        Config.showLiquids.save();
     }
 
     public static void setVisible(boolean visible) {
         Config.isVisible.set(visible);
+        Config.isVisible.save();
     }
 
     public static void setCompactEqualStacks(boolean compact) {
         Config.compactEqualStacks.set(compact);
+        Config.compactEqualStacks.save();
     }
 
     public static void setPos(int leftx, int topy, int rightx, int bottomy) {
@@ -449,21 +455,30 @@ public class Config {
         Config.topY.set(topy);
         Config.rightX.set(rightx);
         Config.bottomY.set(bottomy);
+        Config.leftX.save();
+        Config.topY.save();
+        Config.rightX.save();
+        Config.bottomY.save();
         updateDefaultOverlayStyle();
     }
 
     public static void setScale(float scale) {
         tooltipScale.set((double) scale);
+        tooltipScale.save();
         updateDefaultOverlayStyle();
     }
 
     public static void setBoxStyle(int thickness, int borderColor, int fillcolor, int offset) {
         boxThickness.set(thickness);
+        boxThickness.save();
         boxBorderColor = borderColor;
         boxFillColor = fillcolor;
         cfgboxBorderColor.set(Integer.toHexString(boxBorderColor));
+        cfgboxBorderColor.save();
         cfgboxFillColor.set(Integer.toHexString(boxFillColor));
+        cfgboxFillColor.save();
         boxOffset.set(offset);
+        boxOffset.save();
         updateDefaultOverlayStyle();
     }
 
