@@ -8,7 +8,7 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 
 import static net.neoforged.fml.Logging.CORE;
 
-@EventBusSubscriber(modid = TheOneProbe.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = TheOneProbe.MODID)
 public class ConfigReload {
 
 

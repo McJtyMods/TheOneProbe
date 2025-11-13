@@ -254,11 +254,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         			probeInfo.defaultProgressStyle()
         			.numberFormat(NumberFormat.NONE)
         			.borderlessColor(color, color.darker().darker())
-        			.prefix(((MutableComponent)fluidStack.getDisplayName()).append(": "))
+        			.prefix(((MutableComponent)fluidStack.getHoverName()).append(": "))
         			.suffix(text));
         } else {
             if (!fluidStack.isEmpty()) {
-                probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(fluidStack.getTranslationKey()));
+                probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(fluidStack.getFluidType().getDescriptionId(fluidStack)));
             }
             if (config.getTankMode() == 2) {
                 probeInfo.progress(contents, maxContents,
@@ -355,7 +355,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 });
 
                 horizontal.vertical()
-                        .text(CompoundText.create().name(fluidStack.getTranslationKey()))
+                        .text(CompoundText.create().name(fluidStack.getFluidType().getDescriptionId(fluidStack)))
                         .text(CompoundText.create().style(MODNAME).text(modName));
                 return;
             }
