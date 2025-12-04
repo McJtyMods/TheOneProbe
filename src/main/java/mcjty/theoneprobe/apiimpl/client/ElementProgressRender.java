@@ -76,7 +76,8 @@ public class ElementProgressRender {
         Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
             // Shortened view
-            RenderHelper.drawTexturedModalRect(matrix, x, y, 52, 0, 9, 9);
+            RenderSystem.setShaderTexture(0, HEARTH_FULL);
+            RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
             RenderHelper.renderText(Minecraft.getInstance(), graphics, x + 12, y, ChatFormatting.WHITE + String.valueOf((current / 2)));
         } else {
             RenderSystem.setShaderTexture(0, HEARTH_FULL);
@@ -97,17 +98,18 @@ public class ElementProgressRender {
         Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
             // Shortened view
-            RenderHelper.drawTexturedModalRect(matrix, x, y, 43, 9, 9, 9);
+            RenderSystem.setShaderTexture(0, ARMOR_FULL);
+            RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
             RenderHelper.renderText(Minecraft.getInstance(), graphics, x + 12, y, ChatFormatting.WHITE + String.valueOf((current / 2)));
         } else {
             RenderSystem.setShaderTexture(0, ARMOR_FULL);
             for (int i = 0; i < current / 2; i++) {
-                RenderHelper.drawTexturedModalRect(matrix, x, y, 43, 9, 9, 9);
+                RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
                 x += 8;
             }
             if (current % 2 != 0) {
                 RenderSystem.setShaderTexture(0, ARMOR_HALF);
-                RenderHelper.drawTexturedModalRect(matrix, x, y, 25, 9, 9, 9);
+                RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
             }
         }
     }
