@@ -3,8 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id "com.modrinth.minotaur" version "2.+"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "com.hypherionmc.modutils.modpublisher" version "2.2.1"
     id 'net.neoforged.gradle.userdev' version '7.1.4'
 }
 
@@ -36,8 +35,7 @@ dependencies {
     jei()
 }
 
-cfdeps([], [], [])
-modrinth([], [], [])
+modpublisher([], [], [], [], [])
 
 subsystems {
     parchment {
