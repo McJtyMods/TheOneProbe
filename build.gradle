@@ -1,11 +1,23 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.firstdark.dev/releases' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.hypherionmc.modutils:modpublisher:2.2.1'
+    }
+}
+
 plugins {
     id 'java-library'
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id "com.hypherionmc.modutils.modpublisher" version "2.2.1"
     id 'net.neoforged.gradle.userdev' version '7.1.4'
 }
+
+apply plugin: 'com.hypherionmc.modutils.modpublisher'
 
 if (project.file('../gradletools.gradle').exists()) {
     apply from: '../gradletools.gradle'
