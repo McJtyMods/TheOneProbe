@@ -198,6 +198,30 @@ local.properties
 *.tmPreferences.cache
 *.stTheme.cache
 
+# Gradle/NeoForge generated output
+.gradle/
+build/
+out/
+bin/
+run/
+runs/
+logs/
+crash-reports/
+src/generated/resources/.cache/
+
+# Java/build artifacts and logs
+*.class
+*.log
+*.tmp
+*.bak
+*.orig
+hs_err_pid*
+
+# Local machine/config files
+local.properties
+.env
+.env.*
+
 # workspace files are user-specific
 *.sublime-workspace
 
