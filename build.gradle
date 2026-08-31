@@ -1,115 +1,56 @@
-plugins {
-    id 'eclipse'
-    id 'idea'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id "com.modrinth.minotaur" version "2.+"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-}
-
-repositories {
-    maven { url 'https://www.dogforce-games.com/maven/' }
-    maven { // JEI
-        url "https://dvs1.progwml6.com/files/maven"
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+        maven { url = 'https://maven.parchmentmc.org' }
+        maven { url = 'https://plugins.gradle.org/m2/' }
+        maven { url = 'https://maven.firstdark.dev/releases' }
+        mavenCentral()
+        gradlePluginPortal()
     }
-    maven { // Patchouli
-        url "https://maven.blamejared.com"
-    }
-    maven { // CompatLayer
-        url "https://maven.k-4u.nl"
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.parchmentmc:librarian:1.+'
+        classpath 'com.hypherionmc.modutils:modpublisher:2.0.4'
     }
 }
 
-group= "mcjty.theoneprobe" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-base.archivesName = "theoneprobe"
+apply plugin: 'com.hypherionmc.modutils.modpublisher'
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+if (project.file('../gradletools.gradle').exists()) {
+    apply from: '../gradletools.gradle'
+} else {
+    apply from: 'https://raw.githubusercontent.com/McJtyMods/MultiWorkspace/1.20_tech/gradletools.gradle'
+}
+
+group = 'mcjty.theoneprobe'
+archivesBaseName = 'theoneprobe'
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "-${System.getenv('BUILD_NUMBER')}"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+repos()
+runs('theoneprobe')
+jars('theoneprobe')
 
-minecraft {
-    mappings channel: 'official' , version: '1.20.1'
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    copyIdeResources = true
-
-    //runDir = "run"
-    runs {
-        client = {
-            // recommended logging data for a userdev environment
-            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
-            // recommended logging level for the console
-            properties 'forge.logging.console.level': 'debug'
-            workingDirectory project.file('run').canonicalPath
-            source sourceSets.main
-        }
-        server = {
-            // recommended logging data for a userdev environment
-            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
-            // recommended logging level for the console
-            properties 'forge.logging.console.level': 'debug'
-            workingDirectory project.file('run').canonicalPath
-            source sourceSets.main
-        }
-        data = {
-            workingDirectory project.file('run').canonicalPath
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'theoneprobe', '--all', '--output', file('src/generated/resources/'), '--existing', sourceSets.main.resources.srcDirs[0]
-            source sourceSets.main
-        }
-    }
-}
-
-jar {
-  duplicatesStrategy = DuplicatesStrategy.INCLUDE
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-    //compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
-    //runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
+    mc()
 }
 
-jar {
-    manifest {
-        attributes 'FMLAT': 'accesstransformer.cfg',
-        "Specification-Title": "theoneprobe",
-        "Specification-Vendor": "McJty",
-        "Specification-Version": "1",
-        "Implementation-Title": project.name,
-        "Implementation-Version": "${version}",
-        "Implementation-Vendor" :"McJty",
-        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-    }
-}
-
-//processResources
-//{
-//    // this will ensure that this task is redone when the versions change.
-//    inputs.property "version", project.version
-//    inputs.property "mcversion", project.minecraft.version
-//
-//    // replace stuff in mcmod.info, nothing else
-//    from(sourceSets.main.resources.srcDirs) {
-//        include 'mcmod.info'
-//                
-//        // replace version and mcversion
-//        expand 'version':project.version, 'mcversion':project.minecraft.version
-//    }
-//        
-//    // copy everything else, thats not the mcmod.info
-//    from(sourceSets.main.resources.srcDirs) {
-//        exclude 'mcmod.info'
-//    }
-//}
+modpublisher(['baubles', 'tesla', 'redstone-flux'], [], [], [], [])
 
 task apiJar(type: Jar) {
-    archiveClassifier = "api"
+    classifier = 'api'
     from(sourceSets.main.output) {
-        include "mcjty/theoneprobe/api/**"
+        include 'mcjty/theoneprobe/api/**'
     }
 }
 
@@ -124,16 +65,16 @@ publishing {
 
         artifactId = project.archivesBaseName
         pom {
-            name = 'RFToolsBase'
-            description = 'Base mod for all McJty tech mods'
+            name = 'The One Probe'
+            description = 'The One Probe'
             scm {
-                url = 'https://github.com/McJtyMods/RFToolsBase'
-                connection = 'scm:git:git@github.com:McJtyMods/RFToolsBase.git'
-                developerConnection = 'scm:git:git@github.com:McJtyMods/RFToolsBase.git'
+                url = 'https://github.com/McJtyMods/TheOneProbe'
+                connection = 'scm:git:git@github.com:McJtyMods/TheOneProbe.git'
+                developerConnection = 'scm:git:git@github.com:McJtyMods/TheOneProbe.git'
             }
             issueManagement {
                 system = 'github'
-                url = 'https://github.com/McJtyMods/RFToolsBase/issues'
+                url = 'https://github.com/McJtyMods/TheOneProbe/issues'
             }
             licenses {
                 license {
@@ -158,72 +99,4 @@ publishing {
             }
         }
     }
-}
-
-String getChangelogText() {
-    def changelogFile = file('changelog.txt')
-    String str = ''
-    int lineCount = 0
-    boolean done = false
-    changelogFile.eachLine {
-        if (done || it == null) {
-            return
-        }
-        if (it.size() > 1) {
-            def temp = it
-            if (lineCount == 0) {
-                temp = "${modname} ${version}"
-                temp = "<h2>$temp</h2>"
-            } else if (it.startsWith('-')) {
-                temp = "&nbsp;&nbsp;&nbsp;$temp"
-                temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>");
-                temp = temp.replaceAll("#([0-9]+)\\b(?!<\\/a>)", "<a href=\"https://github.com/$github_project/issues/\$1\">\$0</a>");
-            } else {
-                temp = "<h4>$temp</h4>"
-            }
-            str += "$temp<br/>"
-            lineCount++
-            return
-        } else {
-            done = true
-        }
-    }
-    return str
-}
-
-tasks.curseforge.enabled = project.hasProperty('curseforge_key')
-
-curseforge {
-    if (project.hasProperty('curseforge_key')) {
-        apiKey = project.curseforge_key
-    }
-
-    project {
-        id = project.projectId
-        changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
-        changelogType = 'html'
-        releaseType = project.curse_type
-        addGameVersion project.minecraft_version
-        mainArtifact(jar) {
-            displayName = "${modname} - ${version}"
-        }
-        relations {
-            optionalLibrary 'baubles'
-            optionalLibrary 'tesla'
-            optionalLibrary 'redstone-flux'
-        }
-    }
-}
-
-tasks.modrinth.enabled = project.hasProperty('modrinth_token')
-modrinth {
-    if (project.hasProperty('modrinth_token')) {
-        token = project.modrinth_token
-    }
-    projectId = project.projectSlug
-    versionType = project.curse_type
-    versionName = "${modname} - ${version}"
-    uploadFile = jar
-    gameVersions = [project.minecraft_version]
-    changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
 }
