@@ -4,7 +4,7 @@ import mcjty.theoneprobe.api.Color;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementPaddingRender;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
@@ -37,7 +37,7 @@ public class ElementPadding implements IElement {
 	}
 	
 	@Override
-	public void render(GuiGraphics stack, int x, int y) {
+	public void render(GuiGraphicsExtractor stack, int x, int y) {
 		if (color != -1) {
 			ElementPaddingRender.renderPadding(stack, x, y, getWidth(), getHeight(), color);
 		}

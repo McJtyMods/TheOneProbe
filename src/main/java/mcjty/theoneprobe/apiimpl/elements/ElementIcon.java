@@ -5,7 +5,7 @@ import mcjty.theoneprobe.api.IIconStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementIconRender;
 import mcjty.theoneprobe.apiimpl.styles.IconStyle;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
@@ -51,7 +51,7 @@ public class ElementIcon implements IElement {
     }
     
     @Override
-    public void render(GuiGraphics graphics, int x, int y) {
+    public void render(GuiGraphicsExtractor graphics, int x, int y) {
         ElementIconRender.render(icon, graphics, x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight(), style.getColor());
     }
 

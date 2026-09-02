@@ -6,7 +6,7 @@ import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -22,14 +22,14 @@ import java.util.Map;
 
 public class ElementEntityRender {
 
-    public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, GuiGraphics graphics, int x, int y) {
+    public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, GuiGraphicsExtractor graphics, int x, int y) {
         Entity entity = Minecraft.getInstance().level.getEntity(playerID);
         if (entity != null) {
             renderEntity(style, graphics, x, y, entity);
         }
     }
 
-    public static void render(String entityName, CompoundTag entityNBT, IEntityStyle style, GuiGraphics graphics, int x, int y) {
+    public static void render(String entityName, CompoundTag entityNBT, IEntityStyle style, GuiGraphicsExtractor graphics, int x, int y) {
         if (entityName != null && !entityName.isEmpty()) {
             String fixed = fixEntityId(entityName);
             Identifier id = Identifier.parse(fixed);
@@ -43,12 +43,12 @@ public class ElementEntityRender {
                             Level world = Minecraft.getInstance().level;
 
                             entity = value.create(world, EntitySpawnReason.LOAD);
-                            entity.snapTo(0.5D, 0.0D, 0.5D, Mth.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
+                            entity.snapTo(0.5D, 0.0D, 0.5D, Mth.wrapDegrees(world.getRandom().nextFloat() * 360.0F), 0.0F);
 
                             if (entity instanceof Mob mob) {
                                 mob.yHeadRot = mob.getYRot();
                                 mob.yBodyRot = mob.getYRot();
-                                mob.setLeftHanded(world.random.nextFloat() < 0.05F);
+                                mob.setLeftHanded(world.getRandom().nextFloat() < 0.05F);
                             }
 
                             entity.load(TagValueInput.create(ProblemReporter.DISCARDING, world.registryAccess(), entityNBT));
@@ -175,7 +175,7 @@ public class ElementEntityRender {
         return id;
     }
 
-    private static void renderEntity(IEntityStyle style, GuiGraphics graphics, int x, int y, Entity entity) {
+    private static void renderEntity(IEntityStyle style, GuiGraphicsExtractor graphics, int x, int y, Entity entity) {
         float height = entity.getBbHeight();
         height = (float) ((height - 1) * .7 + 1);
         float s = style.getScale() * ((style.getHeight() * 14.0f / 25) / height);

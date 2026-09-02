@@ -8,7 +8,7 @@ import mcjty.theoneprobe.api.TankReference;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementProgressRender;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -52,7 +52,7 @@ public class ElementTank implements IElement {
 	}
 	
 	@Override
-	public void render(GuiGraphics graphics, int x, int y) {
+	public void render(GuiGraphicsExtractor graphics, int x, int y) {
 		ElementProgressRender.renderTank(graphics, x, y, getWidth(), getHeight(), style, tank);
 	}
 	

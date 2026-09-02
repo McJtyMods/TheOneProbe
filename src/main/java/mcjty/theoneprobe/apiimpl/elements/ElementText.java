@@ -6,7 +6,7 @@ import mcjty.theoneprobe.api.ITextStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementTextRender;
 import mcjty.theoneprobe.apiimpl.styles.TextStyle;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -61,7 +61,7 @@ public class ElementText implements IElement {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int x, int y) {
+    public void render(GuiGraphicsExtractor graphics, int x, int y) {
         int width = getTextWidth();
         switch (style.getAlignment()) {
             case ALIGN_BOTTOMRIGHT -> ElementTextRender.render(text, graphics, (x + getInternalWidth() - width) + style.getLeftPadding(), y + style.getTopPadding(), legacy);

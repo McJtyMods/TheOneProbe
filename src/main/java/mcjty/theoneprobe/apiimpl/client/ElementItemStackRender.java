@@ -4,14 +4,12 @@ import mcjty.theoneprobe.api.IItemStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 
 public class ElementItemStackRender {
 
-    public static void render(ItemStack itemStack, IItemStyle style, GuiGraphics graphics, int x, int y) {
-        ItemRenderer itemRender = Minecraft.getInstance().getItemRenderer();
+    public static void render(ItemStack itemStack, IItemStyle style, GuiGraphicsExtractor graphics, int x, int y) {
         if (!itemStack.isEmpty()) {
             int size = itemStack.getCount();
             String amount;
@@ -27,7 +25,7 @@ public class ElementItemStackRender {
                 amount = String.valueOf(size / 1000000000) + "g";
             }
 
-            if (!RenderHelper.renderItemStack(Minecraft.getInstance(), itemRender, itemStack, graphics, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount)) {
+            if (!RenderHelper.renderItemStack(Minecraft.getInstance(), itemStack, graphics, x + (style.getWidth() - 18) / 2, y + (style.getHeight() - 18) / 2, amount)) {
                 // There was a crash rendering this item
                 RenderHelper.renderText(Minecraft.getInstance(), graphics, x, y, ChatFormatting.RED + "ERROR: " + itemStack.getHoverName());
             }

@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 
@@ -12,7 +12,7 @@ public interface IElement {
     /**
      * Render this element at the location given by the location
      */
-    void render(GuiGraphics graphics, int x, int y);
+    void render(GuiGraphicsExtractor graphics, int x, int y);
 
     /**
      * Get the width of this element

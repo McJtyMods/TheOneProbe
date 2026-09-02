@@ -4,7 +4,7 @@ import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +15,7 @@ import static mcjty.theoneprobe.api.IProbeInfo.STARTLOC;
 
 public class ElementTextRender {
 
-	public static void render(Component text, GuiGraphics graphics, int x, int y, boolean legacy) {
+	public static void render(Component text, GuiGraphicsExtractor graphics, int x, int y, boolean legacy) {
 		if (legacy) {
             render(text, graphics, x, y);
         } else {
@@ -23,7 +23,7 @@ public class ElementTextRender {
         }
 	}
 	
-    public static void render(Component text, GuiGraphics graphics, int x, int y) {
+    public static void render(Component text, GuiGraphicsExtractor graphics, int x, int y) {
         RenderHelper.renderText(Minecraft.getInstance(), graphics, x, y, stylifyString(text));
     }
 

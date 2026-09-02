@@ -61,7 +61,7 @@ public class Tools {
                 buf.writeVarInt(0);
             } else {
                 buf.writeVarInt(stack.getCount());
-                ITEM_STREAM_CODEC.encode(buf, stack.getItemHolder());
+                ITEM_STREAM_CODEC.encode(buf, stack.typeHolder());
                 RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), buf.registryAccess());
                 DataComponentPatch.STREAM_CODEC.encode(buffer, stack.getComponentsPatch());
                 if (buffer.writerIndex() <= Config.maxPacketToServer.get()) {

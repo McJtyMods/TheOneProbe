@@ -1,3 +1,6 @@
+26.1.2_neo-14.0.0:
+- Port to 26.1.2/NeoForge
+
 1.21.11_neo-13.0.0:
 - Port to 1.21.11/NeoForge
 

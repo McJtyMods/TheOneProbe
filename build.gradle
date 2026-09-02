@@ -21,7 +21,7 @@ apply plugin: 'com.hypherionmc.modutils.modpublisher'
 
 group= "mcjty.theoneprobe" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 base.archivesName = "theoneprobe"
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "-${System.getenv('BUILD_NUMBER')}"
@@ -84,13 +84,6 @@ jar {
                 "Implementation-Vendor"    : 'McJty',
                 "Implementation-Timestamp" : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
-    }
-}
-
-subsystems {
-    parchment {
-        minecraftVersion = "${parchment_minecraft_version}"
-        mappingsVersion = "${parchment_version}"
     }
 }
 

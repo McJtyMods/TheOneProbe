@@ -6,12 +6,13 @@ import mcjty.theoneprobe.api.IIconStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementIconRender;
 import mcjty.theoneprobe.apiimpl.styles.IconStyle;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
+
+import static mcjty.theoneprobe.apiimpl.client.FluidRenderHelper.getStillSprite;
+import static mcjty.theoneprobe.apiimpl.client.FluidRenderHelper.getTintColor;
 
 public class ElementFluid implements IElement {
 
@@ -38,11 +39,9 @@ public class ElementFluid implements IElement {
     }
     
     @Override
-    public void render(GuiGraphics graphics, int x, int y) {
-        int tintColor = IClientFluidTypeExtensions.of(fluid.getFluid()).getTintColor(fluid);
-        Identifier stillTexture = IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture();
-        Color color = new Color(tintColor);
-        ElementIconRender.render(stillTexture, graphics, x, y, 16, 16, -1, -1, style.getTextureWidth(), style.getTextureHeight(), color.getRGB());
+    public void render(GuiGraphicsExtractor graphics, int x, int y) {
+        Color color = new Color(getTintColor(fluid));
+        ElementIconRender.render(getStillSprite(fluid), graphics, x, y, 16, 16, color.getRGB());
     }
 
     @Override

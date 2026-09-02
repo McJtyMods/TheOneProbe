@@ -1,12 +1,10 @@
 package mcjty.theoneprobe.gui;
 
-import javax.annotation.Nonnull;
-
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.screens.Screen;
@@ -48,13 +46,13 @@ public class GuiNote extends Screen {
     }
 
     @Override
-    protected void renderMenuBackground(GuiGraphics graphics, int x, int y, int width, int height) {
+    protected void extractMenuBackground(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, background, guiLeft, guiTop, 0.0f, 0.0f, 256, 256, 256, 256);
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 //        PoseStack matrixStack = graphics.pose();
 //        RenderSystem.setShaderTexture(0, background);
 //        drawTexturedModalRect(matrixStack.last().pose(), guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
@@ -135,7 +133,7 @@ public class GuiNote extends Screen {
         return false;
     }
 
-    private int setInConfig(GuiGraphics graphics, int x, int y) {
+    private int setInConfig(GuiGraphicsExtractor graphics, int x, int y) {
         RenderHelper.renderText(Minecraft.getInstance(), graphics, x, y, BOLD + "" + GREEN + "You can change this here:");
         y += 10;
 

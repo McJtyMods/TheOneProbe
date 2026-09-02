@@ -5,7 +5,7 @@ import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.ILayoutStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
@@ -32,7 +32,7 @@ public class ElementHorizontal extends AbstractElementPanel {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int x, int y) {
+    public void render(GuiGraphicsExtractor graphics, int x, int y) {
         super.render(graphics, x, y);
         if (layout.getBorderColor() != null) {
             x += 3;

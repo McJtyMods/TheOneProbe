@@ -23,7 +23,7 @@ import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
@@ -39,7 +39,7 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     protected IProbeConfig overriddenConfig;
 
     @Override
-    public void render(GuiGraphics graphics, int x, int y) {
+    public void render(GuiGraphicsExtractor graphics, int x, int y) {
         Integer borderColor = layout.getBorderColor();
         if (borderColor != null) {
             int w = getWidth();

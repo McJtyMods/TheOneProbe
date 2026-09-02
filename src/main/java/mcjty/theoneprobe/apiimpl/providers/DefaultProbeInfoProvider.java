@@ -32,7 +32,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
@@ -244,7 +243,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         int contents = fluidStack.getAmount();
     	if(config.getTankMode() == 1) {
 
-            int tintColor = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack);
+            int tintColor = 0xffffffff;
             Color color = new Color(tintColor);
         	if (Objects.equals(fluidStack.getFluid(), Fluids.LAVA)) {
     			color = new Color(255, 139, 27);

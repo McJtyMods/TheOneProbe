@@ -16,7 +16,7 @@ import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -74,7 +74,7 @@ public class OverlayRenderer {
         cachedEntityInfo.put(uuid, Pair.of(time, probeInfo));
     }
 
-    public static void renderHUD(ProbeMode mode, GuiGraphics graphics, float partialTicks) {
+    public static void renderHUD(ProbeMode mode, GuiGraphicsExtractor graphics, float partialTicks) {
         double dist = Config.probeDistance.get();
         HitResult mouseOver = Minecraft.getInstance().hitResult;
         if (mouseOver != null) {
@@ -131,7 +131,7 @@ public class OverlayRenderer {
         }
     }
 
-    private static void renderHUDEntity(GuiGraphics graphics, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
+    private static void renderHUDEntity(GuiGraphicsExtractor graphics, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
         if (!(mouseOver instanceof EntityHitResult)) {
             return;
         }
@@ -208,7 +208,7 @@ public class OverlayRenderer {
         ClientPacketDistributor.sendToServer(PacketGetEntityInfo.create(player.level().dimension(), mode, mouseOver, entity));
     }
 
-    private static void renderHUDBlock(GuiGraphics graphics, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
+    private static void renderHUDBlock(GuiGraphicsExtractor graphics, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
         if (!(mouseOver instanceof BlockHitResult)) {
             return;
         }
@@ -337,7 +337,7 @@ public class OverlayRenderer {
         ClientPacketDistributor.sendToServer(PacketGetInfo.create(world.dimension(), blockPos, mode, mouseOver, pickBlock));
     }
 
-    public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, GuiGraphics graphics) {
+    public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, GuiGraphicsExtractor graphics) {
         graphics.pose().pushMatrix();
 
         float scale = Config.tooltipScale.get().floatValue();
@@ -374,7 +374,7 @@ public class OverlayRenderer {
         cachedEntityInfo = newCachedInfo;
     }
 
-    public static void renderElements(GuiGraphics graphics, ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh,
+    public static void renderElements(GuiGraphicsExtractor graphics, ProbeInfo probeInfo, IOverlayStyle style, double sw, double sh,
 									  @Nullable IElement extra) {
         if (extra != null) {
             probeInfo.element(extra);

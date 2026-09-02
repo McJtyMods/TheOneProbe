@@ -6,7 +6,7 @@ import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.OverlayRenderer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class DefaultOverlayRenderer implements IOverlayRenderer {
 
@@ -21,7 +21,7 @@ public class DefaultOverlayRenderer implements IOverlayRenderer {
     }
 
     @Override
-    public void render(IOverlayStyle style, IProbeInfo probeInfo, GuiGraphics graphics) {
+    public void render(IOverlayStyle style, IProbeInfo probeInfo, GuiGraphicsExtractor graphics) {
         OverlayRenderer.renderOverlay(style, probeInfo, graphics);
     }
 }

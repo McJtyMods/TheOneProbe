@@ -1,7 +1,5 @@
 package mcjty.theoneprobe.gui;
 
-import javax.annotation.Nonnull;
-
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.CompoundText;
@@ -11,7 +9,7 @@ import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -80,14 +78,14 @@ public class GuiConfig extends Screen {
     }
 
     @Override
-    protected void renderMenuBackground(GuiGraphics graphics, int x, int y, int width, int height) {
+    protected void extractMenuBackground(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, background, guiLeft + WIDTH, y, 0.0f, 0.0f, 256, 256, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, scene, guiLeft, y, 0.0f, 0.0f, 256, 256, 256, 256);
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         renderProbe(graphics);
 
         int x = WIDTH + guiLeft + 10;
@@ -177,7 +175,7 @@ public class GuiConfig extends Screen {
         }
     }
 
-    private int addPreset(GuiGraphics graphics, int x, int y, Preset preset) {
+    private int addPreset(GuiGraphicsExtractor graphics, int x, int y, Preset preset) {
         graphics.fill(x + 10, y - 1, x + 10 + WIDTH - 50, y + 10, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), graphics, x + 20, y, preset.getName());
         hitboxes.add(new HitBox(x + 10 - guiLeft, y - 1 - guiTop, x + 10 + WIDTH - 50 - guiLeft, y + 10 - guiTop, () -> {
@@ -187,13 +185,13 @@ public class GuiConfig extends Screen {
         return y;
     }
 
-    private void addButton(GuiGraphics graphics, int x, int y, int width, int height, String text, Runnable runnable) {
+    private void addButton(GuiGraphicsExtractor graphics, int x, int y, int width, int height, String text, Runnable runnable) {
         graphics.fill(x, y, x + width-1, y + height-1, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), graphics, x + 3, y + 3, text);
         hitboxes.add(new HitBox(x - guiLeft, y - guiTop, x + width -1 - guiLeft, y + height -1 - guiTop, runnable));
     }
 
-    private void renderProbe(GuiGraphics graphics) {
+    private void renderProbe(GuiGraphicsExtractor graphics) {
         Block block = Blocks.OAK_LOG;
         String modName = Tools.getModName(block);
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
@@ -209,7 +207,7 @@ public class GuiConfig extends Screen {
         renderElements(probeInfo, Config.getDefaultOverlayStyle(), graphics);
     }
 
-    private void renderElements(ProbeInfo probeInfo, IOverlayStyle style, GuiGraphics graphics) {
+    private void renderElements(ProbeInfo probeInfo, IOverlayStyle style, GuiGraphicsExtractor graphics) {
         graphics.pose().pushMatrix();
         float scale = (float) (1 / Config.tooltipScale.get());
         graphics.pose().scale(scale, scale);
