@@ -1,3 +1,6 @@
+1.21.11_neo-13.0.0:
+- Port to 1.21.11/NeoForge
+
 1.21_neo-12.0.8:
 - Fixed armor rendering
 - Fixed health and armor rendering in case it was too large
