@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -38,7 +38,7 @@ import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode mode,
                                   Vec3 hitVec) implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "getentityinfo");
+    public static final Identifier ID = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "getentityinfo");
     public static final CustomPacketPayload.Type<PacketGetEntityInfo> TYPE = new Type<>(ID);
 
     public static final StreamCodec<FriendlyByteBuf, PacketGetEntityInfo> CODEC = StreamCodec.composite(
@@ -88,8 +88,8 @@ public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode m
         }
 
         if (!Config.getEntityBlacklist().isEmpty()) {
-            ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
-            for (Predicate<ResourceLocation> predicate : Config.getEntityBlacklist()) {
+            Identifier rl = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+            for (Predicate<Identifier> predicate : Config.getEntityBlacklist()) {
                 if (predicate.test(rl)) {
                     return null;
                 }

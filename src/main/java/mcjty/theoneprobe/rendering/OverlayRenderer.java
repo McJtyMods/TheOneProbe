@@ -1,8 +1,5 @@
 package mcjty.theoneprobe.rendering;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexSorting;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -24,7 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -36,12 +33,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.ClientHooks;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.apache.commons.lang3.tuple.Pair;
-import org.joml.Matrix4f;
-import org.joml.Matrix4fStack;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -83,22 +76,19 @@ public class OverlayRenderer {
 
     public static void renderHUD(ProbeMode mode, GuiGraphics graphics, float partialTicks) {
         double dist = Config.probeDistance.get();
-        PoseStack matrixStack = graphics.pose();
-
         HitResult mouseOver = Minecraft.getInstance().hitResult;
         if (mouseOver != null) {
             if (mouseOver.getType() == HitResult.Type.ENTITY) {
-                matrixStack.pushPose();
+                graphics.pose().pushMatrix();
 
                 float scale = Config.tooltipScale.get().floatValue();
 
                 float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
                 float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-                setupOverlayRendering(sw * scale, sh * scale);
+                graphics.pose().scale(1.0f / scale, 1.0f / scale);
                 renderHUDEntity(graphics, mode, mouseOver, sw * scale, sh * scale);
-                setupOverlayRendering(sw, sh);
-                matrixStack.popPose();
+                graphics.pose().popMatrix();
 
                 checkCleanup();
                 return;
@@ -111,37 +101,25 @@ public class OverlayRenderer {
         Vec3 end = start.add(vec31.x * dist, vec31.y * dist, vec31.z * dist);
 
         ClipContext context = new ClipContext(start, end, ClipContext.Block.OUTLINE, Config.showLiquids.get() ? ClipContext.Fluid.ANY : ClipContext.Fluid.NONE, entity);
-        mouseOver = entity.getCommandSenderWorld().clip(context);
+        mouseOver = entity.level().clip(context);
         if (mouseOver == null) {
             return;
         }
 
         if (mouseOver.getType() == HitResult.Type.BLOCK) {
-            matrixStack.pushPose();
+            graphics.pose().pushMatrix();
 
             float scale = Config.tooltipScale.get().floatValue();
 
             float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-            setupOverlayRendering(sw * scale, sh * scale);
+            graphics.pose().scale(1.0f / scale, 1.0f / scale);
             renderHUDBlock(graphics, mode, mouseOver, sw * scale, sh * scale);
-            setupOverlayRendering(sw, sh);
-
-            matrixStack.popPose();
+            graphics.pose().popMatrix();
         }
 
         checkCleanup();
-    }
-
-    private static void setupOverlayRendering(float sw, float sh) {
-        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        Matrix4f ortho = (new Matrix4f()).setOrtho(0.0F, sw, sh, 0.0F, 1000.0F, ClientHooks.getGuiFarPlane());
-        RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);  // @todo 1.20 is this right?
-        Matrix4fStack posestack = RenderSystem.getModelViewStack();
-        posestack.identity();
-        posestack.translate(0.0F, 0.0F, 1000.0F - ClientHooks.getGuiFarPlane());
-        RenderSystem.applyModelViewMatrix();
     }
 
     private static void checkCleanup() {
@@ -160,8 +138,8 @@ public class OverlayRenderer {
         Entity entity = ((EntityHitResult) mouseOver).getEntity();
 
         if (!Config.getEntityBlacklist().isEmpty()) {
-            ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
-            for (Predicate<ResourceLocation> predicate : Config.getEntityBlacklist()) {
+            Identifier rl = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+            for (Predicate<Identifier> predicate : Config.getEntityBlacklist()) {
                 if (predicate.test(rl)) {
                     return;
                 }
@@ -227,7 +205,7 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, Player player) {
-        PacketDistributor.sendToServer(PacketGetEntityInfo.create(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity));
+        ClientPacketDistributor.sendToServer(PacketGetEntityInfo.create(player.level().dimension(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(GuiGraphics graphics, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
@@ -239,7 +217,7 @@ public class OverlayRenderer {
             return;
         }
         Player player = Minecraft.getInstance().player;
-        if (player.getCommandSenderWorld().isEmptyBlock(blockPos)) {
+        if (player.level().isEmptyBlock(blockPos)) {
             return;
         }
 
@@ -264,7 +242,7 @@ public class OverlayRenderer {
             }
         }
 
-        ResourceKey<Level> dimension = player.getCommandSenderWorld().dimension();
+        ResourceKey<Level> dimension = player.level().dimension();
         Pair<ResourceKey<Level>, BlockPos> key = Pair.of(dimension, blockPos);
         Pair<Long, ProbeInfo> cacheEntry = cachedInfo.get(key);
         if (cacheEntry == null || cacheEntry.getValue() == null) {
@@ -309,10 +287,10 @@ public class OverlayRenderer {
     private static ProbeInfo getWaitingInfo(ProbeMode mode, HitResult mouseOver, BlockPos blockPos, Player player) {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
 
-        Level world = player.getCommandSenderWorld();
+        Level world = player.level();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getCloneItemStack(blockState, mouseOver, world, blockPos, player);
+        ItemStack pickBlock = block.getCloneItemStack(world, blockPos, blockState, true, player);
         IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getLocation(), ((BlockHitResult)mouseOver).getDirection(), pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
@@ -344,10 +322,10 @@ public class OverlayRenderer {
     }
 
     private static void requestBlockInfo(ProbeMode mode, HitResult mouseOver, BlockPos blockPos, Player player) {
-        Level world = player.getCommandSenderWorld();
+        Level world = player.level();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getCloneItemStack(blockState, mouseOver, world, blockPos, player);
+        ItemStack pickBlock = block.getCloneItemStack(world, blockPos, blockState, true, player);
         if (pickBlock == null) {
             // Should not be needed but you never know... (bad mods)
             pickBlock = ItemStack.EMPTY;
@@ -356,22 +334,20 @@ public class OverlayRenderer {
             // @todo 1.20.5_Neo is this right?
             pickBlock = new ItemStack(pickBlock.getItem(), pickBlock.getCount());
         }
-        PacketDistributor.sendToServer(PacketGetInfo.create(world.dimension(), blockPos, mode, mouseOver, pickBlock));
+        ClientPacketDistributor.sendToServer(PacketGetInfo.create(world.dimension(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, GuiGraphics graphics) {
-        PoseStack matrixStack = graphics.pose();
-        matrixStack.pushPose();
+        graphics.pose().pushMatrix();
 
         float scale = Config.tooltipScale.get().floatValue();
 
         float sw = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         float sh = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-        setupOverlayRendering(sw * scale, sh * scale);
+        graphics.pose().scale(1.0f / scale, 1.0f / scale);
         renderElements(graphics, (ProbeInfo) probeInfo, style, sw * scale, sh * scale, null);
-        setupOverlayRendering(sw, sh);
-        matrixStack.popPose();
+        graphics.pose().popMatrix();
     }
 
     private static void cleanupCachedBlocks(long time) {
@@ -403,8 +379,6 @@ public class OverlayRenderer {
         if (extra != null) {
             probeInfo.element(extra);
         }
-
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 //        final ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getInstance());
 //        final int scaledWidth = scaledresolution.getScaledWidth();

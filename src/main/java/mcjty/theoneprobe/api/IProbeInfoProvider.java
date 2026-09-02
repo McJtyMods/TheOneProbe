@@ -1,6 +1,6 @@
 package mcjty.theoneprobe.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -15,7 +15,7 @@ public interface IProbeInfoProvider {
     /**
      * Return a unique ID
      */
-    ResourceLocation getID();
+    Identifier getID();
 
     /**
      * Add information for the probe info for the given block. This is always called

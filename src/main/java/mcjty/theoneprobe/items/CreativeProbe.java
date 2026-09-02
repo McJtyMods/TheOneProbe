@@ -4,10 +4,8 @@ import net.minecraft.world.item.Item;
 
 public class CreativeProbe extends Item {
 
-    public CreativeProbe() {
-        super(new Properties()
-                .stacksTo(1)
-        );
+    public CreativeProbe(Properties properties) {
+        super(properties.stacksTo(1));
     }
 
 }

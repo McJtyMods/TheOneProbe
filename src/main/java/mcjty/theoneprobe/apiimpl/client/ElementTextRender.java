@@ -1,6 +1,5 @@
 package mcjty.theoneprobe.apiimpl.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.api.TextStyleClass;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;

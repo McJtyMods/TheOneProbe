@@ -12,11 +12,9 @@ import mcjty.theoneprobe.network.*;
 import mcjty.theoneprobe.rendering.ClientSetup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -29,7 +27,6 @@ import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -53,44 +50,12 @@ public class TheOneProbe {
     public static boolean tesla = false;
     public static boolean redstoneflux = false;
 
-    public static final ResourceLocation HASPROBE = ResourceLocation.fromNamespaceAndPath(MODID, "hasprobe");
+    public static final Identifier HASPROBE = Identifier.fromNamespaceAndPath(MODID, "hasprobe");
     public static final TagKey<Item> HASPROBE_TAG = TagKey.create(Registries.ITEM, HASPROBE);
-
-    private static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, MODID);
-    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> MATERIAL_DIAMOND_HELMET = ARMOR_MATERIALS.register("diamond_helmet_probe", () -> new ArmorMaterial(
-            Map.of(
-                    ArmorItem.Type.HELMET, 3,
-                    ArmorItem.Type.CHESTPLATE, 8,
-                    ArmorItem.Type.LEGGINGS, 6,
-                    ArmorItem.Type.BOOTS, 3,
-                    ArmorItem.Type.BODY, 11
-            ),
-            10, SoundEvents.ARMOR_EQUIP_DIAMOND, () -> Ingredient.of(new ItemStack(Items.DIAMOND)),
-            Collections.emptyList(),  2.0f, 0.0f));
-    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> MATERIAL_IRON_HELMET = ARMOR_MATERIALS.register("iron_helmet_probe", () -> new ArmorMaterial(
-            Map.of(
-                    ArmorItem.Type.HELMET, 2,
-                    ArmorItem.Type.CHESTPLATE, 6,
-                    ArmorItem.Type.LEGGINGS, 5,
-                    ArmorItem.Type.BOOTS, 2,
-                    ArmorItem.Type.BODY, 5
-            ),
-            10, SoundEvents.ARMOR_EQUIP_IRON, () -> Ingredient.of(new ItemStack(Items.IRON_INGOT)),
-            Collections.emptyList(),  0.0f, 0.0f));
-    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> MATERIAL_GOLD_HELMET = ARMOR_MATERIALS.register("gold_helmet_probe", () -> new ArmorMaterial(
-            Map.of(
-                    ArmorItem.Type.HELMET, 1,
-                    ArmorItem.Type.CHESTPLATE, 5,
-                    ArmorItem.Type.LEGGINGS, 3,
-                    ArmorItem.Type.BOOTS, 1,
-                    ArmorItem.Type.BODY, 7
-            ),
-            10, SoundEvents.ARMOR_EQUIP_GOLD, () -> Ingredient.of(new ItemStack(Items.GOLD_INGOT)),
-            Collections.emptyList(),  0.0f, 0.0f));
 
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MODID);
     public static final Supplier<AttachmentType<Boolean>> ATTACHMENT_TYPE_PLAYER_GOT_NOTE = ATTACHMENT_TYPES.register("playergotnote", () -> AttachmentType.builder(() -> false)
-            .serialize(Codec.BOOL)
+            .serialize(Codec.BOOL.fieldOf("value"))
             .copyOnDeath()
             .build());
 
@@ -139,8 +104,6 @@ public class TheOneProbe {
 
         TABS.register(bus);
         ATTACHMENT_TYPES.register(bus);
-        ARMOR_MATERIALS.register(bus);
-
         if (dist.isClient()) {
             bus.addListener(ClientSetup::onClientSetup);
             bus.addListener(ClientSetup::onRegisterKeyMappings);
@@ -187,8 +150,9 @@ public class TheOneProbe {
     private void processIMC(final InterModProcessEvent event) {
         event.getIMCStream().forEach(message -> {
             if ("getTheOneProbe".equalsIgnoreCase(message.method())) {
-                Supplier<Function<ITheOneProbe, Void>> supplier = message.getMessageSupplier();
-                supplier.get().apply(theOneProbeImp);
+                @SuppressWarnings("unchecked")
+                Function<ITheOneProbe, Void> callback = (Function<ITheOneProbe, Void>) message.messageSupplier().get();
+                callback.apply(theOneProbeImp);
             }
         });
     }
@@ -208,13 +172,13 @@ public class TheOneProbe {
         event.register(Registries.ITEM, helper -> {
             ModItems.init();
 
-            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "probe"), ModItems.PROBE);
-            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "creativeprobe"), ModItems.CREATIVE_PROBE);
-            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "probenote"), ModItems.PROBE_NOTE);
+            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "probe"), ModItems.PROBE);
+            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "creativeprobe"), ModItems.CREATIVE_PROBE);
+            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "probenote"), ModItems.PROBE_NOTE);
 
-            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "diamond_helmet_probe"), ModItems.DIAMOND_HELMET_PROBE);
-            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "gold_helmet_probe"), ModItems.GOLD_HELMET_PROBE);
-            helper.register(ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "iron_helmet_probe"), ModItems.IRON_HELMET_PROBE);
+            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "diamond_helmet_probe"), ModItems.DIAMOND_HELMET_PROBE);
+            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "gold_helmet_probe"), ModItems.GOLD_HELMET_PROBE);
+            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "iron_helmet_probe"), ModItems.IRON_HELMET_PROBE);
 
 //            if (TheOneProbe.baubles) {
 //                helper.register(ModItems.PROBE_GOGGLES);
@@ -229,7 +193,7 @@ public class TheOneProbe {
 
     private void configureProviders() {
         List<IProbeInfoProvider> providers = TheOneProbe.theOneProbeImp.getProviders();
-        ResourceLocation[] defaultValues = new ResourceLocation[providers.size()];
+        Identifier[] defaultValues = new Identifier[providers.size()];
         int i = 0;
         for (IProbeInfoProvider provider : providers) {
             defaultValues[i++] = provider.getID();

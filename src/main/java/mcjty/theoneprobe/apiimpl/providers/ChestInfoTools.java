@@ -14,7 +14,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class ChestInfoTools {
             for (ItemStack stackInSlot : stacks) {
                 horizontal = vertical.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER));
                 horizontal.item(stackInSlot, new ItemStyle().width(16).height(16))
-                        .text(CompoundText.create().info(stackInSlot.getDescriptionId()));
+                        .text(CompoundText.create().info(stackInSlot.getHoverName()));
             }
         } else {
             for (ItemStack stackInSlot : stacks) {
@@ -122,11 +123,11 @@ public class ChestInfoTools {
         Set<Item> foundItems = Config.compactEqualStacks.get() ? new HashSet<>() : null;
         AtomicInteger maxSlots = new AtomicInteger();
         try {
-            IItemHandler capability = world.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+            ResourceHandler<ItemResource> capability = world.getCapability(Capabilities.Item.BLOCK, pos, null);
             if (capability != null) {
-                maxSlots.set(capability.getSlots());
+                maxSlots.set(capability.size());
                 for (int i = 0; i < maxSlots.get(); i++) {
-                    addItemStack(stacks, foundItems, capability.getStackInSlot(i));
+                    addItemStack(stacks, foundItems, capability.getResource(i).toStack(capability.getAmountAsInt(i)));
                 }
             } else if (te instanceof Container inventory) {
                 maxSlots.set(inventory.getContainerSize());

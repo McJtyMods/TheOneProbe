@@ -9,11 +9,7 @@
   ],
   "type": "minecraft:crafting_shaped",
   "key": {
-    "p": {
-      "item": "minecraft:paper"
-    },
-    "r": {
-      "item": "minecraft:redstone"
-    }
+    "p": "minecraft:paper",
+    "r": "minecraft:redstone"
   }
 }

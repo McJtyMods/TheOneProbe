@@ -9,7 +9,7 @@ import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class ProbeInfo extends ElementVertical {
         int size = buf.readVarInt();
         List<IElement> elements = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            ResourceLocation id = buf.readResourceLocation();
+            Identifier id = buf.readIdentifier();
             IElementFactory factory = TheOneProbe.theOneProbeImp.getElementFactory(id);
             elements.add(factory.createElement(buf));
         }
@@ -60,7 +60,7 @@ public class ProbeInfo extends ElementVertical {
     public static void writeElements(List<IElement> elements, RegistryFriendlyByteBuf buf) {
         buf.writeVarInt(elements.size());
         for (IElement element : elements) {
-            buf.writeResourceLocation(element.getID());
+            buf.writeIdentifier(element.getID());
             element.toBytes(buf);
         }
     }

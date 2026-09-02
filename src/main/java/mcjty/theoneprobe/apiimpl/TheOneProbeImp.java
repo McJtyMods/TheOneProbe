@@ -6,24 +6,24 @@ import mcjty.theoneprobe.apiimpl.elements.*;
 import mcjty.theoneprobe.apiimpl.styles.StyleManager;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 import java.util.function.Function;
 
 public class TheOneProbeImp implements ITheOneProbe {
 
-    public static final ResourceLocation ELEMENT_TEXT = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "text");
-    public static final ResourceLocation ELEMENT_ITEM = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "item");
-    public static final ResourceLocation ELEMENT_PROGRESS = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "progress");
-    public static final ResourceLocation ELEMENT_HORIZONTAL = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "hor");
-    public static final ResourceLocation ELEMENT_VERTICAL = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "ver");
-    public static final ResourceLocation ELEMENT_ENTITY = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "ent");
-    public static final ResourceLocation ELEMENT_ICON = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "icon");
-    public static final ResourceLocation ELEMENT_FLUID = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "fluid");
-    public static final ResourceLocation ELEMENT_ITEMLABEL = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "itemlabel");
-    public static final ResourceLocation ELEMENT_TANK = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "tank");
-    public static final ResourceLocation ELEMENT_PADDING = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "pad");
+    public static final Identifier ELEMENT_TEXT = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "text");
+    public static final Identifier ELEMENT_ITEM = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "item");
+    public static final Identifier ELEMENT_PROGRESS = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "progress");
+    public static final Identifier ELEMENT_HORIZONTAL = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "hor");
+    public static final Identifier ELEMENT_VERTICAL = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "ver");
+    public static final Identifier ELEMENT_ENTITY = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "ent");
+    public static final Identifier ELEMENT_ICON = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "icon");
+    public static final Identifier ELEMENT_FLUID = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "fluid");
+    public static final Identifier ELEMENT_ITEMLABEL = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "itemlabel");
+    public static final Identifier ELEMENT_TANK = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "tank");
+    public static final Identifier ELEMENT_PADDING = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "pad");
 
     private final StyleManager styleManager = new StyleManager();
     private List<IProbeConfigProvider> configProviders = new ArrayList<>();
@@ -32,12 +32,12 @@ public class TheOneProbeImp implements ITheOneProbe {
     private List<IProbeInfoEntityProvider> entityProviders = new ArrayList<>();
     private List<IBlockDisplayOverride> blockOverrides = new ArrayList<>();
     private List<IEntityDisplayOverride> entityOverrides = new ArrayList<>();
-    private Map<ResourceLocation, IElementFactory> factories = new HashMap<>();
+    private Map<Identifier, IElementFactory> factories = new HashMap<>();
 
     public TheOneProbeImp() {
     }
 
-    private static IElementFactory create(ResourceLocation id, Function<RegistryFriendlyByteBuf, IElement> factory) {
+    private static IElementFactory create(Identifier id, Function<RegistryFriendlyByteBuf, IElement> factory) {
         return new IElementFactory() {
             @Override
             public IElement createElement(RegistryFriendlyByteBuf buf) {
@@ -45,7 +45,7 @@ public class TheOneProbeImp implements ITheOneProbe {
             }
 
             @Override
-            public ResourceLocation getId() {
+            public Identifier getId() {
                 return id;
             }
         };
@@ -65,7 +65,7 @@ public class TheOneProbeImp implements ITheOneProbe {
         TheOneProbe.theOneProbeImp.registerElementFactory(create(ELEMENT_PADDING, ElementPadding::new));
     }
 
-    private int findProvider(ResourceLocation id) {
+    private int findProvider(Identifier id) {
         for (int i = 0 ; i < providers.size() ; i++) {
             if (id.equals(providers.get(i).getID())) {
                 return i;
@@ -104,7 +104,7 @@ public class TheOneProbeImp implements ITheOneProbe {
     }
 
     @Override
-    public IElementFactory getElementFactory(ResourceLocation id) {
+    public IElementFactory getElementFactory(Identifier id) {
         return factories.get(id);
     }
 
@@ -120,7 +120,7 @@ public class TheOneProbeImp implements ITheOneProbe {
         return entityProviders;
     }
 
-    private IProbeInfoProvider getProviderByID(ResourceLocation id) {
+    private IProbeInfoProvider getProviderByID(Identifier id) {
         for (IProbeInfoProvider provider : providers) {
             if (provider.getID().equals(id)) {
                 return provider;
@@ -138,9 +138,9 @@ public class TheOneProbeImp implements ITheOneProbe {
         return null;
     }
 
-    public void configureProviders(ResourceLocation[] sortedProviders, Set<String> excludedProviders) {
+    public void configureProviders(Identifier[] sortedProviders, Set<String> excludedProviders) {
         List<IProbeInfoProvider> newProviders = new ArrayList<>();
-        for (ResourceLocation id : sortedProviders) {
+        for (Identifier id : sortedProviders) {
             if (!excludedProviders.contains(id)) {
                 IProbeInfoProvider provider = getProviderByID(id);
                 if (provider != null) {

@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -33,10 +33,12 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -48,8 +50,8 @@ import static net.neoforged.neoforge.fluids.FluidType.BUCKET_VOLUME;
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
-    public ResourceLocation getID() {
-        return ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "default");
+    public Identifier getID() {
+        return Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "default");
     }
 
     @Override
@@ -177,7 +179,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             if (te instanceof SpawnerBlockEntity spawnerBlock) {
                 BaseSpawner logic = spawnerBlock.getSpawner();
                 CompoundTag tag = logic.nextSpawnData.getEntityToSpawn();
-                Optional<EntityType<?>> optional = EntityType.by(tag);
+                Optional<EntityType<?>> optional = EntityType.by(TagValueInput.create(ProblemReporter.DISCARDING, world.registryAccess(), tag));
                 optional.ifPresent(type -> probeInfo.horizontal(probeInfo.defaultLayoutStyle()
                         .alignment(ElementAlignment.ALIGN_CENTER))
                         .text(CompoundText.create().style(LABEL).text("Mob: ").info(type.getDescriptionId())));
@@ -225,11 +227,12 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
     private void showTankInfo(IProbeInfo probeInfo, Level world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
         BlockEntity te = world.getBlockEntity(pos);
-        IFluidHandler handler = world.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+        ResourceHandler<FluidResource> handler = world.getCapability(Capabilities.Fluid.BLOCK, pos, null);
         if (handler != null) {
-            for (int i = 0; i < handler.getTanks(); i++) {
-                FluidStack fluidStack = handler.getFluidInTank(i);
-                int maxContents = handler.getTankCapacity(i);
+            for (int i = 0; i < handler.size(); i++) {
+                FluidResource resource = handler.getResource(i);
+                FluidStack fluidStack = resource.toStack(handler.getAmountAsInt(i));
+                int maxContents = handler.getCapacityAsInt(i, resource);
                 if (!fluidStack.isEmpty()) {
                     addFluidInfo(probeInfo, config, fluidStack, maxContents);
                 }
@@ -286,9 +289,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 //            long maxEnergy = bigPower.getCapacity();
 //            addEnergyInfo(probeInfo, config, energy, maxEnergy);
         } else{
-            IEnergyStorage handler = world.getCapability(Capabilities.EnergyStorage.BLOCK, pos, null);
+            EnergyHandler handler = world.getCapability(Capabilities.Energy.BLOCK, pos, null);
             if (handler != null) {
-                addEnergyInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
+                addEnergyInfo(probeInfo, config, handler.getAmountAsLong(), handler.getCapacityAsLong());
             }
         }
     }
@@ -346,13 +349,10 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 FluidStack fluidStack = new FluidStack(fluid, BUCKET_VOLUME);
 
                 horizontal.fluid(fluidStack, probeInfo.defaultIconStyle().width(20));
-                //Proposal Fluids should look at the icon only not buckets of it. Dunno you have to decide. I just fixed the fluid color bug
-                ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
-                FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {
-                    if (FluidStack.isSameFluidSameComponents(fluidStack, fc)) {
-                        horizontal.item(bucketStack);
-                    }
-                });
+                ItemStack bucketStack = new ItemStack(fluid.getBucket());
+                if (!bucketStack.isEmpty()) {
+                    horizontal.item(bucketStack);
+                }
 
                 horizontal.vertical()
                         .text(CompoundText.create().name(fluidStack.getFluidType().getDescriptionId(fluidStack)))

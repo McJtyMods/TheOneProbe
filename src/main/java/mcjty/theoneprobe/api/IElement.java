@@ -2,7 +2,7 @@ package mcjty.theoneprobe.api;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * An element in the probe gui.
@@ -33,5 +33,5 @@ public interface IElement {
     /**
      * Get the identifier for this element (as specified by IElementFactory)
      */
-    ResourceLocation getID();
+    Identifier getID();
 }

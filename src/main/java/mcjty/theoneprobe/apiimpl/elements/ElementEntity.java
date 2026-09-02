@@ -10,9 +10,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.network.FriendlyByteBuf;
 
 public class ElementEntity implements IElement {
@@ -34,12 +36,13 @@ public class ElementEntity implements IElement {
             entityNBT = null;
             playerID = player.getId();
         } else {
-            entityNBT = new CompoundTag();
-            entity.saveWithoutId(entityNBT);
+            TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess());
+            entity.saveWithoutId(output);
+            entityNBT = output.buildResult();
 //            entityNBT = entity.serializeNBT();
             playerID = null;
         }
-        ResourceLocation registryName = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+        Identifier registryName = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         if (registryName == null) {
             registryName = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         }
@@ -97,7 +100,7 @@ public class ElementEntity implements IElement {
     }
 
     @Override
-    public ResourceLocation getID() {
+    public Identifier getID() {
         return TheOneProbeImp.ELEMENT_ENTITY;
     }
 }

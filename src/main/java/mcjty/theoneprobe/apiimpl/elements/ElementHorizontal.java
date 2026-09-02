@@ -8,7 +8,7 @@ import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ElementHorizontal extends AbstractElementPanel {
 
@@ -81,7 +81,7 @@ public class ElementHorizontal extends AbstractElementPanel {
     }
 
     @Override
-    public ResourceLocation getID() {
+    public Identifier getID() {
         return TheOneProbeImp.ELEMENT_HORIZONTAL;
     }
 }

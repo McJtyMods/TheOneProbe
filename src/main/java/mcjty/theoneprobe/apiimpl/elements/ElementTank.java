@@ -13,7 +13,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public class ElementTank implements IElement {
@@ -85,7 +85,7 @@ public class ElementTank implements IElement {
 	}
 	
 	@Override
-	public ResourceLocation getID() {
+	public Identifier getID() {
 		return TheOneProbeImp.ELEMENT_TANK;
 	}
 }

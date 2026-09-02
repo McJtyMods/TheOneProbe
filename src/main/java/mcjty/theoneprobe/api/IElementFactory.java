@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.api;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * A factory for elements
@@ -17,5 +17,5 @@ public interface IElementFactory {
     /**
      * Return a unique resource location that identifies this element factory
      */
-    ResourceLocation getId();
+    Identifier getId();
 }

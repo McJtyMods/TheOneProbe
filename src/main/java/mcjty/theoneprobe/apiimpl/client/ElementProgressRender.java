@@ -1,7 +1,5 @@
 package mcjty.theoneprobe.apiimpl.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IProgressStyle;
 import mcjty.theoneprobe.api.TankReference;
@@ -11,24 +9,24 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.joml.Matrix4f;
 
 import java.util.Objects;
 import java.util.function.Function;
 
 public class ElementProgressRender {
 
-    private static final ResourceLocation HEARTH_FULL = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/heart/full.png");
-    private static final ResourceLocation HEARTH_HALF = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/heart/half.png");
-    private static final ResourceLocation ARMOR_FULL = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/armor_full.png");
-    private static final ResourceLocation ARMOR_HALF = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/armor_half.png");
+    private static final Identifier HEART_FULL = Identifier.withDefaultNamespace("hud/heart/full");
+    private static final Identifier HEART_HALF = Identifier.withDefaultNamespace("hud/heart/half");
+    private static final Identifier ARMOR_FULL = Identifier.withDefaultNamespace("hud/armor_full");
+    private static final Identifier ARMOR_HALF = Identifier.withDefaultNamespace("hud/armor_half");
 
     public static void render(IProgressStyle style, long current, long max, GuiGraphics graphics, int x, int y, int w, int h) {
         if (style.isLifeBar()) {
@@ -71,45 +69,33 @@ public class ElementProgressRender {
     }
 
     private static void renderLifeBar(long current, GuiGraphics graphics, int x, int y, int w, int h) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        PoseStack matrixStack = graphics.pose();
-        Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
             // Shortened view
-            RenderSystem.setShaderTexture(0, HEARTH_FULL);
-            RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HEART_FULL, x, y, 9, 9);
             RenderHelper.renderText(Minecraft.getInstance(), graphics, x + 12, y, ChatFormatting.WHITE + String.valueOf((current / 2)));
         } else {
-            RenderSystem.setShaderTexture(0, HEARTH_FULL);
             for (int i = 0; i < current / 2; i++) {
-                RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HEART_FULL, x, y, 9, 9);
                 x += 8;
             }
             if (current % 2 != 0) {
-                RenderSystem.setShaderTexture(0, HEARTH_HALF);
-                RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HEART_HALF, x, y, 9, 9);
             }
         }
     }
 
     private static void renderArmorBar(long current, GuiGraphics graphics, int x, int y, int w, int h) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        PoseStack matrixStack = graphics.pose();
-        Matrix4f matrix = matrixStack.last().pose();
         if (current * 4 >= w) {
             // Shortened view
-            RenderSystem.setShaderTexture(0, ARMOR_FULL);
-            RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ARMOR_FULL, x, y, 9, 9);
             RenderHelper.renderText(Minecraft.getInstance(), graphics, x + 12, y, ChatFormatting.WHITE + String.valueOf((current / 2)));
         } else {
-            RenderSystem.setShaderTexture(0, ARMOR_FULL);
             for (int i = 0; i < current / 2; i++) {
-                RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ARMOR_FULL, x, y, 9, 9);
                 x += 8;
             }
             if (current % 2 != 0) {
-                RenderSystem.setShaderTexture(0, ARMOR_HALF);
-                RenderHelper.drawTexturedModalRect(matrix, x, y, 0, 0, 9, 9, 9, 9);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ARMOR_HALF, x, y, 9, 9);
             }
         }
     }
@@ -123,35 +109,31 @@ public class ElementProgressRender {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-        Function<ResourceLocation, TextureAtlasSprite> map = mc.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
+        Function<Identifier, TextureAtlasSprite> map = mc.getAtlasManager()
+                .getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS)::getSprite;
         width -= 2;
         FluidStack[] fluids = tank.getFluids();
         int start = 1;
         int tanks = fluids.length;
         int max = tank.getCapacity();
-        PoseStack matrixStack = graphics.pose();
-        Matrix4f matrix = matrixStack.last().pose();
         for (FluidStack stack : fluids) {
             int lvl = (int) (stack == null ? 0 : (((double) stack.getAmount() / max) * width));
             if (lvl <= 0) {
                 continue;
             }
-            ResourceLocation stillTexture = IClientFluidTypeExtensions.of(stack.getFluid()).getStillTexture(stack);
+            Identifier stillTexture = IClientFluidTypeExtensions.of(stack.getFluid()).getStillTexture(stack);
             TextureAtlasSprite liquidIcon = map.apply(stillTexture);
             if (Objects.equals(liquidIcon, map.apply(MissingTextureAtlasSprite.getLocation()))) {
                 continue;
             }
             int color = IClientFluidTypeExtensions.of(stack.getFluid()).getTintColor(stack);
-            RenderSystem.setShaderColor(((color >> 16) & 255) / 255F, ((color >> 8) & 255) / 255F, (color & 255) / 255F, ((color >> 24) & 255) / 255F);
             while (lvl > 0) {
                 int maxX = Math.min(16, lvl);
                 lvl -= maxX;
-                RenderHelper.drawTexturedModalRect(matrix, x + start, y + 1, liquidIcon, maxX, height - 2);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, liquidIcon, x + start, y + 1, maxX, height - 2, color);
                 start += maxX;
             }
         }
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         if(style.isShowText()) {
             renderText(graphics, x, y, width + 2, tank.getStored(), style);
         }

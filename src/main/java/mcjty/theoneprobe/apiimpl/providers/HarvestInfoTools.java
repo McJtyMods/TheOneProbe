@@ -5,7 +5,7 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,11 +22,11 @@ import static mcjty.theoneprobe.api.TextStyleClass.WARNING;
 
 public class HarvestInfoTools {
 
-    private static final ResourceLocation ICONS = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/icons.png");
+    private static final Identifier ICONS = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/icons.png");
 
     private static String getTools(BlockState state) {
         Set<TagKey<Block>> tags = state.getBlock().builtInRegistryHolder().tags().collect(Collectors.toSet());
-        Map<ResourceLocation, String> tooltypes = Config.getTooltypeTags();
+        Map<Identifier, String> tooltypes = Config.getTooltypeTags();
         String tools = "";
         for (TagKey<Block> tag : tags) {
             String s = tooltypes.get(tag.location());
@@ -42,7 +42,7 @@ public class HarvestInfoTools {
 
     private static String getLevels(BlockState state) {
         Set<TagKey<Block>> tags = state.getBlock().builtInRegistryHolder().tags().collect(Collectors.toSet());
-        Map<ResourceLocation, String> harvestability = Config.getHarvestabilityTags();
+        Map<Identifier, String> harvestability = Config.getHarvestabilityTags();
         String levels = "";
         for (TagKey<Block> tag : tags) {
             String s = harvestability.get(tag.location());

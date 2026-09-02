@@ -2,14 +2,16 @@ package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
-import net.minecraft.core.Holder;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorMaterials;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 
 import static mcjty.theoneprobe.TheOneProbe.HASPROBE_TAG;
 
@@ -23,40 +25,28 @@ public class ModItems {
     public static ProbeNote PROBE_NOTE;
 
     public static void init() {
-        PROBE = new Probe();
-        CREATIVE_PROBE = new CreativeProbe();
+        PROBE = new Probe(properties("probe"));
+        CREATIVE_PROBE = new CreativeProbe(properties("creativeprobe"));
 
-        DIAMOND_HELMET_PROBE = makeHelmet(TheOneProbe.MATERIAL_DIAMOND_HELMET);
-        GOLD_HELMET_PROBE = makeHelmet(TheOneProbe.MATERIAL_GOLD_HELMET);
-        IRON_HELMET_PROBE = makeHelmet(TheOneProbe.MATERIAL_IRON_HELMET);
+        DIAMOND_HELMET_PROBE = makeHelmet("diamond_helmet_probe", ArmorMaterials.DIAMOND);
+        GOLD_HELMET_PROBE = makeHelmet("gold_helmet_probe", ArmorMaterials.GOLD);
+        IRON_HELMET_PROBE = makeHelmet("iron_helmet_probe", ArmorMaterials.IRON);
 
-        PROBE_NOTE = new ProbeNote();
+        PROBE_NOTE = new ProbeNote(properties("probenote"));
 
         if (TheOneProbe.baubles) {
             PROBE_GOGGLES = BaubleTools.initProbeGoggle();
         }
     }
 
-    private static Item makeHelmet(Holder<ArmorMaterial> material) {
-        Item item = new ArmorItem(material, ArmorItem.Type.HELMET, new Item.Properties()) {
+    private static Item makeHelmet(String name, ArmorMaterial material) {
+        return new Item(properties(name).humanoidArmor(material, ArmorType.HELMET));
+    }
 
-//            @Override
-//            public boolean getHasSubtypes() {
-//                return true;
-//            }
-//
-//            @Override
-//            public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-//                if (this.isInCreativeTab(tab)) {
-//                    ItemStack stack = new ItemStack(this);
-//                    CompoundNBT tag = new CompoundNBT();
-//                    tag.setInteger(PROBETAG, 1);
-//                    stack.setTagCompound(tag);
-//                    subItems.add(stack);
-//                }
-//            }
-        };
-        return item;
+    private static Item.Properties properties(String name) {
+        ResourceKey<Item> id = ResourceKey.create(Registries.ITEM,
+                Identifier.fromNamespaceAndPath(TheOneProbe.MODID, name));
+        return new Item.Properties().setId(id);
     }
 
     public static boolean isProbeInHand(ItemStack stack) {

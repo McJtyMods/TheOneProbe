@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.text.DecimalFormat;
 
@@ -126,7 +126,7 @@ public class ElementProgress implements IElement {
     }
 
     @Override
-    public ResourceLocation getID() {
+    public Identifier getID() {
         return TheOneProbeImp.ELEMENT_PROGRESS;
     }
 }

@@ -9,7 +9,7 @@ import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import mcjty.theoneprobe.items.IEnumConfig;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.*;
@@ -57,12 +57,12 @@ public class Config {
     private static ConfigValue<List<? extends String>> tooltypeTags;
     private static ConfigValue<List<? extends String>> harvestabilityTags;
     private static ConfigValue<List<? extends String>> blacklistEntities;
-    private static Set<ResourceLocation> inventoriesToShow = null;
-    private static Set<ResourceLocation> inventoriesToNotShow = null;
-    private static Set<ResourceLocation> dontSendNBTSet = null;
-    private static Set<Predicate<ResourceLocation>> blacklistEntitiesSet = null;
-    private static Map<ResourceLocation, String> tooltypeTagsSet = null;
-    private static Map<ResourceLocation, String> harvestabilityTagsSet = null;
+    private static Set<Identifier> inventoriesToShow = null;
+    private static Set<Identifier> inventoriesToNotShow = null;
+    private static Set<Identifier> dontSendNBTSet = null;
+    private static Set<Predicate<Identifier>> blacklistEntitiesSet = null;
+    private static Map<Identifier, String> tooltypeTagsSet = null;
+    private static Map<Identifier, String> harvestabilityTagsSet = null;
 
     public static DoubleValue probeDistance;        // Client-side
     public static BooleanValue showLiquids;
@@ -126,7 +126,7 @@ public class Config {
     private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowSilverfish;
 
     private static ConfigValue<List<? extends String>> renderBlacklist;
-    private static Set<ResourceLocation> renderBlacklistSet = null;
+    private static Set<Identifier> renderBlacklistSet = null;
 
 
     public static final Map<TextStyleClass, String> defaultTextStyleClasses = new HashMap<>();
@@ -528,56 +528,56 @@ public class Config {
         return defaultOverlayStyle;
     }
 
-    public static Set<ResourceLocation> getInventoriesToShow() {
+    public static Set<Identifier> getInventoriesToShow() {
         if (inventoriesToShow == null) {
             inventoriesToShow = new HashSet<>();
             for (String s : showContentsWithoutSneaking.get()) {
-                inventoriesToShow.add(ResourceLocation.parse(s));
+                inventoriesToShow.add(Identifier.parse(s));
             }
         }
         return inventoriesToShow;
     }
 
-    public static Map<ResourceLocation, String> getTooltypeTags() {
+    public static Map<Identifier, String> getTooltypeTags() {
         if (tooltypeTagsSet == null) {
             tooltypeTagsSet = new HashMap<>();
             for (String s : tooltypeTags.get()) {
                 String[] splitted = StringUtils.split(s, '=');
-                tooltypeTagsSet.put(ResourceLocation.parse(splitted[0]), splitted[1]);
+                tooltypeTagsSet.put(Identifier.parse(splitted[0]), splitted[1]);
             }
         }
         return tooltypeTagsSet;
     }
 
-    public static Map<ResourceLocation, String> getHarvestabilityTags() {
+    public static Map<Identifier, String> getHarvestabilityTags() {
         if (harvestabilityTagsSet == null) {
             harvestabilityTagsSet = new HashMap<>();
             for (String s : harvestabilityTags.get()) {
                 String[] splitted = StringUtils.split(s, '=');
-                harvestabilityTagsSet.put(ResourceLocation.parse(splitted[0]), splitted[1]);
+                harvestabilityTagsSet.put(Identifier.parse(splitted[0]), splitted[1]);
             }
         }
         return harvestabilityTagsSet;
     }
 
-    public static Set<ResourceLocation> getInventoriesToNotShow() {
+    public static Set<Identifier> getInventoriesToNotShow() {
         if (inventoriesToNotShow == null) {
             inventoriesToNotShow = new HashSet<>();
             for (String s : dontShowContentsUnlessSneaking.get()) {
-                inventoriesToNotShow.add(ResourceLocation.parse(s));
+                inventoriesToNotShow.add(Identifier.parse(s));
             }
         }
         return inventoriesToNotShow;
     }
 
-    public static Set<Predicate<ResourceLocation>> getEntityBlacklist() {
+    public static Set<Predicate<Identifier>> getEntityBlacklist() {
         if (blacklistEntitiesSet == null) {
             blacklistEntitiesSet = new HashSet<>();
             for (String s : blacklistEntities.get()) {
                 if ("*".equals(s)) {
                     blacklistEntitiesSet.add(rl -> true);
                 } else if (s.contains(":")) {
-                    ResourceLocation wanted = ResourceLocation.parse(s);
+                    Identifier wanted = Identifier.parse(s);
                     blacklistEntitiesSet.add(rl -> rl.equals(wanted));
                 } else {
                     blacklistEntitiesSet.add(rl -> rl.getNamespace().equals(s));
@@ -587,11 +587,11 @@ public class Config {
         return blacklistEntitiesSet;
     }
 
-    public static Set<ResourceLocation> getDontSendNBTSet() {
+    public static Set<Identifier> getDontSendNBTSet() {
         if (dontSendNBTSet == null) {
             dontSendNBTSet = new HashSet<>();
             for (String s : dontSendNBT.get()) {
-                dontSendNBTSet.add(ResourceLocation.parse(s));
+                dontSendNBTSet.add(Identifier.parse(s));
             }
         }
         return dontSendNBTSet;
@@ -659,11 +659,11 @@ public class Config {
 
     }
 
-    public static boolean isBlacklistForRendering(ResourceLocation id) {
+    public static boolean isBlacklistForRendering(Identifier id) {
         if (renderBlacklistSet == null) {
             renderBlacklistSet = new HashSet<>();
             for (String s : renderBlacklist.get()) {
-                renderBlacklistSet.add(ResourceLocation.parse(s));
+                renderBlacklistSet.add(Identifier.parse(s));
             }
         }
         return renderBlacklistSet.contains(id);

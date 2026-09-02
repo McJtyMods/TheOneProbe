@@ -8,18 +8,18 @@ import mcjty.theoneprobe.apiimpl.styles.IconStyle;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ElementIcon implements IElement {
 
-    private final ResourceLocation icon;
+    private final Identifier icon;
     private final int u;
     private final int v;
     private final int w;
     private final int h;
     private final IIconStyle style;
 
-    public ElementIcon(ResourceLocation icon, int u, int v, int w, int h, IIconStyle style) {
+    public ElementIcon(Identifier icon, int u, int v, int w, int h, IIconStyle style) {
         this.icon = icon;
         this.u = u;
         this.v = v;
@@ -30,7 +30,7 @@ public class ElementIcon implements IElement {
 
     public ElementIcon(FriendlyByteBuf buf) {
         if (buf.readBoolean()) {
-            icon = buf.readResourceLocation();
+            icon = buf.readIdentifier();
         } else {
             icon = null;
         }
@@ -52,7 +52,7 @@ public class ElementIcon implements IElement {
     
     @Override
     public void render(GuiGraphics graphics, int x, int y) {
-        ElementIconRender.render(icon, graphics.pose(), x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight(), style.getColor());
+        ElementIconRender.render(icon, graphics, x, y, w, h, u, v, style.getTextureWidth(), style.getTextureHeight(), style.getColor());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ElementIcon implements IElement {
     public void toBytes(RegistryFriendlyByteBuf buf) {
         if (icon != null) {
             buf.writeBoolean(true);
-            buf.writeResourceLocation(icon);
+            buf.writeIdentifier(icon);
         } else {
             buf.writeBoolean(false);
         }
@@ -85,7 +85,7 @@ public class ElementIcon implements IElement {
     }
 
     @Override
-    public ResourceLocation getID() {
+    public Identifier getID() {
         return TheOneProbeImp.ELEMENT_ICON;
     }
 }

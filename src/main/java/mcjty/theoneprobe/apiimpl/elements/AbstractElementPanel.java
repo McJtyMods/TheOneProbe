@@ -26,7 +26,7 @@ import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
@@ -98,12 +98,12 @@ public abstract class AbstractElementPanel implements IElement, IProbeInfo {
     }
 
     @Override
-    public IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h) {
+    public IProbeInfo icon(Identifier icon, int u, int v, int w, int h) {
         return icon(icon, u, v, w, h, new IconStyle());
     }
 
     @Override
-    public IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h, IIconStyle style) {
+    public IProbeInfo icon(Identifier icon, int u, int v, int w, int h, IIconStyle style) {
         children.add(new ElementIcon(icon, u, v, w, h, style));
         return this;
     }

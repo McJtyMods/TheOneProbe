@@ -16,8 +16,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.wolf.Wolf;
+import net.minecraft.world.entity.animal.equine.Horse;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -109,7 +109,7 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             if(!stack.isEmpty()) {
                 probeInfo.horizontal(new LayoutStyle().spacing(10).alignment(ElementAlignment.ALIGN_CENTER))
                         .item(stack, new ItemStyle().width(16).height(16))
-                        .text(CompoundText.create().info(stack.getDescriptionId()));
+                        .text(CompoundText.create().info(stack.getHoverName()));
                 if (mode == ProbeMode.EXTENDED) {
                     probeInfo.text(CompoundText.createLabelInfo("Rotation: ", itemFrame.getRotation()));
                 }
@@ -121,9 +121,9 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
         if (Tools.show(mode, config.getAnimalOwnerSetting())) {
             UUID ownerId = null;
             if (entity instanceof TamableAnimal tamable) {
-                ownerId = tamable.getOwnerUUID();
+                ownerId = tamable.getOwnerReference() == null ? null : tamable.getOwnerReference().getUUID();
             } else if (entity instanceof Horse horse) {
-                ownerId = horse.getOwnerUUID();
+                ownerId = horse.getOwnerReference() == null ? null : horse.getOwnerReference().getUUID();
             }
 
             if (ownerId != null) {

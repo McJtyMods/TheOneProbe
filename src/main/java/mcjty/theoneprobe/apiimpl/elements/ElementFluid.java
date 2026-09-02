@@ -9,7 +9,7 @@ import mcjty.theoneprobe.apiimpl.styles.IconStyle;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -40,9 +40,9 @@ public class ElementFluid implements IElement {
     @Override
     public void render(GuiGraphics graphics, int x, int y) {
         int tintColor = IClientFluidTypeExtensions.of(fluid.getFluid()).getTintColor(fluid);
-        ResourceLocation stillTexture = IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture();
+        Identifier stillTexture = IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture();
         Color color = new Color(tintColor);
-        ElementIconRender.render(stillTexture, graphics.pose(), x, y, 16, 16, -1, -1, style.getTextureWidth(), style.getTextureHeight(), color.getRGB());
+        ElementIconRender.render(stillTexture, graphics, x, y, 16, 16, -1, -1, style.getTextureWidth(), style.getTextureHeight(), color.getRGB());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ElementFluid implements IElement {
     }
 
     @Override
-    public ResourceLocation getID() {
+    public Identifier getID() {
         return TheOneProbeImp.ELEMENT_FLUID;
     }
 }

@@ -7,7 +7,7 @@ import mcjty.theoneprobe.config.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -20,8 +20,8 @@ import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 public class DebugProbeInfoProvider implements IProbeInfoProvider {
 
     @Override
-    public ResourceLocation getID() {
-        return ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "debug");
+    public Identifier getID() {
+        return Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "debug");
     }
 
     @Override

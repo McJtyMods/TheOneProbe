@@ -1,7 +1,5 @@
 package mcjty.theoneprobe.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import javax.annotation.Nonnull;
 
 import mcjty.theoneprobe.TheOneProbe;
@@ -14,15 +12,16 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import org.apache.commons.lang3.tuple.Pair;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
-import static mcjty.theoneprobe.rendering.RenderHelper.drawTexturedModalRect;
 
 public class GuiConfig extends Screen {
     private static final int WIDTH = 230;
@@ -39,8 +37,8 @@ public class GuiConfig extends Screen {
     private int guiLeft;
     private int guiTop;
 
-    private static final ResourceLocation background = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/config.png");
-    private static final ResourceLocation scene = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/scene.png");
+    private static final Identifier background = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/config.png");
+    private static final Identifier scene = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/scene.png");
 
     private static final List<Preset> presets = new ArrayList<>();
 
@@ -83,10 +81,8 @@ public class GuiConfig extends Screen {
 
     @Override
     protected void renderMenuBackground(GuiGraphics graphics, int x, int y, int width, int height) {
-        RenderSystem.enableBlend();
-        graphics.blit(background, guiLeft+WIDTH, y,  0.0f, 0.0f, 256, 256, 256, 256);
-        graphics.blit(scene, guiLeft, y,  0.0f, 0.0f, 256, 256, 256, 256);
-        RenderSystem.disableBlend();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, background, guiLeft + WIDTH, y, 0.0f, 0.0f, 256, 256, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, scene, guiLeft, y, 0.0f, 0.0f, 256, 256, 256, 256);
     }
 
     @Override
@@ -153,14 +149,14 @@ public class GuiConfig extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        boolean rc = super.mouseClicked(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        boolean rc = super.mouseClicked(event, doubleClick);
         if (rc) {
             return true;
         }
-        if (mouseButton == 0) {
+        if (event.button() == 0) {
             for (HitBox box : hitboxes) {
-                if (box.isHit((int)mouseX-guiLeft, (int)mouseY-guiTop)) {
+                if (box.isHit((int) event.x() - guiLeft, (int) event.y() - guiTop)) {
                     box.call();
                     return true;
                 }
@@ -205,7 +201,7 @@ public class GuiConfig extends Screen {
         probeInfo.horizontal()
                 .item(pickBlock)
                 .vertical()
-                .text(CompoundText.create().name(pickBlock.getDescriptionId()))
+                .text(CompoundText.create().name(pickBlock.getHoverName()))
                 .text(CompoundText.create().style(MODNAME).text(modName));
         probeInfo.text(CompoundText.createLabelInfo("Fuel: ","5 volts"));
         probeInfo.text(CompoundText.create().style(LABEL).text("Error: ").style(ERROR).text("Oups!"));
@@ -214,12 +210,9 @@ public class GuiConfig extends Screen {
     }
 
     private void renderElements(ProbeInfo probeInfo, IOverlayStyle style, GuiGraphics graphics) {
-        PoseStack matrixStack = graphics.pose();
-        matrixStack.pushPose();
+        graphics.pose().pushMatrix();
         float scale = (float) (1 / Config.tooltipScale.get());
-        matrixStack.scale(scale, scale, scale);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        matrixStack.translate(0, 0, 1);
+        graphics.pose().scale(scale, scale);
 
         int w = probeInfo.getWidth();
         int h = probeInfo.getHeight();
@@ -273,7 +266,7 @@ public class GuiConfig extends Screen {
 
         probeInfo.render(graphics, x + margin, y + margin);
 
-        matrixStack.popPose();
+        graphics.pose().popMatrix();
     }
 
     public static void open() {

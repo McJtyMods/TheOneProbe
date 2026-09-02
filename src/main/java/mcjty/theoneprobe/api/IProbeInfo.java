@@ -3,7 +3,7 @@ package mcjty.theoneprobe.api;
 import java.util.Collection;
 import java.util.List;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -64,8 +64,8 @@ public interface IProbeInfo {
      * Create an icon. If u and v are -1 then the default texture atlas is used
      * and TheOneProbe will try to find the resource location on that atlas
      */
-    IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h, IIconStyle style);
-    IProbeInfo icon(ResourceLocation icon, int u, int v, int w, int h);
+    IProbeInfo icon(Identifier icon, int u, int v, int w, int h, IIconStyle style);
+    IProbeInfo icon(Identifier icon, int u, int v, int w, int h);
 
     /**
      * A fluid icon. This will render the fluid icon for the given fluidstack

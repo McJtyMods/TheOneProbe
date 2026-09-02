@@ -9,14 +9,8 @@
   ],
   "type": "minecraft:crafting_shaped",
   "key": {
-    "r": {
-      "item": "minecraft:redstone"
-    },
-    "C": {
-      "item": "minecraft:comparator"
-    },
-    "n": {
-      "item": "minecraft:gold_nugget"
-    }
+    "r": "minecraft:redstone",
+    "C": "minecraft:comparator",
+    "n": "minecraft:gold_nugget"
   }
 }

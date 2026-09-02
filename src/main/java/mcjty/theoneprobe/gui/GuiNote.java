@@ -1,7 +1,5 @@
 package mcjty.theoneprobe.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import javax.annotation.Nonnull;
 
 import mcjty.theoneprobe.TheOneProbe;
@@ -9,13 +7,14 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.ChatFormatting;
 
 import static mcjty.theoneprobe.config.Config.*;
-import static mcjty.theoneprobe.rendering.RenderHelper.drawTexturedModalRect;
 import static net.minecraft.ChatFormatting.BOLD;
 import static net.minecraft.ChatFormatting.GREEN;
 
@@ -30,7 +29,7 @@ public class GuiNote extends Screen {
     private int guiLeft;
     private int guiTop;
 
-    private static final ResourceLocation background = ResourceLocation.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/note.png");
+    private static final Identifier background = Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "textures/gui/note.png");
 
     public GuiNote() {
         super(Component.literal("note"));
@@ -50,9 +49,7 @@ public class GuiNote extends Screen {
 
     @Override
     protected void renderMenuBackground(GuiGraphics graphics, int x, int y, int width, int height) {
-        RenderSystem.enableBlend();
-        graphics.blit(background, guiLeft, guiTop,  0.0f, 0.0f, 256, 256, 256, 256);
-        RenderSystem.disableBlend();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, background, guiLeft, guiTop, 0.0f, 0.0f, 256, 256, 256, 256);
     }
 
     @Override
@@ -118,13 +115,13 @@ public class GuiNote extends Screen {
     private int hitY;
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        boolean rc = super.mouseClicked(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        boolean rc = super.mouseClicked(event, doubleClick);
         if (rc) {
             return true;
         }
-        mouseX += guiLeft;
-        mouseY += guiTop;
+        double mouseX = event.x();
+        double mouseY = event.y();
         if (mouseY >= hitY && mouseY < hitY + BUTTON_HEIGHT) {
             if (mouseX >= hitX && mouseX < hitX + BUTTON_WIDTH) {
                 Config.setProbeNeeded(PROBE_NEEDED);
@@ -142,8 +139,8 @@ public class GuiNote extends Screen {
         RenderHelper.renderText(Minecraft.getInstance(), graphics, x, y, BOLD + "" + GREEN + "You can change this here:");
         y += 10;
 
-        hitY = y + guiTop;
-        hitX = x + guiLeft;
+        hitY = y;
+        hitX = x;
         graphics.fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, 0xff000000);
         RenderHelper.renderText(Minecraft.getInstance(), graphics, x + 3, y + 4, "Needed"); x += BUTTON_MARGIN;
 

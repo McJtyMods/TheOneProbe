@@ -1,7 +1,6 @@
 package mcjty.theoneprobe.apiimpl.client;
 
 import com.google.common.collect.Maps;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.DataFixUtils;
 import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.config.Config;
@@ -11,11 +10,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 import java.util.Map;
 
 public class ElementEntityRender {
@@ -30,18 +32,18 @@ public class ElementEntityRender {
     public static void render(String entityName, CompoundTag entityNBT, IEntityStyle style, GuiGraphics graphics, int x, int y) {
         if (entityName != null && !entityName.isEmpty()) {
             String fixed = fixEntityId(entityName);
-            ResourceLocation id = ResourceLocation.parse(fixed);
+            Identifier id = Identifier.parse(fixed);
 
             if (!Config.isBlacklistForRendering(id)) {
                 Entity entity = null;
                 if (entityNBT != null) {
-                    EntityType<?> value = BuiltInRegistries.ENTITY_TYPE.get(id);
+                    EntityType<?> value = BuiltInRegistries.ENTITY_TYPE.getValue(id);
                     if (value != null) {
                         try {
                             Level world = Minecraft.getInstance().level;
 
-                            entity = value.create(world);
-                            entity.moveTo(0.5D, 0.0D, 0.5D, Mth.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
+                            entity = value.create(world, EntitySpawnReason.LOAD);
+                            entity.snapTo(0.5D, 0.0D, 0.5D, Mth.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
 
                             if (entity instanceof Mob mob) {
                                 mob.yHeadRot = mob.getYRot();
@@ -49,17 +51,17 @@ public class ElementEntityRender {
                                 mob.setLeftHanded(world.random.nextFloat() < 0.05F);
                             }
 
-                            entity.load(entityNBT);
+                            entity.load(TagValueInput.create(ProblemReporter.DISCARDING, world.registryAccess(), entityNBT));
 //                            EntityType.applyItemNBT(world, null, entity, entityNBT);
                         } catch (Exception ignore) {
                             // This can crash due to a vanilla bug with foxes. Workaround here
                         }
                     }
                 } else {
-                    EntityType<?> value = BuiltInRegistries.ENTITY_TYPE.get(id);
+                    EntityType<?> value = BuiltInRegistries.ENTITY_TYPE.getValue(id);
                     if (value != null) {
                         try {
-                            entity = value.create(Minecraft.getInstance().level);
+                            entity = value.create(Minecraft.getInstance().level, EntitySpawnReason.LOAD);
                         } catch (Exception ignore) {
                             // This can crash due to a vanilla bug with foxes. Workaround here
                         }
@@ -157,7 +159,7 @@ public class ElementEntityRender {
 
     /**
      * This method attempts to fix an old-style (1.10.2) entity Id and convert it to the
-     * string representation of the ResourceLocation.fromNamespaceAndPath.
+     * string representation of the Identifier.fromNamespaceAndPath.
      * This does not work for modded entities.
      * @param id an old-style entity id as used in 1.10
      * @return
@@ -178,7 +180,7 @@ public class ElementEntityRender {
         height = (float) ((height - 1) * .7 + 1);
         float s = style.getScale() * ((style.getHeight() * 14.0f / 25) / height);
 
-        RenderHelper.renderEntity(entity, graphics.pose(), x, y, s);
+        RenderHelper.renderEntity(entity, graphics, x, y, style.getWidth(), style.getHeight(), s);
     }
 
 }

@@ -7,7 +7,7 @@ import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public class ElementItemLabel implements IElement {
@@ -58,7 +58,7 @@ public class ElementItemLabel implements IElement {
     }
 
     @Override
-    public ResourceLocation getID() {
+    public Identifier getID() {
         return TheOneProbeImp.ELEMENT_ITEMLABEL;
     }
 }

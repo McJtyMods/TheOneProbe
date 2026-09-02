@@ -17,7 +17,7 @@ public class CommandTopNeed implements Command<CommandSourceStack> {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("need")
-                .requires(cs -> cs.hasPermission(0))
+                .requires(Commands.hasPermission(Commands.LEVEL_ALL))
                 .executes(CMD);
     }
 
