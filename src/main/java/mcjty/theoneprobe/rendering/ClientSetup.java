@@ -36,7 +36,7 @@ public class ClientSetup {
     @SubscribeEvent
     public void onGuiOpen(ScreenEvent.Opening event) {
         if (ignoreNextGuiClose) {
-            Screen current = Minecraft.getInstance().screen;
+            Screen current = Minecraft.getInstance().gui.screen();
             if (event.getScreen() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
                 ignoreNextGuiClose = false;
                 // We don't want our gui to be closed for a new 'null' guil

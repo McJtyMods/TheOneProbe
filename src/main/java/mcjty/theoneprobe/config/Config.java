@@ -489,7 +489,11 @@ public class Config {
         StringBuilder builder = new StringBuilder();
         String[] splitted = StringUtils.split(input, ',');
         for (String s : splitted) {
-            ChatFormatting format = ChatFormatting.getByName(s);
+            String normalized = s.toUpperCase(Locale.ROOT).replaceAll("[^A-Z]", "");
+            ChatFormatting format = Arrays.stream(ChatFormatting.values())
+                    .filter(candidate -> candidate.name().replace("_", "").equals(normalized))
+                    .findFirst()
+                    .orElse(null);
             if (format != null) {
                 builder.append(format.toString());
             }

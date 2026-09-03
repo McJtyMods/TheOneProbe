@@ -268,6 +268,6 @@ public class GuiConfig extends Screen {
     }
 
     public static void open() {
-        Minecraft.getInstance().setScreen(new GuiConfig());
+        Minecraft.getInstance().gui.setScreen(new GuiConfig());
     }
 }

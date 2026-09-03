@@ -23,12 +23,12 @@ probe required if you so desire.
 [[dependencies.theoneprobe]]
     modId="neoforge"
     type="required"
-    versionRange="[26.1.2.94,)"
+    versionRange="[26.2.0.75,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.theoneprobe]]
     modId="minecraft"
     type="required"
-    versionRange="[26.1.2]"
+    versionRange="[26.2]"
     ordering="NONE"
     side="BOTH"
