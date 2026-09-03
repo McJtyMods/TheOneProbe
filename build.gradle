@@ -98,6 +98,93 @@ artifacts {
     archives apiJar
 }
 
+def getPublishChangelog = {
+    def changelogOverride = System.getenv('CHANGELOG')
+    if (changelogOverride != null && changelogOverride != 'none') {
+        return changelogOverride
+    }
+
+    def changelogFile = file('changelog.txt')
+    if (!changelogFile.exists()) {
+        throw new GradleException('Cannot publish without changelog.txt or a CHANGELOG environment variable')
+    }
+
+    StringBuilder changelog = new StringBuilder()
+    int lineCount = 0
+    boolean done = false
+    changelogFile.eachLine { line ->
+        if (done) {
+            return
+        }
+        if (line.size() <= 1) {
+            done = true
+            return
+        }
+
+        def formatted = line
+        if (lineCount == 0) {
+            formatted = "## ${mod_name} ${version}"
+        } else if (!line.startsWith('-')) {
+            formatted = "#### ${line}"
+        } else {
+            formatted = formatted.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "[\$0](https://github.com/\$1/issues/\$2)")
+            formatted = formatted.replaceAll("#([0-9]+)\\b", "[\$0](https://github.com/${github_project}/issues/\$1)")
+        }
+        changelog.append(formatted).append('\n')
+        lineCount++
+    }
+    changelog.toString()
+}
+
+def curseKey = (project.findProperty('curseforge_key') ?: System.getenv('CURSEFORGE_TOKEN') ?: System.getenv('CURSE_TOKEN') ?: '').toString()
+def modrinthKey = (project.findProperty('modrinth_token') ?: System.getenv('MODRINTH_TOKEN') ?: '').toString()
+def publishArtifactTask = tasks.findByName('reobfJar') ?: tasks.findByName('jar')
+
+tasks.named('publishCurseforge') {
+    enabled = !curseKey.isEmpty()
+    dependsOn publishArtifactTask
+}
+
+tasks.named('publishModrinth') {
+    enabled = !modrinthKey.isEmpty() && project.hasProperty('modrinthId')
+    dependsOn publishArtifactTask
+}
+
+tasks.named('publishMod') {
+    dependsOn publishArtifactTask
+    doFirst {
+        if (curseKey.isEmpty() && modrinthKey.isEmpty()) {
+            throw new GradleException('No publishing credentials found. Set CURSEFORGE_TOKEN (or CURSE_TOKEN) and/or MODRINTH_TOKEN.')
+        }
+    }
+}
+
+['publishGitHub', 'publishNightbloom', 'publishModtale'].each { taskName ->
+    def publishTask = tasks.findByName(taskName)
+    if (publishTask != null) {
+        publishTask.enabled = false
+    }
+}
+
+publisher {
+    apiKeys {
+        curseforge curseKey
+        modrinth modrinthKey
+    }
+
+    curseID.set(project.projectId.toString())
+    modrinthID.set(project.modrinthId.toString())
+    versionType.set(project.curse_type.toString())
+    changelog.set({ getPublishChangelog.call() })
+    projectVersion.set(project.version.toString())
+    displayName.set("${mod_name} - ${project.version}")
+    gameVersions.set([project.minecraft_version.toString()])
+    loaders.set(['neoforge'])
+    curseEnvironment.set('both')
+    javaVersions.add(JavaVersion.VERSION_25)
+    artifact.set(jar)
+}
+
 publishing {
     publications.create('mavenJava', MavenPublication) {
         from components.java
