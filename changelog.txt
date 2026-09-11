@@ -1,3 +1,6 @@
+1.20.1-10.0.4:
+- Fixed a bug in combination with a recent version of JEI where it would flood the logs with errors
+
 1.20.1-10.0.3:
 - TOP will now no longer try to resolve the contents of a lootbox. Instead it will show that the loot hasn't been resolved yet. With the debug probe you can now also see the name of the loot table
 
