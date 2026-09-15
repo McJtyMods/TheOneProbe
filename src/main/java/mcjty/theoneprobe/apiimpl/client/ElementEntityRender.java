@@ -22,6 +22,9 @@ import java.util.Map;
 
 public class ElementEntityRender {
 
+    // Preview entities are never added to the level, so Minecraft does not assign them an ID.
+    private static final int PREVIEW_ENTITY_ID = -1;
+
     public static void renderPlayer(String entityName, Integer playerID, IEntityStyle style, GuiGraphicsExtractor graphics, int x, int y) {
         Entity entity = Minecraft.getInstance().level.getEntity(playerID);
         if (entity != null) {
@@ -43,6 +46,7 @@ public class ElementEntityRender {
                             Level world = Minecraft.getInstance().level;
 
                             entity = value.create(world, EntitySpawnReason.LOAD);
+                            entity.setId(PREVIEW_ENTITY_ID);
                             entity.snapTo(0.5D, 0.0D, 0.5D, Mth.wrapDegrees(world.getRandom().nextFloat() * 360.0F), 0.0F);
 
                             if (entity instanceof Mob mob) {
@@ -62,6 +66,7 @@ public class ElementEntityRender {
                     if (value != null) {
                         try {
                             entity = value.create(Minecraft.getInstance().level, EntitySpawnReason.LOAD);
+                            entity.setId(PREVIEW_ENTITY_ID);
                         } catch (Exception ignore) {
                             // This can crash due to a vanilla bug with foxes. Workaround here
                         }
