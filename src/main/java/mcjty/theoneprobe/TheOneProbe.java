@@ -1,45 +1,38 @@
 package mcjty.theoneprobe;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import mcjty.theoneprobe.commands.ModCommands;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import mcjty.theoneprobe.network.FabricNetworking;
+import mcjty.theoneprobe.api.TheOneProbePlugin;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
+import net.neoforged.fml.config.ModConfig;
+import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
+import fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.fabricmc.api.ModInitializer;
 import com.mojang.serialization.Codec;
 import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
-import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.providers.*;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
-import mcjty.theoneprobe.network.*;
-import mcjty.theoneprobe.rendering.ClientSetup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
-import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import net.neoforged.neoforge.registries.RegisterEvent;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
-@Mod("theoneprobe")
-public class TheOneProbe {
+public class TheOneProbe implements ModInitializer {
     public static final String MODID = "theoneprobe";
 
     public static final Logger logger = LogManager.getLogger();
@@ -53,142 +46,69 @@ public class TheOneProbe {
     public static final Identifier HASPROBE = Identifier.fromNamespaceAndPath(MODID, "hasprobe");
     public static final TagKey<Item> HASPROBE_TAG = TagKey.create(Registries.ITEM, HASPROBE);
 
-    private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MODID);
-    public static final Supplier<AttachmentType<Boolean>> ATTACHMENT_TYPE_PLAYER_GOT_NOTE = ATTACHMENT_TYPES.register("playergotnote", () -> AttachmentType.builder(() -> false)
-            .serialize(Codec.BOOL.fieldOf("value"))
-            .copyOnDeath()
-            .build());
+    public static final AttachmentType<Boolean> PLAYER_GOT_NOTE =
+            AttachmentRegistry.create(
+                    Identifier.fromNamespaceAndPath(MODID, "playergotnote"),
+                    builder -> builder.initializer(() -> false).persistent(Codec.BOOL).copyOnDeath());
 
-    private static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-    public static final Supplier<CreativeModeTab> TAB_PROBE = TABS.register("probe", () -> CreativeModeTab.builder()
-            .title(Component.literal("The One Probe"))
-            .icon(() -> new ItemStack(ModItems.PROBE))
-            .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
-            .displayItems((featureFlags, output) -> {
-                if (ModItems.CREATIVE_PROBE != null) {
-                    output.accept(ModItems.CREATIVE_PROBE);
-                }
-                if (ModItems.PROBE != null) {
-                    output.accept(ModItems.PROBE);
-                }
-                if (ModItems.DIAMOND_HELMET_PROBE != null) {
-                    output.accept(ModItems.DIAMOND_HELMET_PROBE);
-                }
-                if (ModItems.GOLD_HELMET_PROBE != null) {
-                    output.accept(ModItems.GOLD_HELMET_PROBE);
-                }
-                if (ModItems.IRON_HELMET_PROBE != null) {
-                    output.accept(ModItems.IRON_HELMET_PROBE);
-                }
-                if (ModItems.PROBE_GOGGLES != null) {
-                    output.accept(ModItems.PROBE_GOGGLES);
-                }
-                if (ModItems.PROBE_NOTE != null) {
-                    output.accept(ModItems.PROBE_NOTE);
-                }
-            })
-            .build());
-
-
-    public TheOneProbe(ModContainer container, IEventBus bus, Dist dist) {
-        container.registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
-        container.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
-
-        bus.addListener(this::onRegisterEvent);
-        bus.addListener(this::onRegisterPayloadHandler);
-        bus.addListener(this::init);
-        bus.addListener(Config::onLoad);
-        bus.addListener(Config::onReload);
-
-        bus.addListener(this::processIMC);
-
-        TABS.register(bus);
-        ATTACHMENT_TYPES.register(bus);
-        if (dist.isClient()) {
-            bus.addListener(ClientSetup::onClientSetup);
-            bus.addListener(ClientSetup::onRegisterKeyMappings);
-        }
-    }
-
-    private void init(final FMLCommonSetupEvent event) {
-
-        tesla = ModList.get().isLoaded("tesla");
-        if (tesla) {
-            logger.log(Level.INFO, "The One Probe Detected TESLA: enabling support");
-        }
-
-        redstoneflux = ModList.get().isLoaded("redstoneflux");
-        if (redstoneflux) {
-            logger.log(Level.INFO, "The One Probe Detected RedstoneFlux: enabling support");
-        }
-
-        baubles = ModList.get().isLoaded("baubles");
-        if (baubles) {
-            if (Config.supportBaubles.get()) {
-                logger.log(Level.INFO, "The One Probe Detected Baubles: enabling support");
-            } else {
-                logger.log(Level.INFO, "The One Probe Detected Baubles but support disabled in config");
-                baubles = false;
-            }
-        }
-
-        NeoForge.EVENT_BUS.register(new ForgeEventHandlers());
-
-        registerCapabilities();
+    @Override
+    public void onInitialize() {
+        ModConfigEvents.loading(MODID).register(config -> {
+            Config.onLoad(config);
+            Config.resolveConfigs();
+        });
+        ModConfigEvents.reloading(MODID).register(config -> {
+            Config.onReload(config);
+            Config.resolveConfigs();
+        });
+        ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
+        ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.COMMON, Config.COMMON_CONFIG);
+        ModItems.init();
+        registerItem("probe", ModItems.PROBE);
+        registerItem("creativeprobe", ModItems.CREATIVE_PROBE);
+        registerItem("probenote", ModItems.PROBE_NOTE);
+        registerItem("diamond_helmet_probe", ModItems.DIAMOND_HELMET_PROBE);
+        registerItem("gold_helmet_probe", ModItems.GOLD_HELMET_PROBE);
+        registerItem("iron_helmet_probe", ModItems.IRON_HELMET_PROBE);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB,
+                Identifier.fromNamespaceAndPath(MODID, "probe"),
+                FabricCreativeModeTab.builder()
+                        .title(Component.literal("The One Probe"))
+                        .icon(() -> new ItemStack(ModItems.PROBE))
+                        .displayItems((parameters, output) -> {
+                            output.accept(ModItems.PROBE);
+                            output.accept(ModItems.CREATIVE_PROBE);
+                            output.accept(ModItems.PROBE_NOTE);
+                            output.accept(ModItems.DIAMOND_HELMET_PROBE);
+                            output.accept(ModItems.GOLD_HELMET_PROBE);
+                            output.accept(ModItems.IRON_HELMET_PROBE);
+                        }).build());
         TheOneProbeImp.registerElements();
-        TheOneProbe.theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
-        TheOneProbe.theOneProbeImp.registerProvider(new DebugProbeInfoProvider());
-        TheOneProbe.theOneProbeImp.registerProvider(new BlockProbeInfoProvider());
-        TheOneProbe.theOneProbeImp.registerEntityProvider(new DefaultProbeInfoEntityProvider());
-        TheOneProbe.theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
-        TheOneProbe.theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
-
+        theOneProbeImp.registerProvider(new DefaultProbeInfoProvider());
+        theOneProbeImp.registerProvider(new DebugProbeInfoProvider());
+        theOneProbeImp.registerProvider(new BlockProbeInfoProvider());
+        theOneProbeImp.registerEntityProvider(new DefaultProbeInfoEntityProvider());
+        theOneProbeImp.registerEntityProvider(new DebugProbeInfoEntityProvider());
+        theOneProbeImp.registerEntityProvider(new EntityProbeInfoEntityProvider());
+        FabricLoader.getInstance().getEntrypoints("theoneprobe", TheOneProbePlugin.class)
+                .forEach(plugin -> plugin.register(theOneProbeImp));
         configureProviders();
         configureEntityProviders();
-    }
-
-    private void processIMC(final InterModProcessEvent event) {
-        event.getIMCStream().forEach(message -> {
-            if ("getTheOneProbe".equalsIgnoreCase(message.method())) {
-                @SuppressWarnings("unchecked")
-                Function<ITheOneProbe, Void> callback = (Function<ITheOneProbe, Void>) message.messageSupplier().get();
-                callback.apply(theOneProbeImp);
+        FabricNetworking.register();
+        CommandRegistrationCallback.EVENT.register(
+                (dispatcher, access, environment) -> ModCommands.register(dispatcher));
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            var player = handler.player;
+            if (Config.spawnNote.get() && !player.getAttachedOrCreate(PLAYER_GOT_NOTE)
+                    && player.getInventory().add(new ItemStack(ModItems.PROBE_NOTE))) {
+                player.setAttached(PLAYER_GOT_NOTE, true);
             }
         });
     }
 
-    public void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar(TheOneProbe.MODID)
-                .versioned("1.0")
-                .optional();
-        registrar.playToServer(PacketGetEntityInfo.TYPE, PacketGetEntityInfo.CODEC, PacketGetEntityInfo::handle);
-        registrar.playToClient(PacketReturnEntityInfo.TYPE, PacketReturnEntityInfo.CODEC, PacketReturnEntityInfo::handle);
-        registrar.playToServer(PacketGetInfo.TYPE, PacketGetInfo.CODEC, PacketGetInfo::handle);
-        registrar.playToClient(PacketOpenGui.TYPE, PacketOpenGui.CODEC, PacketOpenGui::handle);
-        registrar.playToClient(PacketReturnInfo.TYPE, PacketReturnInfo.CODEC, PacketReturnInfo::handle);
-    }
-
-    public void onRegisterEvent(RegisterEvent event) {
-        event.register(Registries.ITEM, helper -> {
-            ModItems.init();
-
-            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "probe"), ModItems.PROBE);
-            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "creativeprobe"), ModItems.CREATIVE_PROBE);
-            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "probenote"), ModItems.PROBE_NOTE);
-
-            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "diamond_helmet_probe"), ModItems.DIAMOND_HELMET_PROBE);
-            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "gold_helmet_probe"), ModItems.GOLD_HELMET_PROBE);
-            helper.register(Identifier.fromNamespaceAndPath(TheOneProbe.MODID, "iron_helmet_probe"), ModItems.IRON_HELMET_PROBE);
-
-//            if (TheOneProbe.baubles) {
-//                helper.register(ModItems.PROBE_GOGGLES);
-//            }
-        });
-    }
-
-
-    private static void registerCapabilities() {
-//        CapabilityManager.INSTANCE.register(PlayerGotNote.class);
+    private static void registerItem(String name, Item item) {
+        Registry.register(BuiltInRegistries.ITEM,
+                Identifier.fromNamespaceAndPath(MODID, name), item);
     }
 
     private void configureProviders() {

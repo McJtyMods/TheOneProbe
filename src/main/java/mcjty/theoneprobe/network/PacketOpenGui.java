@@ -8,7 +8,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record PacketOpenGui(int gui) implements CustomPacketPayload {
 
@@ -31,13 +30,11 @@ public record PacketOpenGui(int gui) implements CustomPacketPayload {
         return new PacketOpenGui(gui);
     }
 
-    public void handle(IPayloadContext ctx) {
-        ctx.enqueueWork(() -> {
-            if (gui == GUI_CONFIG) {
-                GuiConfig.open();
-            } else {
-                GuiNote.open();
-            }
-        });
+    public void handle() {
+        if (gui == GUI_CONFIG) {
+            GuiConfig.open();
+        } else {
+            GuiNote.open();
+        }
     }
 }

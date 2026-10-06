@@ -14,7 +14,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.1.38'
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
 
 apply plugin: 'com.hypherionmc.modutils.modpublisher'
@@ -33,43 +33,26 @@ sourceSets.main.resources {
 
 repositories {
     mavenLocal()
+    maven { url = 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/' }
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forge_config_api_port_version}"
+    include(implementation('teamreborn:energy:5.0.0'))
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
-minecraft {
-    accessTransformers {
-        file('src/main/resources/META-INF/accesstransformer.cfg')
-    }
+loom {
+    accessWidenerPath = file('src/main/resources/theoneprobe.accesswidener')
+    runs { server { programArg '--nogui' } }
 }
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'info'
-        modSource project.sourceSets.main
-    }
-
-    client {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    server {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-        argument '--nogui'
-    }
-
-    gameTestServer {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    clientData {
-        arguments.addAll '--mod', project.mod_id, '--all', '--output',
-                file('src/generated/resources/').getAbsolutePath(), '--existing',
-                file('src/main/resources/').getAbsolutePath()
-    }
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand version: project.version }
 }
 
 jar {
@@ -179,7 +162,7 @@ publisher {
     projectVersion.set(project.version.toString())
     displayName.set("${mod_name} - ${project.version}")
     gameVersions.set([project.minecraft_version.toString()])
-    loaders.set(['neoforge'])
+    loaders.set(['fabric'])
     curseEnvironment.set('both')
     javaVersions.add(JavaVersion.VERSION_25)
     artifact.set(jar)
@@ -226,4 +209,10 @@ publishing {
             }
         }
     }
+}
+
+fabricApi.configureTests {
+    createSourceSet = true
+    modId = 'theoneprobe_test'
+    enableGameTests = false
 }

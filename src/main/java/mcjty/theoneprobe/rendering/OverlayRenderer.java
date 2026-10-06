@@ -33,7 +33,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -154,7 +154,7 @@ public class OverlayRenderer {
 //        }
 
 //        String entityString = EntityList.getEntityString(entity);
-        String entityString = entity.getEncodeId();
+        String entityString = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
         if (entityString == null && !(entity instanceof Player)) {
             // We can't show info for this entity
             return;
@@ -205,7 +205,8 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, Player player) {
-        ClientPacketDistributor.sendToServer(PacketGetEntityInfo.create(player.level().dimension(), mode, mouseOver, entity));
+        if (!ClientPlayNetworking.canSend(PacketGetEntityInfo.TYPE)) return;
+        ClientPlayNetworking.send(PacketGetEntityInfo.create(player.level().dimension(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(GuiGraphicsExtractor graphics, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
@@ -290,7 +291,7 @@ public class OverlayRenderer {
         Level world = player.level();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getCloneItemStack(world, blockPos, blockState, true, player);
+        ItemStack pickBlock = blockState.getCloneItemStack(world, blockPos, true);
         IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getLocation(), ((BlockHitResult)mouseOver).getDirection(), pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
@@ -325,7 +326,7 @@ public class OverlayRenderer {
         Level world = player.level();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getCloneItemStack(world, blockPos, blockState, true, player);
+        ItemStack pickBlock = blockState.getCloneItemStack(world, blockPos, true);
         if (pickBlock == null) {
             // Should not be needed but you never know... (bad mods)
             pickBlock = ItemStack.EMPTY;
@@ -334,7 +335,8 @@ public class OverlayRenderer {
             // @todo 1.20.5_Neo is this right?
             pickBlock = new ItemStack(pickBlock.getItem(), pickBlock.getCount());
         }
-        ClientPacketDistributor.sendToServer(PacketGetInfo.create(world.dimension(), blockPos, mode, mouseOver, pickBlock));
+        if (!ClientPlayNetworking.canSend(PacketGetInfo.TYPE)) return;
+        ClientPlayNetworking.send(PacketGetInfo.create(world.dimension(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, GuiGraphicsExtractor graphics) {

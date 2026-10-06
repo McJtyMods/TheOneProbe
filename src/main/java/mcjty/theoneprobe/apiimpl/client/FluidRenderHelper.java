@@ -1,10 +1,11 @@
 package mcjty.theoneprobe.apiimpl.client;
 
 import net.minecraft.client.Minecraft;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.neoforged.neoforge.client.fluid.FluidTintSource;
-import net.neoforged.neoforge.fluids.FluidStack;
+
+import mcjty.theoneprobe.api.FluidStack;
 
 public final class FluidRenderHelper {
 
@@ -16,8 +17,7 @@ public final class FluidRenderHelper {
     }
 
     public static int getTintColor(FluidStack stack) {
-        FluidTintSource tintSource = getFluidModel(stack).fluidTintSource();
-        return tintSource == null ? -1 : tintSource.colorAsStack(stack);
+        return FluidVariantRendering.getColor(stack.variant());
     }
 
     private static FluidModel getFluidModel(FluidStack stack) {

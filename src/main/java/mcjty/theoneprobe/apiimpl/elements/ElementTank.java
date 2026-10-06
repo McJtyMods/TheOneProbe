@@ -14,7 +14,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public class ElementTank implements IElement {
 	private final TankReference tank;

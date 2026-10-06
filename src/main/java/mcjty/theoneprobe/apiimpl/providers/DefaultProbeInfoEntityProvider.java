@@ -23,7 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.UsernameCache;
+
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.UUID;
@@ -127,7 +127,10 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             }
 
             if (ownerId != null) {
-                String username = UsernameCache.getLastKnownUsername(ownerId);
+                String username = player.level() instanceof net.minecraft.server.level.ServerLevel serverLevel
+                        ? serverLevel.getServer().services().nameToIdCache().get(ownerId)
+                                .map(net.minecraft.server.players.NameAndId::name).orElse(null)
+                        : null;
                 if (username == null) {
                     probeInfo.text(CompoundText.create().style(WARNING).text("Unknown owner"));
                 } else {

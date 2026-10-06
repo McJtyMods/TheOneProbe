@@ -23,8 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import java.util.List;
 import java.util.UUID;
@@ -57,20 +56,15 @@ public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode m
         return new PacketGetEntityInfo(dim, entity.getUUID(), mode, mouseOver.getLocation());
     }
 
-    public void handle(IPayloadContext ctx) {
-        ctx.enqueueWork(() -> {
-                    Player player = ctx.player();
-                    ServerLevel world = (ServerLevel) player.level();
-                    Entity entity = world.getEntity(uuid);
-                    if (entity != null) {
-                        ProbeInfo probeInfo = getProbeInfo(player, mode, world, entity, hitVec);
-                        PacketDistributor.sendToPlayer((ServerPlayer) player, PacketReturnEntityInfo.create(uuid, probeInfo));
-                    }
-                })
-                .exceptionally(e -> {
-                    ctx.disconnect(Component.translatable("theoneprobe.networking.failed", e.getMessage()));
-                    return null;
-                });
+    public void handle(ServerPlayNetworking.Context ctx) {
+        ServerPlayer player = ctx.player();
+        ServerLevel world = player.level();
+        if (!world.dimension().equals(dim)) return;
+        Entity entity = world.getEntity(uuid);
+        if (entity != null) {
+            ProbeInfo probeInfo = getProbeInfo(player, mode, world, entity, hitVec);
+            ServerPlayNetworking.send(player, PacketReturnEntityInfo.create(uuid, probeInfo));
+        }
     }
 
     private static ProbeInfo getProbeInfo(Player player, ProbeMode mode, Level world, Entity entity, Vec3 hitVec) {

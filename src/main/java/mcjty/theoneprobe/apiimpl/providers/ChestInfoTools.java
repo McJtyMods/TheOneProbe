@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
@@ -13,9 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -123,11 +121,15 @@ public class ChestInfoTools {
         Set<Item> foundItems = Config.compactEqualStacks.get() ? new HashSet<>() : null;
         AtomicInteger maxSlots = new AtomicInteger();
         try {
-            ResourceHandler<ItemResource> capability = world.getCapability(Capabilities.Item.BLOCK, pos, null);
-            if (capability != null) {
-                maxSlots.set(capability.size());
-                for (int i = 0; i < maxSlots.get(); i++) {
-                    addItemStack(stacks, foundItems, capability.getResource(i).toStack(capability.getAmountAsInt(i)));
+            var storage = ItemStorage.SIDED.find(world, pos, null);
+            if (storage != null) {
+                for (var view : storage) {
+                    maxSlots.incrementAndGet();
+                    if (!view.isResourceBlank()) {
+                        ItemStack stack = new ItemStack(view.getResource().getItem(), (int) Math.min(Integer.MAX_VALUE, view.getAmount()));
+                        stack.applyComponents(view.getResource().getComponentsPatch());
+                        addItemStack(stacks, foundItems, stack);
+                    }
                 }
             } else if (te instanceof Container inventory) {
                 maxSlots.set(inventory.getContainerSize());

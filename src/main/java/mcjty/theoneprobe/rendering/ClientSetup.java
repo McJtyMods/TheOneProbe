@@ -1,5 +1,17 @@
 package mcjty.theoneprobe.rendering;
 
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import mcjty.theoneprobe.network.PacketOpenGui;
+import mcjty.theoneprobe.network.PacketReturnEntityInfo;
+import mcjty.theoneprobe.network.PacketReturnInfo;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.api.ClientModInitializer;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.gui.GuiConfig;
@@ -13,53 +25,32 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
-import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
-import net.neoforged.neoforge.common.NeoForge;
 
 import static mcjty.theoneprobe.config.Config.*;
 
-public class ClientSetup {
+public class ClientSetup implements ClientModInitializer {
 
-    public static void onClientSetup(FMLClientSetupEvent event) {
-        NeoForge.EVENT_BUS.register(new ClientSetup());
-        NeoForge.EVENT_BUS.register(new KeyInputHandler());
-    }
-
-    public static boolean ignoreNextGuiClose = false;
-
-    @SubscribeEvent
-    public void onGuiOpen(ScreenEvent.Opening event) {
-        if (ignoreNextGuiClose) {
-            Screen current = Minecraft.getInstance().gui.screen();
-            if (event.getScreen() == null && (current instanceof GuiConfig || current instanceof GuiNote)) {
-                ignoreNextGuiClose = false;
-                // We don't want our gui to be closed for a new 'null' guil
-                event.setCanceled(true);
-            }
-        }
-    }
-
-    public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+    @Override
+    public void onInitializeClient() {
         KeyBindings.init();
-        event.register(KeyBindings.toggleVisible);
-        event.register(KeyBindings.toggleLiquids);
+        KeyMappingHelper.registerKeyMapping(KeyBindings.toggleVisible);
+        KeyMappingHelper.registerKeyMapping(KeyBindings.toggleLiquids);
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.player != null && client.gui.screen() == null) new KeyInputHandler().onKeyInput();
+        });
+        ClientPlayNetworking.registerGlobalReceiver(
+                PacketReturnInfo.TYPE, (packet, context) -> packet.handle());
+        ClientPlayNetworking.registerGlobalReceiver(
+                PacketReturnEntityInfo.TYPE, (packet, context) -> packet.handle());
+        ClientPlayNetworking.registerGlobalReceiver(
+                PacketOpenGui.TYPE, (packet, context) -> packet.handle());
+        HudElementRegistry.attachElementBefore(
+                VanillaHudElements.TITLE_AND_SUBTITLE,
+                Identifier.fromNamespaceAndPath("theoneprobe", "overlay"), this::renderOverlay);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
-    public void renderGameOverlayEvent(RenderGuiLayerEvent.Pre event) {
-        if (!event.getName().equals(VanillaGuiLayers.TITLE)) {
-            return;
-        }
-//        if (event.getType() != RenderGuiOverlayEvent.ElementType.TEXT) {
-//            return;
-//        }
-
+    private void renderOverlay(GuiGraphicsExtractor graphics, DeltaTracker partialTick) {
+        if (Minecraft.getInstance().player == null) return;
         if (Config.holdKeyToMakeVisible.get()) {
             if (!KeyBindings.toggleVisible.isDown()) {
                 return;
@@ -71,17 +62,17 @@ public class ClientSetup {
         }
 
         if (hasItemInEitherHand(ModItems.CREATIVE_PROBE)) {
-            OverlayRenderer.renderHUD(ProbeMode.DEBUG, event.getGuiGraphics(), event.getPartialTick().getGameTimeDeltaPartialTick(true));
+            OverlayRenderer.renderHUD(ProbeMode.DEBUG, graphics, partialTick.getGameTimeDeltaPartialTick(true));
         } else {
             switch (Config.needsProbe.get()) {
                 case PROBE_NOTNEEDED:
                 case PROBE_NEEDEDFOREXTENDED:
-                    OverlayRenderer.renderHUD(getModeForPlayer(), event.getGuiGraphics(), event.getPartialTick().getGameTimeDeltaPartialTick(true));
+                    OverlayRenderer.renderHUD(getModeForPlayer(), graphics, partialTick.getGameTimeDeltaPartialTick(true));
                     break;
                 case PROBE_NEEDED:
                 case PROBE_NEEDEDHARD:
                     if (ModItems.hasAProbeSomewhere(Minecraft.getInstance().player)) {
-                        OverlayRenderer.renderHUD(getModeForPlayer(), event.getGuiGraphics(), event.getPartialTick().getGameTimeDeltaPartialTick(true));
+                        OverlayRenderer.renderHUD(getModeForPlayer(), graphics, partialTick.getGameTimeDeltaPartialTick(true));
                     }
                     break;
             }

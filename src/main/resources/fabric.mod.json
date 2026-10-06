@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "theoneprobe",
+  "version": "${version}",
+  "name": "The One Probe",
+  "description": "Immersive block and entity information overlay.",
+  "authors": [
+    "McJty"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mcjty.theoneprobe.TheOneProbe"
+    ],
+    "client": [
+      "mcjty.theoneprobe.rendering.ClientSetup"
+    ]
+  },
+  "accessWidener": "theoneprobe.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "26.2",
+    "java": ">=25",
+    "fabric-api": "*",
+    "forgeconfigapiport": ">=26.2.1"
+  }
+}

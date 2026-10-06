@@ -30,7 +30,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.fluids.FluidStack;
+import mcjty.theoneprobe.api.FluidStack;
 
 public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 

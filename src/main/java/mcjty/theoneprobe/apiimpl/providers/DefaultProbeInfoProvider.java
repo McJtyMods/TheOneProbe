@@ -1,11 +1,12 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import team.reborn.energy.api.EnergyStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
-import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -31,11 +32,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.energy.EnergyHandler;
-import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import mcjty.theoneprobe.api.FluidStack;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.TagValueInput;
 
@@ -44,7 +41,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static mcjty.theoneprobe.api.TextStyleClass.*;
-import static net.neoforged.neoforge.fluids.FluidType.BUCKET_VOLUME;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -225,16 +221,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showTankInfo(IProbeInfo probeInfo, Level world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
-        BlockEntity te = world.getBlockEntity(pos);
-        ResourceHandler<FluidResource> handler = world.getCapability(Capabilities.Fluid.BLOCK, pos, null);
+        var handler = FluidStorage.SIDED.find(world, pos, null);
         if (handler != null) {
-            for (int i = 0; i < handler.size(); i++) {
-                FluidResource resource = handler.getResource(i);
-                FluidStack fluidStack = resource.toStack(handler.getAmountAsInt(i));
-                int maxContents = handler.getCapacityAsInt(i, resource);
-                if (!fluidStack.isEmpty()) {
-                    addFluidInfo(probeInfo, config, fluidStack, maxContents);
-                }
+            for (var view : handler) {
+                FluidStack stack = new FluidStack(view.getResource(), TankReference.toMillibuckets(view.getAmount()));
+                if (!stack.isEmpty()) addFluidInfo(probeInfo, config, stack, TankReference.toMillibuckets(view.getCapacity()));
             }
         }
     }
@@ -260,7 +251,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         			.suffix(text));
         } else {
             if (!fluidStack.isEmpty()) {
-                probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(fluidStack.getFluidType().getDescriptionId(fluidStack)));
+                probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(fluidStack.getHoverName()));
             }
             if (config.getTankMode() == 2) {
                 probeInfo.progress(contents, maxContents,
@@ -278,20 +269,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showEnergy(IProbeInfo probeInfo, Level world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
-        BlockEntity te = world.getBlockEntity(pos);
-        if (TheOneProbe.tesla && TeslaTools.isEnergyHandler(te)) {
-            long energy = TeslaTools.getEnergy(te);
-            long maxEnergy = TeslaTools.getMaxEnergy(te);
-            addEnergyInfo(probeInfo, config, energy, maxEnergy);
-//        } else if (te instanceof IBigPower bigPower) {
-//            long energy = bigPower.getStoredPower();
-//            long maxEnergy = bigPower.getCapacity();
-//            addEnergyInfo(probeInfo, config, energy, maxEnergy);
-        } else{
-            EnergyHandler handler = world.getCapability(Capabilities.Energy.BLOCK, pos, null);
-            if (handler != null) {
-                addEnergyInfo(probeInfo, config, handler.getAmountAsLong(), handler.getCapacityAsLong());
-            }
+        var handler = EnergyStorage.SIDED.find(world, pos, null);
+        if (handler != null) {
+            addEnergyInfo(probeInfo, config, handler.getAmount(), handler.getCapacity());
         }
     }
 
@@ -345,7 +325,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             Fluid fluid = fluidState.getType();
             if (!Objects.equals(fluid, Fluids.EMPTY)) {
                 IProbeInfo horizontal = probeInfo.horizontal();
-                FluidStack fluidStack = new FluidStack(fluid, BUCKET_VOLUME);
+                FluidStack fluidStack = new FluidStack(fluid, 1000);
 
                 horizontal.fluid(fluidStack, probeInfo.defaultIconStyle().width(20));
                 ItemStack bucketStack = new ItemStack(fluid.getBucket());
@@ -354,7 +334,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
                 }
 
                 horizontal.vertical()
-                        .text(CompoundText.create().name(fluidStack.getFluidType().getDescriptionId(fluidStack)))
+                        .text(CompoundText.create().name(fluidStack.getHoverName()))
                         .text(CompoundText.create().style(MODNAME).text(modName));
                 return;
             }

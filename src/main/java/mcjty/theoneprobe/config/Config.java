@@ -10,7 +10,7 @@ import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import mcjty.theoneprobe.items.IEnumConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.Identifier;
-import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.*;
 import org.apache.commons.lang3.StringUtils;
@@ -673,11 +673,11 @@ public class Config {
         return renderBlacklistSet.contains(id);
     }
 
-    public static void onLoad(ModConfigEvent.Loading event) {
+    public static void onLoad(ModConfig event) {
         renderBlacklistSet = null;
     }
 
-    public static void onReload(ModConfigEvent.Reloading event) {
+    public static void onReload(ModConfig event) {
         renderBlacklistSet = null;
     }
 }

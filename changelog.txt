@@ -1,3 +1,9 @@
+26.2-15.0.1-fabric
+- Port to Fabric for Minecraft 26.2
+- Use Fabric networking, HUD, key mappings, item registration, and persistent player attachments
+- Support Fabric Transfer API inventories and fluids, and Team Reborn Energy API
+- Add a theoneprobe Fabric addon entrypoint and client integration tests
+
 26.2_neo-15.0.1:
 - Fix a crash when looking at entities
 

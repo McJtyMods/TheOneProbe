@@ -9,7 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+
 
 import java.util.UUID;
 
@@ -32,10 +32,8 @@ public record PacketReturnEntityInfo(UUID uuid, ProbeInfo probeInfo) implements 
         return new PacketReturnEntityInfo(uuid, probeInfo);
     }
 
-    public void handle(IPayloadContext ctx) {
-        ctx.enqueueWork(() -> {
-            OverlayRenderer.registerProbeInfo(uuid, probeInfo);
-        });
+    public void handle() {
+        OverlayRenderer.registerProbeInfo(uuid, probeInfo);
     }
 
 }

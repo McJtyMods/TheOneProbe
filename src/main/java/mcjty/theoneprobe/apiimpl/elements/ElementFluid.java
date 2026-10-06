@@ -9,7 +9,7 @@ import mcjty.theoneprobe.apiimpl.styles.IconStyle;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.fluids.FluidStack;
+import mcjty.theoneprobe.api.FluidStack;
 
 import static mcjty.theoneprobe.apiimpl.client.FluidRenderHelper.getStillSprite;
 import static mcjty.theoneprobe.apiimpl.client.FluidRenderHelper.getTintColor;

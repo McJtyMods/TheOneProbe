@@ -2,7 +2,7 @@ package mcjty.theoneprobe.api;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
+
 
 /**
  * A mode that indicates what kind of information we want to display.
@@ -14,5 +14,5 @@ public enum ProbeMode {
     EXTENDED,       // Extended. This is used when the player is sneaking
     DEBUG;          // Creative only. This is used when the player holds a creative probe
 
-    public static final StreamCodec<FriendlyByteBuf, ProbeMode> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(ProbeMode.class);
+    public static final StreamCodec<FriendlyByteBuf, ProbeMode> STREAM_CODEC = StreamCodec.of((buf, mode) -> buf.writeEnum(mode), buf -> buf.readEnum(ProbeMode.class));
 }

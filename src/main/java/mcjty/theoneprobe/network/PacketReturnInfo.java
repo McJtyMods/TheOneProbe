@@ -12,7 +12,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record PacketReturnInfo(ResourceKey<Level> dim, BlockPos pos, ProbeInfo probeInfo) implements CustomPacketPayload {
 
@@ -34,9 +33,7 @@ public record PacketReturnInfo(ResourceKey<Level> dim, BlockPos pos, ProbeInfo p
         return new PacketReturnInfo(dim, pos, probeInfo);
     }
 
-    public void handle(IPayloadContext ctx) {
-        ctx.enqueueWork(() -> {
-            OverlayRenderer.registerProbeInfo(dim, pos, probeInfo);
-        });
+    public void handle() {
+        OverlayRenderer.registerProbeInfo(dim, pos, probeInfo);
     }
 }

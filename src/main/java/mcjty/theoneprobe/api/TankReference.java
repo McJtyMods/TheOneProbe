@@ -1,10 +1,13 @@
 package mcjty.theoneprobe.api;
 
+import java.util.ArrayList;
+import java.util.List;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.IFluidTank;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import mcjty.theoneprobe.api.FluidStack;
+
 
 public final class TankReference {
     private final int capacity;
@@ -43,33 +46,31 @@ public final class TankReference {
         return new TankReference(capacity, fluid.getAmount(), fluid);
     }
 
-    /// Simple Tank like FluidTank
-    public static TankReference createTank(IFluidTank tank) {
-        return new TankReference(tank.getCapacity(), tank.getFluidAmount(), tank.getFluid());
-    }
-
-    /// Any Fluid Handler, but Squashes all the fluids into 1 Progress Bar
-    public static TankReference createHandler(IFluidHandler handler) {
+    /** Combine all storage views into one bar. Fabric amounts are converted to mB. */
+    public static TankReference createHandler(Storage<FluidVariant> handler) {
         int capacity = 0;
         int stored = 0;
-        FluidStack[] fluids = new FluidStack[handler.getTanks()];
-        for (int i = 0; i < fluids.length; i++) {
-            capacity += handler.getTankCapacity(i);
-            FluidStack fluid = handler.getFluidInTank(i);
-            fluids[i] = fluid;
-            stored += fluid.getAmount();
+        List<FluidStack> fluids = new ArrayList<>();
+        for (var view : handler) {
+            int amount = toMillibuckets(view.getAmount());
+            capacity = (int) Math.min(Integer.MAX_VALUE, (long) capacity + toMillibuckets(view.getCapacity()));
+            stored = (int) Math.min(Integer.MAX_VALUE, (long) stored + amount);
+            fluids.add(new FluidStack(view.getResource(), amount));
         }
-        return new TankReference(capacity, stored, fluids);
+        return new TankReference(capacity, stored, fluids.toArray(FluidStack[]::new));
     }
 
-    /// Any Fluid Handler but splits each internal Tank into its own Progress Bar
-    public static TankReference[] createSplitHandler(IFluidHandler handler) {
-        TankReference[] references = new TankReference[handler.getTanks()];
-        for (int i = 0; i < references.length; i++) {
-            FluidStack fluid = handler.getFluidInTank(i);
-            references[i] = new TankReference(handler.getTankCapacity(i), fluid.getAmount(), fluid);
+    public static TankReference[] createSplitHandler(Storage<FluidVariant> handler) {
+        List<TankReference> tanks = new ArrayList<>();
+        for (var view : handler) {
+            int amount = toMillibuckets(view.getAmount());
+            tanks.add(new TankReference(toMillibuckets(view.getCapacity()), amount, new FluidStack(view.getResource(), amount)));
         }
-        return references;
+        return tanks.toArray(TankReference[]::new);
+    }
+
+    public static int toMillibuckets(long droplets) {
+        return (int) Math.min(Integer.MAX_VALUE, droplets / 81);
     }
 
     public void toBytes(RegistryFriendlyByteBuf buffer) {
