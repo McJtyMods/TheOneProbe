@@ -13,6 +13,16 @@ format is preserved. Open the settings by using a probe or running `/top config`
 
 Build with a Java 25 JDK:
 
+Install a Java 25 JDK before building. `gradle/gradle-daemon-jvm.properties`
+selects Java 25 for Gradle itself, including when your shell defaults to Java 17.
+The compiler toolchain alone does not select the JVM that loads Fabric Loom.
+If Gradle cannot find your JDK, set `JAVA_HOME` to its installation directory:
+
+```sh
+export JAVA_HOME=/path/to/jdk-25
+export PATH="$JAVA_HOME/bin:$PATH"
+```
+
 ```sh
 ./gradlew build
 ./gradlew runClient
