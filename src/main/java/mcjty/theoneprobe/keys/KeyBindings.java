@@ -13,7 +13,7 @@ public class KeyBindings {
     public static KeyMapping toggleVisible;
 
     public static void init() {
-        toggleLiquids = new KeyMapping("key.toggleLiquids", InputConstants.Type.KEYSYM, InputConstants.UNKNOWN.getValue(), CATEGORY);
-        toggleVisible = new KeyMapping("key.toggleVisible", InputConstants.Type.KEYSYM, InputConstants.UNKNOWN.getValue(), CATEGORY);
+        toggleLiquids = new KeyMapping("key.toggleLiquids", InputConstants.Type.KEYBOARD, InputConstants.UNKNOWN.getValue(), CATEGORY);
+        toggleVisible = new KeyMapping("key.toggleVisible", InputConstants.Type.KEYBOARD, InputConstants.UNKNOWN.getValue(), CATEGORY);
     }
 }

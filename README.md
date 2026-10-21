@@ -2,11 +2,11 @@
 # The One Probe (TOP) - Minecraft Mod
 _More immersive alternative for WAILA_
 
-## Fabric 26.2
+## Fabric 26.3
 
-This branch targets Minecraft 26.2, Fabric Loader 0.19.3 or newer, and Java 25.
+This branch targets Minecraft 26.3, Fabric Loader 0.19.5 or newer, and Java 25.
 Install the mod on both the client and server alongside **Fabric API** and
-**Forge Config API Port 26.2.1 or newer**. Team Reborn Energy API is bundled.
+**Forge Config API Port 26.3.1 or newer**. Team Reborn Energy API is bundled.
 The existing `theoneprobe-common.toml` and `theoneprobe-client.toml` configuration
 format is preserved. Open the settings by using a probe or running `/top config`;
 `/top need` opens the introduction note.
