@@ -3,8 +3,8 @@ package mcjty.theoneprobe.api;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.IFluidTank;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
 public final class TankReference {
     private final int capacity;
@@ -44,18 +44,18 @@ public final class TankReference {
     }
 
     /// Simple Tank like FluidTank
-    public static TankReference createTank(IFluidTank tank) {
-        return new TankReference(tank.getCapacity(), tank.getFluidAmount(), tank.getFluid());
+    public static TankReference createTank(ResourceHandler<FluidResource> tank) {
+        return createHandler(tank);
     }
 
     /// Any Fluid Handler, but Squashes all the fluids into 1 Progress Bar
-    public static TankReference createHandler(IFluidHandler handler) {
+    public static TankReference createHandler(ResourceHandler<FluidResource> handler) {
         int capacity = 0;
         int stored = 0;
-        FluidStack[] fluids = new FluidStack[handler.getTanks()];
+        FluidStack[] fluids = new FluidStack[handler.size()];
         for (int i = 0; i < fluids.length; i++) {
-            capacity += handler.getTankCapacity(i);
-            FluidStack fluid = handler.getFluidInTank(i);
+            capacity += handler.getCapacityAsInt(i, handler.getResource(i));
+            FluidStack fluid = handler.getResource(i).toStack(handler.getAmountAsInt(i));
             fluids[i] = fluid;
             stored += fluid.getAmount();
         }
@@ -63,11 +63,11 @@ public final class TankReference {
     }
 
     /// Any Fluid Handler but splits each internal Tank into its own Progress Bar
-    public static TankReference[] createSplitHandler(IFluidHandler handler) {
-        TankReference[] references = new TankReference[handler.getTanks()];
+    public static TankReference[] createSplitHandler(ResourceHandler<FluidResource> handler) {
+        TankReference[] references = new TankReference[handler.size()];
         for (int i = 0; i < references.length; i++) {
-            FluidStack fluid = handler.getFluidInTank(i);
-            references[i] = new TankReference(handler.getTankCapacity(i), fluid.getAmount(), fluid);
+            FluidStack fluid = handler.getResource(i).toStack(handler.getAmountAsInt(i));
+            references[i] = new TankReference(handler.getCapacityAsInt(i, handler.getResource(i)), fluid.getAmount(), fluid);
         }
         return references;
     }

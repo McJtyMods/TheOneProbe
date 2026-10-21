@@ -7,8 +7,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.IFluidTank;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -119,13 +119,13 @@ public interface IProbeInfo {
      * This creates a Tank Progress bar of 100 width with Fluid Icon Rendering
      */
     default IProbeInfo tankSimple(int capacity, FluidStack fluid) { return tank(TankReference.createSimple(capacity, fluid));}
-    default IProbeInfo tank(IFluidTank tank) { return tank(TankReference.createTank(tank));}
-    default IProbeInfo tankHandler(IFluidHandler handler) { return tank(TankReference.createHandler(handler));}
+    default IProbeInfo tank(ResourceHandler<FluidResource> tank) { return tank(TankReference.createTank(tank));}
+    default IProbeInfo tankHandler(ResourceHandler<FluidResource> handler) { return tank(TankReference.createHandler(handler));}
     IProbeInfo tank(TankReference tank);
     
     default IProbeInfo tankSimple(int capacity, FluidStack fluid, IProgressStyle style) { return tank(TankReference.createSimple(capacity, fluid), style);}
-    default IProbeInfo tank(IFluidTank tank, IProgressStyle style) { return tank(TankReference.createTank(tank), style);}
-    default IProbeInfo tankHandler(IFluidHandler handler, IProgressStyle style) { return tank(TankReference.createHandler(handler), style);}
+    default IProbeInfo tank(ResourceHandler<FluidResource> tank, IProgressStyle style) { return tank(TankReference.createTank(tank), style);}
+    default IProbeInfo tankHandler(ResourceHandler<FluidResource> handler, IProgressStyle style) { return tank(TankReference.createHandler(handler), style);}
     IProbeInfo tank(TankReference tank, IProgressStyle style);
     
     IProbeInfo padding(int width, int height);

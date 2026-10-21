@@ -1,5 +1,6 @@
 package mcjty.theoneprobe.gui;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.CompoundText;
@@ -152,7 +153,7 @@ public class GuiConfig extends Screen {
         if (rc) {
             return true;
         }
-        if (event.button() == 0) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             for (HitBox box : hitboxes) {
                 if (box.isHit((int) event.x() - guiLeft, (int) event.y() - guiTop)) {
                     box.call();

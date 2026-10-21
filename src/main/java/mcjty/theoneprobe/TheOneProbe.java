@@ -92,7 +92,7 @@ public class TheOneProbe {
 
     public TheOneProbe(ModContainer container, IEventBus bus, Dist dist) {
         container.registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
-        container.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
+        container.registerConfig(ModConfig.Type.LOCAL, Config.COMMON_CONFIG, "theoneprobe-common.toml");
 
         bus.addListener(this::onRegisterEvent);
         bus.addListener(this::onRegisterPayloadHandler);

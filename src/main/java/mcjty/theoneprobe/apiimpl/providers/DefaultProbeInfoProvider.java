@@ -193,8 +193,8 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             return;
         }
         int redstonePower;
-        if (block instanceof RedStoneWireBlock) {
-            redstonePower = blockState.getValue(RedStoneWireBlock.POWER);
+        if (block instanceof RedstoneWireBlock) {
+            redstonePower = blockState.getValue(RedstoneWireBlock.POWER);
         } else {
             redstonePower = world.getSignal(data.getPos(), data.getSideHit().getOpposite());
         }

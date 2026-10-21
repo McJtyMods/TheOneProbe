@@ -1,3 +1,6 @@
+26.3_neo-16.0.0:
+- Port to 26.3/NeoForge
+
 26.2_neo-15.0.1:
 - Fix a crash when looking at entities
 
