@@ -36,7 +36,7 @@ public class ClientSetup implements ClientModInitializer {
         KeyMappingHelper.registerKeyMapping(KeyBindings.toggleVisible);
         KeyMappingHelper.registerKeyMapping(KeyBindings.toggleLiquids);
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (client.player != null && client.gui.screen() == null) new KeyInputHandler().onKeyInput();
+            if (client.player != null && client.screen == null) new KeyInputHandler().onKeyInput();
         });
         ClientPlayNetworking.registerGlobalReceiver(
                 PacketReturnInfo.TYPE, (packet, context) -> packet.handle());

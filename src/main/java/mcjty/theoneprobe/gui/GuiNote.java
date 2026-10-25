@@ -153,6 +153,6 @@ public class GuiNote extends Screen {
     }
 
     public static void open() {
-        Minecraft.getInstance().gui.setScreen(new GuiNote());
+        Minecraft.getInstance().setScreen(new GuiNote());
     }
 }

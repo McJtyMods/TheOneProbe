@@ -20,9 +20,9 @@
   "accessWidener": "theoneprobe.accesswidener",
   "depends": {
     "fabricloader": ">=0.19.3",
-    "minecraft": "26.2",
+    "minecraft": "=26.1.2",
     "java": ">=25",
-    "fabric-api": "*",
-    "forgeconfigapiport": ">=26.2.1"
+    "fabric-api": ">=0.155.3+26.1.2",
+    "forgeconfigapiport": ">=26.1.5"
   }
 }
