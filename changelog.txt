@@ -1,4 +1,4 @@
-26.1.2-15.0.1-fabric:
+26.1.2-14.0.0-fabric:
 - Backported the 26.2 Fabric version to Minecraft 26.1.2
 
 26.2-15.0.1-fabric
