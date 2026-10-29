@@ -39,18 +39,18 @@ The test mod is kept in `src/gametest` and is excluded from the release jar.
 
 This checkout is the `26.1.2_fabric` backport of the 26.2 Fabric branch, with version `26.1.2-15.0.1-fabric`. It uses Fabric API `0.155.3+26.1.2` and Forge Config API Port `26.1.5`, matching `../Multi_fabric`.
 
-Open `../Multi_fabric/build.gradle` for integrated development. The workspace automatically includes this sibling checkout as `:TheOneProbe`, and McJtyLib uses its source project for TOP integration:
+Open `../Multi_fabric/build.gradle` for integrated development. Add `-PsourceLibraries` to include this sibling checkout as `:TheOneProbe` and use both library source projects. Default workspace runs use the pinned Jenkins library artifacts:
 
 ```sh
 cd ../Multi_fabric
-./gradlew :TheOneProbe:build :TheOneProbe:gametestClasses :McJtyLib:build :workspace:classes
-./gradlew :TheOneProbe:runClientGameTest
-./gradlew :workspace:runClient
+./gradlew -PsourceLibraries :TheOneProbe:build :TheOneProbe:gametestClasses :McJtyLib:build :workspace:classes
+./gradlew -PsourceLibraries :TheOneProbe:runClientGameTest
+./gradlew -PsourceLibraries :workspace:runClient
 ```
 
 Standalone and integrated builds, access-widener validation, all four McJtyLib JUnit checks, and TOP's client game test passed on Minecraft 26.1.2. The client test exercises a real client and integrated server, including packet exchange, chest contents, fluid component serialization, the welcome note and both command screens.
 
-Native Fabric transfer regression checks also passed with both McJtyLib and TOP loaded; the log confirms McJtyLib registered its TOP provider. Run them from `../Multi_fabric` with `./gradlew -PtransferTests :McJtyLib:runTransferTest`.
+Native Fabric transfer regression checks also passed with both McJtyLib and TOP loaded; the log confirms McJtyLib registered its TOP provider. Run them from `../Multi_fabric` with `./gradlew -PsourceLibraries -PtransferTests :McJtyLib:runTransferTest`.
 
 The client game test also passed with McJtyLib and JEI added to its runtime through a temporary Gradle init script, confirming the combined client/server runtime and TOP addon registration.
 
