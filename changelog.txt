@@ -1,3 +1,7 @@
+1.20.1-10.0.5:
+- Mods can now conditionally hide blocks from the probe entirely.
+- Mods can now hide their entities from the probe entirely, including vehicle control holograms.
+
 1.20.1-10.0.4:
 - Fixed a bug in combination with a recent version of JEI where it would flood the logs with errors
 

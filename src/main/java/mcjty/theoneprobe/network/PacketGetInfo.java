@@ -123,6 +123,9 @@ public class PacketGetInfo  {
         ProbeInfo probeInfo = TheOneProbe.theOneProbeImp.create();
         if (world.hasChunkAt(blockPos)) {
             BlockState state = world.getBlockState(blockPos);
+            if (TheOneProbe.theOneProbeImp.isBlockBlacklisted(player, world, blockPos, state)) {
+                return null;
+            }
             IProbeHitData data = new ProbeHitData(blockPos, hitVec, sideHit, pickBlock);
 
             IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
