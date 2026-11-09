@@ -1,3 +1,6 @@
+26.1.2-14.0.1-fabric:
+- Mods can now conditionally hide blocks and entities from the probe entirely.
+
 26.1.2-14.0.0-fabric:
 - Backported the 26.2 Fabric version to Minecraft 26.1.2
 
