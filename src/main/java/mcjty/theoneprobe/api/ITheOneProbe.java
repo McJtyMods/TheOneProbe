@@ -1,6 +1,10 @@
 package mcjty.theoneprobe.api;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+
+import java.util.function.BiPredicate;
 
 /**
  * Main interface for this mod. Use this to build probe information
@@ -89,6 +93,30 @@ public interface ITheOneProbe {
      * entity information is shown for your entities.
      */
     void registerEntityDisplayOverride(IEntityDisplayOverride override);
+
+    /**
+     * Suppress all probe information for blocks matching this predicate. Arguments are the viewing
+     * player, level, block position and current block state; returning true hides the entire overlay.
+     * Predicates are additive: any match hides the block.
+     * Register during the common IMC callback on both physical sides.
+     * Predicates run on the client before cache lookup and on the server before providers, so they
+     * must be side-safe and must not modify game state. Registrations last for this API instance.
+     * The default implementation does nothing to preserve compatibility with other API implementations.
+     */
+    default void registerBlockBlacklist(IBlockBlacklist predicate) {
+    }
+
+    /**
+     * Suppress all probe information for entities matching this predicate. The first argument is
+     * the viewing player, the second the target entity; returning true hides the entire overlay.
+     * Predicates are additive: any match hides the entity, alongside the configured blacklist.
+     * Register during the common IMC callback on both physical sides. Predicates run on the
+     * client before cache lookup and on the server before providers, so they must be side-safe
+     * and must not modify game state. Registrations last for the lifetime of this API instance.
+     * The default implementation does nothing to preserve compatibility with other API implementations.
+     */
+    default void registerEntityBlacklist(BiPredicate<Player, Entity> predicate) {
+    }
 
     /**
      * Get the style manager that you can use to create your own styles.

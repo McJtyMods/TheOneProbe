@@ -1,3 +1,7 @@
+1.21_neo-12.0.9:
+- Mods can now conditionally hide blocks from the probe entirely.
+- Mods can now hide their entities from the probe entirely, including vehicle control holograms.
+
 1.21_neo-12.0.8:
 - Fixed armor rendering
 - Fixed health and armor rendering in case it was too large

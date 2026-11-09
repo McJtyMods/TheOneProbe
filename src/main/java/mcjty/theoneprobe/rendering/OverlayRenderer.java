@@ -158,6 +158,10 @@ public class OverlayRenderer {
             return;
         }
         Entity entity = ((EntityHitResult) mouseOver).getEntity();
+        Player player = Minecraft.getInstance().player;
+        if (TheOneProbe.theOneProbeImp.isEntityBlacklisted(player, entity)) {
+            return;
+        }
 
         if (!Config.getEntityBlacklist().isEmpty()) {
             ResourceLocation rl = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
@@ -183,8 +187,6 @@ public class OverlayRenderer {
         }
 
         UUID uuid = entity.getUUID();
-
-        Player player = Minecraft.getInstance().player;
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
@@ -240,6 +242,12 @@ public class OverlayRenderer {
         }
         Player player = Minecraft.getInstance().player;
         if (player.getCommandSenderWorld().isEmptyBlock(blockPos)) {
+            return;
+        }
+
+        Level level = player.getCommandSenderWorld();
+        BlockState state = level.getBlockState(blockPos);
+        if (TheOneProbe.theOneProbeImp.isBlockBlacklisted(player, level, blockPos, state)) {
             return;
         }
 
