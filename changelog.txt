@@ -1,3 +1,6 @@
+26.3-16.0.2-fabric:
+- Mods can now conditionally hide blocks and entities from the probe entirely.
+
 26.3-16.0.1-fabric
 - Fix a crash when looking at boats with Improved Transparency enabled
 

@@ -6,7 +6,8 @@
   "entrypoints": {
     "fabric-client-gametest": [
       "mcjty.theoneprobe.test.FabricPortTest",
-      "mcjty.theoneprobe.test.BoatPreviewTest"
+      "mcjty.theoneprobe.test.BoatPreviewTest",
+      "mcjty.theoneprobe.test.BlacklistTest"
     ]
   }
 }

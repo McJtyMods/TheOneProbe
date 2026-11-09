@@ -68,6 +68,9 @@ public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode m
     }
 
     private static ProbeInfo getProbeInfo(Player player, ProbeMode mode, Level world, Entity entity, Vec3 hitVec) {
+        if (TheOneProbe.theOneProbeImp.isEntityBlacklisted(player, entity)) {
+            return null;
+        }
         if (Config.needsProbe.get() == PROBE_NEEDEDFOREXTENDED) {
             // We need a probe only for extended information
             if (!ModItems.hasAProbeSomewhere(player)) {
