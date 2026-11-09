@@ -5,6 +5,7 @@ import mcjty.theoneprobe.network.ThrowableIdentity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.state.BoatRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +21,10 @@ public class RenderHelper {
         EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         try {
             EntityRenderState state = dispatcher.extractEntity(entity, 1.0f);
+            if (state instanceof BoatRenderState boatState) {
+                // A GUI has no water to mask, and the OIT water mask needs a depth-only render pass.
+                boatState.isUnderWater = true;
+            }
             Quaternionf rotation = new Quaternionf().rotateZ((float) Math.PI).rotateY((float) Math.toRadians(rot));
             Vector3f offset = new Vector3f(0.0f, state.boundingBoxHeight / 2.0f, 0.0f);
             graphics.entity(state, scale, offset, rotation, null, x, y, x + width, y + height);

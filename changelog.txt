@@ -1,3 +1,6 @@
+26.3_neo-16.0.1:
+- Fix a crash when looking at boats with Improved Transparency enabled
+
 26.3_neo-16.0.0:
 - Port to 26.3/NeoForge
 
