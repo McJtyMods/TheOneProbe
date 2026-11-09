@@ -1,3 +1,7 @@
+26.1.2_neo-14.0.1:
+- Mods can now conditionally hide blocks from the probe entirely.
+- Mods can now hide their entities from the probe entirely, including vehicle control holograms.
+
 26.1.2_neo-14.0.0:
 - Port to 26.1.2/NeoForge
 

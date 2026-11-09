@@ -5,10 +5,17 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.*;
 import mcjty.theoneprobe.apiimpl.styles.StyleManager;
 import mcjty.theoneprobe.config.Config;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 public class TheOneProbeImp implements ITheOneProbe {
@@ -32,6 +39,8 @@ public class TheOneProbeImp implements ITheOneProbe {
     private List<IProbeInfoEntityProvider> entityProviders = new ArrayList<>();
     private List<IBlockDisplayOverride> blockOverrides = new ArrayList<>();
     private List<IEntityDisplayOverride> entityOverrides = new ArrayList<>();
+    private final List<IBlockBlacklist> blockBlacklist = new CopyOnWriteArrayList<>();
+    private final List<BiPredicate<Player, Entity>> entityBlacklist = new CopyOnWriteArrayList<>();
     private Map<Identifier, IElementFactory> factories = new HashMap<>();
 
     public TheOneProbeImp() {
@@ -218,6 +227,34 @@ public class TheOneProbeImp implements ITheOneProbe {
     @Override
     public void registerEntityDisplayOverride(IEntityDisplayOverride override) {
         entityOverrides.add(override);
+    }
+
+    @Override
+    public void registerBlockBlacklist(IBlockBlacklist predicate) {
+        blockBlacklist.add(Objects.requireNonNull(predicate));
+    }
+
+    public boolean isBlockBlacklisted(Player player, Level level, BlockPos pos, BlockState state) {
+        for (IBlockBlacklist predicate : blockBlacklist) {
+            if (predicate.test(player, level, pos, state)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void registerEntityBlacklist(BiPredicate<Player, Entity> predicate) {
+        entityBlacklist.add(Objects.requireNonNull(predicate));
+    }
+
+    public boolean isEntityBlacklisted(Player player, Entity entity) {
+        for (BiPredicate<Player, Entity> predicate : entityBlacklist) {
+            if (predicate.test(player, entity)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<IEntityDisplayOverride> getEntityOverrides() {
