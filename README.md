@@ -25,6 +25,40 @@ This mod also has a flexible API that other mods can use to add more information
         implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
     }
 
+## Hiding block overlays
+
+Register a side-safe predicate with
+`probe.registerBlockBlacklist((player, level, pos, state) -> ...)` to hide a
+block's entire overlay when it returns `true`, including cached information,
+break progress and the tooltip frame. The position and current state are supplied
+for the targeted block in the world. For example:
+
+```java
+probe.registerBlockBlacklist((player, level, pos, state) ->
+        state.is(YourModBlocks.CONTROL_PANEL.get()) && !player.isCrouching());
+```
+
+Register during the common `getTheOneProbe` IMC callback on both physical sides.
+Predicates are additive, run on the client before cache lookup or network requests
+and on the server before information providers, and must not modify game state
+or reference client-only classes. Registrations last for the API instance's
+lifetime. The interface method has a no-op default for other API implementations.
+
+## Hiding entity overlays
+
+In the common `getTheOneProbe` IMC callback, register a side-safe predicate with
+`probe.registerEntityBlacklist((player, entity) -> ...)`. Return `true` to hide an
+entity's entire overlay, including cached information and the tooltip frame.
+For example, a vehicle mod can hide its control-panel entities and the vehicle
+currently ridden by the viewing player.
+
+Predicates are additive and coexist with the configured entity blacklist. They
+run on the client before cache lookup or network requests, and on the server
+before information providers. Register on both physical sides and avoid client-only
+classes or changes to game state in predicates. Registrations last for the API
+instance's lifetime. Existing providers and display overrides keep working; the
+new interface method has a no-op default for other API implementations.
+
 ## Licence
 
 #### MIT
