@@ -1,3 +1,6 @@
+1.21.1-12.0.9-fabric
+- Ported to Minecraft 1.21.1 on Fabric.
+
 1.21_neo-12.0.9:
 - Mods can now conditionally hide blocks from the probe entirely.
 - Mods can now hide their entities from the probe entirely, including vehicle control holograms.

@@ -1,5 +1,13 @@
 package mcjty.theoneprobe.network;
 
+import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
+import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
+import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
+import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Predicate;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
@@ -7,11 +15,11 @@ import mcjty.theoneprobe.apiimpl.ProbeHitEntityData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
@@ -23,17 +31,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Predicate;
-
-import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
-import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
-import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
-import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
 public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode mode,
                                   Vec3 hitVec) implements CustomPacketPayload {
@@ -57,20 +54,15 @@ public record PacketGetEntityInfo(ResourceKey<Level> dim, UUID uuid, ProbeMode m
         return new PacketGetEntityInfo(dim, entity.getUUID(), mode, mouseOver.getLocation());
     }
 
-    public void handle(IPayloadContext ctx) {
-        ctx.enqueueWork(() -> {
-                    Player player = ctx.player();
-                    ServerLevel world = (ServerLevel) player.level();
-                    Entity entity = world.getEntity(uuid);
-                    if (entity != null) {
-                        ProbeInfo probeInfo = getProbeInfo(player, mode, world, entity, hitVec);
-                        PacketDistributor.sendToPlayer((ServerPlayer) player, PacketReturnEntityInfo.create(uuid, probeInfo));
-                    }
-                })
-                .exceptionally(e -> {
-                    ctx.disconnect(Component.translatable("theoneprobe.networking.failed", e.getMessage()));
-                    return null;
-                });
+    public void handle(ServerPlayNetworking.Context ctx) {
+        ServerPlayer player = ctx.player();
+        ServerLevel world = player.serverLevel();
+        if (!world.dimension().equals(dim)) return;
+        Entity entity = world.getEntity(uuid);
+        if (entity != null) {
+            ProbeInfo probeInfo = getProbeInfo(player, mode, world, entity, hitVec);
+            ServerPlayNetworking.send(player, PacketReturnEntityInfo.create(uuid, probeInfo));
+        }
     }
 
     private static ProbeInfo getProbeInfo(Player player, ProbeMode mode, Level world, Entity entity, Vec3 hitVec) {

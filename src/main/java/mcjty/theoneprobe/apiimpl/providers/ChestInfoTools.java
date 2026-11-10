@@ -1,10 +1,17 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.annotation.Nonnull;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.Container;
@@ -13,15 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChestInfoTools {
 
@@ -122,11 +120,15 @@ public class ChestInfoTools {
         Set<Item> foundItems = Config.compactEqualStacks.get() ? new HashSet<>() : null;
         AtomicInteger maxSlots = new AtomicInteger();
         try {
-            IItemHandler capability = world.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-            if (capability != null) {
-                maxSlots.set(capability.getSlots());
-                for (int i = 0; i < maxSlots.get(); i++) {
-                    addItemStack(stacks, foundItems, capability.getStackInSlot(i));
+            var storage = ItemStorage.SIDED.find(world, pos, null);
+            if (storage != null) {
+                for (var view : storage) {
+                    maxSlots.incrementAndGet();
+                    if (!view.isResourceBlank()) {
+                        ItemStack stack = new ItemStack(view.getResource().getItem(), (int) Math.min(Integer.MAX_VALUE, view.getAmount()));
+                        stack.applyComponents(view.getResource().getComponents());
+                        addItemStack(stacks, foundItems, stack);
+                    }
                 }
             } else if (te instanceof Container inventory) {
                 maxSlots.set(inventory.getContainerSize());

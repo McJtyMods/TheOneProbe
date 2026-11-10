@@ -1,17 +1,17 @@
 package mcjty.theoneprobe.apiimpl.elements;
 
 import mcjty.theoneprobe.api.Color;
+import mcjty.theoneprobe.api.FluidStack;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IIconStyle;
 import mcjty.theoneprobe.apiimpl.TheOneProbeImp;
 import mcjty.theoneprobe.apiimpl.client.ElementIconRender;
+import mcjty.theoneprobe.apiimpl.client.FluidRenderHelper;
 import mcjty.theoneprobe.apiimpl.styles.IconStyle;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ElementFluid implements IElement {
 
@@ -39,8 +39,8 @@ public class ElementFluid implements IElement {
     
     @Override
     public void render(GuiGraphics graphics, int x, int y) {
-        int tintColor = IClientFluidTypeExtensions.of(fluid.getFluid()).getTintColor(fluid);
-        ResourceLocation stillTexture = IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture();
+        int tintColor = FluidVariantRendering.getColor(fluid.variant());
+        ResourceLocation stillTexture = FluidRenderHelper.getStillSprite(fluid).contents().name().withPrefix("textures/").withSuffix(".png");
         Color color = new Color(tintColor);
         ElementIconRender.render(stillTexture, graphics.pose(), x, y, 16, 16, -1, -1, style.getTextureWidth(), style.getTextureHeight(), color.getRGB());
     }

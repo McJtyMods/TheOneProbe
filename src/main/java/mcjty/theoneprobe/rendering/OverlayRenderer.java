@@ -1,8 +1,15 @@
 package mcjty.theoneprobe.rendering;
 
+import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexSorting;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Predicate;
+import javax.annotation.Nullable;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.ProbeHitData;
@@ -17,6 +24,7 @@ import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.network.PacketGetEntityInfo;
 import mcjty.theoneprobe.network.PacketGetInfo;
 import mcjty.theoneprobe.network.ThrowableIdentity;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,20 +44,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.ClientHooks;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Predicate;
-
-import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
 
 public class OverlayRenderer {
 
@@ -136,11 +134,11 @@ public class OverlayRenderer {
 
     private static void setupOverlayRendering(float sw, float sh) {
         RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, true);
-        Matrix4f ortho = (new Matrix4f()).setOrtho(0.0F, sw, sh, 0.0F, 1000.0F, ClientHooks.getGuiFarPlane());
+        Matrix4f ortho = (new Matrix4f()).setOrtho(0.0F, sw, sh, 0.0F, 1000.0F, 21000.0F);
         RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);  // @todo 1.20 is this right?
         Matrix4fStack posestack = RenderSystem.getModelViewStack();
         posestack.identity();
-        posestack.translate(0.0F, 0.0F, 1000.0F - ClientHooks.getGuiFarPlane());
+        posestack.translate(0.0F, 0.0F, 1000.0F - 21000.0F);
         RenderSystem.applyModelViewMatrix();
     }
 
@@ -180,13 +178,14 @@ public class OverlayRenderer {
 //        }
 
 //        String entityString = EntityList.getEntityString(entity);
-        String entityString = entity.getEncodeId();
+        String entityString = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
         if (entityString == null && !(entity instanceof Player)) {
             // We can't show info for this entity
             return;
         }
 
         UUID uuid = entity.getUUID();
+
         long time = System.currentTimeMillis();
 
         Pair<Long, ProbeInfo> cacheEntry = cachedEntityInfo.get(uuid);
@@ -229,7 +228,8 @@ public class OverlayRenderer {
     }
 
     private static void requestEntityInfo(ProbeMode mode, HitResult mouseOver, Entity entity, Player player) {
-        PacketDistributor.sendToServer(PacketGetEntityInfo.create(player.getCommandSenderWorld().dimension(), mode, mouseOver, entity));
+        if (!ClientPlayNetworking.canSend(PacketGetEntityInfo.TYPE)) return;
+        ClientPlayNetworking.send(PacketGetEntityInfo.create(player.level().dimension(), mode, mouseOver, entity));
     }
 
     private static void renderHUDBlock(GuiGraphics graphics, ProbeMode mode, HitResult mouseOver, double sw, double sh) {
@@ -320,7 +320,7 @@ public class OverlayRenderer {
         Level world = player.getCommandSenderWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getCloneItemStack(blockState, mouseOver, world, blockPos, player);
+        ItemStack pickBlock = block.getCloneItemStack(world, blockPos, blockState);
         IProbeHitData data = new ProbeHitData(blockPos, mouseOver.getLocation(), ((BlockHitResult)mouseOver).getDirection(), pickBlock);
 
         IProbeConfig probeConfig = TheOneProbe.theOneProbeImp.createProbeConfig();
@@ -355,7 +355,7 @@ public class OverlayRenderer {
         Level world = player.getCommandSenderWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        ItemStack pickBlock = block.getCloneItemStack(blockState, mouseOver, world, blockPos, player);
+        ItemStack pickBlock = block.getCloneItemStack(world, blockPos, blockState);
         if (pickBlock == null) {
             // Should not be needed but you never know... (bad mods)
             pickBlock = ItemStack.EMPTY;
@@ -364,7 +364,8 @@ public class OverlayRenderer {
             // @todo 1.20.5_Neo is this right?
             pickBlock = new ItemStack(pickBlock.getItem(), pickBlock.getCount());
         }
-        PacketDistributor.sendToServer(PacketGetInfo.create(world.dimension(), blockPos, mode, mouseOver, pickBlock));
+        if (!ClientPlayNetworking.canSend(PacketGetInfo.TYPE)) return;
+        ClientPlayNetworking.send(PacketGetInfo.create(world.dimension(), blockPos, mode, mouseOver, pickBlock));
     }
 
     public static void renderOverlay(IOverlayStyle style, IProbeInfo probeInfo, GuiGraphics graphics) {

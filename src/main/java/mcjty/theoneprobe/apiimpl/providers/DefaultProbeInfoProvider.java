@@ -1,12 +1,19 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import static mcjty.theoneprobe.api.TextStyleClass.*;
+
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.api.FluidStack;
 import mcjty.theoneprobe.apiimpl.ProbeConfig;
 import mcjty.theoneprobe.apiimpl.elements.ElementProgress;
-import mcjty.theoneprobe.compat.TeslaTools;
 import mcjty.theoneprobe.config.Config;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -31,19 +38,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
-
-import static mcjty.theoneprobe.api.TextStyleClass.*;
-import static net.neoforged.neoforge.fluids.FluidType.BUCKET_VOLUME;
+import team.reborn.energy.api.EnergyStorage;
 
 public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
@@ -224,15 +219,11 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showTankInfo(IProbeInfo probeInfo, Level world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
-        BlockEntity te = world.getBlockEntity(pos);
-        IFluidHandler handler = world.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+        var handler = FluidStorage.SIDED.find(world, pos, null);
         if (handler != null) {
-            for (int i = 0; i < handler.getTanks(); i++) {
-                FluidStack fluidStack = handler.getFluidInTank(i);
-                int maxContents = handler.getTankCapacity(i);
-                if (!fluidStack.isEmpty()) {
-                    addFluidInfo(probeInfo, config, fluidStack, maxContents);
-                }
+            for (var view : handler) {
+                FluidStack stack = new FluidStack(view.getResource(), TankReference.toMillibuckets(view.getAmount()));
+                if (!stack.isEmpty()) addFluidInfo(probeInfo, config, stack, TankReference.toMillibuckets(view.getCapacity()));
             }
         }
     }
@@ -241,7 +232,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         int contents = fluidStack.getAmount();
     	if(config.getTankMode() == 1) {
 
-            int tintColor = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack);
+            int tintColor = FluidVariantRendering.getColor(fluidStack.variant());
             Color color = new Color(tintColor);
         	if (Objects.equals(fluidStack.getFluid(), Fluids.LAVA)) {
     			color = new Color(255, 139, 27);
@@ -258,7 +249,7 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
         			.suffix(text));
         } else {
             if (!fluidStack.isEmpty()) {
-                probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(fluidStack.getFluidType().getDescriptionId(fluidStack)));
+                probeInfo.text(CompoundText.create().style(NAME).text("Liquid:").info(fluidStack.getHoverName()));
             }
             if (config.getTankMode() == 2) {
                 probeInfo.progress(contents, maxContents,
@@ -276,20 +267,9 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
 
     private void showEnergy(IProbeInfo probeInfo, Level world, BlockPos pos) {
         ProbeConfig config = Config.getDefaultConfig();
-        BlockEntity te = world.getBlockEntity(pos);
-        if (TheOneProbe.tesla && TeslaTools.isEnergyHandler(te)) {
-            long energy = TeslaTools.getEnergy(te);
-            long maxEnergy = TeslaTools.getMaxEnergy(te);
-            addEnergyInfo(probeInfo, config, energy, maxEnergy);
-//        } else if (te instanceof IBigPower bigPower) {
-//            long energy = bigPower.getStoredPower();
-//            long maxEnergy = bigPower.getCapacity();
-//            addEnergyInfo(probeInfo, config, energy, maxEnergy);
-        } else{
-            IEnergyStorage handler = world.getCapability(Capabilities.EnergyStorage.BLOCK, pos, null);
-            if (handler != null) {
-                addEnergyInfo(probeInfo, config, handler.getEnergyStored(), handler.getMaxEnergyStored());
-            }
+        var handler = EnergyStorage.SIDED.find(world, pos, null);
+        if (handler != null) {
+            addEnergyInfo(probeInfo, config, handler.getAmount(), handler.getCapacity());
         }
     }
 
@@ -343,19 +323,15 @@ public class DefaultProbeInfoProvider implements IProbeInfoProvider {
             Fluid fluid = fluidState.getType();
             if (!Objects.equals(fluid, Fluids.EMPTY)) {
                 IProbeInfo horizontal = probeInfo.horizontal();
-                FluidStack fluidStack = new FluidStack(fluid, BUCKET_VOLUME);
+                FluidStack fluidStack = new FluidStack(fluid, 1000);
 
                 horizontal.fluid(fluidStack, probeInfo.defaultIconStyle().width(20));
                 //Proposal Fluids should look at the icon only not buckets of it. Dunno you have to decide. I just fixed the fluid color bug
-                ItemStack bucketStack = FluidUtil.getFilledBucket(fluidStack);
-                FluidUtil.getFluidContained(bucketStack).ifPresent(fc -> {
-                    if (FluidStack.isSameFluidSameComponents(fluidStack, fc)) {
-                        horizontal.item(bucketStack);
-                    }
-                });
+                ItemStack bucketStack = new ItemStack(fluid.getBucket());
+                if (!bucketStack.isEmpty()) horizontal.item(bucketStack);
 
                 horizontal.vertical()
-                        .text(CompoundText.create().name(fluidStack.getFluidType().getDescriptionId(fluidStack)))
+                        .text(CompoundText.create().name(fluidStack.getHoverName()))
                         .text(CompoundText.create().style(MODNAME).text(modName));
                 return;
             }

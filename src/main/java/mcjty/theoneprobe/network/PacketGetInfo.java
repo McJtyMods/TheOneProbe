@@ -1,5 +1,12 @@
 package mcjty.theoneprobe.network;
 
+import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
+import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
+import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
+import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
+
+import java.util.List;
+import javax.annotation.Nonnull;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
@@ -7,10 +14,10 @@ import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import mcjty.theoneprobe.apiimpl.ProbeInfo;
 import mcjty.theoneprobe.config.Config;
 import mcjty.theoneprobe.items.ModItems;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -25,16 +32,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-
-import static mcjty.theoneprobe.api.TextStyleClass.ERROR;
-import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
-import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDFOREXTENDED;
-import static mcjty.theoneprobe.config.Config.PROBE_NEEDEDHARD;
 
 public record PacketGetInfo(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode, Direction sideHit, Vec3 hitVec, @Nonnull ItemStack pickBlock) implements CustomPacketPayload {
 
@@ -60,13 +57,12 @@ public record PacketGetInfo(ResourceKey<Level> dim, BlockPos pos, ProbeMode mode
         return new PacketGetInfo(dim, pos, mode, sideHit, mouseOver.getLocation(), pickBlock);
     }
 
-    public void handle(IPayloadContext ctx) {
-        ctx.enqueueWork(() -> {
-            Player player = ctx.player();
-            ServerLevel world = (ServerLevel) player.level();
-            ProbeInfo probeInfo = getProbeInfo(player, mode, world, pos, sideHit, hitVec, pickBlock);
-            PacketDistributor.sendToPlayer((ServerPlayer) player, PacketReturnInfo.create(dim, pos, probeInfo));
-        });
+    public void handle(ServerPlayNetworking.Context ctx) {
+        ServerPlayer player = ctx.player();
+        ServerLevel world = player.serverLevel();
+        if (!world.dimension().equals(dim)) return;
+        ProbeInfo probeInfo = getProbeInfo(player, mode, world, pos, sideHit, hitVec, pickBlock);
+        ServerPlayNetworking.send(player, PacketReturnInfo.create(dim, pos, probeInfo));
     }
 
     private static ProbeInfo getProbeInfo(Player player, ProbeMode mode, Level world, BlockPos blockPos, Direction sideHit, Vec3 hitVec, @Nonnull ItemStack pickBlock) {

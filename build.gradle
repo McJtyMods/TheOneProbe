@@ -14,45 +14,57 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.1.4'
+    id 'fabric-loom' version '1.10.5'
 }
 
 apply plugin: 'com.hypherionmc.modutils.modpublisher'
 
-if (project.file('../gradletools.gradle').exists()) {
-    apply from: '../gradletools.gradle'
-} else {
-    apply from: 'https://raw.githubusercontent.com/McJtyMods/MultiWorkspace/1.21_neo/gradletools.gradle'
+def localGradleTools = [
+        project.findProperty('gradletools_path') ? file(project.property('gradletools_path')) : null,
+        rootProject.file('gradletools.gradle'),
+        file('../Multi_fabric/gradletools.gradle'),
+        file('../gradletools.gradle'),
+        file('gradletools.gradle')
+].find { it != null && it.isFile() }
+apply from: localGradleTools ?: 'https://raw.githubusercontent.com/McJtyMods/MultiWorkspace/1.21_fabric/gradletools.gradle'
+
+group = 'mcjty.theoneprobe'
+base.archivesName = 'theoneprobe'
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
 }
-
-group= "mcjty.theoneprobe" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-base.archivesName = "theoneprobe"
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "-${System.getenv('BUILD_NUMBER')}"
 }
-
+sourceSets.main.resources.srcDir 'src/generated/resources'
 repos()
-at()
+access()
 runs()
 jars()
-
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-}
-
 dependencies {
     mc()
-    jei()
+    config()
+    energy()
 }
 
-modpublisher([], [], [], [], [])
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand version: project.version }
+}
 
-subsystems {
-    parchment {
-        minecraftVersion = "${parchment_minecraft_version}"
-        mappingsVersion = "${parchment_version}"
+jar {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    manifest {
+        attributes([
+                "Specification-Title"      : project.mod_id,
+                "Specification-Vendor"     : 'McJty',
+                "Specification-Version"    : "1",
+                "Implementation-Title"     : project.name,
+                "Implementation-Version"   : project.jar.archiveVersion,
+                "Implementation-Vendor"    : 'McJty',
+                "Implementation-Timestamp" : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
 }
 
@@ -67,12 +79,14 @@ artifacts {
     archives apiJar
 }
 
+modpublisher([], ['fabric-api', 'forge-config-api-port'], [], ['fabric-api', 'forge-config-api-port'], [])
+
 publishing {
     publications.create('mavenJava', MavenPublication) {
         from components.java
         artifact apiJar
 
-        artifactId = project.archivesBaseName
+        artifactId = base.archivesName.get()
         pom {
             name = 'TheOneProbe'
             description = 'What am I looking at?'

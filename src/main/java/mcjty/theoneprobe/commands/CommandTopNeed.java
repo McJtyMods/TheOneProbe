@@ -6,10 +6,10 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mcjty.theoneprobe.network.PacketOpenGui;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 public class CommandTopNeed implements Command<CommandSourceStack> {
 
@@ -21,11 +21,10 @@ public class CommandTopNeed implements Command<CommandSourceStack> {
                 .executes(CMD);
     }
 
-
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        PacketDistributor.sendToPlayer(player, new PacketOpenGui(PacketOpenGui.GUI_NOTE));
+        ServerPlayNetworking.send(player, new PacketOpenGui(PacketOpenGui.GUI_NOTE));
         return 0;
     }
 }

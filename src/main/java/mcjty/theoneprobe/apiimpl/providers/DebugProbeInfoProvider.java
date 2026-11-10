@@ -1,5 +1,8 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import static mcjty.theoneprobe.api.TextStyleClass.INFO;
+import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
+
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
@@ -13,9 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
-import static mcjty.theoneprobe.api.TextStyleClass.INFO;
-import static mcjty.theoneprobe.api.TextStyleClass.LABEL;
 
 public class DebugProbeInfoProvider implements IProbeInfoProvider {
 
@@ -42,7 +42,7 @@ public class DebugProbeInfoProvider implements IProbeInfoProvider {
                 .text(CompoundText.createLabelInfo("Hardness: ", blockState.getDestroySpeed(world, pos)))
                 .text(CompoundText.createLabelInfo("Power W: ",+ blockState.getSignal(world, pos, side.getOpposite()))
                         .style(LABEL).text(", S: ").style(INFO).text(String.valueOf(blockState.getDirectSignal(world, pos, side.getOpposite()))))
-                .text(CompoundText.createLabelInfo("Light: ", block.getLightEmission(blockState, world, pos)));
+                .text(CompoundText.createLabelInfo("Light: ", blockState.getLightEmission()));
         BlockEntity te = world.getBlockEntity(pos);
         if (te != null) {
             vertical.text(CompoundText.createLabelInfo("TE: ", te.getClass().getSimpleName()));

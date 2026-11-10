@@ -1,3 +1,7 @@
+## Fabric 1.21.1 development
+
+This branch is `1.21_fabric` and requires Java 21. In MultiWorkspace, build this mod with `./gradlew :TheOneProbe:build` from the workspace root. Individual checkouts use the same `gradletools.gradle` driver, preferring local peer sources before the Jenkins/Maven fallback. Before the remote branch is available, select the workspace script with `-Pgradletools_path=../gradletools.gradle` and use `--gradle-user-home ../.gradle-user-home`.
+
 ![The One Probe (TOP) Logo](https://media.forgecdn.net/avatars/41/170/635991514554675962.png)
 # The One Probe (TOP) - Minecraft Mod
 _More immersive alternative for WAILA_

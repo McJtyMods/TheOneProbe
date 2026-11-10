@@ -1,17 +1,17 @@
 package mcjty.theoneprobe.items;
 
+import static mcjty.theoneprobe.TheOneProbe.HASPROBE_TAG;
+
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.compat.BaubleTools;
 import net.minecraft.core.Holder;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
-import static mcjty.theoneprobe.TheOneProbe.HASPROBE_TAG;
 
 public class ModItems {
     public static CreativeProbe CREATIVE_PROBE;
@@ -26,9 +26,9 @@ public class ModItems {
         PROBE = new Probe();
         CREATIVE_PROBE = new CreativeProbe();
 
-        DIAMOND_HELMET_PROBE = makeHelmet(TheOneProbe.MATERIAL_DIAMOND_HELMET);
-        GOLD_HELMET_PROBE = makeHelmet(TheOneProbe.MATERIAL_GOLD_HELMET);
-        IRON_HELMET_PROBE = makeHelmet(TheOneProbe.MATERIAL_IRON_HELMET);
+        DIAMOND_HELMET_PROBE = makeHelmet(ArmorMaterials.DIAMOND);
+        GOLD_HELMET_PROBE = makeHelmet(ArmorMaterials.GOLD);
+        IRON_HELMET_PROBE = makeHelmet(ArmorMaterials.IRON);
 
         PROBE_NOTE = new ProbeNote();
 

@@ -1,12 +1,18 @@
 package mcjty.theoneprobe.apiimpl.providers;
 
+import static mcjty.theoneprobe.api.TextStyleClass.*;
+
+import com.mojang.authlib.GameProfile;
+import java.text.DecimalFormat;
+import java.util.Collection;
+import java.util.UUID;
 import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import mcjty.theoneprobe.config.Config;
-import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,12 +29,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.UsernameCache;
-import java.text.DecimalFormat;
-import java.util.Collection;
-import java.util.UUID;
-
-import static mcjty.theoneprobe.api.TextStyleClass.*;
 
 public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider {
 
@@ -127,7 +127,10 @@ public class DefaultProbeInfoEntityProvider implements IProbeInfoEntityProvider 
             }
 
             if (ownerId != null) {
-                String username = UsernameCache.getLastKnownUsername(ownerId);
+                String username = player.level() instanceof ServerLevel serverLevel
+                        ? serverLevel.getServer().getProfileCache().get(ownerId)
+                                .map(GameProfile::getName).orElse(null)
+                        : null;
                 if (username == null) {
                     probeInfo.text(CompoundText.create().style(WARNING).text("Unknown owner"));
                 } else {

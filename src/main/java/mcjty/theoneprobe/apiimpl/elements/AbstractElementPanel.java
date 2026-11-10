@@ -2,9 +2,9 @@ package mcjty.theoneprobe.apiimpl.elements;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import mcjty.theoneprobe.api.CompoundText;
 import mcjty.theoneprobe.api.ElementAlignment;
+import mcjty.theoneprobe.api.FluidStack;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IEntityStyle;
 import mcjty.theoneprobe.api.IIconStyle;
@@ -24,13 +24,11 @@ import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcjty.theoneprobe.apiimpl.styles.TextStyle;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.fluids.FluidStack;
 
 public abstract class AbstractElementPanel implements IElement, IProbeInfo {
 

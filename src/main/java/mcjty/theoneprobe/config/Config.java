@@ -1,6 +1,9 @@
 package mcjty.theoneprobe.config;
 
+import static mcjty.theoneprobe.api.TextStyleClass.*;
 
+import java.util.*;
+import java.util.function.Predicate;
 import mcjty.theoneprobe.api.IOverlayStyle;
 import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.NumberFormat;
@@ -10,15 +13,10 @@ import mcjty.theoneprobe.apiimpl.styles.DefaultOverlayStyle;
 import mcjty.theoneprobe.items.IEnumConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.*;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.*;
-import java.util.function.Predicate;
-
-import static mcjty.theoneprobe.api.TextStyleClass.*;
 
 public class Config {
 
@@ -27,7 +25,6 @@ public class Config {
 
     public static final ModConfigSpec COMMON_CONFIG;
     public static final ModConfigSpec CLIENT_CONFIG;
-
 
     public static final int PROBE_NOTNEEDED = 0;
     public static final int PROBE_NEEDED = 1;
@@ -106,7 +103,6 @@ public class Config {
     public static int tankbarAlternateFilledColor = 0xff000043;
     public static int tankbarBorderColor = 0xff555555;
 
-
     private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowModName;
     private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowHarvestLevel;
     private static IEnumConfig<IProbeConfig.ConfigMode> cfgshowCanBeHarvested;
@@ -127,7 +123,6 @@ public class Config {
 
     private static ConfigValue<List<? extends String>> renderBlacklist;
     private static Set<ResourceLocation> renderBlacklistSet = null;
-
 
     public static final Map<TextStyleClass, String> defaultTextStyleClasses = new HashMap<>();
     public static Map<TextStyleClass, ConfigValue<String>> cfgtextStyleClasses = new HashMap<>();
@@ -152,7 +147,6 @@ public class Config {
     public static IProbeConfig getRealConfig() {
         return realConfig;
     }
-
 
     static {
         defaultTextStyleClasses.put(NAME, "white");
@@ -355,7 +349,6 @@ public class Config {
         Config.needsProbe.save();
     }
 
-
     public static void setupStyleConfig() {
         leftX = CLIENT_BUILDER
                 .comment("The distance to the left side of the screen. Use -1 if you don't want to set this")
@@ -489,7 +482,11 @@ public class Config {
         StringBuilder builder = new StringBuilder();
         String[] splitted = StringUtils.split(input, ',');
         for (String s : splitted) {
-            ChatFormatting format = ChatFormatting.getByName(s);
+            String normalized = s.toUpperCase(Locale.ROOT).replaceAll("[^A-Z]", "");
+            ChatFormatting format = Arrays.stream(ChatFormatting.values())
+                    .filter(candidate -> candidate.name().replace("_", "").equals(normalized))
+                    .findFirst()
+                    .orElse(null);
             if (format != null) {
                 builder.append(format.toString());
             }
@@ -669,11 +666,11 @@ public class Config {
         return renderBlacklistSet.contains(id);
     }
 
-    public static void onLoad(ModConfigEvent.Loading event) {
+    public static void onLoad(ModConfig event) {
         renderBlacklistSet = null;
     }
 
-    public static void onReload(ModConfigEvent.Reloading event) {
+    public static void onReload(ModConfig event) {
         renderBlacklistSet = null;
     }
 }

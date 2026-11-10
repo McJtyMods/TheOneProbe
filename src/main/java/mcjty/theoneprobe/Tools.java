@@ -1,11 +1,13 @@
 package mcjty.theoneprobe;
 
+import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.EXTENDED;
+import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.NORMAL;
+
 import io.netty.buffer.Unpooled;
-import io.netty.handler.codec.DecoderException;
-import io.netty.handler.codec.EncoderException;
 import mcjty.theoneprobe.api.IProbeConfig;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.config.Config;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,11 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
-
-import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.EXTENDED;
-import static mcjty.theoneprobe.api.IProbeConfig.ConfigMode.NORMAL;
 
 public class Tools {
 
@@ -100,16 +98,16 @@ public class Tools {
     public static String getModName(EntityType<?> entry) {
         ResourceLocation registryName = BuiltInRegistries.ENTITY_TYPE.getKey(entry);
         String modId = registryName == null ? "minecraft" : registryName.getNamespace();
-        return ModList.get().getModContainerById(modId)
-                .map(mod -> mod.getModInfo().getDisplayName())
+        return FabricLoader.getInstance().getModContainer(modId)
+                .map(mod -> mod.getMetadata().getName())
                 .orElse(StringUtils.capitalize(modId));
     }
 
     public static String getModName(Block entry) {
         ResourceLocation registryName = BuiltInRegistries.BLOCK.getKey(entry);
         String modId = registryName == null ? "minecraft" : registryName.getNamespace();
-        return ModList.get().getModContainerById(modId)
-                .map(mod -> mod.getModInfo().getDisplayName())
+        return FabricLoader.getInstance().getModContainer(modId)
+                .map(mod -> mod.getMetadata().getName())
                 .orElse(StringUtils.capitalize(modId));
     }
 
